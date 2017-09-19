@@ -15,7 +15,7 @@ enum MODEL_ID
 {
 	DUMMY_MODEL,
 	PLAYER_MODEL,
-
+	ENEMY_MODEL,
 	SKYBOX_MODEL,
 	STAGE_MODEL,
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
