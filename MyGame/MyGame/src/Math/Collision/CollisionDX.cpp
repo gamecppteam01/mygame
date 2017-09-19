@@ -1,7 +1,7 @@
 //#include "CollisionDX.h"
-//#include "../DxLib/DXConverter.h"
-//#include "../util/math/MathHelper.h"
-//#include "../util/math/Vector3.h"
+//#include "../../Conv/DXConverter.h"
+//#include "../../Math/MathHelper.h"
+//#include "../../Math/Vector3.h"
 //
 //bool CollisionDX::Capsule_vs_Capsule(const Capsule & c1, const Capsule & c2)
 //{

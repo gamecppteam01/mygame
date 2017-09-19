@@ -2,16 +2,16 @@
 //#include "Collision.h"
 //#include "CollisionDX.h"
 //#include "CollisionParameter.h"
-//#include "../dxlib/DXConverter.h"
-//#include "../graphic/Model.h"
-//#include "../actor/Actor.h"
-//#include "../actor/Stage.h"
+//#include "../../Conv/DXConverter.h"
+//#include "../../Graphic/Model.h"
+//#include "../../Actor/Actor.h"
+//#include "../../Field/Field.h"
 //
 ////#include "../util/collision/Line.h"
 ////#include "../util/collision/Ray.h"
 //#include "../../Actor/Body/BoundingSphere.h"
-//#include "../util/collision/BoundingBox.h"
-//#include "../util/collision/OrientedBoundingBox.h"
+//#include "../../Actor/Body/BoundingBox.h"
+//#include "../../Actor/Body/OrientedBoundingBox.h"
 //
 //CollisionFunction::CollisionFunction(IWorld * world) :
 //world_(world)
@@ -22,7 +22,7 @@
 //{
 //}
 //
-//CollisionParameter CollisionFunction::Actor_vs_Wall(const Actor & one, const Actor & other) const
+//CollisionParameter CollisionFunction::Actor_vs_Wall(const Actor & one, const Field & other) const
 //{
 //	CollisionParameter colpara;
 //	colpara.colID = COL_ID::ACTOR_WALL_COL;

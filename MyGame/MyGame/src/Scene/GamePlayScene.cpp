@@ -19,8 +19,8 @@ void GamePlayScene::start() {
 	world_.addField(field);
 	std::shared_ptr<CameraActor> camera = std::make_shared<CameraActor>(&world_, "Player", Vector3::Zero);
 	world_.addCamera(camera);
-	std::shared_ptr<BoundingCapsule> caps= std::make_shared<BoundingCapsule>(Vector3(0.0f,10.0f,0.0f), Matrix::Identity, 20.0f, 3.0f);
-	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Zero, caps);
+	std::shared_ptr<BoundingCapsule> caps= std::make_shared<BoundingCapsule>(Vector3(0.0f,0.0f,0.0f), Matrix::Identity, 20.0f, 3.0f);
+	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f, caps);
 	world_.addActor(ActorGroup::PLAYER, player);
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));

@@ -11,8 +11,8 @@
 // コンストラクタ
 BoundingCapsule::BoundingCapsule(const Vector3& pos, const Matrix& mat, const float& len, const float& rad) :
 	Body(ShapeType::Capsule, pos, mat, rad, len) {
-	mPoints[0] = pos + Vector3::Up * (len - rad);
-	mPoints[1] = pos - Vector3::Up * (len - rad);
+	mPoints[0] = pos + Vector3::Up * (len*0.5f - rad);
+	mPoints[1] = pos - Vector3::Up * (len*0.5f - rad);
 }
 
 // 衝突判定

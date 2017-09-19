@@ -1,0 +1,16 @@
+DxLib_VC/
+Debug/
+Release/
+.vs/
+# Git‚ÌŠÇ—‰º‚©‚çŠO‚·Šg’£q
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.sdf
+*.suo
+*.VC.opendb
+*.exe
+
+
+/Log.txt

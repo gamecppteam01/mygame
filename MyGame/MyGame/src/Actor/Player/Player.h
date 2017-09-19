@@ -20,7 +20,7 @@ private:
 	virtual void onCollide(Actor& other);
 
 private:
-	//virtual void field() override;
+	virtual bool field() override;
 
 	void checkCollideField();
 private:

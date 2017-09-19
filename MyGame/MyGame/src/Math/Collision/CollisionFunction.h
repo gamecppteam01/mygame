@@ -13,7 +13,7 @@
 //	~CollisionFunction();
 //
 //	// アクターvs壁
-//	CollisionParameter Actor_vs_Wall(const Actor& one, const Actor& other) const;
+//	CollisionParameter Actor_vs_Wall(const Actor& one, const Field& other) const;
 //	// アクターvs床
 //	CollisionParameter Actor_vs_Floor(const Actor& one, const Actor& other) const;
 //	// プレイヤーvsエネミーシンボル
