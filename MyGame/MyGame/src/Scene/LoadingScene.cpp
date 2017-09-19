@@ -2,7 +2,7 @@
 #include"../Resource/LoadingList.h"
 
 LoadingScene::LoadingScene() {
-	next_ = SceneType::SCENE_GAMEPLAY;
+	next_ = SceneType::SCENE_TITLE;
 }
 
 void LoadingScene::start() {

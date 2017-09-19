@@ -1,5 +1,9 @@
 #pragma once
 //シーンを一括インクルードするためのファイル
-#include"LoadingScene.h"
-#include"GamePlayScene.h"
-#include"SceneType.h"
+#include "TitleScene.h"
+#include "LoadingScene.h"
+#include "GamePlayScene.h"
+#include "GameClearScene.h"
+#include "GameOverScene.h"
+#include "CreditScene.h"
+#include "SceneType.h"

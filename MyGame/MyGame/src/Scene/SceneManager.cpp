@@ -4,8 +4,12 @@
 //ローディングシーンから開始
 SceneManager::SceneManager() :currentScene_(SceneType::SCENE_LOADING) {
 	//利用するシーンを作成し、シーンリストに追加する
-	scenes_[SceneType::SCENE_LOADING] = std::make_shared<LoadingScene>();
+	scenes_[SceneType::SCENE_LOADING]  = std::make_shared<LoadingScene>();
+	scenes_[SceneType::SCENE_TITLE]    = std::make_shared<TitleScene>();
 	scenes_[SceneType::SCENE_GAMEPLAY] = std::make_shared<GamePlayScene>();
+	scenes_[SceneType::SCENE_CLEAR]    = std::make_shared<GameClearScene>();
+	scenes_[SceneType::SCENE_GAMEOVER] = std::make_shared<GameOverScene>();
+	scenes_[SceneType::SCENE_CREDIT]   = std::make_shared<CreditScene>();
 }
 
 SceneManager::~SceneManager() {
