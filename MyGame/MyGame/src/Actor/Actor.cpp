@@ -203,60 +203,15 @@ void Actor::handleMessage(EventMessage message, void* param) {
 }
 
 // フィールドとの衝突判定
-bool Actor::field() {
-	float savey = position_.y;
+bool Actor::field(Vector3& result) {
+	Vector3 hitcenter;
+	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), (VECTOR*)&hitcenter))
+	{
+		result = hitcenter;
 
-	world_->getField()->getMesh().collide_sphere(position_, body_->radius(), (VECTOR*)&position_);
-	position_.y = savey;
-	Vector3 start = position_ + Vector3{ 0.0f, 1.0f,0.0f };
-	Vector3 end = position_ - Vector3{ 0.0f, 6.0f,0.0f };
-	Vector3 intersect;
-	if (world_->getField()->getMesh().collide_line(start, end, (VECTOR*)&intersect)) {
-		//if (MathHelper::Abs(position_.y - intersect.y) < 3.0f) {
-		position_.y = intersect.y + 5.0f;
-		//}
 		return true;
 	}
 	return false;
-
-
-	//// 移動前の座標を保存
-	//previousPosition_ = currentPosition_;
-	//// 移動後の座標を算出
-	//currentPosition_ = position_;
-
-	//// 衝突したポリゴンを格納（壁）
-	//std::vector<MV1_COLL_RESULT_POLY*> walls = std::vector<MV1_COLL_RESULT_POLY*>();
-	//// 衝突したポリゴンを格納（床）
-	//std::vector<MV1_COLL_RESULT_POLY*> floors = std::vector<MV1_COLL_RESULT_POLY*>();
-
-	//// プレイヤーの周囲にあるポリゴンを検出した結果が代入される当たり判定結果構造体
-	//MV1_COLL_RESULT_POLY_DIM HitDim = MV1CollCheck_Capsule(world_->getField()->modelHandle(), -1, Vector3::Vector3ToVECTOR(currentPosition_ + body_->points(0)), Vector3::Vector3ToVECTOR(currentPosition_ + body_->points(1)), body_->radius());
-
-	//hitNum_ = HitDim.HitNum;
-
-	//// 検出されたポリゴンが壁ポリゴンか床ポリゴン判断し、それぞれ配列に格納
-	//for (int i = 0; i < hitNum_; i++) {
-	//	// 内積で傾き具合を計算
-	//	float slope = Vector3::Dot(Vector3::VECTORToVector3(HitDim.Dim[i].Normal), Vector3::Up);
-
-	//	//壁の場合
-	//	if (slope < HIT_SLOPE_LIMIT) walls.push_back(&HitDim.Dim[i]);
-	//	//床の場合
-	//	else floors.push_back(&HitDim.Dim[i]);
-	//}
-
-	//// 衝突した壁ポリゴンがない場合return
-	//if (!walls.empty()) wall_hit_check(currentPosition_, walls);
-
-	//// 床ポリゴンとの当たり判定
-	//if (!floors.empty()) floor_hit_check(currentPosition_, floors);
-
-	//// 検出したプレイヤーの周囲のポリゴン情報を開放する
-	//MV1CollResultPolyDimTerminate(HitDim);
-
-	//// 新しい座標を保存する
-	//position_ = currentPosition_;
 }
 
 // 壁との衝突判定

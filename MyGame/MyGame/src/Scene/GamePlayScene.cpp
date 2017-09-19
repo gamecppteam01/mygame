@@ -7,6 +7,7 @@
 #include"../Actor/Body/BoundingCapsule.h"
 #include"../Camera/CameraActor.h"
 #include<memory>
+#include"../Actor/Enemy/EnemyTemplate.h"
 
 GamePlayScene::GamePlayScene():world_() {
 
@@ -22,6 +23,7 @@ void GamePlayScene::start() {
 	std::shared_ptr<BoundingCapsule> caps= std::make_shared<BoundingCapsule>(Vector3(0.0f,0.0f,0.0f), Matrix::Identity, 20.0f, 3.0f);
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f, caps);
 	world_.addActor(ActorGroup::PLAYER, player);
+	world_.addActor(ActorGroup::ENEMY, std::make_shared<EnemyTemplate>(&world_, "Player", Vector3::Up*10.0f));
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 

@@ -42,6 +42,7 @@ void LoadingScene::LoadModel()
 {
 	std::string defaultPath = "res/Model/";//全リソース共通パス
 	Model::GetInstance().Load(defaultPath + "player.mv1", MODEL_ID::PLAYER_MODEL);
+	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 
 }
 

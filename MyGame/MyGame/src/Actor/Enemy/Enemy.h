@@ -18,15 +18,11 @@ private:
 	// 衝突した
 	virtual void onCollide(Actor& other);
 
-private:
-	//virtual void field() override;
-
-	void checkCollideField();
-private:
+protected:
 	//蓄積する移動量を格納する
 	Vector3 velocity_;
-
+	//重力
 	float gravity_;
-
+	//3Dモデルアニメーション
 	Animation animation_;
 };

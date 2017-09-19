@@ -79,7 +79,7 @@ public:
 	Actor& operator = (const Actor& other) = delete;
 protected:
 	// フィールドとの衝突判定(足場と当たった場合はtrueを返す)
-	virtual bool field();
+	virtual bool field(Vector3& result=Vector3());
 
 protected:
 	// 壁との衝突判定

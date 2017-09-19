@@ -20,9 +20,7 @@ private:
 	virtual void onCollide(Actor& other);
 
 private:
-	virtual bool field() override;
-
-	void checkCollideField();
+	//virtual bool field() override;
 private:
 	//’~Ï‚·‚éˆÚ“®—Ê‚ğŠi”[‚·‚é
 	Vector3 velocity_;
