@@ -15,6 +15,11 @@ public:
 	explicit Light(bool value);
 	~Light();
 
+	static Light& GetInstance() {
+		static Light l;
+		return l;
+	}
+
 	///<summary>
 	/// ‰Šú‰»ˆ—
 	///</summary>

@@ -5,6 +5,7 @@
 #include"../Actor/ActorManager.h"
 #include"../Field/FieldPtr.h"
 #include"../Camera/CameraPtr.h"
+#include"../Light/LightPtr.h"
 
 enum class EventMessage;
 
@@ -25,6 +26,7 @@ public:
 	// フィールドの追加
 	void addField(const FieldPtr& field);
 	void addCamera(const CameraPtr& camera);
+	void addLight(const LightPtr& light);
 	// フィールドの取得
 	virtual FieldPtr getField() const override;
 	virtual CameraPtr getCamera() override;
@@ -45,6 +47,7 @@ public:
 private:
 	FieldPtr field_;
 	CameraPtr camera_;
+	LightPtr  light_;
 	ActorManager actors_;
 	
 	// イベントリスナー

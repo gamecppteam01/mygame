@@ -1,6 +1,7 @@
 #include "World.h"
 #include"../Field/Field.h"
 #include"../Camera/CameraActor.h"
+#include"../Light/LightActor.h"
 
 // コンストラクタ
 World::World() :
@@ -15,6 +16,7 @@ void World::Initialize()
 	//各値を初期値に
 	field_ = std::make_shared<Field>();
 	camera_ = std::make_shared<CameraActor>();
+//	light_ = std::make_shared<LightActor>();
 	actors_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
@@ -25,12 +27,14 @@ void World::update(float deltaTime) {
 	// アクターの更新処理
 	actors_.update(deltaTime);
 	camera_->update(deltaTime);
+	light_->update(deltaTime);
 }
 
 // 描画
 void World::draw() const {
 	field_->draw();
 	camera_->draw();
+	light_->draw();
 	// アクターの描画処理
 	actors_.draw();
 }
@@ -49,6 +53,11 @@ void World::addField(const FieldPtr & field)
 void World::addCamera(const CameraPtr & camera)
 {
 	camera_ = camera;
+}
+
+void World::addLight(const LightPtr & light)
+{
+	light_ = light;
 }
 
 FieldPtr World::getField() const
