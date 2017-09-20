@@ -7,6 +7,12 @@ enum SPRITE_ID
 	START_SPRITE,
 	WHITE_SCREEN_SPRITE,
 	BLACK_SCREEN_SPRITE,
+
+	TITLE_START,
+	TITLE_END,
+	TITLE_SELECT,
+
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 
