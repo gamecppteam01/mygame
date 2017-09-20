@@ -20,6 +20,5 @@ public:
 private:
 	//
 	int _Counter;
-	Vector2 _CursolPos;
 
 };

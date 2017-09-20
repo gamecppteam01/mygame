@@ -17,7 +17,6 @@ void TitleScene::start()
 {
 	isEnd_ = false;
 	_Counter = 0;
-	_CursolPos = Vector2(0.0f,0.0f);
 }
 
 void TitleScene::update(float deltaTime)
@@ -25,7 +24,6 @@ void TitleScene::update(float deltaTime)
 
 	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::UP)) {
 		_Counter += 1;
-		_CursolPos
 	}
 	else if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::DOWN)) {
 		_Counter -= 1;
@@ -50,7 +48,7 @@ void TitleScene::draw() const
 		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 300.0f));
 	}
 
-	S/*prite::GetInstance().Draw(SPRITE_ID::TITLE_START, Vector2(150.0f, 100.0f));
+	/*prite::GetInstance().Draw(SPRITE_ID::TITLE_START, Vector2(150.0f, 100.0f));
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_END, Vector2(150.0f, 300.0f));
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 100.0f));*/
 
