@@ -1,6 +1,6 @@
 #pragma once
 #include"../Actor.h"
-#include"../../Graphic/Animation.h"
+#include"../../Graphic/AnimationDx.h"
 #include<map>
 #include<functional>
 enum class EventMessage;
@@ -106,7 +106,7 @@ private:
 	//重力
 	float gravity_;
 	//プレイヤーのアニメーション
-	Animation animation_;
+	AnimationDx animation_;
 
 	Player_State state_;
 

@@ -11,12 +11,19 @@
 #include"../../Graphic/Anime.h"
 #include"../../Graphic/Sprite.h"
 #include"../Body/BoundingCapsule.h"
+#include"../../Input/DualShock4Manager.h"
+
+
+//moveからidleに移行する際のinput確認数カウント
+static int inputCheckCount = 4;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
-	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL)),
+	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position)
 {
+	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
+
 	initialize();
 
 	//各種更新関数を設定する
@@ -55,7 +62,7 @@ void Player::onMessage(EventMessage message, void * param)
 void Player::onUpdate(float deltaTime)
 {
 	playerUpdateFunc_[state_](deltaTime);
-	animation_.update(deltaTime);
+	animation_.Update(MathHelper::Sign(deltaTime));
 
 	//今フレームの更新を
 	position_ += velocity_;
@@ -65,6 +72,7 @@ void Player::onUpdate(float deltaTime)
 
 void Player::onDraw() const
 {
+	animation_.Draw();
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_*Matrix::CreateRotationY(180.0f)).Translation(drawPosition));
@@ -168,18 +176,23 @@ bool Player::change_State(Player_State state)
 
 void Player::idle_Update(float deltaTime)
 {
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-		if (change_State_and_Anim(Player_State::Move,Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	if (std::abs(move.x) > 0.1f || std::abs(move.y) > 0.1f) {
 		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		return;
 	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
+	//	if (change_State_and_Anim(Player_State::Move,Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
+	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
+	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
+	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+	//}
 	//if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
 	//	if (gravity_ == 0.0f) {
 	//		if (change_State_and_Anim(Player_State::Jump, Player_Animation::Jump))playerUpdateFunc_[state_](deltaTime);
@@ -200,35 +213,45 @@ void Player::idle_Update(float deltaTime)
 
 void Player::move_Update(float deltaTime)
 {
-	//待機モードに移行するかどうか
-	int inputCheck = 4;
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-		inputCheck--;
-		framevelocity.x += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
-		inputCheck--;
-		framevelocity.x -= 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-		inputCheck--;
-		framevelocity.z += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-		inputCheck--;
-		framevelocity.z -= 1.0f;
-	}
-	//if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-	//	if (gravity_ == 0.0f) {
-	//		inputCheck--;
-	//		if (change_State_and_Anim(Player_State::Jump, Player_Animation::Jump))playerUpdateFunc_[state_](deltaTime);
-	//	}
-	//}
-
-	if (inputCheck == 5) {
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	if (std::abs(move.x) < 0.1f && std::abs(move.y) < 0.1f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		return;
 	}
+	framevelocity.x += move.x;
+	framevelocity.z += move.y;
+
+
+	////待機モードに移行するかどうか
+	//int inputCheck = inputCheckCount;
+	//Vector3 framevelocity{ 0.0f,0.0f,0.0f };
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
+	//	inputCheck--;
+	//	framevelocity.x += 1.0f;
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
+	//	inputCheck--;
+	//	framevelocity.x -= 1.0f;
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
+	//	inputCheck--;
+	//	framevelocity.z += 1.0f;
+	//}
+	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
+	//	inputCheck--;
+	//	framevelocity.z -= 1.0f;
+	//}
+	////if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
+	////	if (gravity_ == 0.0f) {
+	////		inputCheck--;
+	////		if (change_State_and_Anim(Player_State::Jump, Player_Animation::Jump))playerUpdateFunc_[state_](deltaTime);
+	////	}
+	////}
+	//
+	//if (inputCheck == inputCheckCount) {
+	//	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+	//}
 
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
 		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
@@ -345,7 +368,7 @@ void Player::to_TurnMode()
 }
 
 void Player::changeAnimation(Player_Animation animID, float animSpeed) {
-	animation_.changeAnim((int)animID, animSpeed);
+	animation_.ChangeAnim((int)animID);
 }
 
 

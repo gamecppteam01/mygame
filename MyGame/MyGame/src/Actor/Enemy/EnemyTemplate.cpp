@@ -16,8 +16,8 @@ void EnemyTemplate::onUpdate(float deltaTime)
 {
 	//各種更新を行う、下の更新文は各クラスの仕様に応じて利用、変更する事
 
-	animation_.changeAnim(1, 1.0f);
-	animation_.update(deltaTime);
+	animation_.ChangeAnim(1);
+	animation_.Update(MathHelper::Sign(deltaTime));
 
 	Vector3 result;
 	if (field(result)) {
@@ -31,6 +31,7 @@ void EnemyTemplate::onDraw() const
 {
 	//描画処理を行う(下描画処理は一例)
 	
+	animation_.Draw();
 	//描画位置を判定と合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));

@@ -10,8 +10,9 @@
 #include"../../Graphic/Anime.h"
 
 Enemy::Enemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
-	Actor(world, name, position, body), gravity_(0.0f), animation_(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL))
+	Actor(world, name, position, body), gravity_(0.0f), animation_()
 {
+	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
 }
 
 void Enemy::onMessage(EventMessage message, void * param)
@@ -20,8 +21,8 @@ void Enemy::onMessage(EventMessage message, void * param)
 
 void Enemy::onUpdate(float deltaTime)
 {
-	animation_.changeAnim(1, 1.0f);
-	animation_.update(deltaTime);
+	animation_.ChangeAnim(1);
+	animation_.Update(MathHelper::Sign(deltaTime));
 
 		Vector3 result;
 		if (field(result)) {
@@ -33,6 +34,7 @@ void Enemy::onUpdate(float deltaTime)
 
 void Enemy::onDraw() const
 {
+	animation_.Draw();
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(position_));
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include"../Actor.h"
-#include"../../Graphic/Animation.h"
+#include"../../Graphic/AnimationDX.h"
 
 enum class EventMessage;
 
@@ -24,5 +24,5 @@ protected:
 	//重力
 	float gravity_;
 	//3Dモデルアニメーション
-	Animation animation_;
+	AnimationDx animation_;
 };
