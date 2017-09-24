@@ -46,6 +46,13 @@ public:
 	//指定方向にスティックを倒したかを返す
 	bool StickTriggerDown(Input_Stick stick)const;
 
+	//右スティックの傾きを返す
+	Vector2 RightStick()const;
+	//指定方向に右スティックが倒れているかを返す
+	bool RightStickStateDown(Input_Stick stick)const;
+	//指定方向に右スティックを倒したかを返す
+	bool RightStickTriggerDown(Input_Stick stick)const;
+
 	bool AnyInputStateDown()const;
 
 	void Update();

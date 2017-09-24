@@ -170,6 +170,7 @@
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Camera\CameraActor.cpp" />
+    <ClCompile Include="src\Camera\OverLookingCamera.cpp" />
     <ClCompile Include="src\Conv\DXConverter.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
@@ -188,10 +189,7 @@
     <ClCompile Include="src\Input\GamePad.cpp" />
     <ClCompile Include="src\Input\InputChecker.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
-    <ClCompile Include="src\Light\LightActor.cpp" />
     <ClCompile Include="src\Math\Collision\Collision.cpp" />
-    <ClCompile Include="src\Math\Collision\CollisionDX.cpp" />
-    <ClCompile Include="src\Math\Collision\CollisionFunction.cpp" />
     <ClCompile Include="src\Math\Color.cpp" />
     <ClCompile Include="src\Math\Easing.cpp" />
     <ClCompile Include="src\Math\MathHelper.cpp" />
@@ -201,25 +199,20 @@
     <ClCompile Include="src\Math\Random.cpp" />
     <ClCompile Include="src\Math\Vector2.cpp" />
     <ClCompile Include="src\Math\Vector3.cpp" />
-    <ClCompile Include="src\ParticelContanis\ParticleBig\ParticleBig.cpp" />
-    <ClCompile Include="src\ParticelContanis\ParticleFactory\ParticleFactory.cpp" />
-    <ClCompile Include="src\ParticelContanis\ParticleManager\ParticleManager.cpp" />
-    <ClCompile Include="src\ParticelContanis\ParticleMiddle\ParticleMiddle.cpp" />
-    <ClCompile Include="src\ParticelContanis\ParticleSmall\ParticleSmall.cpp" />
-    <ClCompile Include="src\ParticelContanis\Particle\Particle.cpp" />
     <ClCompile Include="src\Resource\CsvReader.cpp" />
     <ClCompile Include="src\Scene\CreditScene.cpp" />
     <ClCompile Include="src\Scene\GameClearScene.cpp" />
     <ClCompile Include="src\Scene\GameOverScene.cpp" />
     <ClCompile Include="src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScene.cpp" />
-    <ClCompile Include="src\Scene\ParticleScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\Sound\Sound.cpp" />
     <ClCompile Include="src\Tween\TweenManager.cpp" />
     <ClCompile Include="src\Tween\TweenObject.cpp" />
+    <ClCompile Include="src\UI\UI.cpp" />
+    <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +240,7 @@
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\CameraActor.h" />
     <ClInclude Include="src\Camera\CameraPtr.h" />
+    <ClInclude Include="src\Camera\OverLookingCamera.h" />
     <ClInclude Include="src\Conv\DXConverter.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
@@ -272,8 +266,7 @@
     <ClInclude Include="src\Input\GamePad.h" />
     <ClInclude Include="src\Input\InputChecker.h" />
     <ClInclude Include="src\Input\Keyboard.h" />
-    <ClInclude Include="src\Light\LightActor.h" />
-    <ClInclude Include="src\Light\LightPtr.h" />
+    <ClInclude Include="src\Light\LightType.h" />
     <ClInclude Include="src\Math\Collision\Collision.h" />
     <ClInclude Include="src\Math\Collision\CollisionDX.h" />
     <ClInclude Include="src\Math\Collision\CollisionFunction.h" />
@@ -290,15 +283,6 @@
     <ClInclude Include="src\Math\Random.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleBig\ParticleBig.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleFactory\Factory.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleFactory\ParticleFactory.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleManager\ParticleManager.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleMediator\ParticleMediator.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleMiddle\ParticleMiddle.h" />
-    <ClInclude Include="src\ParticelContanis\ParticlePtr\ParticlePtr.h" />
-    <ClInclude Include="src\ParticelContanis\ParticleSmall\ParticleSmall.h" />
-    <ClInclude Include="src\ParticelContanis\Particle\Particle.h" />
     <ClInclude Include="src\Resource\CsvReader.h" />
     <ClInclude Include="src\Resource\LoadingList.h" />
     <ClInclude Include="src\Scene\CreditScene.h" />
@@ -306,7 +290,6 @@
     <ClInclude Include="src\Scene\GameOverScene.h" />
     <ClInclude Include="src\Scene\GamePlayScene.h" />
     <ClInclude Include="src\Scene\LoadingScene.h" />
-    <ClInclude Include="src\Scene\ParticleScene.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scene\Scenes.h" />
@@ -316,6 +299,9 @@
     <ClInclude Include="src\Sound\Sound.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />
+    <ClInclude Include="src\UI\UI.h" />
+    <ClInclude Include="src\UI\UIManager.h" />
+    <ClInclude Include="src\UI\UIPtr.h" />
     <ClInclude Include="src\World\IWorld.h" />
     <ClInclude Include="src\World\World.h" />
   </ItemGroup>

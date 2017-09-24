@@ -6,12 +6,11 @@
 #include"../../Graphic/DebugDraw.h"
 #include"../../Math/Collision/CollisionMesh.h"
 #include"../../Math/Collision/Collision.h"
-#include"../../Math/Collision/CollisionFunction.h"
 #include"../../Conv/DXConverter.h"
 #include"../../Graphic/Anime.h"
 
 Enemy::Enemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
-	Actor(world, name, position, body), gravity_(0.0f), animation_(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL))
+	Actor(world, name, position, body), gravity_(0.0f), animation_(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL))
 {
 }
 

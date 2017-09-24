@@ -4,7 +4,7 @@
 
 // コンストラクタ（標準ライトを使用するか否か）
 Light::Light()
-: Light(false){}
+	: Light(false) {}
 Light::Light(bool value)
 {
 	SetLightEnable(value);

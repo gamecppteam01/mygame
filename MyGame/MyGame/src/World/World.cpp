@@ -1,13 +1,13 @@
 #include "World.h"
 #include"../Field/Field.h"
-#include"../Camera/CameraActor.h"
-#include"../Light/LightActor.h"
+#include"../Camera/OverLookingCamera.h"
 
 // コンストラクタ
 World::World() :
 	listener_([](EventMessage, void*) {}),
 	field_(std::make_shared<Field>()),
-	camera_(std::make_shared<CameraActor>()){
+	camera_(std::make_shared<OverLookingCamera>()),
+	light_(true){
 }
 
 //初期化
@@ -15,8 +15,8 @@ void World::Initialize()
 {
 	//各値を初期値に
 	field_ = std::make_shared<Field>();
-	camera_ = std::make_shared<CameraActor>();
-//	light_ = std::make_shared<LightActor>();
+	camera_ = std::make_shared<OverLookingCamera>();
+	light_.Initialize();
 	actors_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
@@ -27,14 +27,12 @@ void World::update(float deltaTime) {
 	// アクターの更新処理
 	actors_.update(deltaTime);
 	camera_->update(deltaTime);
-	light_->update(deltaTime);
 }
 
 // 描画
 void World::draw() const {
 	field_->draw();
 	camera_->draw();
-	light_->draw();
 	// アクターの描画処理
 	actors_.draw();
 }
@@ -55,9 +53,19 @@ void World::addCamera(const CameraPtr & camera)
 	camera_ = camera;
 }
 
-void World::addLight(const LightPtr & light)
+void World::addLight(DirectionalLight light)
 {
-	light_ = light;
+	light_.SetDirectionalLight(light.handlename, light.vector);
+}
+
+void World::addLight(SpotLight light)
+{
+	light_.SetSpotLight(light.handlename,light.position, light.vector, light.cone_outangle, light.cone_inangle, light.range);
+}
+
+void World::addLight(PointLight light)
+{
+	light_.SetPointLight(light.handlename, light.position, light.range);
 }
 
 FieldPtr World::getField() const
@@ -98,5 +106,3 @@ void World::end()
 	actors_.initialize();
 	listener_ = nullptr;
 }
-
-

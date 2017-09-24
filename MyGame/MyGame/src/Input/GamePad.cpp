@@ -185,6 +185,16 @@ Vector2 GamePad::GetPreviousStick()
 	return prevStick_;
 }
 
+Vector2 GamePad::GetCurrentRightStick()
+{
+	return curRightStick_;
+}
+
+Vector2 GamePad::GetPreviousRightStick()
+{
+	return prevRightStick_;
+}
+
 // 指定のパッドの振動を開始する
 void GamePad::VibrationStart(int power = 500, int time = 60, int pad)
 {
@@ -228,6 +238,10 @@ void GamePad::Update()
 	int stickX, stickY;
 	GetJoypadAnalogInput(&stickX, &stickY, 1);
 	curStick_ = Vector2((float)stickX / 1000.0f, (float)stickY / 1000.0f);
+
+	prevRightStick_ = curRightStick_;
+	GetJoypadAnalogInputRight(&stickX, &stickY, 1);
+	curRightStick_ = Vector2((float)stickX / 1000.0f, (float)stickY / 1000.0f);
 
 }
 

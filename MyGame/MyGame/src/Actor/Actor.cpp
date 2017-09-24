@@ -41,6 +41,10 @@ Actor::Actor(const std::string& name) :
 }
 
 
+void Actor::initialize()
+{
+}
+
 // XV
 void Actor::update(float deltaTime) {
 	onUpdate(deltaTime);

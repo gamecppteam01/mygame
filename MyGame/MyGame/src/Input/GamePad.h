@@ -101,6 +101,14 @@ public:
 	///</summary>
 	Vector2 GetPreviousStick();
 	///<summary>
+	/// 現フレームの1番目コントローラの右スティック入力を受け取る
+	///</summary>
+	Vector2 GetCurrentRightStick();
+	///<summary>
+	/// 前フレームの1番目コントローラの右スティック入力を受け取る
+	///</summary>
+	Vector2 GetPreviousRightStick();
+	///<summary>
 	/// 指定のパッドの右アナログスティックの入力具合を調べる
 	/// (X = -1.0～1.0, Y = -1.0～1.0)
 	///</summary>
@@ -131,4 +139,7 @@ private:
 	
 	Vector2 curStick_;//現フレームのスティック入力
 	Vector2 prevStick_;//前フレームのスティック入力
+
+	Vector2 curRightStick_;//現フレームの右スティック入力
+	Vector2 prevRightStick_;//前フレームの右スティック入力
 };

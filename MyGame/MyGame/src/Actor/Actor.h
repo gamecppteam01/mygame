@@ -24,6 +24,8 @@ public:
 	explicit Actor(const std::string& name = "none");
 	// 仮想デストラクタ
 	virtual ~Actor() {}
+	//初期化(必要なキャラクターのみoverride)
+	virtual void initialize();
 	// 更新
 	void update(float deltaTime);
 	// 描画

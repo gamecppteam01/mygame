@@ -2,5 +2,5 @@
 
 #include <memory>
 
-class CameraActor;
-using CameraPtr = std::shared_ptr<CameraActor>;
+class OverLookingCamera;
+using CameraPtr = std::shared_ptr<OverLookingCamera>;

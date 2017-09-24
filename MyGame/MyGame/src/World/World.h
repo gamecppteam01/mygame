@@ -5,7 +5,8 @@
 #include"../Actor/ActorManager.h"
 #include"../Field/FieldPtr.h"
 #include"../Camera/CameraPtr.h"
-#include"../Light/LightPtr.h"
+#include"../Graphic/Light.h"
+#include"../Light/LightType.h"
 
 enum class EventMessage;
 
@@ -26,7 +27,9 @@ public:
 	// フィールドの追加
 	void addField(const FieldPtr& field);
 	void addCamera(const CameraPtr& camera);
-	void addLight(const LightPtr& light);
+	void addLight(DirectionalLight light);
+	void addLight(SpotLight light);
+	void addLight(PointLight light);
 	// フィールドの取得
 	virtual FieldPtr getField() const override;
 	virtual CameraPtr getCamera() override;
@@ -47,10 +50,9 @@ public:
 private:
 	FieldPtr field_;
 	CameraPtr camera_;
-	LightPtr  light_;
+	Light  light_;
 	ActorManager actors_;
 	
 	// イベントリスナー
 	std::function<void(EventMessage, void*)> listener_;
 };
-

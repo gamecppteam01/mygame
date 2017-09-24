@@ -75,7 +75,6 @@ public:
 		return true;
 	}
 	bool collide_capsule(const VECTOR& start, const VECTOR& end, float radius, VECTOR* result = nullptr) {
-		DrawSphere3D(start, radius, 0, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
 		//当たったかどうか
 		bool isHit = false;
 
@@ -111,11 +110,6 @@ public:
 		// プレイヤーの周囲にあるポリゴンを検出した結果が代入される当たり判定結果構造体
 		MV1_COLL_RESULT_POLY_DIM HitDim = MV1CollCheck_Capsule(model_, -1, resultstart, resultend, radius);
 
-		//当たって無かったらポリゴン検出を終了する
-		if (HitDim.HitNum == 0) {
-			MV1CollResultPolyDimTerminate(HitDim);
-
-		}
 		for (int i = 0; i < HitDim.HitNum; i++) {
 			VECTOR triangle[4]{
 				HitDim.Dim[i].Position[0],
@@ -137,6 +131,9 @@ public:
 			}
 		}
 		if (isHit)*result = (resultstart + resultend)*0.5f;
+
+		//ポリゴンを開放する
+		MV1CollResultPolyDimTerminate(HitDim);
 
 		return isHit;
 	

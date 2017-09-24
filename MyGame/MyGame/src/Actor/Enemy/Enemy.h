@@ -7,7 +7,7 @@ enum class EventMessage;
 class Enemy :public Actor {
 public:
 	Enemy(IWorld* world, const std::string& name, const Vector3& position, const IBodyPtr& body);
-
+	virtual ~Enemy(){}
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);

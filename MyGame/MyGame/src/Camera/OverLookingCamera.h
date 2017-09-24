@@ -1,9 +1,9 @@
 #pragma once
 #include"../Actor/Actor.h"
 
-class CameraActor :public Actor {
+class OverLookingCamera :public Actor {
 public:
-	CameraActor(IWorld* world=nullptr, const std::string& name="Camera", const Vector3& position=Vector3::Zero, const IBodyPtr& body = std::make_shared<DummyBody>());
+	OverLookingCamera(IWorld* world = nullptr, const std::string& name = "Camera", const Vector3& position = Vector3::Zero, const IBodyPtr& body = std::make_shared<DummyBody>());
 
 	void setTarget(ActorPtr& target);
 

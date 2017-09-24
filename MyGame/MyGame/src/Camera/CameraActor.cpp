@@ -1,17 +1,17 @@
 #include "CameraActor.h"
 #include"Camera.h"
 #include"../Graphic/Model.h"
+#include"../Input/InputChecker.h"
 
 //‘ÎÛ‚©‚çŒã‚ë‘¤‚É—£‚ê‚é‹——£
-static const float backwardLength = 25.0f;
+static const float backwardLength = 50.0f;
 //‘ÎÛ‚©‚çã‘¤‚É—£‚ê‚é‹——£
 static const float upLength = 20.0f;
 
 
 CameraActor::CameraActor(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
-	Actor(world,name,position,body),target_(nullptr)
+	Actor(world,name,position,body),target_(nullptr), targetTranslate_(Vector3::Zero)
 {
-
 }
 
 void CameraActor::setTarget(ActorPtr & target)
@@ -35,6 +35,7 @@ void CameraActor::onUpdate(float deltaTime)
 		position_.y = (targetPos + (target_->getPose().Backward()*backwardLength + target_->getPose().Up()*upLength)).y;
 		//position_ = targetPos + (target_->getPose().Backward()*backwardLength + target_->getPose().Up()*upLength);
 		targetPos += target_->getPose().Up()*10.0f;
+		targetPos += targetTranslate_;
 	}
 
 	Camera::GetInstance().Position.Set(position_);
@@ -55,4 +56,21 @@ void CameraActor::onDraw() const
 
 void CameraActor::onCollide(Actor & other)
 {
+}
+
+void CameraActor::cameraMove(float deltaTime)
+{
+	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
+		targetTranslate_ += Vector3(0.0f, 0.0f, 0.0f);
+	}
+	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
+		targetTranslate_ += Vector3(0.0f, 0.0f, 0.0f);
+	}
+	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
+		targetTranslate_ += Vector3(0.0f, 0.0f, 0.0f);
+	}
+	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
+		targetTranslate_ += Vector3(0.0f, 0.0f, 0.0f);
+	}
+
 }

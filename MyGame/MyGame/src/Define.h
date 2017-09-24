@@ -15,7 +15,7 @@ static const int		WINDOW_MODE = TRUE;
 ///フィールドの座標
 static const Vector3	FIELD_POS = Vector3::Zero;
 ///フィールドのサイズ(スカイボックス貼り付け基準位置)
-static const float		FIELD_SIZE = 1000.0f;
+static const float		FIELD_SIZE = 10.0f;
 ///フィールドの拡大率
 static const float		FIELD_SCALE = 1.0f;
 
