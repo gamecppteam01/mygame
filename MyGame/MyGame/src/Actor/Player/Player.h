@@ -3,7 +3,10 @@
 #include"../../Graphic/AnimationDx.h"
 #include<map>
 #include<functional>
+#include<array>
+
 enum class EventMessage;
+class PlayerBullet;
 
 class Player :public Actor {
 public:
@@ -13,6 +16,8 @@ public:
 		//Jump,//ジャンプ
 		Step,//技
 		Attack,//攻撃
+		Shoot,//発射
+		ShootEnd,//発射終了
 		KnockBack,//被弾
 		Down,//ダウン時
 		Turn,//回転
@@ -23,12 +28,21 @@ public:
 		Idle=0,//待機時
 		Move_Forward=2,//前移動時
 		Step_Left=8,//左ステップ時
-		Attack=11,//攻撃時
+		Attack = 11,//攻撃時
+		Shoot = 12,//発射時
+		ShootEnd=13,//発射終了
 		KnockBack=14,//被弾時
 		Down=15,//ダウン時
 		//Jump = 17,//ジャンプ時
 		Turn=11,//回転時
-		Animation_Count//利用アニメーション数を数えるための列挙値(Countを状態として利用しないこと)
+	};
+	//ステップの種類
+	enum class Step_Type {
+		Chasse,//シャッセ
+		Turn,//ターン
+		Whisk,//ホイスク
+		SplitCubanBreak,//スプリットきゅーばんブレイク
+		Dance_Count//ダンスの数
 	};
 
 public:
@@ -48,8 +62,6 @@ private:
 
 //プレイヤーの移動関係
 private:
-	//入力による移動(移動に対応したキーが入力されていた場合はtrueを返す)
-	bool inputTransformUpdate(float deltaTime);
 	//重力及びジャンプを更新する
 	void gravityUpdate(float deltaTime);
 	//フィールドとの当たり判定を行い、位置を補正する
@@ -73,6 +85,10 @@ private:
 	void step_Update(float deltaTime);
 	//攻撃時更新
 	void attack_Update(float deltaTime);
+	//発射時更新
+	void shoot_Update(float deltaTime);
+	//発射終了時更新
+	void shootend_Update(float deltaTime);
 	//被弾時更新
 	void knockback_Update(float deltaTime);
 	//被弾時更新
@@ -89,6 +105,10 @@ private:
 	void to_StepMode();
 	//攻撃状態への移行処理
 	void to_AttackMode();
+	//発射状態への移行処理
+	void to_ShootMode();
+	//発射終了状態への移行処理
+	void to_ShootEndMode();
 	//被弾状態への移行処理
 	void to_KnockBackMode();
 	//被弾状態への移行処理
@@ -98,7 +118,14 @@ private:
 private:
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
 
+
+//弾(女)関係
 private:
+	//女がプレイヤーに追従するかどうか
+	bool isCanTracking() const;
+	void bulletUpdate(float deltaTime);
+private:
+	//男関連
 	//移動ベクトル
 	Vector3 velocity_;
 	//上方向ベクトル
@@ -107,14 +134,22 @@ private:
 	float gravity_;
 	//プレイヤーのアニメーション
 	AnimationDx animation_;
-
+	//状態
 	Player_State state_;
+	std::array<Step_Type, 3> stepCombo_;
+	//女関連
+	//女本体
+	std::shared_ptr<PlayerBullet> bullet_{};
+	//女の位置、男側で直に書き換える
+	Vector3* bulletPosition_{};
+	//女の移動ベクトル
+	Vector3 bulletVelocity_;
+	//回転力
+	float turnPower_;
+
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
-
-	//回転力
-	float turnPower_;
 
 private:
 	Vector3 defaultPosition_;

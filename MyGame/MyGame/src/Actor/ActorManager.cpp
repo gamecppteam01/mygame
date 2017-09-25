@@ -9,9 +9,11 @@ ActorManager::ActorManager() {
 void ActorManager::initialize() {
 	// アクターグループの登録
 	actors_[ActorGroup::PLAYER] = std::make_shared<Actor>();
+	actors_[ActorGroup::PLAYER_BULLET] = std::make_shared<Actor>();
 	actors_[ActorGroup::ENEMY] = std::make_shared<Actor>();
 	root_.clearChildren();
 	root_.addChild(actors_[ActorGroup::PLAYER]);
+	root_.addChild(actors_[ActorGroup::PLAYER_BULLET]);
 	root_.addChild(actors_[ActorGroup::ENEMY]);
 }
 
@@ -47,6 +49,7 @@ void ActorManager::collide() {
 	// 衝突するグループの指定
 	//actors_[ActorGroup::Player]->collideChildren(*actors_[ActorGroup::Enemy]);
 	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::ENEMY]);
+	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::PLAYER_BULLET]);
 	
 
 }

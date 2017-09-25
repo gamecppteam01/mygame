@@ -16,7 +16,7 @@
 class IWorld;
 enum class EventMessage;
 
-class Actor {
+class Actor:public std::enable_shared_from_this<Actor>{
 public:
 	// コンストラクタ
 	Actor(IWorld* world, const std::string& name, const Vector3& position = Vector3::Zero, const IBodyPtr& body = std::make_shared<DummyBody>());

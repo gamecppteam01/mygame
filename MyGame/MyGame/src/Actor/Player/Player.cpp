@@ -12,16 +12,28 @@
 #include"../../Graphic/Sprite.h"
 #include"../Body/BoundingCapsule.h"
 #include"../../Input/DualShock4Manager.h"
-
+#include"PlayerBullet.h"
+#include"../ActorGroup.h"
+#include"../../Camera/OverLookingCamera.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static int inputCheckCount = 4;
+//男と女の距離
+static Vector3 bulletDistance{ 8.0f,0.0f,0.0f };
+//回転力の基本係数
+static float defaultTurnPower = 1.0f;
+//無視するコントローラの傾き範囲
+static float ignoreSlope = 0.1f;
+
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
-	state_(Player_State::Idle), defaultPosition_(position)
+	state_(Player_State::Idle), defaultPosition_(position), bullet_(std::make_shared<PlayerBullet>(world,position))
+	, bulletVelocity_(Vector3::Zero), turnPower_(1.0f)
 {
+	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
+
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
 
 	initialize();
@@ -32,6 +44,8 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	//playerUpdateFunc_[Player_State::Jump] = [this](float deltaTime) {jump_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Step] = [this](float deltaTime) {step_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Attack] = [this](float deltaTime) {attack_Update(deltaTime); };
+	playerUpdateFunc_[Player_State::Shoot] = [this](float deltaTime) {shoot_Update(deltaTime); };
+	playerUpdateFunc_[Player_State::ShootEnd] = [this](float deltaTime) {shootend_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::KnockBack] = [this](float deltaTime) {knockback_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Down] = [this](float deltaTime) {down_Update(deltaTime); };
 
@@ -41,6 +55,8 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	//playerToNextModeFunc_[Player_State::Jump] = [this]() {to_JumpMode(); };
 	playerToNextModeFunc_[Player_State::Step] = [this]() {to_StepMode(); };
 	playerToNextModeFunc_[Player_State::Attack] = [this]() {to_AttackMode(); };
+	playerToNextModeFunc_[Player_State::Shoot] = [this]() {to_ShootMode(); };
+	playerToNextModeFunc_[Player_State::ShootEnd] = [this]() {to_ShootEndMode(); };
 	playerToNextModeFunc_[Player_State::KnockBack] = [this]() {to_KnockBackMode(); };
 	playerToNextModeFunc_[Player_State::Down] = [this]() {to_DownMode(); };
 }
@@ -53,6 +69,9 @@ void Player::initialize()
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Idle);
 
+	turnPower_ = 1.0f;
+	bullet_->initialize();
+	bulletPosition_ = bullet_->getPositionPtr();
 }
 
 void Player::onMessage(EventMessage message, void * param)
@@ -64,10 +83,13 @@ void Player::onUpdate(float deltaTime)
 	playerUpdateFunc_[state_](deltaTime);
 	animation_.Update(MathHelper::Sign(deltaTime));
 
-	//今フレームの更新を
+	//今フレームの更新を適用
 	position_ += velocity_;
 	velocity_ -= velocity_*0.5f;
 	correctPosition();
+
+	//女を更新する
+	if(isCanTracking())bulletUpdate(deltaTime);
 }
 
 void Player::onDraw() const
@@ -75,60 +97,18 @@ void Player::onDraw() const
 	animation_.Draw();
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_*Matrix::CreateRotationY(180.0f)).Translation(drawPosition));
+	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
 
 	//body_->draw(position_);
 }
 
 void Player::onCollide(Actor & other)
 {
+	if (other.getName() == "PlayerBullet"&&state_== Player_State::Shoot) {
+		change_State_and_Anim(Player_State::ShootEnd, Player_Animation::ShootEnd);
+	}
 }
 
-bool Player::inputTransformUpdate(float deltaTime)
-{
-	//対応しているボタンが押されているか
-	bool isPushAnyKey_=false;
-
-	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-		isPushAnyKey_ = true;
-		framevelocity.x += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
-		isPushAnyKey_ = true;
-		framevelocity.x -= 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-		isPushAnyKey_ = true;
-		framevelocity.z += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-		isPushAnyKey_ = true;
-		framevelocity.z -= 1.0f;
-	}
-	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-		if (gravity_ == 0.0f) {
-			isPushAnyKey_ = true;
-			upVelocity_ = 20.0f;
-		}
-	}
-
-	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		isPushAnyKey_ = true;
-		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
-	}
-	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::L1)) {
-		isPushAnyKey_ = true;
-		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
-	}
-
-	upVelocity_ -= upVelocity_*0.5f;
-
-	//framevelocity = framevelocity * rotation_;
-	velocity_ += framevelocity;
-
-	return isPushAnyKey_;
-}
 
 void Player::gravityUpdate(float deltaTime)
 {
@@ -177,30 +157,14 @@ bool Player::change_State(Player_State state)
 void Player::idle_Update(float deltaTime)
 {
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	if (std::abs(move.x) > 0.1f || std::abs(move.y) > 0.1f) {
+	if (std::abs(move.x) > ignoreSlope || std::abs(move.y) > ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-	//	if (change_State_and_Anim(Player_State::Move,Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
-	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-	//	if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
-	//}
-	//if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-	//	if (gravity_ == 0.0f) {
-	//		if (change_State_and_Anim(Player_State::Jump, Player_Animation::Jump))playerUpdateFunc_[state_](deltaTime);
-	//	}
-	//}
-
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
+		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
+		return;
+		//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
 	}
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::L1)) {
 		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
@@ -215,46 +179,17 @@ void Player::move_Update(float deltaTime)
 {
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	if (std::abs(move.x) < 0.1f && std::abs(move.y) < 0.1f) {
+	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	framevelocity.x += move.x;
 	framevelocity.z += move.y;
 
-
-	////待機モードに移行するかどうか
-	//int inputCheck = inputCheckCount;
-	//Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-	//	inputCheck--;
-	//	framevelocity.x += 1.0f;
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
-	//	inputCheck--;
-	//	framevelocity.x -= 1.0f;
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-	//	inputCheck--;
-	//	framevelocity.z += 1.0f;
-	//}
-	//if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-	//	inputCheck--;
-	//	framevelocity.z -= 1.0f;
-	//}
-	////if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-	////	if (gravity_ == 0.0f) {
-	////		inputCheck--;
-	////		if (change_State_and_Anim(Player_State::Jump, Player_Animation::Jump))playerUpdateFunc_[state_](deltaTime);
-	////	}
-	////}
-	//
-	//if (inputCheck == inputCheckCount) {
-	//	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
-	//}
-
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
+		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
+		return;
+		//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
 	}
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::L1)) {
 		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
@@ -310,6 +245,27 @@ void Player::attack_Update(float deltaTime)
 {
 }
 
+void Player::shoot_Update(float deltaTime)
+{
+	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
+		//if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		//return;
+	}
+	framevelocity.x += move.x;
+	framevelocity.z += move.y;
+	framevelocity += bulletVelocity_;
+	bulletVelocity_ *= 0.98f;
+
+	*bulletPosition_ += framevelocity;
+}
+
+void Player::shootend_Update(float deltaTime)
+{
+	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+}
+
 void Player::knockback_Update(float deltaTime)
 {
 }
@@ -353,6 +309,20 @@ void Player::to_AttackMode()
 
 }
 
+void Player::to_ShootMode()
+{
+	world_->getCamera()->setTarget((ActorPtr)bullet_);
+	Vector3 shootVector = *bulletPosition_ - position_;
+	shootVector = shootVector.Normalize();
+	bulletVelocity_ = shootVector*(turnPower_*defaultTurnPower);
+}
+
+void Player::to_ShootEndMode()
+{
+	world_->getCamera()->setTarget(shared_from_this());
+
+}
+
 void Player::to_KnockBackMode()
 {
 
@@ -369,6 +339,17 @@ void Player::to_TurnMode()
 
 void Player::changeAnimation(Player_Animation animID, float animSpeed) {
 	animation_.ChangeAnim((int)animID);
+}
+
+bool Player::isCanTracking() const
+{
+	//発射時以外は追従する
+	return state_!=Player_State::Shoot;
+}
+
+void Player::bulletUpdate(float deltaTime)
+{
+	*bulletPosition_ = position_ + (bulletDistance*rotation_);
 }
 
 
