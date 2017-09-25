@@ -41,7 +41,8 @@ public:
 		Chasse,//シャッセ
 		Turn,//ターン
 		Whisk,//ホイスク
-		SplitCubanBreak,//スプリットきゅーばんブレイク
+		SplitCubanBreak,//スプリットキューバンブレイク
+		Empty,//空
 		Dance_Count//ダンスの数
 	};
 
@@ -136,6 +137,7 @@ private:
 	AnimationDx animation_;
 	//状態
 	Player_State state_;
+	//ステップを格納する
 	std::array<Step_Type, 3> stepCombo_;
 	//女関連
 	//女本体
