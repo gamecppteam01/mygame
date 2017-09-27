@@ -4,6 +4,7 @@
 #include<map>
 #include<functional>
 #include<array>
+#include"../../Method/MethodTimer.h"
 
 enum class EventMessage;
 class PlayerBullet;
@@ -38,10 +39,10 @@ public:
 	};
 	//ステップの種類
 	enum class Step_Type {
-		Chasse,//シャッセ
-		Turn,//ターン
-		Whisk,//ホイスク
-		SplitCubanBreak,//スプリットキューバンブレイク
+		Chasse=0,//シャッセ
+		Turn=1,//ターン
+		Whisk=2,//ホイスク
+		SplitCubanBreak=3,//スプリットキューバンブレイク
 		Empty,//空
 		Dance_Count//ダンスの数
 	};
@@ -119,12 +120,20 @@ private:
 private:
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
 
-
+private:
+	bool isChangeStep() const;
 //弾(女)関係
 private:
 	//女がプレイヤーに追従するかどうか
 	bool isCanTracking() const;
 	void bulletUpdate(float deltaTime);
+	//コンボリストにステップを追加する
+	void addStep(int stepCount,float stepTime, Step_Type type);
+	//円エフェクトを生成する
+	void createCircleEffect();
+private:
+	//スティックのベクトルを右手座標系に変換
+	Vector2 getSticktoMove();
 private:
 	//男関連
 	//移動ベクトル
@@ -138,17 +147,25 @@ private:
 	//状態
 	Player_State state_;
 	//ステップを格納する
-	std::array<Step_Type, 3> stepCombo_;
+	std::array<Step_Type, 3> stepCombo_{ Step_Type::Empty,Step_Type::Empty ,Step_Type::Empty };
+	//エフェクト生成クラスを呼び出す
+	MethodTimer effectCreator_;
 	//女関連
 	//女本体
 	std::shared_ptr<PlayerBullet> bullet_{};
 	//女の位置、男側で直に書き換える
 	Vector3* bulletPosition_{};
+	//女の回転、男側で直に書き換える
+	Matrix* bulletRotation_{};
 	//女の移動ベクトル
 	Vector3 bulletVelocity_;
 	//回転力
 	float turnPower_;
-
+	
+	//コンボのジャスト時間タイマー
+	float justTimer_;
+	//ステップの最大時間
+	float stepMaxTime_;
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;

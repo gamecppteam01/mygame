@@ -41,6 +41,11 @@ Vector3 * PlayerBullet::getPositionPtr()
 	return &position_;
 }
 
+Matrix * PlayerBullet::getRotationPtr()
+{
+	return &rotation_;
+}
+
 void PlayerBullet::changeAnimation(PlayerBullet_Animation animID, float animSpeed)
 {
 	animation_.ChangeAnim((int)animID);

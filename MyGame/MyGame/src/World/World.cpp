@@ -7,7 +7,8 @@ World::World() :
 	listener_([](EventMessage, void*) {}),
 	field_(std::make_shared<Field>()),
 	camera_(std::make_shared<OverLookingCamera>()),
-	light_(true){
+	light_(true),
+	uiManager_(){
 }
 
 //初期化
@@ -18,6 +19,7 @@ void World::Initialize()
 	camera_ = std::make_shared<OverLookingCamera>();
 	light_.Initialize();
 	actors_.initialize();
+	uiManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
 
@@ -27,6 +29,7 @@ void World::update(float deltaTime) {
 	// アクターの更新処理
 	actors_.update(deltaTime);
 	camera_->update(deltaTime);
+	uiManager_.update(deltaTime);
 }
 
 // 描画
@@ -35,6 +38,7 @@ void World::draw() const {
 	camera_->draw();
 	// アクターの描画処理
 	actors_.draw();
+	uiManager_.draw();
 }
 
 // メッセージ処理
@@ -66,6 +70,11 @@ void World::addLight(SpotLight light)
 void World::addLight(PointLight light)
 {
 	light_.SetPointLight(light.handlename, light.position, light.range);
+}
+
+void World::addUI(UIPtr ui)
+{
+	uiManager_.add(ui);
 }
 
 FieldPtr World::getField() const

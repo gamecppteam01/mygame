@@ -9,6 +9,7 @@ void LoadingScene::start() {
 	//各種リソースのロードを行う
 	LoadSprite();
 	LoadModel();
+	LoadEffect();
 	LoadFont();
 	LoadBGM();
 	LoadSE();
@@ -46,6 +47,12 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "player.mv1", MODEL_ID::PLAYER_MODEL);
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 
+}
+
+void LoadingScene::LoadEffect()
+{
+	std::string defaultPath = "res/Sprite/Effect/";//全リソース共通パス
+	Model::GetInstance().Load2D(defaultPath + "circleeffect.jpg", MODEL_ID::EFFECT_CIRCLE_MODEL);
 }
 
 void LoadingScene::LoadFont()

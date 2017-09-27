@@ -37,6 +37,7 @@ private:
 //プレイヤー用
 private:
 	Vector3* getPositionPtr();
+	Matrix* getRotationPtr();
 	//アニメーションの変更
 	void changeAnimation(PlayerBullet_Animation animID, float animSpeed = 1.0f);
 

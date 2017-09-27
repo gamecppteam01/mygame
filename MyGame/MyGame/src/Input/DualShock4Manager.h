@@ -85,6 +85,7 @@ public:
 		//上で成功出来なかったためfalse
 		return false;
 	}
+	//ReadFileがBluetoothだと正常に行えないため、そこで永遠に待機し続けて先に進めない問題あり(USBでの有線接続により使用する事)
 	void Update() {
 		//読み込み完了データ数
 		DWORD readBytes;

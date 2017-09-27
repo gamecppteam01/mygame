@@ -19,11 +19,16 @@ enum SPRITE_ID
 // モデルID
 enum MODEL_ID
 {
+	//3Dモデル類
 	DUMMY_MODEL,
 	PLAYER_MODEL,
 	ENEMY_MODEL,
 	SKYBOX_MODEL,
 	STAGE_MODEL,
+
+	//エフェクト類
+	EFFECT_CIRCLE_MODEL,
+
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

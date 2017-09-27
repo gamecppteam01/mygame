@@ -9,6 +9,7 @@
 #include"../Camera/OverLookingCamera.h"
 #include<memory>
 #include"../Actor/Enemy/EnemyTemplate.h"
+#include"../UI/UITemplate.h"
 
 GamePlayScene::GamePlayScene():world_() {
 
@@ -27,6 +28,8 @@ void GamePlayScene::start() {
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
+	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
+	//world_.addUI(uiptr);
 }
 
 void GamePlayScene::update(float deltaTime) {

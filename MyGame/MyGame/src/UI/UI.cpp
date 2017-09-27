@@ -1,22 +1,13 @@
 #include "UI.h"
 
 //コンストラクタ
-UI::UI(const std::string & name, const Vector3 & position)
-	: _name{ name }, _position{ position }
+UI::UI(const std::string & name, const Vector2 & position)
+	: name_{ name }, position_{ position }
 {
 }
 
-//初期化
-void UI::onInitialize()
+std::string UI::getName() const
 {
+	return name_;
 }
 
-//更新
-void UI::onUpdate(float deltaTime)
-{
-}
-
-//描画
-void UI::onDraw() const
-{
-}

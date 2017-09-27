@@ -3,6 +3,7 @@
 #include "UI.h"
 #include "UIPtr.h"
 
+//UI描画を管理するクラス
 class UIManager {
 public:
 	//コンストラクタ
@@ -14,7 +15,7 @@ public:
 	//描画
 	void draw() const;
 	//検索
-	void find(const std::string& name);
+	UIPtr find(const std::string& name);
 	//追加
 	void add(const UIPtr& uiptr);
 

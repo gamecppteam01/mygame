@@ -16,6 +16,8 @@ private:
 	void LoadSprite();
 	//モデルの読み込み
 	void LoadModel();
+	//モデルの読み込み
+	void LoadEffect();
 	//文字フォントの読み込み
 	void LoadFont();
 	//BGMの読み込み
