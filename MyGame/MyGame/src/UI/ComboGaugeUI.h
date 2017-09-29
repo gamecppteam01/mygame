@@ -2,6 +2,7 @@
 #include "../Math/Vector2.h"
 #include <list>
 #include "ButtonUIPtr.h"
+#include "../Actor/Player/Step_Type.h"
 
 enum class State {
 	input,
@@ -21,7 +22,7 @@ public:
 
 private:
 	//É{É^Éìê∂ê¨
-	void createButton();
+	void createButton(const Step_Type& type);
 	//
 	void stateUpdete(float deltaTime);
 	//

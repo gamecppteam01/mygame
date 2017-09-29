@@ -46,19 +46,22 @@ void ComboGaugeUI::draw() const
 	}
 }
 
-void ComboGaugeUI::createButton()
+void ComboGaugeUI::createButton(const Step_Type& type)
 {
-	if (GamePad::GetInstance().ButtonTriggerDown(PAD_INPUT_1)) {
-		buttonList_.push_back(std::make_shared<ButtonUI>(SPRITE_ID::BUTTON_A, Vector2(100.0f, 100.0f) + Vector2(50.0f,0.0f) * buttonList_.size()));
-	}
-	else if (GamePad::GetInstance().ButtonTriggerDown(PAD_INPUT_2)) {
+	switch (type)
+	{
+	case Step_Type::Chasse:
+		buttonList_.push_back(std::make_shared<ButtonUI>(SPRITE_ID::BUTTON_A, Vector2(100.0f, 100.0f) + Vector2(50.0f, 0.0f) * buttonList_.size()));
+		break;
+	case Step_Type::Turn:
 		buttonList_.push_back(std::make_shared<ButtonUI>(SPRITE_ID::BUTTON_B, Vector2(100.0f, 100.0f) + Vector2(50.0f, 0.0f) * buttonList_.size()));
-	}
-	else if (GamePad::GetInstance().ButtonTriggerDown(PAD_INPUT_3)) {
+		break;
+	case Step_Type::Whisk:
 		buttonList_.push_back(std::make_shared<ButtonUI>(SPRITE_ID::BUTTON_C, Vector2(100.0f, 100.0f) + Vector2(50.0f, 0.0f) * buttonList_.size()));
-	}
-	else if (GamePad::GetInstance().ButtonTriggerDown(PAD_INPUT_4)) {
+		break;
+	case Step_Type::SplitCubanBreak:
 		buttonList_.push_back(std::make_shared<ButtonUI>(SPRITE_ID::BUTTON_D, Vector2(100.0f, 100.0f) + Vector2(50.0f, 0.0f) * buttonList_.size()));
+		break;
 	}
 }
 
@@ -82,7 +85,7 @@ void ComboGaugeUI::inputUpdate(float deltaTime)
 		t = 1;
 		state_ = State::output;
 	}
-	createButton();
+	
 }
 
 void ComboGaugeUI::outputUpdate(float deltaTime)
