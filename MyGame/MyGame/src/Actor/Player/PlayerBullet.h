@@ -16,7 +16,6 @@ public:
 		Down = 15,//ダウン時
 		//Jump = 17,//ジャンプ時
 		Turn = 11,//回転時
-		Animation_Count//利用アニメーション数を数えるための列挙値(Countを状態として利用しないこと)
 	};
 
 public:

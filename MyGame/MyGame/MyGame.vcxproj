@@ -165,8 +165,11 @@
     <ClCompile Include="src\Actor\Body\BoundingSphere.cpp" />
     <ClCompile Include="src\Actor\Body\OrientedBoundingBox.cpp" />
     <ClCompile Include="src\Actor\Body\Ray.cpp" />
+    <ClCompile Include="src\Actor\Dummy\BetweenPositionActor.cpp" />
     <ClCompile Include="src\Actor\EffectActor\EffectActor.cpp" />
+    <ClCompile Include="src\Actor\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyTemplate.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="src\Conv\DXConverter.cpp" />
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
     <ClCompile Include="src\Effect\Effect.cpp" />
+    <ClCompile Include="src\Effect\HitEffect.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
     <ClCompile Include="src\Game\Time.cpp" />
@@ -242,11 +246,15 @@
     <ClInclude Include="src\Actor\Body\CollisionModel.h" />
     <ClInclude Include="src\Actor\Body\OrientedBoundingBox.h" />
     <ClInclude Include="src\Actor\Body\Ray.h" />
+    <ClInclude Include="src\Actor\Dummy\BetweenPositionActor.h" />
     <ClInclude Include="src\Actor\EffectActor\EffectActor.h" />
+    <ClInclude Include="src\Actor\Enemy\BaseEnemy.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
+    <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyTemplate.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />
+    <ClInclude Include="src\Actor\Player\Step_Type.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\CameraActor.h" />
     <ClInclude Include="src\Camera\CameraPtr.h" />
@@ -255,6 +263,7 @@
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
+    <ClInclude Include="src\Effect\HitEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />

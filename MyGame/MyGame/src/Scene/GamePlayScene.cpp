@@ -8,7 +8,7 @@
 #include"../Camera/CameraActor.h"
 #include"../Camera/OverLookingCamera.h"
 #include<memory>
-#include"../Actor/Enemy/EnemyTemplate.h"
+#include"../Actor/Enemy/BaseEnemy.h"
 #include"../UI/UITemplate.h"
 
 GamePlayScene::GamePlayScene():world_() {
@@ -24,7 +24,7 @@ void GamePlayScene::start() {
 	world_.addCamera(camera);
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f);
 	world_.addActor(ActorGroup::PLAYER, player);
-	world_.addActor(ActorGroup::ENEMY, std::make_shared<EnemyTemplate>(&world_, "Enemy", Vector3::Up*10.0f));
+	world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f));
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 

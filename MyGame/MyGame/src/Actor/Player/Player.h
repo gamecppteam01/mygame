@@ -5,6 +5,7 @@
 #include<functional>
 #include<array>
 #include"../../Method/MethodTimer.h"
+#include"Step_Type.h"
 
 enum class EventMessage;
 class PlayerBullet;
@@ -26,31 +27,24 @@ public:
 	};
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class Player_Animation {
-		Idle=0,//待機時
-		Move_Forward=2,//前移動時
-		Step_Left=8,//左ステップ時
+		Idle = 0,//待機時
+		Move_Forward = 2,//前移動時
+		Step_Left = 8,//左ステップ時
 		Attack = 11,//攻撃時
 		Shoot = 12,//発射時
-		ShootEnd=13,//発射終了
-		KnockBack=14,//被弾時
-		Down=15,//ダウン時
+		ShootEnd = 13,//発射終了
+		KnockBack = 14,//被弾時
+		Down = 15,//ダウン時
 		//Jump = 17,//ジャンプ時
-		Turn=11,//回転時
-	};
-	//ステップの種類
-	enum class Step_Type {
-		Chasse=0,//シャッセ
-		Turn=1,//ターン
-		Whisk=2,//ホイスク
-		SplitCubanBreak=3,//スプリットキューバンブレイク
-		Empty,//空
-		Dance_Count//ダンスの数
+		Turn = 11,//回転時
 	};
 
 public:
 	Player(IWorld* world,const std::string& name,const Vector3& position);
 
-
+//外部公開関数
+public:
+	void addVelocity(const Vector3& velocity);
 private:
 	virtual void initialize()override;
 	// メッセージ処理
@@ -117,6 +111,27 @@ private:
 	void to_DownMode();
 	//回転状態への移行処理
 	void to_TurnMode();
+
+	//待機状態の終了処理
+	void end_IdleMode();
+	//移動状態の終了処理
+	void end_MoveMode();
+	//void to_JumpMode();
+	//技状態の終了処理
+	void end_StepMode();
+	//攻撃状態の終了処理
+	void end_AttackMode();
+	//発射状態の終了処理
+	void end_ShootMode();
+	//発射終了状態の終了処理
+	void end_ShootEndMode();
+	//被弾状態の終了処理
+	void end_KnockBackMode();
+	//被弾状態の終了処理
+	void end_DownMode();
+	//回転状態の終了処理
+	void end_TurnMode();
+
 private:
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
 
@@ -138,6 +153,8 @@ private:
 	//男関連
 	//移動ベクトル
 	Vector3 velocity_;
+	//跳ね返りベクトル(現在未使用)
+	Vector3 boundVector_;
 	//上方向ベクトル
 	float upVelocity_;
 	//重力
@@ -168,6 +185,7 @@ private:
 	float stepMaxTime_;
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
+	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
 
 private:

@@ -34,6 +34,7 @@ enum MODEL_ID
 
 	//エフェクト類
 	EFFECT_CIRCLE_MODEL,
+	EFFECT_LIGHT_MODEL,
 
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
 

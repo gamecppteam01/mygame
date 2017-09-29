@@ -16,6 +16,7 @@
 #include"../../Camera/OverLookingCamera.h"
 #include"../EffectActor/EffectActor.h"
 #include"../../Effect/CircleEffect.h"
+#include"../Dummy/BetweenPositionActor.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static int inputCheckCount = 4;
@@ -34,7 +35,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), bullet_(std::make_shared<PlayerBullet>(world,position))
-	, bulletVelocity_(Vector3::Zero), turnPower_(1.0f), justTimer_(0.0f), stepMaxTime_(0.0f)
+	, bulletVelocity_(Vector3::Zero), turnPower_(1.0f), justTimer_(0.0f), stepMaxTime_(0.0f), boundVector_(Vector3::Zero)
 {
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
 
@@ -63,12 +64,28 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	playerToNextModeFunc_[Player_State::ShootEnd] = [this]() {to_ShootEndMode(); };
 	playerToNextModeFunc_[Player_State::KnockBack] = [this]() {to_KnockBackMode(); };
 	playerToNextModeFunc_[Player_State::Down] = [this]() {to_DownMode(); };
+
+	playerEndModeFunc_[Player_State::Idle] = [this]() {		end_IdleMode(); };
+	playerEndModeFunc_[Player_State::Move] = [this]() {		end_MoveMode(); };
+	playerEndModeFunc_[Player_State::Step] = [this]() {		end_StepMode(); };
+	playerEndModeFunc_[Player_State::Attack] = [this]() {	end_AttackMode(); };
+	playerEndModeFunc_[Player_State::Shoot] = [this]() {	end_ShootMode(); };
+	playerEndModeFunc_[Player_State::ShootEnd] = [this]() {	end_ShootEndMode(); };
+	playerEndModeFunc_[Player_State::KnockBack] = [this]() {end_KnockBackMode(); };
+	playerEndModeFunc_[Player_State::Down] = [this]() {		end_DownMode(); };
+	
+}
+
+void Player::addVelocity(const Vector3 & velocity)
+{
+	velocity_ += velocity;
 }
 
 void Player::initialize()
 {
 	position_ = defaultPosition_;
 	gravity_ = 0.0f;
+	boundVector_ = Vector3::Zero;
 	state_ = Player_State::Idle;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Idle);
@@ -119,22 +136,22 @@ void Player::onDraw() const
 		drawPos += 30;
 		switch (i)
 		{
-		case Player::Step_Type::Chasse:
+		case Step_Type::Chasse:
 			DebugDraw::DebugDrawFormatString(200,drawPos,GetColor(255,255,255),"シャッセ");
 			break;
-		case Player::Step_Type::Turn:
+		case Step_Type::Turn:
 			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "ターン");
 			break;
-		case Player::Step_Type::Whisk:
+		case Step_Type::Whisk:
 			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "ホイスク");
 			break;
-		case Player::Step_Type::SplitCubanBreak:
+		case Step_Type::SplitCubanBreak:
 			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "スプリットキューバンブレイク");
 			break;
-		case Player::Step_Type::Empty:
+		case Step_Type::Empty:
 			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "空");
 			break;
-		case Player::Step_Type::Dance_Count:
+		case Step_Type::Dance_Count:
 			break;
 		default:
 			break;
@@ -190,6 +207,9 @@ bool Player::change_State(Player_State state)
 {
 	//状態が変わらないなら失敗
 	if (state_ == state)return false;
+
+	//状態の終了処理を行う
+	playerEndModeFunc_[state_]();
 	//状態を更新
 	state_ = state;
 	//状態変更を行う
@@ -294,7 +314,9 @@ void Player::jump_Update(float deltaTime)
 void Player::step_Update(float deltaTime)
 {
 	justTimer_ -= deltaTime;
+	//コンボに失敗したら待機に戻る
 	if (justTimer_ < -justTime) {
+		turnPower_ =1.0f;
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 	}
 	//エフェクト生成時間が来たらエフェクト生成関数を呼び出す
@@ -319,35 +341,16 @@ void Player::step_Update(float deltaTime)
 	
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 		addStep(count, 2.0f, (Step_Type)InputChecker::Input_Key::A);
-		//justTimer_ = 2.0f;
-		//stepMaxTime_ = justTimer_;
-		//
-		//stepCombo_.at(count) = (Step_Type)InputChecker::Input_Key::A;
 	}
 	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
 		addStep(count, 1.0f, (Step_Type)InputChecker::Input_Key::B);
-		
-		//justTimer_ = 1.0f;
-		//stepMaxTime_ = justTimer_;
-		//
-		//stepCombo_.at(count) = (Step_Type)InputChecker::Input_Key::B;
 	}
 	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::X)) {
 		addStep(count, 3.0f, (Step_Type)InputChecker::Input_Key::X);
-		
-		//justTimer_ = 3.0f;
-		//stepMaxTime_ = justTimer_;
-		//
-		//stepCombo_.at(count) = (Step_Type)InputChecker::Input_Key::X;
 	}
 	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Y)) {
 		addStep(count, 2.0f, (Step_Type)InputChecker::Input_Key::Y);
-		
-		//justTimer_ = 2.0f;
-		//stepMaxTime_ = justTimer_;
-		//
-		//stepCombo_.at(count) = (Step_Type)InputChecker::Input_Key::Y;
-	}
+		}
 }
 
 void Player::attack_Update(float deltaTime)
@@ -362,6 +365,8 @@ void Player::shoot_Update(float deltaTime)
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
 	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	Vector2 move = getSticktoMove();
+	//回転力を移動速度に追加
+	move *= turnPower_;
 	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
 		//if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		//return;
@@ -428,7 +433,11 @@ void Player::to_AttackMode()
 
 void Player::to_ShootMode()
 {
-	world_->getCamera()->setTarget((ActorPtr)bullet_);
+	std::shared_ptr<BetweenPositionActor> point= std::make_shared<BetweenPositionActor>();
+	point->addTarget(shared_from_this());
+	point->addTarget(bullet_);
+	world_->addActor(ActorGroup::DUMMYACTOR, point);
+	world_->getCamera()->setTarget((ActorPtr)point);
 	Vector3 shootVector = *bulletPosition_ - position_;
 	shootVector = shootVector.Normalize();
 	bulletVelocity_ = shootVector*(turnPower_*defaultTurnPower);
@@ -451,6 +460,44 @@ void Player::to_DownMode()
 }
 
 void Player::to_TurnMode()
+{
+}
+
+void Player::end_IdleMode()
+{
+}
+
+void Player::end_MoveMode()
+{
+}
+
+void Player::end_StepMode()
+{
+}
+
+void Player::end_AttackMode()
+{
+}
+
+void Player::end_ShootMode()
+{
+	ActorPtr cameraPoint = world_->findActor("Point");
+	if(cameraPoint!=nullptr)cameraPoint->dead();
+}
+
+void Player::end_ShootEndMode()
+{
+}
+
+void Player::end_KnockBackMode()
+{
+}
+
+void Player::end_DownMode()
+{
+}
+
+void Player::end_TurnMode()
 {
 }
 
@@ -482,6 +529,8 @@ void Player::bulletUpdate(float deltaTime)
 
 void Player::addStep(int stepCount,float stepTime, Step_Type type)
 {
+	turnPower_ += 0.1f;
+
 	justTimer_ = stepTime;
 	stepMaxTime_ = justTimer_;
 
@@ -503,5 +552,3 @@ Vector2 Player::getSticktoMove()
 	return result;
 
 }
-
-

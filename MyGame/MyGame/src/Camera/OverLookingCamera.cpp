@@ -1,6 +1,7 @@
 #include "OverLookingCamera.h"
 #include"Camera.h"
 #include"../Graphic/Model.h"
+#include"../Actor/Dummy/BetweenPositionActor.h"
 
 //対象から後ろ側に離れる距離
 static const float backwardLength = 3.0f;
@@ -28,8 +29,13 @@ void OverLookingCamera::onUpdate(float deltaTime)
 		//一旦対象の位置を軸にする
 		Vector3 nextPos= target_->position();
 
+		//カメラを追加で引く量
+		float addDistance = 0.0f;
+		if (target_->getName() == "Point") {
+			addDistance = std::static_pointer_cast<BetweenPositionActor>(target_)->getDistance()*0.5f;
+		}
 		//yを固定する
-		nextPos.y = upLength;
+		nextPos.y = upLength+ addDistance;
 
 		//カメラ自身の位置は、対象の位置からカメラを特定数離した位置に置く
 		position_ = Vector3::Lerp(nextPos, position_, 0.9f);
@@ -37,7 +43,7 @@ void OverLookingCamera::onUpdate(float deltaTime)
 		targetPos = position_ + Vector3(0.0f, 0.0f, backwardLength*10.0f);
 		targetPos.y = 0.0f;
 		//一応yを固定し直す
-		position_.y = upLength;
+		position_.y = upLength+ addDistance;
 		//zを固定値分下げる
 		position_.z -= backwardLength;
 	}
