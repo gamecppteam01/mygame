@@ -39,6 +39,12 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "TestTitleStart.png", SPRITE_ID::TITLE_START);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleEnd.png", SPRITE_ID::TITLE_END);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleSelect.png", SPRITE_ID::TITLE_SELECT);
+
+	Sprite::GetInstance().Load(defaultPath + "gauge.png", SPRITE_ID::GAUGE_UI);
+	Sprite::GetInstance().Load(defaultPath + "ButtonA.png", SPRITE_ID::BUTTON_A);
+	Sprite::GetInstance().Load(defaultPath + "ButtonB.png", SPRITE_ID::BUTTON_B);
+	Sprite::GetInstance().Load(defaultPath + "ButtonC.png", SPRITE_ID::BUTTON_C);
+	Sprite::GetInstance().Load(defaultPath + "ButtonD.png", SPRITE_ID::BUTTON_D);
 }
 
 void LoadingScene::LoadModel()

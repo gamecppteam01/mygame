@@ -12,7 +12,7 @@
 #include"../UI/UITemplate.h"
 
 GamePlayScene::GamePlayScene():world_() {
-
+	ui_ = new ComboGaugeUI(Vector2(100.0f, 100.0f));
 }
 
 void GamePlayScene::start() {
@@ -28,6 +28,7 @@ void GamePlayScene::start() {
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
+	ui_->start();
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 }
@@ -36,15 +37,17 @@ void GamePlayScene::update(float deltaTime) {
 
 	world_.update(deltaTime);
 
-
+	ui_->update(deltaTime);
 }
 
 void GamePlayScene::draw() const {
 	//Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, Matrix::Identity);
 
 	world_.draw();
+	ui_->draw();
 }
 
 void GamePlayScene::end() {
 	world_.Initialize();
+	delete ui_;
 }

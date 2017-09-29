@@ -12,6 +12,12 @@ enum SPRITE_ID
 	TITLE_END,
 	TITLE_SELECT,
 
+	GAUGE_UI,
+	BUTTON_A,
+	BUTTON_B,
+	BUTTON_C,
+	BUTTON_D,
+
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include"Scene.h"
 #include"../World/World.h"
+#include "../UI/ComboGaugeUI.h"
 
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
@@ -14,4 +15,5 @@ public:
 
 private:
 	World world_;
+	ComboGaugeUI* ui_;
 };
