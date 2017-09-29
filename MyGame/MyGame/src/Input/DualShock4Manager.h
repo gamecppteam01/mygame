@@ -12,7 +12,7 @@ DualShock4コントローラの傾きを(大まかに)取得するためのクラス
 */
 class DualShock4Manager {
 private:
-	DualShock4Manager() {
+	DualShock4Manager(): dataSize_(0){
 		Initialize();
 	}
 public:
@@ -73,11 +73,19 @@ public:
 			}
 			PHIDP_PREPARSED_DATA ppd;
 			HidD_GetPreparsedData(handle_, &ppd);
-			caps_;
 			if (!HidP_GetCaps(ppd, &caps_)) {
 				CloseHandle(handle_);
 				break;
 			}
+			dataSize_ = caps_.InputReportByteLength;
+			WCHAR m_DS4Serial[127];
+			if (dataSize_ > 64) {
+				isbluetooth_ = 2;
+				if (!HidD_GetSerialNumberString(handle_, m_DS4Serial, sizeof(m_DS4Serial)))
+					continue;
+			}
+			currentData_ = (byte*)malloc(sizeof(byte)*dataSize_);
+			memset(currentData_, 0, dataSize_);
 
 			//ここまで来たら成功なのでtrueを返す
 			return true;
@@ -89,13 +97,22 @@ public:
 	void Update() {
 		//読み込み完了データ数
 		DWORD readBytes;
-
 		//読み込みを行う(読み込みデータはcurrentData_に格納される)
-		if (ReadFile(handle_, &currentData_, caps_.InputReportByteLength, &readBytes, NULL) == TRUE) {
+		if (ReadFile(handle_, currentData_, dataSize_, &readBytes, NULL) == TRUE) {
+
 			//センサーの値を取得
-			int x = currentData_[20];
-			int y = currentData_[24];
-			int z = currentData_[22];
+			int x = currentData_[20 + isbluetooth_];
+			int y = currentData_[24 + isbluetooth_];
+			int z = currentData_[22 + isbluetooth_];
+
+			OutputDebugString("x:");
+			OutputDebugString(std::to_string(x).c_str());
+			OutputDebugString(" y:");
+			OutputDebugString(std::to_string(y).c_str());
+			OutputDebugString(" z:");
+			OutputDebugString(std::to_string(z).c_str());
+			OutputDebugString("\n");
+
 			//傾きが小さい場合は値を無視
 			if (x < 3 || x>254) {
 				x = 1;
@@ -130,6 +147,10 @@ public:
 			angle_.y = ((float)y / 32.f);
 
 		}
+		else {
+			OutputDebugString("失敗");
+			OutputDebugString("\n");
+		}
 		//ReadFile(handle_, &currentData_, caps_.InputReportByteLength, &readBytes, NULL);
 
 
@@ -149,7 +170,10 @@ private:
 	//対象HIDの送受信サイズ等を持つ
 	HIDP_CAPS	caps_{};
 	//コントローラの入力データ配列
-	byte currentData_[64]{ "\0" };
+	byte *currentData_;
+	DWORD dataSize_;
+	//Bluetoothの時のデータズレを解消する値、Bluetoothなら2,有線なら0(Bluetoothだとデータが2ズレるっぽい･･･?)
+	int isbluetooth_{ 0 };
 	Vector2 angle_{ Vector2::Zero };
 };
 
