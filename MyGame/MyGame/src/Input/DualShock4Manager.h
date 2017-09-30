@@ -15,6 +15,9 @@ private:
 	DualShock4Manager(): dataSize_(0){
 		Initialize();
 	}
+	~DualShock4Manager() {
+		free(currentData_);
+	}
 public:
 	static DualShock4Manager& GetInstance() {
 		static DualShock4Manager manager_;
