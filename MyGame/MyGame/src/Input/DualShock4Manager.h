@@ -1,6 +1,5 @@
 #include "hidsdi.h"
 #include"setupapi.h"
-#pragma comment(linker,"/entry:mainCRTStartup")
 #pragma comment(lib, "hid.lib")
 #pragma comment(lib, "SetupAPI.lib") 
 
