@@ -539,5 +539,8 @@
     <ClInclude Include="src\Actor\Dummy\BetweenPositionActor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Conv\ByteConverter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #pragma comment(lib, "SetupAPI.lib") 
 
 #include"../Math/Math.h"
+#include"../Conv/ByteConverter.h"
 /*
 DualShock4コントローラの傾きを(大まかに)取得するためのクラス
 注1)正確な角度を出しているわけではない
@@ -11,7 +12,7 @@ DualShock4コントローラの傾きを(大まかに)取得するためのクラス
 */
 class DualShock4Manager {
 private:
-	DualShock4Manager(): dataSize_(0){
+	DualShock4Manager() : dataSize_(0) {
 		Initialize();
 	}
 	~DualShock4Manager() {
@@ -101,53 +102,8 @@ public:
 		DWORD readBytes;
 		//読み込みを行う(読み込みデータはcurrentData_に格納される)
 		if (ReadFile(handle_, currentData_, dataSize_, &readBytes, NULL) == TRUE) {
-
-			//センサーの値を取得
-			int x = currentData_[20 + isbluetooth_];
-			int y = currentData_[24 + isbluetooth_];
-			int z = currentData_[22 + isbluetooth_];
-
-			OutputDebugString("x:");
-			OutputDebugString(std::to_string(x).c_str());
-			OutputDebugString(" y:");
-			OutputDebugString(std::to_string(y).c_str());
-			OutputDebugString(" z:");
-			OutputDebugString(std::to_string(z).c_str());
-			OutputDebugString("\n");
-
-			//傾きが小さい場合は値を無視
-			if (x < 3 || x>254) {
-				x = 1;
-			}
-			if (y < 3 || y>254) {
-				y = 1;
-			}
-			//200以上の場合はコントローラが裏を向いている
-			if (z > 29 || z>200) {
-				z = 0;
-			}
-
-			//角度が水平、垂直の時にまれに範囲外の数値が出るため、その場合は補正
-			if (x>200 && x < 225)x = 225;
-			if (x>33 && x < 100)x = 33;
-			//225以上の数値を0基準にする(範囲は225～255,0～33)
-			x += 31;
-			x %= 256;
-			//ここまでで傾きが左なら64,右なら0になる
-			//-32～32の範囲に変換
-			x -= 32;
-			//計算結果を角度に代入する(右が正に変換)
-			angle_.x = -((float)x / 32.f);
-
-			//角度が水平、垂直の時にまれに範囲外の数値が出るため、その場合は補正
-			if (y>200 && y < 223)y = 223;
-			if (y>31 && y < 100)y = 31;
-			//xと同じ手順で計算する(yは値が223～255,0～31なため、加算値をずらす)
-			y += 33;
-			y %= 256;
-			y -= 32;
-			angle_.y = ((float)y / 32.f);
-
+			Update_Angle();
+			Update_Acceleration();
 		}
 		else {
 			OutputDebugString("失敗");
@@ -166,6 +122,79 @@ public:
 	Vector2 GetAngle() const {
 		return angle_;
 	}
+
+private:
+	//角度検出
+	void Update_Angle() {
+		//センサーの値を取得
+		int x = currentData_[20 + isbluetooth_];
+		int y = currentData_[24 + isbluetooth_];
+		int z = currentData_[22 + isbluetooth_];
+
+
+		//傾きが小さい場合は値を無視
+		if (x < 3 || x>254) {
+			x = 1;
+		}
+		if (y < 3 || y>254) {
+			y = 1;
+		}
+		//200以上の場合はコントローラが裏を向いている
+		if (z >= 128) {
+			z = 0;
+		}
+
+		//コントローラを勢い良く振った際などに範囲外の数値が出るため、その場合は補正
+		if (x >= 129 && x < 225)x = 225;
+		if (x>33 && x < 129)x = 33;
+		//225以上の数値を0基準にする(範囲は225～255,0～33)
+		x += 31;
+		x %= 256;
+		//ここまでで傾きが左なら64,右なら0になる
+		//-32～32の範囲に変換
+		x -= 32;
+		//計算結果を角度に代入する(右が正に変換)
+		angle_.x = -((float)x / 32.f);
+
+		//コントローラを勢い良く振った際などに範囲外の数値が出るため、その場合は補正
+		if (y >= 127 && y < 223)y = 223;
+		if (y>31 && y < 127)y = 31;
+		//xと同じ手順で計算する(yは値が223～255,0～31なため、加算値をずらす)
+		y += 33;
+		y %= 256;
+		y -= 32;
+		angle_.y = ((float)y / 32.f);
+	}
+	//加速度の更新
+	void Update_Acceleration() {
+		byte x[]{ currentData_[19 + isbluetooth_] ,currentData_[20 + isbluetooth_] };
+		byte y[]{ currentData_[23 + isbluetooth_] ,currentData_[24 + isbluetooth_] };
+		byte z[]{ currentData_[21 + isbluetooth_] ,currentData_[22 + isbluetooth_] };
+
+		int nextAcceleration[]{
+			ByteConverter::Byte_to_Int(x, 2),
+			ByteConverter::Byte_to_Int(y, 2),
+			ByteConverter::Byte_to_Int(z, 2)
+		};
+
+		for (int i = 0; i < 3; i++) {
+			//中央値未満ならそのまま
+			if (ByteConverter::ByteMaxSize(2) / 2 > nextAcceleration[i])continue;
+
+			//中央値を超えていたらマイナスの値に変換
+			nextAcceleration[i] = ByteConverter::ReverseNumber(nextAcceleration[i], 2);
+		}
+
+		OutputDebugString("x:");
+		OutputDebugString(std::to_string(acceleration_.x).c_str());
+		OutputDebugString(" y:");
+		OutputDebugString(std::to_string(acceleration_.y).c_str());
+		OutputDebugString(" z:");
+		OutputDebugString(std::to_string(acceleration_.z).c_str());
+		OutputDebugString("\n");
+
+	}
+
 private:
 	//コントローラのハンドル
 	HANDLE handle_{};
@@ -177,5 +206,7 @@ private:
 	//Bluetoothの時のデータズレを解消する値、Bluetoothなら2,有線なら0(Bluetoothだとデータが2ズレるっぽい･･･?)
 	int isbluetooth_{ 0 };
 	Vector2 angle_{ Vector2::Zero };
+
+	Vector3 acceleration_{ Vector3::Zero };
 };
 
