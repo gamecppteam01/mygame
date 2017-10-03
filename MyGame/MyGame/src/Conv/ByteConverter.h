@@ -17,6 +17,6 @@ public:
 	}
 	//指定バイト計算結果値をマイナス値に変換する(計算対象値とその値の元byte数を受け取る)
 	static int ReverseNumber(int i,int size) {
-		return ByteMaxSize(size) - i;
+		return -(ByteMaxSize(size) - i);
 	}
 };

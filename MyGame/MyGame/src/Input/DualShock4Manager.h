@@ -13,6 +13,10 @@ DualShock4コントローラの傾きを(大まかに)取得するためのクラス
 class DualShock4Manager {
 private:
 	DualShock4Manager() : dataSize_(0) {
+		xAngleList_.resize(10, 0.0f);
+		yAngleList_.resize(10, 0.0f);
+		zAngleList_.resize(10, 0.0f);
+
 		Initialize();
 	}
 	~DualShock4Manager() {
@@ -118,12 +122,27 @@ public:
 		CloseHandle(handle_);
 	}
 
-	//コントローラのz,x軸の傾きを取得する（xには左右の傾きが入り右が正、yには前後の傾きが入り奥が正とする)
+	//コントローラのz,x軸の傾きを取得する(xには左右の傾きが入り右が正、yには前後の傾きが入り奥が正とする)
 	Vector2 GetAngle() const {
 		return angle_;
 	}
 
+	//コントローラのx,y,z軸の傾きを取得する(x,yはどちらも-180～0,0～180の角度情報を持つ、zは-90～90の範囲で、表なら正、裏なら負を持つ)
+	Vector3 GetAngle3D() const {
+		return angle3d_;
+	}
+
 private:
+	//加速度から、最初の角度を求める
+	void First_Angle() {
+		DWORD readBytes;
+		if (ReadFile(handle_, currentData_, dataSize_, &readBytes, NULL) == TRUE) {
+			//ここで角度を求める
+		}
+		else {
+			acceleration_ = Vector3::Zero;
+		}
+	}
 	//角度検出
 	void Update_Angle() {
 		//センサーの値を取得
@@ -165,6 +184,34 @@ private:
 		y -= 32;
 		angle_.y = ((float)y / 32.f);
 	}
+	void Update_Gyro() {
+		byte x[]{ currentData_[13 + isbluetooth_] ,currentData_[14 + isbluetooth_] };
+		byte y[]{ currentData_[17 + isbluetooth_] ,currentData_[18 + isbluetooth_] };
+		byte z[]{ currentData_[15 + isbluetooth_] ,currentData_[16 + isbluetooth_] };
+
+		int nextGyro[]{
+			ByteConverter::Byte_to_Int(x, 2),
+			ByteConverter::Byte_to_Int(y, 2),
+			ByteConverter::Byte_to_Int(z, 2)
+		};
+
+		for (int i = 0; i < 3; i++) {
+			//中央値未満ならそのまま
+			if (ByteConverter::ByteMaxSize(2) / 2 > nextGyro[i])continue;
+
+			//中央値を超えていたらマイナスの値に変換
+			nextGyro[i] = ByteConverter::ReverseNumber(nextGyro[i], 2);
+		}
+		//補正値はドリフトを目で見て適当に決めてるだけの数なため、参考にしない事(場合によっては消した方がいいかも)
+		gyro_.x = nextGyro[0]+1.2f;
+		gyro_.y = nextGyro[1]-3.12f;
+		gyro_.z = nextGyro[2]+1.5f;
+		gyroVector_.x += (nextGyro[0]+1.2f) / (float)maxGyro;
+		gyroVector_.y += (nextGyro[1]-3.12f) / (float)maxGyro;
+		gyroVector_.z += (nextGyro[2]+1.5f) / (float)maxGyro;
+
+
+	}
 	//加速度の更新
 	void Update_Acceleration() {
 		byte x[]{ currentData_[19 + isbluetooth_] ,currentData_[20 + isbluetooth_] };
@@ -184,15 +231,75 @@ private:
 			//中央値を超えていたらマイナスの値に変換
 			nextAcceleration[i] = ByteConverter::ReverseNumber(nextAcceleration[i], 2);
 		}
+		acceleration_.x = nextAcceleration[0];
+		acceleration_.y = nextAcceleration[1];
+		acceleration_.z = nextAcceleration[2];
+
+		Update_Gyro();
+		//ここから傾きの計算(加速度のみに依存した計算を行っている)
+		//今後やりたい角度計算の方法
+		//1)Initialize時に加速度を基準とした初期角度を設定
+		//2)基本的にはジャイロにより角度を更新していく
+		//3)直近10フレーム程度の加速度配列を作る
+		//4)加速度配列の最大値と最低値の差が限りなく小さい場合に限り、下に記述した加速度による角度計算で上書きする
+
+		SelectAngle();
+	}
+	void SelectAngle() {
+		Vector3 nextAngle = Vector3::Zero;
+		//zが正なら表の計算
+		if (acceleration_.z >= 0) {
+			//xは正の値のが大きいから負にズラす
+			nextAngle.x = ((acceleration_.x - 256.f) / maxAcceleration) * 90;
+			//yは負の値のが大きいから正にズラす
+			nextAngle.y = ((acceleration_.y + 256.f) / maxAcceleration) * 90;
+		}
+		//zが負なら裏の計算
+		else {
+			//xは正の値のが大きいから負にズラす
+			nextAngle.x = ((acceleration_.x - 256) / maxAcceleration) * 90;
+			//yは負の値のが大きいから正にズラす
+			nextAngle.y = ((acceleration_.y + 256) / maxAcceleration) * 90;
+			//負の場合は
+			nextAngle.x = MathHelper::Sign(angle3d_.x) * 180 - angle3d_.x;
+			nextAngle.y = MathHelper::Sign(angle3d_.y) * 180 - angle3d_.y;
+
+		}
+		//zはそのまま
+		nextAngle.z = ((acceleration_.z) / maxAcceleration) * 90;
+
+		//x,y,zそれぞれの加速度リストを更新
+		xAngleList_.push_front(nextAngle.x);
+		yAngleList_.push_front(nextAngle.y);
+		zAngleList_.push_front(nextAngle.z);
+
+		xAngleList_.pop_back();
+		yAngleList_.pop_back();
+		zAngleList_.pop_back();
+
+
+		//x,y,zそれぞれ、加速度の変動が小さい場合は加速度の値を角度にする、大きい場合はジャイロの傾きを加算する
+		auto x = std::minmax_element(xAngleList_.begin(), xAngleList_.end());
+		if (std::abs(*x.first - *x.second) <= 10.0f)angle3d_.x = nextAngle.x;
+		else angle3d_.x += gyroVector_.x;
+
+		auto y = std::minmax_element(yAngleList_.begin(), yAngleList_.end());
+		if (std::abs(*y.first - *y.second) <= 10.0f)angle3d_.y = nextAngle.y;
+		else angle3d_.y += gyroVector_.y;
+
+		auto z = std::minmax_element(zAngleList_.begin(), zAngleList_.end());
+		if (std::abs(*z.first - *z.second) <= 10.0f)angle3d_.z = nextAngle.z;
+		else angle3d_.z += gyroVector_.z;
 
 		OutputDebugString("x:");
-		OutputDebugString(std::to_string(acceleration_.x).c_str());
+		OutputDebugString(std::to_string(gyroVector_.x).c_str());
 		OutputDebugString(" y:");
-		OutputDebugString(std::to_string(acceleration_.y).c_str());
+		OutputDebugString(std::to_string(gyroVector_.y).c_str());
 		OutputDebugString(" z:");
-		OutputDebugString(std::to_string(acceleration_.z).c_str());
+		OutputDebugString(std::to_string(gyroVector_.z).c_str());
 		OutputDebugString("\n");
 
+		//現在はgyroの値が正しく機能してない、コントローラをぐるぐる回すと値が飛んでく
 	}
 
 private:
@@ -205,8 +312,23 @@ private:
 	DWORD dataSize_;
 	//Bluetoothの時のデータズレを解消する値、Bluetoothなら2,有線なら0(Bluetoothだとデータが2ズレるっぽい･･･?)
 	int isbluetooth_{ 0 };
+	//xzのゲーム用角度
 	Vector2 angle_{ Vector2::Zero };
-
+	//コントローラのxyz角度
+	Vector3 angle3d_{ Vector3::Zero };
+	//傾きxyz
+	Vector3 gyroVector_{ Vector3::Zero };
+	//生の加速度
 	Vector3 acceleration_{ Vector3::Zero };
+	//生のジャイロ値
+	Vector3 gyro_{ Vector3::Zero };
+
+	std::list<float> xAngleList_;
+	std::list<float> yAngleList_;
+	std::list<float> zAngleList_;
+private:
+	//加速度センサーの傾き検出時の最大値
+	const int maxAcceleration{ 8192 };
+	const int maxGyro{ 1024 };
 };
 
