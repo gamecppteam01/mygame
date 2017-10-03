@@ -5,12 +5,14 @@
 
 #include"../Math/Math.h"
 #include"../Conv/ByteConverter.h"
+
 /*
 DualShock4コントローラの傾きを(大まかに)取得するためのクラス
 注1)正確な角度を出しているわけではない
 注2)複数個のDualShock4コントローラが接続される場合については考慮していない
 */
 class DualShock4Manager {
+	friend class TitleScene;
 private:
 	DualShock4Manager() : dataSize_(0) {
 		xAngleList_.resize(10, 0.0f);
@@ -203,15 +205,45 @@ private:
 			nextGyro[i] = ByteConverter::ReverseNumber(nextGyro[i], 2);
 		}
 		//補正値はドリフトを目で見て適当に決めてるだけの数なため、参考にしない事(場合によっては消した方がいいかも)
-		gyro_.x = nextGyro[0]+1.2f;
-		gyro_.y = nextGyro[1]-3.12f;
-		gyro_.z = nextGyro[2]+1.5f;
-		gyroVector_.x += (nextGyro[0]+1.2f) / (float)maxGyro;
-		gyroVector_.y += (nextGyro[1]-3.12f) / (float)maxGyro;
-		gyroVector_.z += (nextGyro[2]+1.5f) / (float)maxGyro;
+		gyro_.x = nextGyro[0] + 1.2f;
+		gyro_.y = nextGyro[1] - 3.12f;
+		gyro_.z = nextGyro[2] + 1.5f;
+		gyroVector_.x = (nextGyro[0] + 1.2f) / (float)maxGyro;
+		gyroVector_.y = (nextGyro[1] - 3.12f) / (float)maxGyro;
+		gyroVector_.z = (nextGyro[2] + 1.5f) / (float)maxGyro;
+
+		gyroMat_ *= Matrix::CreateRotationX(-gyroVector_.x)*Matrix::CreateRotationY(gyroVector_.y)*Matrix::CreateRotationZ(-gyroVector_.z);
+
+		OutputDebugString("L[");
+		OutputDebugString(std::to_string(gyroMat_.Left().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Left().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Left().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+
+		OutputDebugString("U[");
+		OutputDebugString(std::to_string(gyroMat_.Up().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Up().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Up().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+
+		OutputDebugString("F[");
+		OutputDebugString(std::to_string(gyroMat_.Forward().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Forward().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(gyroMat_.Forward().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+		OutputDebugString("\n");
 
 
-	}
+		}
 	//加速度の更新
 	void Update_Acceleration() {
 		byte x[]{ currentData_[19 + isbluetooth_] ,currentData_[20 + isbluetooth_] };
@@ -235,6 +267,7 @@ private:
 		acceleration_.y = nextAcceleration[1];
 		acceleration_.z = nextAcceleration[2];
 
+
 		Update_Gyro();
 		//ここから傾きの計算(加速度のみに依存した計算を行っている)
 		//今後やりたい角度計算の方法
@@ -247,26 +280,63 @@ private:
 	}
 	void SelectAngle() {
 		Vector3 nextAngle = Vector3::Zero;
-		//zが正なら表の計算
-		if (acceleration_.z >= 0) {
-			//xは正の値のが大きいから負にズラす
-			nextAngle.x = ((acceleration_.x - 256.f) / maxAcceleration) * 90;
-			//yは負の値のが大きいから正にズラす
-			nextAngle.y = ((acceleration_.y + 256.f) / maxAcceleration) * 90;
-		}
-		//zが負なら裏の計算
-		else {
-			//xは正の値のが大きいから負にズラす
-			nextAngle.x = ((acceleration_.x - 256) / maxAcceleration) * 90;
-			//yは負の値のが大きいから正にズラす
-			nextAngle.y = ((acceleration_.y + 256) / maxAcceleration) * 90;
-			//負の場合は
-			nextAngle.x = MathHelper::Sign(angle3d_.x) * 180 - angle3d_.x;
-			nextAngle.y = MathHelper::Sign(angle3d_.y) * 180 - angle3d_.y;
+		////zが正なら表の計算
+		//if (acceleration_.z >= 0) {
+		//	//xは正の値のが大きいから負にズラす
+		//	nextAngle.x = ((acceleration_.x - 256.f) / maxAcceleration) * 90;
+		//	//yは負の値のが大きいから正にズラす
+		//	nextAngle.y = ((acceleration_.y + 256.f) / maxAcceleration) * 90;
+		//}
+		////zが負なら裏の計算
+		//else {
+		//	//xは正の値のが大きいから負にズラす
+		//	nextAngle.x = ((acceleration_.x - 256) / maxAcceleration) * 90;
+		//	//yは負の値のが大きいから正にズラす
+		//	nextAngle.y = ((acceleration_.y + 256) / maxAcceleration) * 90;
+		//	//負の場合は
+		//	nextAngle.x = MathHelper::Sign(nextAngle.x) * 180 - nextAngle.x;
+		//	nextAngle.y = MathHelper::Sign(nextAngle.y) * 180 - nextAngle.y;
+		//
+		//}
+		//xは正の値のが大きいから負にズラす
+		nextAngle.x = ((acceleration_.x - 256.f) / maxAcceleration) * 90;
+		//yは負の値のが大きいから正にズラす
+		nextAngle.y = ((acceleration_.y + 256.f) / maxAcceleration) * 90;
 
-		}
 		//zはそのまま
 		nextAngle.z = ((acceleration_.z) / maxAcceleration) * 90;
+
+		accelMat_ = Matrix::Identity*Matrix::CreateRotationX(nextAngle.x)*Matrix::CreateRotationY(nextAngle.y)*Matrix::CreateRotationZ(nextAngle.z);
+		
+		/*
+		OutputDebugString("L[");
+		OutputDebugString(std::to_string(accelMat_.Left().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Left().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Left().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+
+		OutputDebugString("U[");
+		OutputDebugString(std::to_string(accelMat_.Up().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Up().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Up().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+
+		OutputDebugString("F[");
+		OutputDebugString(std::to_string(accelMat_.Forward().x).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Forward().y).c_str());
+		OutputDebugString(" ,");
+		OutputDebugString(std::to_string(accelMat_.Forward().z).c_str());
+		OutputDebugString("]");
+		OutputDebugString("\n");
+		OutputDebugString("\n");
+		*/	
 
 		//x,y,zそれぞれの加速度リストを更新
 		xAngleList_.push_front(nextAngle.x);
@@ -281,24 +351,28 @@ private:
 		//x,y,zそれぞれ、加速度の変動が小さい場合は加速度の値を角度にする、大きい場合はジャイロの傾きを加算する
 		auto x = std::minmax_element(xAngleList_.begin(), xAngleList_.end());
 		if (std::abs(*x.first - *x.second) <= 10.0f)angle3d_.x = nextAngle.x;
-		else angle3d_.x += gyroVector_.x;
-
+		else {
+			angle3d_.x += gyroVector_.x;
+		}
 		auto y = std::minmax_element(yAngleList_.begin(), yAngleList_.end());
 		if (std::abs(*y.first - *y.second) <= 10.0f)angle3d_.y = nextAngle.y;
-		else angle3d_.y += gyroVector_.y;
-
+		else {
+			angle3d_.y += gyroVector_.y;
+		}
 		auto z = std::minmax_element(zAngleList_.begin(), zAngleList_.end());
 		if (std::abs(*z.first - *z.second) <= 10.0f)angle3d_.z = nextAngle.z;
-		else angle3d_.z += gyroVector_.z;
+		else {
+			angle3d_.z += gyroVector_.z;
+		}
 
-		OutputDebugString("x:");
-		OutputDebugString(std::to_string(gyroVector_.x).c_str());
-		OutputDebugString(" y:");
-		OutputDebugString(std::to_string(gyroVector_.y).c_str());
-		OutputDebugString(" z:");
-		OutputDebugString(std::to_string(gyroVector_.z).c_str());
-		OutputDebugString("\n");
-
+		//OutputDebugString("x:");
+		//OutputDebugString(std::to_string(nextAngle.x).c_str());
+		//OutputDebugString(" y:");
+		//OutputDebugString(std::to_string(nextAngle.y).c_str());
+		//OutputDebugString(" z:");
+		//OutputDebugString(std::to_string(nextAngle.z).c_str());
+		//OutputDebugString("\n");
+		
 		//現在はgyroの値が正しく機能してない、コントローラをぐるぐる回すと値が飛んでく
 	}
 
@@ -322,6 +396,11 @@ private:
 	Vector3 acceleration_{ Vector3::Zero };
 	//生のジャイロ値
 	Vector3 gyro_{ Vector3::Zero };
+
+	Vector3 currentAngle_{ Vector3::Zero };
+	
+	Matrix accelMat_{ Matrix::Identity };
+	Matrix gyroMat_{ Matrix::Identity };
 
 	std::list<float> xAngleList_;
 	std::list<float> yAngleList_;
