@@ -221,8 +221,8 @@ bool Player::change_State(Player_State state)
 
 void Player::idle_Update(float deltaTime)
 {
-	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	//Vector2 move = getSticktoMove();
+	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	Vector2 move = getSticktoMove();
 	if (std::abs(move.x) > ignoreSlope || std::abs(move.y) > ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
@@ -250,8 +250,8 @@ void Player::move_Update(float deltaTime)
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	//Vector2 move = getSticktoMove();
+	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	Vector2 move = getSticktoMove();
 	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
@@ -351,7 +351,7 @@ void Player::step_Update(float deltaTime)
 	}
 	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Y)) {
 		addStep(count, 2.0f, (Step_Type)InputChecker::Input_Key::Y);
-		}
+	}
 }
 
 void Player::attack_Update(float deltaTime)
@@ -536,6 +536,8 @@ void Player::addStep(int stepCount,float stepTime, Step_Type type)
 	stepMaxTime_ = justTimer_;
 
 	stepCombo_.at(stepCount) = type;
+
+	if (stepCount >= stepCombo_.size()-1)return;
 
 	effectCreator_.Add([this] {createCircleEffect(); });
 }

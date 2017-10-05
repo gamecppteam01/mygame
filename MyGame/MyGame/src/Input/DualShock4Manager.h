@@ -1,8 +1,6 @@
-#include "hidsdi.h"
-#include"setupapi.h"
-#pragma comment(lib, "hid.lib")
-#pragma comment(lib, "SetupAPI.lib") 
+#pragma once
 
+#include"DualShock4Reader.h"
 #include"../Math/Math.h"
 #include"../Conv/ByteConverter.h"
 
@@ -212,7 +210,7 @@ private:
 		gyroVector_.y = (nextGyro[1] - 3.12f) / (float)maxGyro;
 		gyroVector_.z = (nextGyro[2] + 1.5f) / (float)maxGyro;
 
-		gyroMat_ *= Matrix::CreateRotationX(-gyroVector_.x)*Matrix::CreateRotationY(gyroVector_.y)*Matrix::CreateRotationZ(-gyroVector_.z);
+		gyroMat_ *= Matrix::CreateRotationX(gyroVector_.x)*Matrix::CreateRotationY(gyroVector_.y)*Matrix::CreateRotationZ(-gyroVector_.z);
 
 		OutputDebugString("L[");
 		OutputDebugString(std::to_string(gyroMat_.Left().x).c_str());

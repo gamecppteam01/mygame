@@ -4,11 +4,16 @@
 #include"../../World/IWorld.h"
 #include"../../Graphic/Model.h"
 #include"../Player/Player.h"
+#include"../../Graphic/DebugDraw.h"
 
 //男と女の距離
-static Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
-
+static Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
+//弾き飛ばす力
 static float boundPower = 10.0f;
+//視界角度
+static float viewAngle = 60.0f;
+//動き出す視界角度
+static float moveAngle = 20.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,body)), turnPower_(1.0f)
@@ -25,14 +30,17 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	bulletPosition_ = bullet_->getPositionPtr();
 	bulletRotation_ = bullet_->getRotationPtr();
 
+	target_ = world_->findActor("Player");
 }
 
 void BaseEnemy::onMessage(EventMessage message, void * param)
 {
 }
 
-void BaseEnemy::onUpdate(float deltaTime)
-{
+void BaseEnemy::onUpdate(float deltaTime){
+	searchTarget(deltaTime);
+	
+
 	bulletUpdate(deltaTime);
 
 	position_ += velocity_;
@@ -44,7 +52,17 @@ void BaseEnemy::onDraw() const
 	animation_.Draw();
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
+	Model::GetInstance().Draw(modelHandle_, Matrix::CreateRotationY(180.0f)*Matrix(rotation_).Translation(drawPosition));
+	
+	//ターゲットが存在しなければ索敵無効
+	if (target_ == nullptr)return;
+	//ターゲットの位置を検索
+	Vector3 targetPos = target_->position();
+	//ターゲット方向のベクトル
+	Vector3 toTarget = targetPos - position_;
+	float forwardAngle = MathHelper::ACos(Vector3::Dot(rotation_.Forward().Normalize(), toTarget.Normalize()));
+
+	DebugDraw::DebugDrawFormatString(50, 50, GetColor(255, 255, 255), "%f", forwardAngle);
 }
 
 void BaseEnemy::onCollide(Actor & other)
@@ -59,6 +77,36 @@ void BaseEnemy::onCollide(Actor & other)
 		
 		//自身も跳ね返る
 		velocity_ = -bound;
+	}
+}
+
+void BaseEnemy::searchTarget(float deltaTime)
+{
+	//ターゲットが存在しなければ索敵無効
+	if (target_ == nullptr)return;
+	//ターゲットの位置を検索
+	Vector3 targetPos = target_->position();
+	//ターゲット方向のベクトル
+	Vector3 toTarget = targetPos - position_;
+	//角度を求める
+	float forwardAngle = MathHelper::ACos(Vector3::Dot(rotation_.Forward().Normalize(), toTarget.Normalize()));
+	float leftAngle = MathHelper::ACos(Vector3::Dot(rotation_.Left().Normalize(), toTarget.Normalize()));
+
+	//行動範囲内だったら
+	if (forwardAngle < moveAngle) {
+		float moveSpeed = 0.2f;
+		//ターゲット方向に前進
+		position_ += toTarget.Normalize()*moveSpeed;
+	}
+	//視界範囲内だったら
+	if (forwardAngle < viewAngle) {
+		//自身を回転させる
+		float rotateAngle = 1.0f;
+		//左なら右に
+		if (leftAngle > 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -rotateAngle);
+		//右なら左に
+		else if(leftAngle < 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), rotateAngle);
+		
 	}
 }
 

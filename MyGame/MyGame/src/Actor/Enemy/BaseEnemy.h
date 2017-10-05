@@ -31,6 +31,8 @@ private:
 	virtual void onCollide(Actor& other) override;
 
 private:
+	//索敵
+	void searchTarget(float deltaTime);
 	//パートナーの更新
 	void bulletUpdate(float deltaTime);
 
@@ -50,4 +52,5 @@ private:
 	//回転力
 	float turnPower_;
 
+	ActorPtr target_;
 };

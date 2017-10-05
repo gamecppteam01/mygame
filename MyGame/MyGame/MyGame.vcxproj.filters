@@ -542,5 +542,8 @@
     <ClInclude Include="src\Conv\ByteConverter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Input\DualShock4Reader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

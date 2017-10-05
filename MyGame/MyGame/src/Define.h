@@ -7,7 +7,7 @@ static const Vector2	SCREEN_SIZE = Vector2(1280.0f, 720.0f);
 static const int WINDOW_WIDTH = (int)SCREEN_SIZE.x;
 static const int WINDOW_HEIGHT = (int)SCREEN_SIZE.y;
 ///ウインドウの表示倍率
-static const float		WINDOW_RATE = 0.5f;
+static const float		WINDOW_RATE = 1.0f;
 ///ウインドウモードにするかしないか(TRUE : FALSE)
 static const int		WINDOW_MODE = TRUE;
 

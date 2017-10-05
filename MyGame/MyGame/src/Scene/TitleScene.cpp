@@ -55,7 +55,7 @@ void TitleScene::draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_END, Vector2(150.0f, 300.0f));
 	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 100.0f));*/
 	
-	Camera::GetInstance().Position.Set(Vector3(0, 0, -30));
+	Camera::GetInstance().Position.Set(Vector3(0, 0, 30));
 
 	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().SetRange(0.1f, 1000.0f);

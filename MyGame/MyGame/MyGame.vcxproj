@@ -286,6 +286,7 @@
     <ClInclude Include="src\Graphic\Sprite.h" />
     <ClInclude Include="src\Graphic\TextDraw.h" />
     <ClInclude Include="src\Input\DualShock4Manager.h" />
+    <ClInclude Include="src\Input\DualShock4Reader.h" />
     <ClInclude Include="src\Input\GamePad.h" />
     <ClInclude Include="src\Input\InputChecker.h" />
     <ClInclude Include="src\Input\Keyboard.h" />
