@@ -8,7 +8,10 @@ public:
 	virtual ~Effect(){}
 	virtual void Initialize();
 	virtual void Update(float deltaTime);
+	//指定なし描画
 	virtual void Draw(const Vector3& position)const;
+	//中心、透明度、回転を指定した描画
+	virtual void Draw(const Vector3& position,const Vector2& origin,float alpha,float angle)const;
 
 	bool isEnd()const;
 protected:

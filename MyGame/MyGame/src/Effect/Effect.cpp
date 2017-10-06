@@ -21,6 +21,13 @@ void Effect::Draw(const Vector3& position)const
 	Model::GetInstance().Draw2D(id_, position+addPosition_, frame_, size_);
 }
 
+void Effect::Draw(const Vector3 & position, const Vector2 & origin, float alpha, float angle) const
+{
+	if (isEnd_)return;
+
+	Model::GetInstance().Draw2D(id_, position + addPosition_, frame_, size_,origin,angle,alpha);
+}
+
 bool Effect::isEnd() const
 {
 	return isEnd_;
