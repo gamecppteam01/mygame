@@ -1,11 +1,12 @@
 #pragma once
 #include "../Math/Math.h"
 #include "../Graphic/Sprite.h"
+#include "../UI/UI.h"
 
-class ButtonUI {
+class ButtonUI : public UI {
 public:
 	//コンストラクタ
-	ButtonUI(const SPRITE_ID& id, const Vector2& position);
+	ButtonUI( const SPRITE_ID& id, const Vector2& position);
 	//開始
 	void start();
 	//描画

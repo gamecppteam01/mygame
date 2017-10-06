@@ -4,7 +4,7 @@
 #include "ButtonUI.h"
 
 ComboGaugeUI::ComboGaugeUI(const Vector2& gaugePos)
-	:gaugePos_{ gaugePos }
+	: UI{ "ConboGaugeUI" , gaugePos }, gaugePos_{ gaugePos }
 {
 }
 

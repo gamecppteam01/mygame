@@ -9,7 +9,7 @@ enum class State {
 	output,
 };
 
-class ComboGaugeUI {
+class ComboGaugeUI : public UI{
 public:
 	//コンストラクタ
 	ComboGaugeUI(const Vector2& gaugePos);
