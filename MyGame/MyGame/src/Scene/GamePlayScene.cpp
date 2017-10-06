@@ -28,7 +28,7 @@ void GamePlayScene::start() {
 
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
-	ui_->start();
+	ui_->initialize();
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 }

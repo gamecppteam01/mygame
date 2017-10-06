@@ -8,7 +8,7 @@ ComboGaugeUI::ComboGaugeUI(const Vector2& gaugePos)
 {
 }
 
-void ComboGaugeUI::start()
+void ComboGaugeUI::initialize()
 {
 	buttonList_.clear();
 	//‰Šú‰»

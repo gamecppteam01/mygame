@@ -3,6 +3,7 @@
 #include <list>
 #include "ButtonUIPtr.h"
 #include "../Actor/Player/Step_Type.h"
+#include "UI.h"
 
 enum class State {
 	input,
@@ -13,12 +14,12 @@ class ComboGaugeUI : public UI{
 public:
 	//コンストラクタ
 	ComboGaugeUI(const Vector2& gaugePos);
-	//開始
-	void start();
+	//初期化
+	virtual void initialize() override;
 	//更新
-	void update(float deltaTime);
+	virtual void update(float deltaTime) override;
 	//描画
-	void draw() const;
+	virtual void draw() const override;
 
 private:
 	//ボタン生成

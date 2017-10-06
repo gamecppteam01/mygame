@@ -8,9 +8,10 @@ public:
 	//コンストラクタ
 	ButtonUI( const SPRITE_ID& id, const Vector2& position);
 	//開始
-	void start();
+	void initialize() override;
+	void update(float deltaTime) override;
 	//描画
-	void draw() const;
+	void draw() const override;
 
 private:
 	//ボタンの座標

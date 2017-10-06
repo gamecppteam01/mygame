@@ -4,7 +4,11 @@ ButtonUI::ButtonUI(const SPRITE_ID& id, const Vector2& position)
 	:UI{ "ButtonUI",position }, m_ID(id), m_Position(position) {
 }
 
-void ButtonUI::start()
+void ButtonUI::initialize()
+{
+}
+
+void ButtonUI::update(float deltaTime)
 {
 }
 
