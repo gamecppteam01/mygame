@@ -264,6 +264,7 @@
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
+    <ClInclude Include="src\Effect\GaugeEffect.h" />
     <ClInclude Include="src\Effect\HitEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Field\Field.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="src\Graphic\Anime.h" />
     <ClInclude Include="src\Graphic\BlendMode.h" />
     <ClInclude Include="src\Graphic\DebugDraw.h" />
+    <ClInclude Include="src\Graphic\EffekseerManager.h" />
     <ClInclude Include="src\Graphic\FontManager.h" />
     <ClInclude Include="src\Graphic\Light.h" />
     <ClInclude Include="src\Graphic\Model.h" />

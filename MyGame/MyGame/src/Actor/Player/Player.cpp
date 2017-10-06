@@ -35,9 +35,10 @@ static float justEffectStartTime = 0.5f;
 Player::Player(IWorld* world, const std::string& name, const Vector3& position) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
-	state_(Player_State::Idle), defaultPosition_(position), bullet_(std::make_shared<PlayerBullet>(world,position))
-	, bulletVelocity_(Vector3::Zero), turnPower_(1.0f), justTimer_(0.0f), stepMaxTime_(0.0f), boundVector_(Vector3::Zero)
+	state_(Player_State::Idle), defaultPosition_(position), 
+	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), justTimer_(0.0f), stepMaxTime_(0.0f), boundVector_(Vector3::Zero)
 {
+	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
 
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
@@ -80,6 +81,20 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 void Player::addVelocity(const Vector3 & velocity)
 {
 	velocity_ += velocity;
+}
+
+void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
+{
+	//bulletÇÇÕÇ∂Ç´
+	bulletVelocity_ += velocity_;
+	if (state_ == Player_State::Shoot) return;
+	//î≠éÀÇµÇƒÇ»Ç©Ç¡ÇΩÇÁé©êgÇ‡ÇÕÇ∂Ç≠
+	velocity_ += velocity;
+}
+
+void Player::createBullet()
+{
+	bullet_ = std::make_shared<PlayerBullet>(world_, position_, this);
 }
 
 void Player::initialize()

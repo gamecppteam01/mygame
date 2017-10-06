@@ -1,5 +1,6 @@
 #include "LoadingScene.h"
 #include"../Resource/LoadingList.h"
+#include"../Graphic/EffekseerManager.h"
 
 LoadingScene::LoadingScene() {
 	next_ = SceneType::SCENE_TITLE;
@@ -57,9 +58,16 @@ void LoadingScene::LoadModel()
 
 void LoadingScene::LoadEffect()
 {
+	//Modelクラスを利用したエフェクト
 	std::string defaultPath = "res/Sprite/Effect/";//全リソース共通パス
 	Model::GetInstance().Load2D(defaultPath + "circleeffect.png", MODEL_ID::EFFECT_CIRCLE_MODEL);
 	Model::GetInstance().Load2D(defaultPath + "light.png", MODEL_ID::EFFECT_LIGHT_MODEL);
+
+
+
+	//Effekseerを利用したエフェクト
+	defaultPath = "res/Effekseer/";
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SAMPLE_EFFECT, defaultPath+"laser.efk");
 }
 
 void LoadingScene::LoadFont()

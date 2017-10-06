@@ -20,6 +20,7 @@ public:
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
 	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+	void hitPlayer(const Vector3& velocity);
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;

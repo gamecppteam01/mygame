@@ -5,6 +5,7 @@
 #include"../Camera/Camera.h"
 #include"../Input/DualShock4Manager.h"
 #include"../Graphic/Model.h"
+#include"../Graphic/EffekseerManager.h"
 
 TitleScene::TitleScene()
 {
@@ -27,6 +28,7 @@ void TitleScene::update(float deltaTime)
 
 	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::UP)) {
 		_Counter += 1;
+		EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SAMPLE_EFFECT);
 	}
 	else if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::DOWN)) {
 		_Counter -= 1;

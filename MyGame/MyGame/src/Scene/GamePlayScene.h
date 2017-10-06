@@ -15,5 +15,4 @@ public:
 
 private:
 	World world_;
-	ComboGaugeUI* ui_;
 };

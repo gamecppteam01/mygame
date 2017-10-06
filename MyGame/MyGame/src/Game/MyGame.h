@@ -17,12 +17,15 @@ public:
 	// •`‰æ
 	virtual void draw() override {
 		sceneManager_.draw();
+		EffekseerManager::GetInstance().Draw();
 	}
 	virtual void frameEnd()override {
 		sceneManager_.checkIsEnd();
 	}
 	// I—¹
 	virtual void end() override {
+		EffekseerManager::GetInstance().End();
+
 	}
 private:
 	SceneManager sceneManager_;

@@ -1,9 +1,10 @@
 #include "PlayerBullet.h"
 #include"../../Graphic/Model.h"
 #include"../Body/BoundingCapsule.h"
-
-PlayerBullet::PlayerBullet(IWorld* world,const Vector3 & position):
-	Actor(world,"PlayerBullet",position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),Matrix::Identity, 20.0f, 3.0f))
+#include"Player.h"
+PlayerBullet::PlayerBullet(IWorld* world,const Vector3 & position, Player* player):
+	Actor(world,"PlayerBullet",position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),Matrix::Identity, 20.0f, 3.0f)),
+	player_(player)
 {
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
@@ -11,6 +12,11 @@ PlayerBullet::PlayerBullet(IWorld* world,const Vector3 & position):
 
 void PlayerBullet::initialize()
 {
+}
+
+void PlayerBullet::hitEnemy(const std::string& hitName,const Vector3& velocity)
+{
+	player_->hitEnemy(hitName, velocity);
 }
 
 void PlayerBullet::onMessage(EventMessage message, void * param)

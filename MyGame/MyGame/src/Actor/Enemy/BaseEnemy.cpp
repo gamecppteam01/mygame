@@ -4,6 +4,7 @@
 #include"../../World/IWorld.h"
 #include"../../Graphic/Model.h"
 #include"../Player/Player.h"
+#include"../Player/PlayerBullet.h"
 #include"../../Graphic/DebugDraw.h"
 
 //男と女の距離
@@ -16,7 +17,7 @@ static float viewAngle = 60.0f;
 static float moveAngle = 20.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,body)), turnPower_(1.0f)
+	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
@@ -31,6 +32,12 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	bulletRotation_ = bullet_->getRotationPtr();
 
 	target_ = world_->findActor("Player");
+}
+
+void BaseEnemy::hitPlayer(const Vector3 & velocity)
+{
+	bulletVelocity_ += velocity;
+	velocity_ += velocity;
 }
 
 void BaseEnemy::onMessage(EventMessage message, void * param)
@@ -78,6 +85,18 @@ void BaseEnemy::onCollide(Actor & other)
 		//自身も跳ね返る
 		velocity_ = -bound;
 	}
+	if (other.getName() == "PlayerBullet") {
+		Vector3 bound = other.position() - position_;
+		bound = bound.Normalize();
+		bound *= boundPower;
+		bound.y = 0.0f;
+		//相手を跳ね返す
+		static_cast<PlayerBullet*>(&other)->hitEnemy(name_,bound);
+
+		//自身も跳ね返る
+		velocity_ = -bound;
+
+	}
 }
 
 void BaseEnemy::searchTarget(float deltaTime)
@@ -94,14 +113,14 @@ void BaseEnemy::searchTarget(float deltaTime)
 
 	//行動範囲内だったら
 	if (forwardAngle < moveAngle) {
-		float moveSpeed = 0.2f;
+		float moveSpeed = 0.5f;
 		//ターゲット方向に前進
 		position_ += toTarget.Normalize()*moveSpeed;
 	}
 	//視界範囲内だったら
 	if (forwardAngle < viewAngle) {
 		//自身を回転させる
-		float rotateAngle = 1.0f;
+		float rotateAngle = 3.0f;
 		//左なら右に
 		if (leftAngle > 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -rotateAngle);
 		//右なら左に

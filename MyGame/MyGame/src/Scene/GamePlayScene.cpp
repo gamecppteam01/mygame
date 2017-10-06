@@ -10,9 +10,9 @@
 #include<memory>
 #include"../Actor/Enemy/BaseEnemy.h"
 #include"../UI/UITemplate.h"
+#include<EffekseerForDXLib.h>
 
 GamePlayScene::GamePlayScene():world_() {
-	ui_ = new ComboGaugeUI(Vector2(100.0f, 100.0f));
 }
 
 void GamePlayScene::start() {
@@ -24,11 +24,11 @@ void GamePlayScene::start() {
 	world_.addCamera(camera);
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f);
 	world_.addActor(ActorGroup::PLAYER, player);
-	world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f));
-
+	for (int i = 0; i < 4; i++) {
+		world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i)));
+	}
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
-	ui_->initialize();
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 }
@@ -37,17 +37,14 @@ void GamePlayScene::update(float deltaTime) {
 
 	world_.update(deltaTime);
 
-	ui_->update(deltaTime);
 }
 
 void GamePlayScene::draw() const {
 	//Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, Matrix::Identity);
 
 	world_.draw();
-	ui_->draw();
 }
 
 void GamePlayScene::end() {
 	world_.Initialize();
-	delete ui_;
 }

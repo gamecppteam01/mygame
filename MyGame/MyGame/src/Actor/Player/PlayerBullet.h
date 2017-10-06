@@ -2,6 +2,7 @@
 #include"../Actor.h"
 #include"../../Graphic/AnimationDx.h"
 
+class Player;
 //プレイヤーの攻撃(女)
 class PlayerBullet:public Actor {
 	friend class Player;
@@ -19,9 +20,11 @@ public:
 	};
 
 public:
-	PlayerBullet(IWorld* world, const Vector3& position);
+	PlayerBullet(IWorld* world, const Vector3& position, Player* player);
 	//初期化
 	virtual void initialize() override;
+
+	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 
 private:
 	// メッセージ処理
@@ -39,7 +42,7 @@ private:
 	Matrix* getRotationPtr();
 	//アニメーションの変更
 	void changeAnimation(PlayerBullet_Animation animID, float animSpeed = 1.0f);
-
+	Player* player_;
 private:
 
 	//プレイヤーのアニメーション

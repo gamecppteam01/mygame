@@ -22,6 +22,12 @@ enum SPRITE_ID
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 
+enum EFFECT_ID {
+
+	SAMPLE_EFFECT,
+
+};
+
 // モデルID
 enum MODEL_ID
 {

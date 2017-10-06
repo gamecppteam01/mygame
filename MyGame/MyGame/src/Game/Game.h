@@ -6,6 +6,7 @@
 #include "../Math/Math.h"
 #include"../Camera/Camera.h"
 #include"../Input/DualShock4Manager.h"
+#include"../Graphic/EffekseerManager.h"
 
 class Game {
 protected:
@@ -71,6 +72,8 @@ private:
 		InputChecker::GetInstance().Update();
 		//DualShock4専用の入力更新
 		DualShock4Manager::GetInstance().Update();
+
+		EffekseerManager::GetInstance().Update();
 	}
 private:
 	// コピー禁止

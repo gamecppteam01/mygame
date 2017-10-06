@@ -55,7 +55,10 @@ void ActorManager::collide() {
 	// 衝突するグループの指定
 	//actors_[ActorGroup::Player]->collideChildren(*actors_[ActorGroup::Enemy]);
 	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::ENEMY]);
+	actors_[ActorGroup::PLAYER_BULLET]->collideChildren(*actors_[ActorGroup::ENEMY]);
+	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
+	actors_[ActorGroup::PLAYER_BULLET]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
 	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::PLAYER_BULLET]);
-	
+
 
 }

@@ -45,7 +45,9 @@ public:
 //外部公開関数
 public:
 	void addVelocity(const Vector3& velocity);
+	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 private:
+	void createBullet();
 	virtual void initialize()override;
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
