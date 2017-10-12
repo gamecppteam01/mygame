@@ -210,8 +210,10 @@ private:
 		gyroVector_.y = (nextGyro[1] - 3.12f) / (float)maxGyro;
 		gyroVector_.z = (nextGyro[2] + 1.5f) / (float)maxGyro;
 
-		gyroMat_ *= Matrix::CreateRotationX(gyroVector_.x)*Matrix::CreateRotationY(gyroVector_.y)*Matrix::CreateRotationZ(-gyroVector_.z);
+		frameGyroMat_= Matrix::CreateFromAxisAngle(gyroMat_.Left(), gyroVector_.x)*Matrix::CreateFromAxisAngle(gyroMat_.Up(), gyroVector_.y)*Matrix::CreateFromAxisAngle(gyroMat_.Forward(), -gyroVector_.z);
 
+		//gyroMat_ *= Matrix::CreateRotationX(gyroVector_.x)*Matrix::CreateRotationY(gyroVector_.y)*Matrix::CreateRotationZ(-gyroVector_.z);
+		gyroMat_ *= frameGyroMat_;
 		OutputDebugString("L[");
 		OutputDebugString(std::to_string(gyroMat_.Left().x).c_str());
 		OutputDebugString(" ,");
@@ -398,14 +400,19 @@ private:
 	Vector3 currentAngle_{ Vector3::Zero };
 	
 	Matrix accelMat_{ Matrix::Identity };
+	//ジャイロ回転行列の合成値
 	Matrix gyroMat_{ Matrix::Identity };
+	//現フレームのジャイロ回転行列
+	Matrix frameGyroMat_{ Matrix::Identity };
 
 	std::list<float> xAngleList_;
 	std::list<float> yAngleList_;
 	std::list<float> zAngleList_;
 private:
-	//加速度センサーの傾き検出時の最大値
+	//加速度センサーの傾き検出時の最大値,重力加速度もこの値と同値
 	const int maxAcceleration{ 8192 };
+	//加速度1当たりの加速度検出値
+	const int baseAcceleration{ 836 };
 	const int maxGyro{ 1024 };
 };
 
