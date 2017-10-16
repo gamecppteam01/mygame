@@ -45,6 +45,13 @@ ActorPtr ActorManager::findActor(const std::string& name) {
 	return root_.findCildren(name);
 }
 
+void ActorManager::findActor(const std::string & name, std::list<ActorPtr>& actorList)
+{
+	for (auto& act : actors_) {
+		act.second->findCildren(name, actorList);
+	}
+}
+
 // メッセージ処理
 void ActorManager::handleMessage(EventMessage message, void* param) {
 	root_.handleMessage(message, param);

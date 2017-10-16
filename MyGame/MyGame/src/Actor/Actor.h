@@ -12,7 +12,7 @@
 #include <functional>
 #include <forward_list>
 #include <vector>
-
+#include<list>
 class IWorld;
 enum class EventMessage;
 
@@ -48,6 +48,8 @@ public:
 	ActorPtr findCildren(const std::string& name);
 	// 子の検索
 	ActorPtr findCildren(std::function<bool(const Actor&)> fn);
+	// 子の検索及び追加
+	void findCildren(const std::string& name,std::list<ActorPtr>& actorList);
 	// 子の追加
 	void addChild(const ActorPtr& child);
 	// 子を巡回

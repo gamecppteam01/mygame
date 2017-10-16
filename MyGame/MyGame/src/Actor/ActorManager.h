@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include"ActorPtr.h"
 #include <map>
+#include<list>
 
 enum class ActorGroup;
 enum class ShapeType;
@@ -22,6 +23,8 @@ public:
 	void addActor(ActorGroup group, const ActorPtr& actor);
 	// アクターの検索
 	ActorPtr findActor(const std::string& name);
+	// アクターの検索
+	void findActor(const std::string& name,std::list<ActorPtr>& actorList);
 	// メッセージ処理
 	void handleMessage(EventMessage message, void* param);
 	// コピー禁止

@@ -122,6 +122,15 @@ ActorPtr Actor::findCildren(std::function<bool(const Actor&)> fn) {
 	return nullptr;
 }
 
+void Actor::findCildren(const std::string & name, std::list<ActorPtr>& actorList)
+{
+	for (auto& c : children_) {
+		if (c->getName() == name) {
+			actorList.push_back(c);
+		}
+	}
+}
+
 // q‚ÌÕ“Ë”»’è
 void Actor::collideChildren(Actor& other) {
 	eachChildren(

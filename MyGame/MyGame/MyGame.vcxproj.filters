@@ -551,5 +551,8 @@
     <ClInclude Include="src\Graphic\EffekseerManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Actor\ScoreJudge\Judge.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -42,6 +42,8 @@ public:
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
 	virtual ActorPtr findActor(const std::string& name) override;
+	//アクターの一括検索
+	virtual void findActors(const std::string& name,std::list<ActorPtr>& actorList) override;
 	// メッセージの送信
 	virtual void sendMessage(EventMessage message, void* param = nullptr)  override;
 	// イベントリスナーの追加

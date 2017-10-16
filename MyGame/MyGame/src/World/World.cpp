@@ -98,6 +98,10 @@ ActorPtr World::findActor(const std::string& name) {
 	return actors_.findActor(name);
 }
 
+void World::findActors(const std::string & name, std::list<ActorPtr>& actorList){
+	actors_.findActor(name, actorList);
+}
+
 
 // メッセージの送信
 void World::sendMessage(EventMessage message, void* param) {
