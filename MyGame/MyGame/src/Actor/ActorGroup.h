@@ -1,6 +1,6 @@
 #pragma once
 enum class ActorGroup {
-
+	NPC,   //ノンプレイヤー
 	PLAYER,//プレイヤー
 	PLAYER_BULLET,//パートナー
 	ENEMY,//敵

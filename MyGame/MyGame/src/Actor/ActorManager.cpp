@@ -8,6 +8,7 @@ ActorManager::ActorManager() {
 // 初期化
 void ActorManager::initialize() {
 	// アクターグループの登録
+	actors_[ActorGroup::NPC] = std::make_shared<Actor>();
 	actors_[ActorGroup::PLAYER] = std::make_shared<Actor>();
 	actors_[ActorGroup::PLAYER_BULLET] = std::make_shared<Actor>();
 	actors_[ActorGroup::ENEMY] = std::make_shared<Actor>();
@@ -15,6 +16,7 @@ void ActorManager::initialize() {
 	actors_[ActorGroup::EFFECT] = std::make_shared<Actor>();
 	actors_[ActorGroup::DUMMYACTOR] = std::make_shared<Actor>();
 	root_.clearChildren();
+	root_.addChild(actors_[ActorGroup::NPC]);
 	root_.addChild(actors_[ActorGroup::PLAYER]);
 	root_.addChild(actors_[ActorGroup::PLAYER_BULLET]);
 	root_.addChild(actors_[ActorGroup::ENEMY]);
