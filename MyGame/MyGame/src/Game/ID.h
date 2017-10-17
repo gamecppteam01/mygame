@@ -17,7 +17,9 @@ enum SPRITE_ID
 	BUTTON_B,
 	BUTTON_C,
 	BUTTON_D,
-
+	ENEMY,
+	PLAYER,
+	MINIMAP,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
