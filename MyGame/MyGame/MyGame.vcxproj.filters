@@ -602,5 +602,8 @@
     <ClInclude Include="src\UI\UIInclude.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\ScoreManager\ScoreManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

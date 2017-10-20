@@ -1,7 +1,10 @@
 #pragma once
 #include"../Actor.h"
 
-enum class EventMessage;
+enum class Judge_State {
+	Search,
+	Regard,
+};
 
 class Judge_NPC : public Actor {
 public:
@@ -19,16 +22,28 @@ public:
 	virtual void onCollide(Actor& other);
 
 private:
+	//状態更新
+	void StateUpdate(float deltaTime);
+	//探索更新
+	void SearchUpdate(float deltaTime);
+	//注視更新
+	void RegardUpdate(float deltaTime);
+	//視野角内にいるか？
 	bool is_Scorp_Angle(ActorPtr& target) const;
+	//一定距離内にいるか？
 	bool is_In_Distans(ActorPtr& target) const;
 
 private:
+	//状態
+	Judge_State m_State;
 	//視野角
 	float m_Scope_angle;
 	//横回転角
 	float yaw;
 	//角度
 	float m_Angle;
-	//加算の値
-	float m_Add;
+	//1カウント
+	float m_Count;
+	//タイマー
+	float m_Timer;
 };

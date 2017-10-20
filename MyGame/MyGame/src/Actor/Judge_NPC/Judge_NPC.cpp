@@ -10,20 +10,19 @@
 
 //コンストラクタ
 Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position,float scope_angle)
-	:Actor(world,
-		name,
-		position,
-		std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f))
-		,m_Scope_angle(scope_angle),yaw(0.0f){
+	:Actor(world,name,position,	std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f))
+	,m_Scope_angle(scope_angle),yaw(0.0f){
 	initialize();
 }
 
 //初期化
 void Judge_NPC::initialize() {
 	m_Angle = 45.0f;
-	m_Add = 1.0f;
+	m_Count = 0.0f;
 	yaw = 1;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
+	m_State = Judge_State::Search;
+	m_Timer = 0.0f;
 }
 
 //メッセージ処理
@@ -32,12 +31,7 @@ void Judge_NPC::onMessage(EventMessage message, void * param) {
 
 //更新
 void Judge_NPC::onUpdate(float deltaTime) {
-	if (m_Add >= m_Angle || m_Add <= -m_Angle) {
-		yaw *= -1;
-	}
-	m_Add += yaw;
-	rotation_ *= Matrix::CreateRotationY(yaw);
-	
+	StateUpdate(deltaTime);
 }
 
 //描画
@@ -60,6 +54,40 @@ void Judge_NPC::onDraw() const {
 void Judge_NPC::onCollide(Actor & other) {
 }
 
+//状態更新
+void Judge_NPC::StateUpdate(float deltaTime){
+	switch (m_State)
+	{
+	case Judge_State::Search:
+		SearchUpdate(deltaTime);
+		break;
+	case Judge_State::Regard:
+		RegardUpdate(deltaTime);
+		break;
+	}
+}
+
+//探索更新
+void Judge_NPC::SearchUpdate(float deltaTime){
+	if (m_Count >= m_Angle || m_Count <= -m_Angle) {
+		m_State = Judge_State::Regard;
+		m_Timer = 3.0f;
+		return;
+	}
+	rotation_ *= Matrix::CreateRotationY(yaw);
+	m_Count += yaw;
+}
+
+//注視更新
+void Judge_NPC::RegardUpdate(float deltaTime){
+	if (m_Timer <= 0) {
+		yaw *= -1;
+		m_Count += yaw;
+		m_State = Judge_State::Search;
+	}
+	m_Timer -= deltaTime;
+}
+
 //視野角内にいるか？
 bool Judge_NPC::is_Scorp_Angle(ActorPtr& target) const
 {
@@ -75,9 +103,7 @@ bool Judge_NPC::is_Scorp_Angle(ActorPtr& target) const
 	result = MathHelper::ACos(result);
 
 	//視野角内にいるか？
-	if (result <= m_Scope_angle) {
-		return true;
-	}
+	if (result <= m_Scope_angle) {	return true; }
 	return false;
 }
 
@@ -88,8 +114,6 @@ bool Judge_NPC::is_In_Distans(ActorPtr & target) const
 	//ターゲットと自分の距離を求める
 	result = Vector3::Distance(target->position(), position_);
 	//自分とターゲットとの距離が一定以内だったら真
-	if (result <= 50) {
-		return true;
-	}
+	if (result <= 50) {	return true; }
 	return false;
 }

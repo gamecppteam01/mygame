@@ -336,6 +336,7 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
+    <ClInclude Include="src\ScoreManager\ScoreManager.h" />
     <ClInclude Include="src\Sound\Sound.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />
