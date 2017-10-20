@@ -8,8 +8,7 @@
 #include"../Graphic/Light.h"
 #include"../Light/LightType.h"
 #include"../UI/UIManager.h"
-
-enum class EventMessage;
+#include"../Judge/StepTimer.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -34,10 +33,11 @@ public:
 	void addLight(PointLight light);
 	//UIの追加
 	void addUI(UIPtr ui);
+	virtual void addStepTimeListener(const ActorPtr& actor) override;
 	// フィールドの取得
 	virtual FieldPtr getField() const override;
 	virtual CameraPtr getCamera() override;
-
+	virtual StepTimer getStepTimer()const override;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
@@ -59,7 +59,8 @@ private:
 	Light  light_;
 	ActorManager actors_;
 	UIManager uiManager_;
-	
+	//ステップ通知
+	StepTimer stepTimer_;
 	// イベントリスナー
 	std::function<void(EventMessage, void*)> listener_;
 };

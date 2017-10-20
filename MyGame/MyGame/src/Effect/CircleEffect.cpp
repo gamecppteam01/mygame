@@ -2,7 +2,7 @@
 #include"../Math/Easing.h"
 
 //holdÇ…çsÇ≠Ç‹Ç≈ÇÃéûä‘
-static float toHoldTime = 0.07f;
+static const float toHoldTime = 0.07f;
 
 CircleEffect::CircleEffect(float maxSize, float effectTime):
 	Effect(MODEL_ID::EFFECT_CIRCLE_MODEL,0.0f,0.0f), maxSize_(maxSize), effectTime_(0.0f),effectMaxTime_(effectTime), holdTime_(0.3f), effectMode_(0){

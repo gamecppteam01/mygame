@@ -8,13 +8,13 @@
 #include"../../Graphic/DebugDraw.h"
 
 //’j‚Æ—‚Ì‹——£
-static Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
+static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
 //’e‚«”ò‚Î‚·—Í
-static float boundPower = 10.0f;
+static const float boundPower = 10.0f;
 //‹ŠEŠp“x
-static float viewAngle = 60.0f;
+static const float viewAngle = 60.0f;
 //“®‚«o‚·‹ŠEŠp“x
-static float moveAngle = 20.0f;
+static const float moveAngle = 20.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f)

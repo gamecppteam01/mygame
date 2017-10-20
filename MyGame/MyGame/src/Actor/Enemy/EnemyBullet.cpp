@@ -5,7 +5,7 @@
 #include"BaseEnemy.h"
 
 //’e‚«”ò‚Î‚·—Í
-static float boundPower = 10.0f;
+static const float boundPower = 10.0f;
 
 EnemyBullet::EnemyBullet(IWorld * world, const std::string & name, const Vector3 & position,BaseEnemy* enemy, const IBodyPtr & body):
 	Enemy(world, "EnemyBullet", position, body), enemy_(enemy)

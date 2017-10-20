@@ -8,7 +8,8 @@ World::World() :
 	field_(std::make_shared<Field>()),
 	camera_(std::make_shared<OverLookingCamera>()),
 	light_(true),
-	uiManager_(){
+	uiManager_(),
+	stepTimer_(){
 }
 
 //初期化
@@ -20,11 +21,13 @@ void World::Initialize()
 	light_.Initialize();
 	actors_.initialize();
 	uiManager_.initialize();
+	stepTimer_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
 
 // 更新
 void World::update(float deltaTime) {
+	stepTimer_.update(deltaTime);
 	field_->update(deltaTime);
 	// アクターの更新処理
 	actors_.update(deltaTime);
@@ -77,6 +80,11 @@ void World::addUI(UIPtr ui)
 	uiManager_.add(ui);
 }
 
+void World::addStepTimeListener(const ActorPtr & actor)
+{
+	stepTimer_.addActor(actor);
+}
+
 FieldPtr World::getField() const
 {
 	return field_;
@@ -87,6 +95,10 @@ CameraPtr World::getCamera()
 	return camera_;
 }
 
+StepTimer World::getStepTimer() const
+{
+	return stepTimer_;
+}
 
 // アクターの追加
 void World::addActor(ActorGroup group, const ActorPtr& actor) {

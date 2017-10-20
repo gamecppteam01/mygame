@@ -2,7 +2,7 @@
 #include"../Math/Easing.h"
 
 //holdÇ…çsÇ≠Ç‹Ç≈ÇÃéûä‘
-static float toHoldTime = 0.07f;
+static const float toHoldTime = 0.07f;
 
 HitEffect::HitEffect(float maxSize,int effectCount, float effectTime) :
 	Effect(MODEL_ID::EFFECT_LIGHT_MODEL, 0.0f, 0.0f), effectCount_(effectCount), maxSize_(maxSize),timeCount_(0.0f), effectMaxTime_(effectTime){

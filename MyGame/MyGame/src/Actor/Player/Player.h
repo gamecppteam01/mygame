@@ -6,8 +6,8 @@
 #include<array>
 #include"../../Method/MethodTimer.h"
 #include"Step_Type.h"
+#include"GyroRotateChecker.h"
 
-enum class EventMessage;
 class PlayerBullet;
 
 class Player :public Actor {
@@ -17,6 +17,7 @@ public:
 		Move,//移動
 		//Jump,//ジャンプ
 		Step,//技
+		Step_Success,//技成功
 		Attack,//攻撃
 		Shoot,//発射
 		ShootEnd,//発射終了
@@ -35,8 +36,7 @@ public:
 		ShootEnd = 13,//発射終了
 		KnockBack = 14,//被弾時
 		Down = 15,//ダウン時
-		//Jump = 17,//ジャンプ時
-		Turn = 11,//回転時
+		Turn = 17,//回転時
 	};
 
 public:
@@ -46,6 +46,7 @@ public:
 public:
 	void addVelocity(const Vector3& velocity);
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
+
 private:
 	void createBullet();
 	virtual void initialize()override;
@@ -57,7 +58,8 @@ private:
 	virtual void onDraw() const;
 	// 衝突した
 	virtual void onCollide(Actor& other);
-
+	//ステップ通知時の処理
+	virtual void JustStep()override;
 //プレイヤーの移動関係
 private:
 	//重力及びジャンプを更新する
@@ -81,6 +83,8 @@ private:
 	//void jump_Update(float deltaTime);
 	//技時更新
 	void step_Update(float deltaTime);
+	//技成立時更新
+	void stepSuccess_Update(float deltaTime);
 	//攻撃時更新
 	void attack_Update(float deltaTime);
 	//発射時更新
@@ -101,6 +105,8 @@ private:
 	//void to_JumpMode();
 	//技状態への移行処理
 	void to_StepMode();
+	//技完成状態への移行処理
+	void to_StepSuccessMode();
 	//攻撃状態への移行処理
 	void to_AttackMode();
 	//発射状態への移行処理
@@ -121,6 +127,8 @@ private:
 	//void to_JumpMode();
 	//技状態の終了処理
 	void end_StepMode();
+	//ステップ成功の終了処理
+	void end_StepSuccessMode();
 	//攻撃状態の終了処理
 	void end_AttackMode();
 	//発射状態の終了処理
@@ -135,23 +143,28 @@ private:
 	void end_TurnMode();
 
 private:
+	//アニメーションの変更
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
 
 private:
+	//ステップに変更する状態か
 	bool isChangeStep() const;
 //弾(女)関係
 private:
 	//女がプレイヤーに追従するかどうか
 	bool isCanTracking() const;
 	void bulletUpdate(float deltaTime);
-	//コンボリストにステップを追加する
-	void addStep(int stepCount,float stepTime, Step_Type type);
 	//円エフェクトを生成する
 	void createCircleEffect();
 private:
 	//スティックのベクトルを右手座標系に変換
 	Vector2 getSticktoMove();
 private:
+	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン)
+	int successStep_;
+	//ステップの時間
+	float stepTime_{ 0.0f };
+
 	//男関連
 	//移動ベクトル
 	Vector3 velocity_;
@@ -165,10 +178,9 @@ private:
 	AnimationDx animation_;
 	//状態
 	Player_State state_;
-	//ステップを格納する
-	std::array<Step_Type, 3> stepCombo_{ Step_Type::Empty,Step_Type::Empty ,Step_Type::Empty };
 	//エフェクト生成クラスを呼び出す
 	MethodTimer effectCreator_;
+	
 	//女関連
 	//女本体
 	std::shared_ptr<PlayerBullet> bullet_{};
@@ -181,15 +193,18 @@ private:
 	//回転力
 	float turnPower_;
 	
-	//コンボのジャスト時間タイマー
-	float justTimer_;
-	//ステップの最大時間
-	float stepMaxTime_;
+	//ジャイロの回転チェッククラス
+	GyroRotateChecker gyroCheck_;
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
-
+	
 private:
-	Vector3 defaultPosition_;
+	const Vector3 defaultPosition_;
+	std::map<int,Player_Animation> stepAnimList_{
+		{ 1,Player_Animation::Down },
+		{ 2,Player_Animation::KnockBack },
+		{ 3,Player_Animation::Idle }
+	};
 };

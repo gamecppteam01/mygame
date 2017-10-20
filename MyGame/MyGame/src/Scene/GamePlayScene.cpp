@@ -12,6 +12,7 @@
 #include"../UI/UITemplate.h"
 #include<EffekseerForDXLib.h>
 #include"../Actor/Judge_NPC/Judge_NPC.h"
+#include"../UI/UIInclude.h"
 
 GamePlayScene::GamePlayScene():world_() {
 }
@@ -25,12 +26,16 @@ void GamePlayScene::start() {
 	world_.addCamera(camera);
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f);
 	world_.addActor(ActorGroup::PLAYER, player);
-	//for (int i = 0; i < 4; i++) {
-	//	world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i)));
-	//}
+	for (int i = 0; i < 4; i++) {
+		//world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i)));
+	}
+	world_.addStepTimeListener(player);
+
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(10.0f, 10.0f, 20.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
+	std::shared_ptr<UITemplate> mapUI = std::make_shared<UITemplate>(Vector2(200, 200));
+	world_.addUI(mapUI);
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 }

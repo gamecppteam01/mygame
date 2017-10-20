@@ -1,6 +1,7 @@
 #pragma once
 #include"Keyboard.h"
-#include"GamePad.h"
+#include"DualShock4Input.h"
+#include"../Math/Vector2.h"
 #include<map>
 
 class InputChecker {
@@ -22,6 +23,7 @@ public:
 		Left,
 		Right
 	};
+
 private:
 	InputChecker();
 public:
@@ -40,7 +42,8 @@ public:
 
 	//スティックの傾きを返す
 	Vector2 Stick()const;
-
+	//ハットスイッチの入力角度を取得する(未入力なら-1)
+	int GetPovAngle()const;
 	//指定方向にスティックが倒れているかを返す
 	bool StickStateDown(Input_Stick stick)const;
 	//指定方向にスティックを倒したかを返す
@@ -57,7 +60,7 @@ public:
 
 	void Update();
 private:
-	using Connect_Key_Pad = std::pair<UINT, UINT>;
+	using Connect_Key_Pad = std::pair<UINT, std::pair<int, int>>;
 	std::map<Input_Key, Connect_Key_Pad> inputList_;
 
 };

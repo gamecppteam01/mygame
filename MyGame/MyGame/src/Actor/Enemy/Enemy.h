@@ -2,7 +2,6 @@
 #include"../Actor.h"
 #include"../../Graphic/AnimationDX.h"
 
-enum class EventMessage;
 
 class Enemy :public Actor {
 public:

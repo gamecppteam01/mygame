@@ -18,25 +18,23 @@
 #include"../../Effect/CircleEffect.h"
 #include"../Dummy/BetweenPositionActor.h"
 #include"../../Input/DualShock4Manager.h"
+#include"../../Judge/JudgeDefine.h"
 
 //moveからidleに移行する際のinput確認数カウント
-static int inputCheckCount = 4;
+static const int inputCheckCount = 4;
 //男と女の距離
-static Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
+static const Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
 //回転力の基本係数
-static float defaultTurnPower = 1.0f;
+static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
-static float ignoreSlope = 0.1f;
-//ジャスト判定の時間
-static float justTime = 0.5f;
-//ジャストエフェクトの生成時間
-static float justEffectStartTime = 0.5f;
+static const float ignoreSlope = 0.1f;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), 
-	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), justTimer_(0.0f), stepMaxTime_(0.0f), boundVector_(Vector3::Zero)
+	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), boundVector_(Vector3::Zero),
+	gyroCheck_()
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -50,6 +48,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	playerUpdateFunc_[Player_State::Move] = [this](float deltaTime) {move_Update(deltaTime); };
 	//playerUpdateFunc_[Player_State::Jump] = [this](float deltaTime) {jump_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Step] = [this](float deltaTime) {step_Update(deltaTime); };
+	playerUpdateFunc_[Player_State::Step_Success] = [this](float deltaTime) {stepSuccess_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Attack] = [this](float deltaTime) {attack_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Shoot] = [this](float deltaTime) {shoot_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::ShootEnd] = [this](float deltaTime) {shootend_Update(deltaTime); };
@@ -61,6 +60,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	playerToNextModeFunc_[Player_State::Move] = [this]() {to_MoveMode(); };
 	//playerToNextModeFunc_[Player_State::Jump] = [this]() {to_JumpMode(); };
 	playerToNextModeFunc_[Player_State::Step] = [this]() {to_StepMode(); };
+	playerToNextModeFunc_[Player_State::Step_Success] = [this]() {to_StepSuccessMode(); };
 	playerToNextModeFunc_[Player_State::Attack] = [this]() {to_AttackMode(); };
 	playerToNextModeFunc_[Player_State::Shoot] = [this]() {to_ShootMode(); };
 	playerToNextModeFunc_[Player_State::ShootEnd] = [this]() {to_ShootEndMode(); };
@@ -70,6 +70,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position) 
 	playerEndModeFunc_[Player_State::Idle] = [this]() {		end_IdleMode(); };
 	playerEndModeFunc_[Player_State::Move] = [this]() {		end_MoveMode(); };
 	playerEndModeFunc_[Player_State::Step] = [this]() {		end_StepMode(); };
+	playerEndModeFunc_[Player_State::Step_Success] = [this]() {		end_StepSuccessMode(); };
 	playerEndModeFunc_[Player_State::Attack] = [this]() {	end_AttackMode(); };
 	playerEndModeFunc_[Player_State::Shoot] = [this]() {	end_ShootMode(); };
 	playerEndModeFunc_[Player_State::ShootEnd] = [this]() {	end_ShootEndMode(); };
@@ -106,7 +107,6 @@ void Player::initialize()
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Idle);
 
-	justTimer_ = 0.0f;
 	turnPower_ = 1.0f;
 	bullet_->initialize();
 
@@ -114,6 +114,7 @@ void Player::initialize()
 	bulletPosition_ = bullet_->getPositionPtr();
 	bulletRotation_ = bullet_->getRotationPtr();
 
+	gyroCheck_.initialize();
 }
 
 void Player::onMessage(EventMessage message, void * param)
@@ -132,6 +133,7 @@ void Player::onUpdate(float deltaTime)
 
 	//女を更新する
 	if(isCanTracking())bulletUpdate(deltaTime);
+
 }
 
 void Player::onDraw() const
@@ -141,38 +143,8 @@ void Player::onDraw() const
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
 
-	if (justTimer_ >= -justTime&&justTimer_<=0.0f) {
-		DebugDraw::DebugDrawFormatString(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, GetColor(255, 255, 255), "ジャスト!");
-	}
 	if (state_ != Player_State::Step)return;
 
-	int drawPos = 0;
-	for (auto i:stepCombo_)
-	{
-		drawPos += 30;
-		switch (i)
-		{
-		case Step_Type::Chasse:
-			DebugDraw::DebugDrawFormatString(200,drawPos,GetColor(255,255,255),"シャッセ");
-			break;
-		case Step_Type::Turn:
-			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "ターン");
-			break;
-		case Step_Type::Whisk:
-			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "ホイスク");
-			break;
-		case Step_Type::SplitCubanBreak:
-			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "スプリットキューバンブレイク");
-			break;
-		case Step_Type::Empty:
-			DebugDraw::DebugDrawFormatString(200, drawPos, GetColor(255, 255, 255), "空");
-			break;
-		case Step_Type::Dance_Count:
-			break;
-		default:
-			break;
-		}
-	}
 	//float ringSize = stepMaxTime_ - max(justTimer_,0.0f);
 	//ringSize = ringSize / stepMaxTime_;
 	//Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, ringSize*64.0f);
@@ -184,6 +156,11 @@ void Player::onCollide(Actor & other)
 	if (other.getName() == "PlayerBullet"&&state_== Player_State::Shoot) {
 		change_State_and_Anim(Player_State::ShootEnd, Player_Animation::ShootEnd);
 	}
+}
+
+void Player::JustStep()
+{
+	
 }
 
 
@@ -236,8 +213,8 @@ bool Player::change_State(Player_State state)
 
 void Player::idle_Update(float deltaTime)
 {
-	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	Vector2 move = getSticktoMove();
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	//Vector2 move = getSticktoMove();
 	if (std::abs(move.x) > ignoreSlope || std::abs(move.y) > ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
@@ -265,8 +242,8 @@ void Player::move_Update(float deltaTime)
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	Vector2 move = getSticktoMove();
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	//Vector2 move = getSticktoMove();
 	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
@@ -329,44 +306,37 @@ void Player::jump_Update(float deltaTime)
 
 void Player::step_Update(float deltaTime)
 {
-	justTimer_ -= deltaTime;
-	//コンボに失敗したら待機に戻る
-	if (justTimer_ < -justTime) {
-		turnPower_ =1.0f;
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
-	}
-	//エフェクト生成時間が来たらエフェクト生成関数を呼び出す
-	if (justTimer_ <= justEffectStartTime) {
-		effectCreator_.Action();
-	}
-	//タイマーが終わってなかったら更新しない
-	if (justTimer_ > 0.0f)return;
-	int count = 0;
-	//空のコンボを検索する
-	for (auto& i : stepCombo_) {
-		if (i == Step_Type::Empty) {
-			break;
+	if (!isChangeStep()) {
+		if (successStep_ != 0) {
+			//ダンスが成立してたら対応したアニメーションを再生(実行順序の関係でここではStateの変更のみ行い、内部で実行されるto_StepSuccessにてアニメーションを更新する)
+			if (change_State(Player_State::Step_Success))playerUpdateFunc_[state_](deltaTime);
+			return;
 		}
-		count++;
+		else {
+			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+			return;
+		}
 	}
-	//コンボが全て成立していたら元に戻る
-	if (count == stepCombo_.size()) {
+
+	gyroCheck_.update();
+	Vector2 rotate = gyroCheck_.getRotate();
+	if (abs(rotate.y) >= 250.0f&&successStep_ < 3)successStep_ = 3;
+	else if (rotate.y >= 160.0f&&successStep_ < 2)successStep_ = 2;
+	else if (rotate.y >= 70.0f&&successStep_ < 1)successStep_ = 1;
+	
+
+}
+
+void Player::stepSuccess_Update(float deltaTime)
+{
+	stepTime_ -= deltaTime;
+	//ステップが終了したら待機状態に戻る
+	if (stepTime_ <= 0.0f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	
-	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
-		addStep(count, 2.0f, (Step_Type)InputChecker::Input_Key::A);
-	}
-	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-		addStep(count, 1.0f, (Step_Type)InputChecker::Input_Key::B);
-	}
-	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::X)) {
-		addStep(count, 3.0f, (Step_Type)InputChecker::Input_Key::X);
-	}
-	else if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Y)) {
-		addStep(count, 2.0f, (Step_Type)InputChecker::Input_Key::Y);
-	}
+
 }
 
 void Player::attack_Update(float deltaTime)
@@ -379,8 +349,8 @@ void Player::shoot_Update(float deltaTime)
 	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	//Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	Vector2 move = getSticktoMove();
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	//Vector2 move = getSticktoMove();
 	//回転力を移動速度に追加
 	move *= turnPower_;
 	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
@@ -435,11 +405,15 @@ void Player::to_JumpMode()
 
 void Player::to_StepMode()
 {
-	//コンボをリセットする
-	for (auto& sc : stepCombo_) {
-		sc = Step_Type::Empty;
-	}
-	justTimer_ = 0.0f;
+	gyroCheck_.initialize();
+	successStep_ = 0;
+}
+
+void Player::to_StepSuccessMode()
+{
+	changeAnimation(stepAnimList_.at(successStep_));
+	//対応したアニメーションの終了時間を取得する
+	stepTime_=animation_.GetAnimMaxTime();
 }
 
 void Player::to_AttackMode()
@@ -491,6 +465,10 @@ void Player::end_StepMode()
 {
 }
 
+void Player::end_StepSuccessMode()
+{
+}
+
 void Player::end_AttackMode()
 {
 }
@@ -523,10 +501,16 @@ void Player::changeAnimation(Player_Animation animID, float animSpeed) {
 
 bool Player::isChangeStep() const
 {
-	return  InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)||
-			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)||
-			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::X)||
-			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Y);
+	return  {
+		(
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::A) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::B) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::X) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Y)
+		)
+		&&
+		InputChecker::GetInstance().GetPovAngle() != -1
+	};
 }
 
 bool Player::isCanTracking() const
@@ -543,23 +527,9 @@ void Player::bulletUpdate(float deltaTime)
 
 }
 
-void Player::addStep(int stepCount,float stepTime, Step_Type type)
-{
-	turnPower_ += 0.1f;
-
-	justTimer_ = stepTime;
-	stepMaxTime_ = justTimer_;
-
-	stepCombo_.at(stepCount) = type;
-
-	if (stepCount >= stepCombo_.size()-1)return;
-
-	effectCreator_.Add([this] {createCircleEffect(); });
-}
-
 void Player::createCircleEffect()
 {
-	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justEffectStartTime);
+	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justTime);
 	world_->addActor(ActorGroup::EFFECT, std::make_shared<EffectActor>(world_,"CircleEffect",position_, circleEffect));
 }
 

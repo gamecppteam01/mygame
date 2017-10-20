@@ -56,6 +56,17 @@ void AnimationDx::ChangeAnim(const int motion, const float frame)
 	prevAnimTimer_ = animTimer_;
 	animTimer_	= frame;
 	rate_		= 0.0f;
+
+	// 前アニメーションをデタッチ
+	MV1DetachAnim(modelHandle_, anim_);
+	MV1DetachAnim(modelHandle_, prevAnim_);
+
+	// 今アニメーションをアタッチ
+	anim_ = MV1AttachAnim(modelHandle_, motion_);
+	// 前アニメーションをアタッチ
+	prevAnim_ = MV1AttachAnim(modelHandle_, prevMotion_);
+
+	maxAnimTime_ = MV1GetAttachAnimTotalTime(modelHandle_, anim_);
 }
 
 void AnimationDx::SetHandle(const int & handle)
@@ -76,6 +87,11 @@ float AnimationDx::GetCurrentAnimFrame() const
 float AnimationDx::GetEndAnimFrame(int motion) const
 {
 	return MV1GetAttachAnimTotalTime(modelHandle_, motion);
+}
+
+float AnimationDx::GetAnimMaxTime() const
+{
+	return maxAnimTime_/60.0f;
 }
 
 

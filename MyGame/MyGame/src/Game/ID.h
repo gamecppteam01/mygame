@@ -20,6 +20,7 @@ enum SPRITE_ID
 	ENEMY,
 	PLAYER,
 	MINIMAP,
+	WARNING,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
@@ -72,3 +73,14 @@ enum FONT_ID {
 
 };
 
+enum EventMessage {
+
+};
+
+
+/*記述ルール
+・Call_を必ず頭につける事
+*/
+enum Notification {
+	Call_JustStep,
+};

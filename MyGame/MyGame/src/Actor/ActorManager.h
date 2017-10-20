@@ -7,7 +7,6 @@
 
 enum class ActorGroup;
 enum class ShapeType;
-enum class EventMessage;
 
 class ActorManager {
 public:

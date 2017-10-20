@@ -1,7 +1,6 @@
 #pragma once
 #include"Actor.h"
 
-enum class EventMessage;
 
 class ActorTemplate :public Actor {
 public:

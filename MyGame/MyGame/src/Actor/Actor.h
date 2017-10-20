@@ -14,7 +14,6 @@
 #include <vector>
 #include<list>
 class IWorld;
-enum class EventMessage;
 
 class Actor:public std::enable_shared_from_this<Actor>{
 public:
@@ -78,6 +77,8 @@ public:
 	bool isOnFloor() const;
 	// メッセージ処理
 	void handleMessage(EventMessage message, void* param);
+	//通知処理
+	void receiveNotification(Notification start);
 	// コピー禁止
 	Actor(const Actor& other) = delete;
 	Actor& operator = (const Actor& other) = delete;
@@ -86,6 +87,9 @@ protected:
 	virtual bool field(Vector3& result=Vector3());
 
 protected:
+	//ステップ判定通知の処理
+	virtual void JustStep();
+
 	// 壁との衝突判定
 	bool wall_hit_check(Vector3& pos, std::vector<MV1_COLL_RESULT_POLY*> walls);
 	// 床との衝突判定

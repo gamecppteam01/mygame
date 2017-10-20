@@ -215,6 +215,19 @@ void Actor::handleMessage(EventMessage message, void* param) {
 	eachChildren([&](Actor& child) { child.handleMessage(message, param); });
 }
 
+void Actor::receiveNotification(Notification start)
+{
+	switch (start)
+	{
+	case Call_JustStep:
+		JustStep();
+		break;
+	default:
+		break;
+	}
+
+}
+
 // フィールドとの衝突判定
 bool Actor::field(Vector3& result) {
 	Vector3 hitcenter;
@@ -225,6 +238,10 @@ bool Actor::field(Vector3& result) {
 		return true;
 	}
 	return false;
+}
+
+void Actor::JustStep()
+{
 }
 
 // 壁との衝突判定

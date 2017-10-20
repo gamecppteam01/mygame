@@ -3,12 +3,12 @@
 #include "../Actor/ActorPtr.h"
 #include"../Field/FieldPtr.h"
 #include"../Camera/CameraPtr.h"
+#include"../Game/ID.h"
 #include <string>
 #include<list>
 
 enum class ActorGroup;
-enum class EventMessage;
-
+class StepTimer;
 // ワールド抽象インターフェース
 class IWorld {
 public:
@@ -25,4 +25,6 @@ public:
 	// フィールドの取得
 	virtual FieldPtr getField() const = 0;
 	virtual CameraPtr getCamera() = 0;
+	virtual StepTimer getStepTimer()const = 0;
+	virtual void addStepTimeListener(const ActorPtr& actor) = 0;
 };
