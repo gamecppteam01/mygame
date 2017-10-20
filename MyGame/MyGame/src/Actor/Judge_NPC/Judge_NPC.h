@@ -19,7 +19,8 @@ public:
 	virtual void onCollide(Actor& other);
 
 private:
-	bool is_Scorp_Angle() const;
+	bool is_Scorp_Angle(ActorPtr& target) const;
+	bool is_In_Distans(ActorPtr& target) const;
 
 private:
 	//Ž‹–ìŠp

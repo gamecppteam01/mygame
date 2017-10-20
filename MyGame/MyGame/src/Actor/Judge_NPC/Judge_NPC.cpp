@@ -6,6 +6,7 @@
 #include"../../Math/Math.h"
 #include"../../Graphic/DebugDraw.h"
 #include"../../Define.h"
+#include<list>
 
 //コンストラクタ
 Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position,float scope_angle)
@@ -45,8 +46,13 @@ void Judge_NPC::onDraw() const {
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
 
-	if (is_Scorp_Angle() == true) {
-		DebugDraw::DebugDrawFormatString(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), "視覚内");
+	std::list<ActorPtr> targets;
+	world_->findActors("Enemy", targets);
+	targets.push_back(world_->findActor("Player"));
+	for (auto t : targets) {
+		if (is_Scorp_Angle(t) == true && is_In_Distans(t) == true) {
+			DebugDraw::DebugDrawFormatString(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), "視覚内");
+		}
 	}
 }
 
@@ -55,9 +61,8 @@ void Judge_NPC::onCollide(Actor & other) {
 }
 
 //視野角内にいるか？
-bool Judge_NPC::is_Scorp_Angle() const
+bool Judge_NPC::is_Scorp_Angle(ActorPtr& target) const
 {
-	auto target = world_->findActor("Player");
 	//相手のベクトルの取得
 	Vector3 V1 = target->position() - position_;
 	V1.Normalize();	//正規化
@@ -71,10 +76,20 @@ bool Judge_NPC::is_Scorp_Angle() const
 
 	//視野角内にいるか？
 	if (result <= m_Scope_angle) {
-		//DebugDraw::DebugDrawFormatString(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), result);
-
 		return true;
 	}
+	return false;
+}
 
+//一定距離内にいるか？
+bool Judge_NPC::is_In_Distans(ActorPtr & target) const
+{
+	float result;
+	//ターゲットと自分の距離を求める
+	result = Vector3::Distance(target->position(), position_);
+	//自分とターゲットとの距離が一定以内だったら真
+	if (result <= 50) {
+		return true;
+	}
 	return false;
 }
