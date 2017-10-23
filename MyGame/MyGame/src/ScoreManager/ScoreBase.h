@@ -32,6 +32,10 @@ public:
 	void AddScore(int playerNumber,int score);
 	//スコア倍率を変更する
 	void ChangeScoreRate(int playerNumber, float scoreRate);
+	//登録されているキャラ数を返す
+	int GetCharacterCount()const;
+	//キャラクターのスコアを返す
+	int GetCharacterScore(int playerNumber);
 private:
 	std::map<int,ScoreData> scoreList_;
 

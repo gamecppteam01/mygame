@@ -223,6 +223,7 @@
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
+    <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
     <ClCompile Include="src\Sound\Sound.cpp" />
     <ClCompile Include="src\Tween\TweenManager.cpp" />
     <ClCompile Include="src\Tween\TweenObject.cpp" />
@@ -323,6 +324,7 @@
     <ClInclude Include="src\Math\Point.h" />
     <ClInclude Include="src\Math\Quaternion.h" />
     <ClInclude Include="src\Math\Random.h" />
+    <ClInclude Include="src\Math\TwoDimensionalArray.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Method\MethodTimer.h" />
@@ -342,6 +344,7 @@
     <ClInclude Include="src\ScoreManager\ScoreBase.h" />
     <ClInclude Include="src\ScoreManager\ScoreList.h" />
     <ClInclude Include="src\ScoreManager\ScoreManager.h" />
+    <ClInclude Include="src\ScoreManager\ScoreMap.h" />
     <ClInclude Include="src\Sound\Sound.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />

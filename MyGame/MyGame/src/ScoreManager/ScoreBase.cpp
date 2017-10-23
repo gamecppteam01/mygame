@@ -42,3 +42,13 @@ void ScoreBase::ChangeScoreRate(int playerNumber, float scoreRate)
 	scoreList_.at(playerNumber).scoreRate_ = scoreRate;
 }
 
+//登録されているキャラ数を返す
+int ScoreBase::GetCharacterCount() const { return scoreList_.size(); }
+
+//キャラクターのスコアを返す
+int ScoreBase::GetCharacterScore(int playerNumber) {
+	//キャラが登録されてなかったら0を返す
+	if (scoreList_.count(playerNumber) == 0)return 0;
+	return scoreList_[playerNumber].score_; 
+}
+

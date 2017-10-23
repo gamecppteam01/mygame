@@ -144,12 +144,19 @@ void Player::onDraw() const
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
+
+	if (world_->getStepTimer().isJustTime()) {
+		DebugDraw::DebugDrawFormatString(0, 0, GetColor(255, 255, 255), "akrmkermekr");
+	}
+
+
 	if (state_ != Player_State::Step)return;
 
 	//float ringSize = stepMaxTime_ - max(justTimer_,0.0f);
 	//ringSize = ringSize / stepMaxTime_;
 	//Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, ringSize*64.0f);
 	//body_->draw(position_);
+
 }
 
 void Player::onCollide(Actor & other)
@@ -414,7 +421,7 @@ void Player::to_StepMode()
 	addScore_.Initialize();
 	//ジャスト判定タイミングならスコア加算関数を登録する
 	if (world_->getStepTimer().isJustTime()) {
-		addScore_.Add([&] {world_->getScoreBase().AddScore(playerNumber_, 100); });
+		addScore_.Add([&] {world_->getCanChangedScoreBase().AddScore(playerNumber_, 100); });
 	}
 	gyroCheck_.initialize();
 	successStep_ = 0;

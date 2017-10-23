@@ -31,7 +31,7 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::PLAYER, player);
 	for (int i = 0; i < 4; i++) {
 		playerNumber++;
-		auto enemy = std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(10.0f*i), playerNumber);
+		auto enemy = std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
@@ -59,6 +59,10 @@ void GamePlayScene::draw() const {
 	//Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, Matrix::Identity);
 
 	world_.draw();
+
+	for (int i = 1; i < world_.getScoreBase().GetCharacterCount()+1; i++) {
+		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreBase().GetCharacterScore(i));
+	}
 }
 
 void GamePlayScene::end() {

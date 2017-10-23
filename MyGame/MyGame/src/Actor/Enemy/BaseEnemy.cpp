@@ -116,6 +116,8 @@ void BaseEnemy::onCollide(Actor & other)
 
 void BaseEnemy::JustStep()
 {
+	if (Random::GetInstance().Range(1, 100) <= 50)return;
+
 	std::vector<int> stepAnim{
 		(int)Enemy_Animation::KnockBack,
 		(int)Enemy_Animation::Move_Forward,
@@ -124,6 +126,7 @@ void BaseEnemy::JustStep()
 	};
 
 	change_State_and_Anim(Enemy_State::Step, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
+	world_->getCanChangedScoreBase().AddScore(playerNumber_, 100);
 }
 
 void BaseEnemy::searchTarget(float deltaTime)
@@ -221,7 +224,7 @@ void BaseEnemy::to_Step()
 
 void BaseEnemy::updateNormal(float deltaTime)
 {
-	searchTarget(deltaTime);
+	//searchTarget(deltaTime);
 
 }
 
