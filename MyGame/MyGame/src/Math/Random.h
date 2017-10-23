@@ -35,7 +35,17 @@ public:
 	///</summary>
 	float Point(float point, float variance);
 
+	template <class T>
+	T Randomize(const std::vector<T>& list);
 private:
 	std::random_device	m_rnd_dev;	// ‰ŠúƒV[ƒh
 	std::mt19937		m_mt;			// —”¶¬Ší
 };
+
+template<class T>
+T Random::Randomize(const std::vector<T>& list)
+{
+	int target = Range(0, list.size()-1);
+	return list[target];
+
+}

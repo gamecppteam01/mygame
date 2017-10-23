@@ -21,14 +21,16 @@ void EnemyBullet::onMessage(EventMessage message, void * param)
 
 void EnemyBullet::onUpdate(float deltaTime)
 {
+	//アニメーションを更新
+	animation_.Update(MathHelper::Sign(deltaTime));
+
 }
 
 void EnemyBullet::onDraw() const
 {
-	animation_.Draw();
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 }
 
 void EnemyBullet::onCollide(Actor & other)

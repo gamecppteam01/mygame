@@ -73,6 +73,7 @@ void StepTimer::update_Just(float deltaTime)
 
 	//ŠÔŠuŠÔ‚ğ’´‚¦‚½‚ÍƒŠƒZƒbƒg
 	restartStepTimer();
+	notifyActor(Notification::Call_JustStep);
 	change_State(TimerMode::Mode_Count);
 
 }

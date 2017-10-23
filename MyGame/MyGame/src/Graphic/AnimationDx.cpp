@@ -1,5 +1,7 @@
 #include "AnimationDx.h"
 #include "../math/MathHelper.h"
+#include"Model.h"
+#include"../Math/Matrix.h"
 #include <DxLib.h>
 #include <math.h>
 #include <algorithm>
@@ -36,7 +38,7 @@ void AnimationDx::Update(const float frameTime)
 	rate_ = MathHelper::Clamp(rate_, 0.0f, 1.0f);
 }
 
-void AnimationDx::Draw() const
+void AnimationDx::Draw(const Matrix& rotation) const
 {
 	// アニメーションのブレンド
 	MV1SetAttachAnimBlendRate(modelHandle_, prevAnim_, 1.0f - rate_);
@@ -44,6 +46,8 @@ void AnimationDx::Draw() const
 	// 描画
 	MV1SetAttachAnimTime(modelHandle_, prevAnim_, prevAnimTimer_);
 	MV1SetAttachAnimTime(modelHandle_, anim_, animTimer_);
+
+	Model::GetInstance().Draw(modelHandle_, rotation);
 }
 
 void AnimationDx::ChangeAnim(const int motion, const float frame)
@@ -71,7 +75,7 @@ void AnimationDx::ChangeAnim(const int motion, const float frame)
 
 void AnimationDx::SetHandle(const int & handle)
 {
-	modelHandle_ = handle;
+	modelHandle_ = MV1DuplicateModel(handle);
 }
 
 bool AnimationDx::IsAnimEnd() const

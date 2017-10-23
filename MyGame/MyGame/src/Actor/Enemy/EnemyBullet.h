@@ -11,11 +11,10 @@ public:
 		Idle = 0,//待機時
 		Move_Forward = 2,//前移動時
 		Step_Left = 8,//左ステップ時
-		Attack = 11,//攻撃時
+		Turn = 11,//回転時
 		KnockBack = 14,//被弾時
 		Down = 15,//ダウン時
 	    //Jump = 17,//ジャンプ時
-	    Turn = 11,//回転時
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事

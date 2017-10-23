@@ -19,7 +19,7 @@ void Random::SetSeed(int seed)
 int Random::Range(int min, int max)
 {
 	// min‚©‚çmax‚Ü‚Å‚Ì”ÍˆÍİ’è
-	std::uniform_int_distribution<> rand(min, max - 1);
+	std::uniform_int_distribution<> rand(min, max);
 
 	// ”ÍˆÍ“à‚Å—”‚ğ¶¬‚µA•Ô‚·
 	return rand(m_mt);

@@ -140,10 +140,9 @@ void Player::onUpdate(float deltaTime)
 
 void Player::onDraw() const
 {
-	animation_.Draw();
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
 	if (state_ != Player_State::Step)return;
 
@@ -423,7 +422,7 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
-
+	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	addScore_.Action();
 
 	changeAnimation(stepAnimList_.at(successStep_));

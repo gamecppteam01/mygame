@@ -34,8 +34,7 @@ void Enemy::onUpdate(float deltaTime)
 
 void Enemy::onDraw() const
 {
-	animation_.Draw();
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(position_));
+	animation_.Draw(Matrix(rotation_).Translation(position_));
 
 }
 

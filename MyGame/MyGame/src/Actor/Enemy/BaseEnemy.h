@@ -9,14 +9,16 @@ public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class Enemy_Animation {
 		Idle = 0,//待機時
-		Move_Forward = 2,//前移動時
-		Step_Left = 8,//左ステップ時
-		Attack = 11,//攻撃時
-		KnockBack = 14,//被弾時
-		Down = 15,//ダウン時
-	  Turn = 11,//回転時
+		Move_Forward = 1,//前移動時
+		Step_Left = 2,//左ステップ時
+		Turn = 3,//回転時
+		KnockBack = 4,//被弾時
+		Down = 5,//ダウン時
 	};
-
+	enum class Enemy_State {
+		Normal,//通常時更新
+		Step//ステップを開始する
+	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
 	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
@@ -35,6 +37,9 @@ private:
 	virtual void onCollide(Actor& other) override;
 
 private:
+	//ステップ通知時の処理
+	virtual void JustStep()override;
+
 	//索敵
 	void searchTarget(float deltaTime);
 	//パートナーの更新
@@ -42,8 +47,17 @@ private:
 
 	//アニメーションの変更
 	void changeAnimation(Enemy_Animation animID);
+	//状態の更新
+	bool change_State(Enemy_State state);
+	//状態変更とアニメーション変更を同時に行う
+	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID);
 
+	void to_Step();
+
+	void updateNormal(float deltaTime);
+	void updateStep(float deltaTime);
 private:
+	float stepTime_{ 0.0f };
 	Vector3 velocity_;
 	//本体
 	std::shared_ptr<EnemyBullet> bullet_;
@@ -60,4 +74,6 @@ private:
 
 	//選手番号
 	int playerNumber_;
+
+	Enemy_State state_{ Enemy_State::Normal };
 };

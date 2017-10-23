@@ -31,7 +31,9 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::PLAYER, player);
 	for (int i = 0; i < 4; i++) {
 		playerNumber++;
-		world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i), playerNumber));
+		auto enemy = std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(10.0f*i), playerNumber);
+		world_.addActor(ActorGroup::ENEMY, enemy);
+		world_.addStepTimeListener(enemy);
 	}
 	world_.addStepTimeListener(player);
 

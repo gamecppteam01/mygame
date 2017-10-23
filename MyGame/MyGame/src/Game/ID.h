@@ -73,7 +73,7 @@ enum FONT_ID {
 
 };
 
-enum EventMessage {
+enum class EventMessage {
 
 };
 
@@ -81,6 +81,7 @@ enum EventMessage {
 /*記述ルール
 ・Call_を必ず頭につける事
 */
-enum Notification {
+enum class Notification {
 	Call_CreateJustEffect,//ジャストエフェクトの生成通知
+	Call_JustStep,//ジャストエフェクトの生成通知
 };

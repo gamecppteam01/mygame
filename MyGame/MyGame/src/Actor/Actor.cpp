@@ -219,8 +219,12 @@ void Actor::receiveNotification(Notification start)
 {
 	switch (start)
 	{
-	case Call_CreateJustEffect: {
+	case Notification::Call_CreateJustEffect: {
 		CreateJustEffect();
+		break;
+	}
+	case Notification::Call_JustStep: {
+		JustStep();
 		break;
 	}
 	default:
