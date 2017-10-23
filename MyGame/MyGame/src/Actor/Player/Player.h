@@ -40,13 +40,15 @@ public:
 	};
 
 public:
-	Player(IWorld* world,const std::string& name,const Vector3& position);
+	Player(IWorld* world,const std::string& name,const Vector3& position,int playerNumber);
 
 //外部公開関数
 public:
 	void addVelocity(const Vector3& velocity);
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 
+	//選手番号を取得する
+	int getPlayerNumber()const { return playerNumber_; }
 private:
 	void createBullet();
 	virtual void initialize()override;
@@ -58,8 +60,14 @@ private:
 	virtual void onDraw() const;
 	// 衝突した
 	virtual void onCollide(Actor& other);
+
+//通知処理関連
+private:
 	//ステップ通知時の処理
 	virtual void JustStep()override;
+	//エフェクト生成通知の処理
+	virtual void CreateJustEffect()override;
+	
 //プレイヤーの移動関係
 private:
 	//重力及びジャンプを更新する
@@ -164,6 +172,8 @@ private:
 	int successStep_;
 	//ステップの時間
 	float stepTime_{ 0.0f };
+	//選手番号
+	int playerNumber_;
 
 	//男関連
 	//移動ベクトル
@@ -180,7 +190,9 @@ private:
 	Player_State state_;
 	//エフェクト生成クラスを呼び出す
 	MethodTimer effectCreator_;
-	
+	//スコア加算の管理
+	MethodTimer addScore_;
+
 	//女関連
 	//女本体
 	std::shared_ptr<PlayerBullet> bullet_{};

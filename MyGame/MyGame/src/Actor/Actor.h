@@ -6,6 +6,7 @@
 #include"../Math/Math.h"
 #include"Body\Base\IBodyPtr.h"
 #include"Body\Base\DummyBody.h"
+#include"../Judge/StepTimer.h"
 #include"../Game/ID.h"
 #include <string>
 #include <memory>
@@ -87,6 +88,8 @@ protected:
 	virtual bool field(Vector3& result=Vector3());
 
 protected:
+	//エフェクト生成通知の処理
+	virtual void CreateJustEffect();
 	//ステップ判定通知の処理
 	virtual void JustStep();
 

@@ -82,5 +82,5 @@ enum EventMessage {
 ・Call_を必ず頭につける事
 */
 enum Notification {
-	Call_JustStep,
+	Call_CreateJustEffect,//ジャストエフェクトの生成通知
 };

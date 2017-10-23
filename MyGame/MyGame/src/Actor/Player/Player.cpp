@@ -14,11 +14,13 @@
 #include"PlayerBullet.h"
 #include"../ActorGroup.h"
 #include"../../Camera/OverLookingCamera.h"
-#include"../EffectActor/EffectActor.h"
+#include"../EffectActor/UniqueEffectActor/TrackingEffectActor.h"
 #include"../../Effect/CircleEffect.h"
 #include"../Dummy/BetweenPositionActor.h"
 #include"../../Input/DualShock4Manager.h"
 #include"../../Judge/JudgeDefine.h"
+#include"../../ScoreManager/ScoreBase.h"
+
 
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
@@ -29,11 +31,11 @@ static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
 
-Player::Player(IWorld* world, const std::string& name, const Vector3& position) :
+Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), 
-	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), boundVector_(Vector3::Zero),
+	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), boundVector_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_()
 {
 	createBullet();
@@ -161,6 +163,11 @@ void Player::onCollide(Actor & other)
 void Player::JustStep()
 {
 	
+}
+
+void Player::CreateJustEffect()
+{
+	createCircleEffect();
 }
 
 
@@ -405,15 +412,27 @@ void Player::to_JumpMode()
 
 void Player::to_StepMode()
 {
+	addScore_.Initialize();
+	//ジャスト判定タイミングならスコア加算関数を登録する
+	if (world_->getStepTimer().isJustTime()) {
+		addScore_.Add([&] {world_->getScoreBase().AddScore(playerNumber_, 100); });
+	}
 	gyroCheck_.initialize();
 	successStep_ = 0;
 }
 
 void Player::to_StepSuccessMode()
 {
+
+	addScore_.Action();
+
 	changeAnimation(stepAnimList_.at(successStep_));
 	//対応したアニメーションの終了時間を取得する
 	stepTime_=animation_.GetAnimMaxTime();
+
+	if (world_->getStepTimer().isJustTime()) {
+
+	}
 }
 
 void Player::to_AttackMode()
@@ -529,8 +548,8 @@ void Player::bulletUpdate(float deltaTime)
 
 void Player::createCircleEffect()
 {
-	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justTime);
-	world_->addActor(ActorGroup::EFFECT, std::make_shared<EffectActor>(world_,"CircleEffect",position_, circleEffect));
+	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justEffectStartTime);
+	world_->addActor(ActorGroup::EFFECT, std::make_shared<TrackingEffectActor>(world_,"CircleEffect",position_, circleEffect,shared_from_this()));
 }
 
 Vector2 Player::getSticktoMove()

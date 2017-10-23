@@ -9,6 +9,7 @@
 #include"../Light/LightType.h"
 #include"../UI/UIManager.h"
 #include"../Judge/StepTimer.h"
+#include"../ScoreManager/ScoreBase.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -38,6 +39,8 @@ public:
 	virtual FieldPtr getField() const override;
 	virtual CameraPtr getCamera() override;
 	virtual StepTimer getStepTimer()const override;
+	virtual ScoreBase getScoreBase()const override;
+	virtual ScoreBase& getCanChangedScoreBase()override;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
@@ -59,6 +62,7 @@ private:
 	Light  light_;
 	ActorManager actors_;
 	UIManager uiManager_;
+	ScoreBase scoreManager_;
 	//ステップ通知
 	StepTimer stepTimer_;
 	// イベントリスナー

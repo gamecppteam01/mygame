@@ -219,9 +219,10 @@ void Actor::receiveNotification(Notification start)
 {
 	switch (start)
 	{
-	case Call_JustStep:
-		JustStep();
+	case Call_CreateJustEffect: {
+		CreateJustEffect();
 		break;
+	}
 	default:
 		break;
 	}
@@ -238,6 +239,10 @@ bool Actor::field(Vector3& result) {
 		return true;
 	}
 	return false;
+}
+
+void Actor::CreateJustEffect()
+{
 }
 
 void Actor::JustStep()

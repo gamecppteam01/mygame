@@ -19,8 +19,11 @@ public:
 
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
-	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
 	void hitPlayer(const Vector3& velocity);
+
+	//選手番号を取得する
+	int getPlayerNumber()const { return playerNumber_; }
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -54,4 +57,7 @@ private:
 	float turnPower_;
 
 	ActorPtr target_;
+
+	//選手番号
+	int playerNumber_;
 };

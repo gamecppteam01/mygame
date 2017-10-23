@@ -9,7 +9,8 @@ World::World() :
 	camera_(std::make_shared<OverLookingCamera>()),
 	light_(true),
 	uiManager_(),
-	stepTimer_(){
+	stepTimer_(),
+	scoreManager_(this){
 }
 
 //初期化
@@ -22,6 +23,7 @@ void World::Initialize()
 	actors_.initialize();
 	uiManager_.initialize();
 	stepTimer_.initialize();
+	scoreManager_.Initialize();
 	listener_ = [](EventMessage, void*) {};
 }
 
@@ -98,6 +100,12 @@ CameraPtr World::getCamera()
 StepTimer World::getStepTimer() const
 {
 	return stepTimer_;
+}
+
+inline ScoreBase World::getScoreBase() const { return scoreManager_; }
+
+inline ScoreBase & World::getCanChangedScoreBase() {
+	return scoreManager_; 
 }
 
 // アクターの追加

@@ -24,20 +24,27 @@ void GamePlayScene::start() {
 	world_.addField(field);
 	std::shared_ptr<OverLookingCamera> camera = std::make_shared<OverLookingCamera>(&world_, "Camera", Vector3::Zero);
 	world_.addCamera(camera);
-	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f);
+
+	//選手番号
+	int playerNumber = 1;
+	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
 	for (int i = 0; i < 4; i++) {
-		//world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i)));
+		playerNumber++;
+		world_.addActor(ActorGroup::ENEMY, std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*10.0f+Vector3(10.0f*i), playerNumber));
 	}
 	world_.addStepTimeListener(player);
 
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(10.0f, 10.0f, 20.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
-	std::shared_ptr<UITemplate> mapUI = std::make_shared<UITemplate>(Vector2(200, 200));
+	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_,Vector2(1000, 0));
 	world_.addUI(mapUI);
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
+
+	//スコア管理クラスがPlayer,Enemyのポインタを要求するため、生成後に再度初期化
+	world_.getCanChangedScoreBase().Initialize();
 }
 
 void GamePlayScene::update(float deltaTime) {
