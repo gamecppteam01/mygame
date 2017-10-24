@@ -21,6 +21,7 @@ public:
 	// Õ“Ë‚µ‚½
 	virtual void onCollide(Actor& other);
 
+	float getAngle()const;
 private:
 	//ó‘ÔXV
 	void StateUpdate(float deltaTime);

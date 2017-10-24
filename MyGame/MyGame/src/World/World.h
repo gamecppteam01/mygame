@@ -10,6 +10,7 @@
 #include"../UI/UIManager.h"
 #include"../Judge/StepTimer.h"
 #include"../ScoreManager/ScoreManager.h"
+#include"../ScoreManager/ScoreMap.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -18,6 +19,8 @@ public:
 	World();
 	//初期化
 	void Initialize();
+	//検索の必要なクラスの初期化
+	virtual void FindInitialize()override;
 	// 更新
 	void update(float deltaTime);
 	// 描画
@@ -41,6 +44,7 @@ public:
 	virtual StepTimer getStepTimer()const override;
 	virtual ScoreManager getScoreManager()const override;
 	virtual ScoreManager& getCanChangedScoreManager()override;
+	virtual ScoreMap& getCanChangedScoreMap()override;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
@@ -63,6 +67,8 @@ private:
 	ActorManager actors_;
 	UIManager uiManager_;
 	ScoreManager scoreManager_;
+	//スコア倍率検出マップ
+	ScoreMap scoreMap_;
 	//ステップ通知
 	StepTimer stepTimer_;
 	// イベントリスナー

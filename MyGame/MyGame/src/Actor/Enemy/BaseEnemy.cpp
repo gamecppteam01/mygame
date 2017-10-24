@@ -6,7 +6,7 @@
 #include"../Player/Player.h"
 #include"../Player/PlayerBullet.h"
 #include"../../Graphic/DebugDraw.h"
-#include"../../ScoreManager/ScoreBase.h"
+#include"../../ScoreManager/ScoreManager.h"
 #include"../../Math/Random.h"
 
 //男と女の距離
@@ -126,7 +126,7 @@ void BaseEnemy::JustStep()
 	};
 
 	change_State_and_Anim(Enemy_State::Step, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
-	world_->getCanChangedScoreBase().AddScore(playerNumber_, 100);
+	world_->getCanChangedScoreManager().addScore(playerNumber_, 100);
 }
 
 void BaseEnemy::searchTarget(float deltaTime)
@@ -215,7 +215,7 @@ bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID)
 
 void BaseEnemy::to_Step()
 {
-	world_->getScoreBase().AddScore(playerNumber_, 100);
+	world_->getScoreManager().addScore(playerNumber_, 100);
 
 	//対応したアニメーションの終了時間を取得する
 	stepTime_ = animation_.GetAnimMaxTime();

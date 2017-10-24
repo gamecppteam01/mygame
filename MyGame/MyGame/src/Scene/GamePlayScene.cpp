@@ -13,6 +13,7 @@
 #include<EffekseerForDXLib.h>
 #include"../Actor/Judge_NPC/Judge_NPC.h"
 #include"../UI/UIInclude.h"
+#include"../Input/InputChecker.h"
 
 GamePlayScene::GamePlayScene():world_() {
 }
@@ -45,14 +46,16 @@ void GamePlayScene::start() {
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 
-	//スコア管理クラスがPlayer,Enemyのポインタを要求するため、生成後に再度初期化
-	world_.getCanChangedScoreBase().Initialize();
+	//アクター検索を掛けるクラス群の初期化
+	world_.FindInitialize();
 }
 
 void GamePlayScene::update(float deltaTime) {
 
 	world_.update(deltaTime);
-
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::R1)) {
+		world_.getCanChangedScoreMap().searchScoreRate();
+	}
 }
 
 void GamePlayScene::draw() const {
@@ -60,8 +63,8 @@ void GamePlayScene::draw() const {
 
 	world_.draw();
 
-	for (int i = 1; i < world_.getScoreBase().GetCharacterCount()+1; i++) {
-		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreBase().GetCharacterScore(i));
+	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
+		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
 }
 

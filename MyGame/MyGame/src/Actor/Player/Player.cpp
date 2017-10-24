@@ -19,7 +19,7 @@
 #include"../Dummy/BetweenPositionActor.h"
 #include"../../Input/DualShock4Manager.h"
 #include"../../Judge/JudgeDefine.h"
-#include"../../ScoreManager/ScoreBase.h"
+#include"../../ScoreManager/ScoreManager.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -320,7 +320,7 @@ void Player::jump_Update(float deltaTime)
 void Player::step_Update(float deltaTime)
 {
 	if (!isChangeStep()) {
-		if (successStep_ != 0) {
+		if (nextStep_ != 0) {
 			//ダンスが成立してたら対応したアニメーションを再生(実行順序の関係でここではStateの変更のみ行い、内部で実行されるto_StepSuccessにてアニメーションを更新する)
 			if (change_State(Player_State::Step_Success))playerUpdateFunc_[state_](deltaTime);
 			return;
@@ -333,10 +333,19 @@ void Player::step_Update(float deltaTime)
 
 	gyroCheck_.update();
 	Vector2 rotate = gyroCheck_.getRotate();
-	if (abs(rotate.y) >= 250.0f&&successStep_ < 3)successStep_ = 3;
-	else if (rotate.y >= 160.0f&&successStep_ < 2)successStep_ = 2;
-	else if (rotate.y >= 70.0f&&successStep_ < 1)successStep_ = 1;
+	OutputDebugString(std::to_string(DualShock4Manager::GetInstance().GetAngle3D().z).c_str());
+	OutputDebugString("\n");
+	if (abs(rotate.y) >= 250.0f) {
+		//1回転成立
+		successStep_ = 3;
+	}
+	else if (rotate.y >= 160.0f)successStep_ = 2;
+	else if (rotate.y >= 70.0f)successStep_ = 1;
 	
+	if (DualShock4Manager::GetInstance().GetAngle3D().z > 20.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
+		gyroCheck_.initialize();
+		nextStep_ = successStep_;
+	}
 
 }
 
@@ -421,10 +430,11 @@ void Player::to_StepMode()
 	addScore_.Initialize();
 	//ジャスト判定タイミングならスコア加算関数を登録する
 	if (world_->getStepTimer().isJustTime()) {
-		addScore_.Add([&] {world_->getCanChangedScoreBase().AddScore(playerNumber_, 100); });
+		addScore_.Add([&] {world_->getCanChangedScoreManager().addScore(playerNumber_, 100); });
 	}
 	gyroCheck_.initialize();
 	successStep_ = 0;
+	nextStep_ = 0;
 }
 
 void Player::to_StepSuccessMode()
@@ -432,7 +442,7 @@ void Player::to_StepSuccessMode()
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	addScore_.Action();
 
-	changeAnimation(stepAnimList_.at(successStep_));
+	changeAnimation(stepAnimList_.at(nextStep_));
 	//対応したアニメーションの終了時間を取得する
 	stepTime_=animation_.GetAnimMaxTime();
 

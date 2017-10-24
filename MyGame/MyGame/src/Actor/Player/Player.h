@@ -168,8 +168,10 @@ private:
 	//スティックのベクトルを右手座標系に変換
 	Vector2 getSticktoMove();
 private:
-	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン)
+	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン,4横回転)
 	int successStep_;
+	//次のステップ
+	int nextStep_;
 	//ステップの時間
 	float stepTime_{ 0.0f };
 	//選手番号
@@ -217,6 +219,7 @@ private:
 	std::map<int,Player_Animation> stepAnimList_{
 		{ 1,Player_Animation::Down },
 		{ 2,Player_Animation::KnockBack },
-		{ 3,Player_Animation::Idle }
+		{ 3,Player_Animation::Idle },
+		{ 4,Player_Animation::Turn },
 	};
 };

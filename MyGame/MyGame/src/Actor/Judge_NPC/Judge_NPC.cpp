@@ -54,6 +54,11 @@ void Judge_NPC::onDraw() const {
 void Judge_NPC::onCollide(Actor & other) {
 }
 
+float Judge_NPC::getAngle() const
+{
+	return m_Angle;
+}
+
 //ó‘ÔXV
 void Judge_NPC::StateUpdate(float deltaTime){
 	switch (m_State)

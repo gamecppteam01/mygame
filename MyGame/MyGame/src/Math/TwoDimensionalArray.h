@@ -2,6 +2,7 @@
 #include<vector>
 #include<tuple>
 #include<utility>
+#include<functional>
 
 template<typename T>
 //二次元配列管理クラス
@@ -29,7 +30,26 @@ public:
 	void setElement(int x, int y,const T& data) {
 		dataList_[y][x] = data;
 	}
-
+	//全要素の一括処理(func:処理用関数)
+	void loopElement(std::function<void(T&)> func) {
+		for (auto& d : dataList_) {
+			for (auto& c : d) {
+				func(c);
+			}
+		}
+	}
+	//全要素のポインタコンテナを作成して返す(非推奨)
+	std::vector<T*> getAllDataPtr() {
+		std::vector<T*> result;
+		int ySize = dataList_.size();
+		for (int y = 0; y < ySize; y++) {
+			int xSize = dataList_[y].size();
+			for (int x = 0; x < xSize; x++) {
+				result.push_back(&dataList_[y][x]);
+			}
+		}
+		return result;
+	}
 private:
 	//データセット用の再帰関数
 	void setData(int xSize, int ySize, int xMaxSize, int yMaxSize, int loopCount, int dataSize){}

@@ -10,11 +10,14 @@
 enum class ActorGroup;
 class StepTimer;
 class ScoreManager;
+class ScoreMap;
 // ワールド抽象インターフェース
 class IWorld {
 public:
 	// 仮想デストラクタ
 	virtual ~IWorld() {}
+	//検索が必要なクラスの初期化
+	virtual void FindInitialize() = 0;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) = 0;
 	// アクターの検索
@@ -29,5 +32,6 @@ public:
 	virtual StepTimer getStepTimer()const = 0;
 	virtual ScoreManager getScoreManager()const = 0;
 	virtual ScoreManager& getCanChangedScoreManager() = 0;
+	virtual ScoreMap& getCanChangedScoreMap() = 0;
 	virtual void addStepTimeListener(const ActorPtr& actor) = 0;
 };

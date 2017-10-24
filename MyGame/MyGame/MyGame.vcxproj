@@ -309,6 +309,7 @@
     <ClInclude Include="src\Input\InputChecker.h" />
     <ClInclude Include="src\Input\Keyboard.h" />
     <ClInclude Include="src\Judge\JudgeDefine.h" />
+    <ClInclude Include="src\Judge\JudgeFunction.h" />
     <ClInclude Include="src\Judge\StepTimer.h" />
     <ClInclude Include="src\Light\LightType.h" />
     <ClInclude Include="src\Math\Collision\Collision.h" />

@@ -10,7 +10,8 @@ World::World() :
 	light_(true),
 	uiManager_(),
 	stepTimer_(),
-	scoreManager_(this){
+	scoreManager_(this),
+	scoreMap_(this) {
 }
 
 //初期化
@@ -25,6 +26,10 @@ void World::Initialize()
 	stepTimer_.initialize();
 	scoreManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
+}
+void World::FindInitialize() {
+	scoreManager_.initialize();
+	scoreMap_.initialize();
 }
 
 // 更新
@@ -106,6 +111,11 @@ inline ScoreManager World::getScoreManager() const { return scoreManager_; }
 
 inline ScoreManager & World::getCanChangedScoreManager() {
 	return scoreManager_; 
+}
+
+ScoreMap & World::getCanChangedScoreMap()
+{
+	return scoreMap_;
 }
 
 // アクターの追加
