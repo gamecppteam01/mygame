@@ -9,7 +9,7 @@
 
 enum class ActorGroup;
 class StepTimer;
-class ScoreBase;
+class ScoreManager;
 // ワールド抽象インターフェース
 class IWorld {
 public:
@@ -27,7 +27,7 @@ public:
 	virtual FieldPtr getField() const = 0;
 	virtual CameraPtr getCamera() = 0;
 	virtual StepTimer getStepTimer()const = 0;
-	virtual ScoreBase getScoreBase()const = 0;
-	virtual ScoreBase& getCanChangedScoreBase() = 0;
+	virtual ScoreManager getScoreManager()const = 0;
+	virtual ScoreManager& getCanChangedScoreManager() = 0;
 	virtual void addStepTimeListener(const ActorPtr& actor) = 0;
 };

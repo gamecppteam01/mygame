@@ -23,7 +23,7 @@ void World::Initialize()
 	actors_.initialize();
 	uiManager_.initialize();
 	stepTimer_.initialize();
-	scoreManager_.Initialize();
+	scoreManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
 
@@ -102,9 +102,9 @@ StepTimer World::getStepTimer() const
 	return stepTimer_;
 }
 
-inline ScoreBase World::getScoreBase() const { return scoreManager_; }
+inline ScoreManager World::getScoreManager() const { return scoreManager_; }
 
-inline ScoreBase & World::getCanChangedScoreBase() {
+inline ScoreManager & World::getCanChangedScoreManager() {
 	return scoreManager_; 
 }
 
