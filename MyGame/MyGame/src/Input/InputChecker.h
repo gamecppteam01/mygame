@@ -44,6 +44,8 @@ public:
 	Vector2 Stick()const;
 	//ハットスイッチの入力角度を取得する(未入力なら-1)
 	int GetPovAngle()const;
+	//ハットスイッチの入力角度を取得する(未入力なら-1)
+	int GetPovTriggerDownAngle()const;
 	//指定方向にスティックが倒れているかを返す
 	bool StickStateDown(Input_Stick stick)const;
 	//指定方向にスティックを倒したかを返す

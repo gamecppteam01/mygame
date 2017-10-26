@@ -33,4 +33,6 @@ public:
 	Vector2 GetPrevRightStick()const;
 	//ハットスイッチの入力角度を取得する
 	int GetPovAngle()const;
+	//ハットスイッチが押されたか瞬間かどうか
+	int GetPovTriggerDownAngle()const;
 };

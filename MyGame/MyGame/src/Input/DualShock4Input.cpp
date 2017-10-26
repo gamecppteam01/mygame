@@ -102,3 +102,40 @@ int DualShock4Input::GetPovAngle() const
 	return 0;
 
 }
+
+int DualShock4Input::GetPovTriggerDownAngle() const
+{
+	int pov = DualShock4Manager::GetInstance().GetByte(5);
+	int prevPov = DualShock4Manager::GetInstance().GetPrevByte(5);
+	if ((pov & 8) != 0)return -1;
+	if ((pov & 7) == 7) {
+		if((prevPov & 7) != 7)return 315;
+		else return -1;
+	}
+	if ((pov & 6) == 6) {
+		if((prevPov & 6) != 6)return 270;
+		else return -1;
+	}
+	if ((pov & 5) == 5) {
+		if((prevPov & 5) != 5)return 225;
+		else return -1;
+	}
+	if ((pov & 4) == 4) {
+		if((prevPov & 4) != 4)return 180;
+		else return -1;
+	}
+	if ((pov & 3) == 3) {
+		if((prevPov & 3) != 3)return 135;
+		else return -1;
+	}
+	if ((pov & 2) == 2) {
+		if((prevPov & 2) != 2)return 90;
+		else return -1;
+	}
+	if ((pov & 1) == 1) {
+		if((prevPov & 1) != 1)return 45;
+		else return -1;
+	}
+	if ((prevPov & 8) == 0)return -1;
+	else return 0;
+}

@@ -53,6 +53,11 @@ int InputChecker::GetPovAngle() const
 	return DualShock4Input::GetInstance().GetPovAngle();
 }
 
+int InputChecker::GetPovTriggerDownAngle() const
+{
+	return DualShock4Input::GetInstance().GetPovTriggerDownAngle();
+}
+
 bool InputChecker::StickStateDown(Input_Stick stick) const
 {
 	switch (stick)
