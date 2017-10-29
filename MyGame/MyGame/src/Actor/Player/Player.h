@@ -18,6 +18,7 @@ public:
 		//Jump,//ジャンプ
 		Step,//技
 		Step_Success,//技成功
+		Stumble,//よろけモード
 		Attack,//攻撃
 		Shoot,//発射
 		ShootEnd,//発射終了
@@ -49,6 +50,12 @@ public:
 
 	//選手番号を取得する
 	int getPlayerNumber()const { return playerNumber_; }
+	//よろけ方向を取得する
+	Vector3 getStumbleDirection()const { return stumbleDirection_; }
+	//よろけ時間を取得する
+	float getStumbleTime()const { return stumbleTime_; }
+	Player_State getState()const { return state_; }
+
 private:
 	void createBullet();
 	virtual void initialize()override;
@@ -105,6 +112,8 @@ private:
 	void down_Update(float deltaTime);
 	//回転時更新
 	void turn_Update(float deltaTime);
+	//よろけ時更新
+	void stumble_Update(float deltaTime);
 
 	//待機状態への移行処理
 	void to_IdleMode();
@@ -127,6 +136,8 @@ private:
 	void to_DownMode();
 	//回転状態への移行処理
 	void to_TurnMode();
+	//よろけ状態への移行処理
+	void to_StumbleMode();
 
 	//待機状態の終了処理
 	void end_IdleMode();
@@ -149,7 +160,8 @@ private:
 	void end_DownMode();
 	//回転状態の終了処理
 	void end_TurnMode();
-
+	//よろけの終了処理
+	void end_StumbleMode();
 private:
 	//アニメーションの変更
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
@@ -176,6 +188,12 @@ private:
 	float stepTime_{ 0.0f };
 	//選手番号
 	int playerNumber_;
+
+	//よろけ関連
+	//ヒットした向き
+	Vector3 stumbleDirection_{ Vector3::Zero };
+	//よろけ時間
+	float stumbleTime_{ 0.0f };
 
 	//男関連
 	//移動ベクトル
@@ -213,7 +231,7 @@ private:
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
-	
+
 private:
 	const Vector3 defaultPosition_;
 	std::map<int,Player_Animation> stepAnimList_{

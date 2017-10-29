@@ -3,8 +3,9 @@
 
 struct  WarningParamter
 {
-	WarningParamter() : warningPos_(Vector2::Zero),
-		scale_(Vector2::Zero), angle_(0), origin_(Vector2::Zero) {
+	WarningParamter(const Vector2& warningPos=Vector2::Zero,const Vector2& scale=Vector2::One,float angle=0.0f,const Vector2& origin=Vector2::Zero) : 
+		warningPos_(warningPos),
+		scale_(scale), angle_(angle), origin_(origin) {
 
 	}
 	//åxçêÇÃèÍèä

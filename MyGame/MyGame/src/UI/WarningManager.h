@@ -1,8 +1,11 @@
 #pragma once
 #include "UI.h"
 #include "WarningParamter.h"
+#include"../World/IWorld.h"
 #include <map>
 
+
+class Player;
 
  enum class warningState {
 	UP,
@@ -17,7 +20,7 @@
 class WarningManager : public UI {
 public:
 	//コンストラクタ
-	WarningManager();
+	WarningManager(IWorld* world);
 	//初期化
 	virtual void initialize() override;
 	//更新
@@ -31,9 +34,8 @@ private:
 	std::map<warningState, WarningParamter> parameters_;
 	warningState state_;
 	
-	//警告のカウント
-	int warningCount_;
-	//警告の時間
-	float warningTime_;
+	IWorld* world_;
+
 	
+	std::weak_ptr<Player> player_;
 };

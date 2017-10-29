@@ -4,53 +4,42 @@
 #include "../Graphic/Sprite.h"
 #include "../Actor/ActorGroup.h"
 #include "../Math/Math.h"
+#include"../Actor/Player/Player.h"
 
-WarningManager::WarningManager()
-	:UI{ "warningmanager" , position_ }, state_{ warningState::None }
+WarningManager::WarningManager(IWorld* world)
+	:UI{ "warningmanager" , position_ }, state_{ warningState::None }, world_(world)
 {
 	
 }
 
 void WarningManager::initialize()
 {
-	warningCount_ = 3;
-	warningTime_ = 0.0f;
+	//プレイヤーのポインタを取得
+	player_= std::static_pointer_cast<Player>(world_->findActor("Player"));
+
+	//画像の中心
+	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::WARNING) / 2;
 
 	//上
-	WarningParamter param;
-	param.angle_ = 0.0f;
-	param.warningPos_ = Vector2::Zero;
-	param.origin_ = Vector2::Zero;
-	param.scale_ = Vector2(1.0f, 1.0f);
-	parameters_[warningState::UP] = param;
+	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::UP),
+		std::forward_as_tuple(Vector2::Zero, Vector2::One, 0.0f, origin));
 
 	//下
-	param.angle_ = 180.0f;
-	param.warningPos_ = Vector2(1280.0f, 720.0f);
-	param.origin_ = Vector2::Zero;
-	param.scale_ = Vector2(1.0f, 1.0f);
-	parameters_[warningState::DOWN] = param;
+	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::DOWN),
+		std::forward_as_tuple(Vector2(1280.0f, 720.0f), Vector2::One, 180.0f, origin));
 
 	//左
-	param.angle_ = 90.0f;
-	param.warningPos_ = Vector2(1280.0f, 0.0f);
-	param.origin_ = Vector2::Zero;
-	param.scale_ = Vector2(1.0f, 1.0f);
-	parameters_[warningState::LEFT] = param;
+	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::LEFT),
+		std::forward_as_tuple(Vector2(1280.0f, 0.0f), Vector2::One, 90.0f, origin));
 
 	//右
-	param.angle_ = -90.0f;
-	param.warningPos_ = Vector2(2.0f,720.0f);
-	param.origin_ = Vector2::Zero;
-	param.scale_ = Vector2(1.0f, 1.0f);
-	parameters_[warningState::RIGHT] = param;
+	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::RIGHT),
+		std::forward_as_tuple(Vector2(0.0f, 720.0f), Vector2::One, -90.0f, origin));
 
 	//空
-	param.angle_ = 0.0f;
-	param.origin_ = Vector2::Zero;
-	param.scale_ = Vector2::Zero;
-	param.warningPos_ = Vector2::Zero;
-	parameters_[warningState::None] = param;
+	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::None),
+		std::forward_as_tuple(Vector2::Zero, Vector2::Zero, 0.0f, origin));
+
 }
 
 void WarningManager::update(float deltaTime)
@@ -81,6 +70,8 @@ void WarningManager::update(float deltaTime)
 
 void WarningManager::draw() const
 {
+	if (player_.lock()->getState() != Player::Player_State::Stumble)return;
+
 	WarningParamter wp = parameters_.at(state_);
 	Sprite::GetInstance().Draw(SPRITE_ID::WARNING, wp.warningPos_, wp.origin_, wp.scale_, wp.angle_);
 }

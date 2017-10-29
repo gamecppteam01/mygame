@@ -24,10 +24,11 @@ public:
 		SetWindowSizeExtendRate(mRate);
 		// ウインドウモードにするかどうか
 		ChangeWindowMode(mWindow);
-
+		SetUseDirect3DVersion(DX_DIRECT3D_9);
 		//DXLib初期化処理
 		if (DxLib_Init() == -1)return -1;//エラーが起きたら終了
 		SetDrawScreen(DX_SCREEN_BACK);
+		EffekseerManager::GetInstance().Initialize();
 		start();
 
 		// キーが押されるまでループします

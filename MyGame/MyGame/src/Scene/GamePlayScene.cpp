@@ -41,8 +41,10 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(10.0f, 10.0f, 20.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
-	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_,Vector2(1000, 0));
+	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1000, 0));
 	world_.addUI(mapUI);
+	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
+	world_.addUI(warningUI);
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 

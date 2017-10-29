@@ -56,6 +56,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerUpdateFunc_[Player_State::ShootEnd] = [this](float deltaTime) {shootend_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::KnockBack] = [this](float deltaTime) {knockback_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Down] = [this](float deltaTime) {down_Update(deltaTime); };
+	playerUpdateFunc_[Player_State::Stumble] = [this](float deltaTime) {stumble_Update(deltaTime); };
 
 	//各種状態変更関数を設定する
 	playerToNextModeFunc_[Player_State::Idle] = [this]() {to_IdleMode(); };
@@ -68,6 +69,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerToNextModeFunc_[Player_State::ShootEnd] = [this]() {to_ShootEndMode(); };
 	playerToNextModeFunc_[Player_State::KnockBack] = [this]() {to_KnockBackMode(); };
 	playerToNextModeFunc_[Player_State::Down] = [this]() {to_DownMode(); };
+	playerToNextModeFunc_[Player_State::Stumble] = [this]() {to_StumbleMode(); };
 
 	playerEndModeFunc_[Player_State::Idle] = [this]() {		end_IdleMode(); };
 	playerEndModeFunc_[Player_State::Move] = [this]() {		end_MoveMode(); };
@@ -78,6 +80,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerEndModeFunc_[Player_State::ShootEnd] = [this]() {	end_ShootEndMode(); };
 	playerEndModeFunc_[Player_State::KnockBack] = [this]() {end_KnockBackMode(); };
 	playerEndModeFunc_[Player_State::Down] = [this]() {		end_DownMode(); };
+	playerEndModeFunc_[Player_State::Stumble] = [this]() {		end_StumbleMode(); };
 	
 }
 
@@ -93,6 +96,9 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 	if (state_ == Player_State::Shoot) return;
 	//発射してなかったら自身もはじく
 	velocity_ += velocity;
+
+	stumbleDirection_ = -velocity;
+	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
 }
 
 void Player::createBullet()
@@ -164,6 +170,7 @@ void Player::onCollide(Actor & other)
 	if (other.getName() == "PlayerBullet"&&state_== Player_State::Shoot) {
 		change_State_and_Anim(Player_State::ShootEnd, Player_Animation::ShootEnd);
 	}
+
 }
 
 void Player::JustStep()
@@ -408,6 +415,35 @@ void Player::turn_Update(float deltaTime)
 
 }
 
+void Player::stumble_Update(float deltaTime)
+{
+	stumbleTime_ += deltaTime;
+	//よろけ時間がダウン時間に到達したら転倒
+	if (stumbleTime_ >= fallTime) {
+		//転倒処理を書く
+	}
+
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
+
+	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
+	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
+	//Vector2 move = getSticktoMove();
+	//よろけ修正方向を向いたら
+	if (Vector3::Angle(stumbleDirection_,Vector3(move.x,0.0f,move.y))<=10.0f) {
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		return;
+	}
+	framevelocity.x += move.x;
+	framevelocity.z += move.y;
+
+	upVelocity_ -= upVelocity_*0.5f;
+
+	velocity_ += framevelocity;
+
+	gravityUpdate(deltaTime);
+
+}
+
 void Player::to_IdleMode()
 {
 
@@ -488,6 +524,11 @@ void Player::to_TurnMode()
 {
 }
 
+void Player::to_StumbleMode()
+{
+	stumbleTime_ = 0.0f;
+}
+
 void Player::end_IdleMode()
 {
 }
@@ -527,6 +568,10 @@ void Player::end_DownMode()
 }
 
 void Player::end_TurnMode()
+{
+}
+
+void Player::end_StumbleMode()
 {
 }
 
