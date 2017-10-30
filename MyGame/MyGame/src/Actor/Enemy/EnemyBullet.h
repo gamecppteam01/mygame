@@ -19,6 +19,8 @@ public:
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
 	EnemyBullet(IWorld* world, const std::string& name, const Vector3& position, BaseEnemy* enemy, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+
+	void hitOther(const Vector3& bound);
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -29,8 +31,11 @@ private:
 	// 衝突した
 	virtual void onCollide(Actor& other) override;
 
+	Vector3 mathBound(Actor & other);
+
 	//ベース用
 private:
+
 	Vector3* getPositionPtr();
 	Matrix* getRotationPtr();
 	//アニメーションの変更

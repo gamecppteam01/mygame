@@ -74,6 +74,53 @@ public:
 		MV1CollResultPolyDimTerminate(coll_poly);
 		return true;
 	}
+	bool collide_sphere(const VECTOR& center,const VECTOR& previous, float radius, VECTOR* result = nullptr)const {
+		//モデルと球体の当たり判定関数、当たった情報を持つ
+		const auto coll_poly = MV1CollCheck_Sphere(model_, 0, center, radius);
+		if (coll_poly.HitNum == 0) {
+			//衝突判定データの削除、coll_polyはメモリ確保を動的に行っているため、Poly用のdelete代わりの関数を呼ぶ必要がある
+			MV1CollResultPolyDimTerminate(coll_poly);
+			return false;
+		}
+		auto result_center = center;
+		for (int i = 0; i < coll_poly.HitNum; ++i) {
+			//平面と点の衝突関係情報の入れ物
+			PLANE_POINT_RESULT plane_point_result;
+			//無限平面と点の当たり判定を行う、平面上に一番近い点を調べたりしてくれる
+			Plane_Point_Analyse(
+				&coll_poly.Dim[i].Position[0],//平面のうち好きな点、平面上であればposition[0]でなくても良い
+				&coll_poly.Dim[i].Normal,
+				&result_center,
+				&plane_point_result//これに無限平面と、自身の点の最も近い点の情報等が入る
+			);
+
+			//三角形の中に、無限平面のうち一番近い点が入っているかを調べる=三角形の中に中心点が入っているかを調べる
+			if (CollisionTriangle(
+				coll_poly.Dim[i].Position[0],
+				coll_poly.Dim[i].Position[1],
+				coll_poly.Dim[i].Position[2]
+			).is_inside(plane_point_result.Plane_MinDist_Pos)) {
+				//面に当たってたら、面の法線方向に押し出す、大きさはoffset、めり込み分だけ押し出す
+				const auto distance = std::sqrt(plane_point_result.Plane_Pnt_MinDist_Square);
+				//法線方向に押し出すベクトルの計算
+				const auto offset = VScale(coll_poly.Dim[i].Normal, radius - distance);
+				result_center = VAdd(result_center, offset);
+			}
+		}
+		//ポリゴンと辺の判定
+		for (int i = 0; i < coll_poly.HitNum; ++i) {
+			CollisionTriangle(
+				coll_poly.Dim[i].Position[0],
+				coll_poly.Dim[i].Position[1],
+				coll_poly.Dim[i].Position[2]
+			).collide_edge_and_sphere(result_center, radius, &result_center);
+		}
+		if (result != nullptr) {
+			*result = result_center;
+		}
+		MV1CollResultPolyDimTerminate(coll_poly);
+		return true;
+	}
 	bool collide_capsule(const VECTOR& start, const VECTOR& end, float radius, VECTOR* result = nullptr) {
 		//当たったかどうか
 		bool isHit = false;
@@ -238,6 +285,40 @@ public:
 
 
 	}
+	bool collide_capsule(const VECTOR& start1, const VECTOR& end1, float radius1, const VECTOR& start2, const VECTOR& end2, float radius2, VECTOR* result1 = nullptr, VECTOR* result2 = nullptr) {
+		//当たったかどうか
+		bool isHit = false;
+
+		//始点、終点を取得
+		VECTOR resultstart1 = start1;
+		VECTOR resultend1 = end1;
+		VECTOR resultstart2 = start2;
+		VECTOR resultend2 = end2;
+
+		if (collide_sphere(resultend1, radius1, &resultend1)) {
+			//足元からの押し出しベクトルを作成
+			Vector3 moveVecbottom = VSub(resultend1, end1);
+			//カプセルの始点に押し出しを適用
+			resultend2 = VAdd(resultend2, moveVecbottom);
+			isHit = true;
+		}
+		if (collide_sphere(resultend2, radius2, &resultend2)) {
+			//足元からの押し出しベクトルを作成
+			Vector3 moveVecbottom2 = VSub(resultend2, end2);
+			//カプセルの始点に押し出しを適用
+			resultend1 = VAdd(resultend1, moveVecbottom2);
+			isHit = true;
+		}
+
+		//中心を計算して返す
+		if (isHit) {
+			*result1 = resultend1;
+			*result2 = resultend2;
+		}
+		return isHit;
+
+	}
+
 	/*
 	//カプセルとの判定(start=上,end=下)
 	bool collide_capsule(const VECTOR& start,const VECTOR& end,float radius, VECTOR* result=nullptr) {

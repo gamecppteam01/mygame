@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
 
-
+#include"../Math/Vector3.h"
 class TitleScene : public Scene {
 public:
 	//
@@ -20,5 +20,6 @@ public:
 private:
 	//
 	int _Counter;
-
+	int handle;
+	Vector3 scale{ Vector3::One };
 };

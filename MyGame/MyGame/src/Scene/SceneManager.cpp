@@ -44,5 +44,6 @@ void SceneManager::next() {
 	SceneType nextScene = scenes_[currentScene_]->nextScene();
 	currentScene_ = nextScene;
 	//次のシーンを開始する
+	scenes_[currentScene_]->baseInit();
 	scenes_[currentScene_]->start();
 }

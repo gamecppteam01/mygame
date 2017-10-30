@@ -16,6 +16,11 @@ public:
 
 	virtual SceneType nextScene()const { return next_; }
 
+	//‹¤’Ê‚Ì‰Šú‰»
+	void baseInit() {
+		isEnd_ = false;
+	}
+
 protected:
 	bool isEnd_{ false };
 	SceneType next_{ SceneType::SCENE_GAMEPLAY };

@@ -55,9 +55,6 @@ void GamePlayScene::start() {
 void GamePlayScene::update(float deltaTime) {
 
 	world_.update(deltaTime);
-	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::R1)) {
-		world_.getCanChangedScoreMap().searchScoreRate();
-	}
 }
 
 void GamePlayScene::draw() const {

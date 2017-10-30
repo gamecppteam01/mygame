@@ -20,6 +20,7 @@
 #include"../../Input/DualShock4Manager.h"
 #include"../../Judge/JudgeDefine.h"
 #include"../../ScoreManager/ScoreManager.h"
+#include"../../Graphic/FontManager.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -30,12 +31,13 @@ static const Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
 static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
+static const float boundPower = 5.0f;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), 
-	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), boundVector_(Vector3::Zero), playerNumber_(playerNumber),
+	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_()
 {
 	createBullet();
@@ -91,11 +93,7 @@ void Player::addVelocity(const Vector3 & velocity)
 
 void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
-	//bulletをはじき
-	bulletVelocity_ += velocity_;
-	if (state_ == Player_State::Shoot) return;
-	//発射してなかったら自身もはじく
-	velocity_ += velocity;
+	bound_ += velocity;
 
 	stumbleDirection_ = -velocity;
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
@@ -110,7 +108,6 @@ void Player::initialize()
 {
 	position_ = defaultPosition_;
 	gravity_ = 0.0f;
-	boundVector_ = Vector3::Zero;
 	state_ = Player_State::Idle;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Idle);
@@ -156,6 +153,8 @@ void Player::onDraw() const
 	}
 
 
+	DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
+	
 	if (state_ != Player_State::Step)return;
 
 	//float ringSize = stepMaxTime_ - max(justTimer_,0.0f);
@@ -170,7 +169,21 @@ void Player::onCollide(Actor & other)
 	if (other.getName() == "PlayerBullet"&&state_== Player_State::Shoot) {
 		change_State_and_Anim(Player_State::ShootEnd, Player_Animation::ShootEnd);
 	}
+	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet") && isCanStamble()) {
 
+	}
+
+}
+void Player::onCollideResult()
+{
+	bound_.y = 0.0f;
+	Vector3 bound = bound_.Normalize()*boundPower;
+	bound.y = 0.0f;
+	bulletVelocity_ += bound;
+	//シュート時でなければプレイヤー自身も発射する
+	if (state_ != Player_State::Shoot)velocity_ += bound;
+
+	bound_ = Vector3::Zero;
 }
 
 void Player::JustStep()
@@ -181,6 +194,22 @@ void Player::JustStep()
 void Player::CreateJustEffect()
 {
 	createCircleEffect();
+}
+
+bool Player::field(Vector3 & result)
+{
+	if (!world_->getField()->isInField(position_)) {
+		position_ = world_->getField()->CorrectPosition(position_);
+	}
+	Vector3 hit1;
+	Vector3 hit2;
+	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
+	{
+		result = hit1 + ((body_->points(0)));
+
+		return true;
+	}
+	return false;
 }
 
 
@@ -340,17 +369,22 @@ void Player::step_Update(float deltaTime)
 
 	gyroCheck_.update();
 	Vector2 rotate = gyroCheck_.getRotate();
-	OutputDebugString(std::to_string(DualShock4Manager::GetInstance().GetAngle3D().z).c_str());
-	OutputDebugString("\n");
-	if (abs(rotate.y) >= 250.0f) {
+	if (abs(rotate.y) >= 270.0f) {
 		//1回転成立
 		successStep_ = 3;
 	}
 	else if (rotate.y >= 160.0f)successStep_ = 2;
-	else if (rotate.y >= 70.0f)successStep_ = 1;
-	
-	if (DualShock4Manager::GetInstance().GetAngle3D().z > 20.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
-		gyroCheck_.initialize();
+	else if (rotate.y >= 90.0f&&successStep_ != 2)successStep_ = 1;
+
+	if (std::abs(gyroCheck_.getAngle()) >= 300.0f) {
+		successStep_ = 4;
+		nextStep_ = successStep_;
+		gyroCheck_.initAngle();
+	}
+	OutputDebugString(std::to_string(DualShock4Manager::GetInstance().GetAngle3D().z).c_str());
+	OutputDebugString("\n");
+	if (DualShock4Manager::GetInstance().GetAngle3D().z > 45.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
+		gyroCheck_.initRotate();
 		nextStep_ = successStep_;
 	}
 
@@ -364,7 +398,10 @@ void Player::stepSuccess_Update(float deltaTime)
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	
+	if (nextStep_ == 2) {
+		stepAttack(deltaTime);
+	}
+
 
 }
 
@@ -463,11 +500,9 @@ void Player::to_JumpMode()
 
 void Player::to_StepMode()
 {
-	addScore_.Initialize();
-	//ジャスト判定タイミングならスコア加算関数を登録する
-	if (world_->getStepTimer().isJustTime()) {
-		addScore_.Add([&] {world_->getCanChangedScoreManager().addScore(playerNumber_, 100); });
-	}
+	//ジャスト判定タイミングならスコア加算フラグを有効にする
+	isJustStep_ = world_->getStepTimer().isJustTime();
+
 	gyroCheck_.initialize();
 	successStep_ = 0;
 	nextStep_ = 0;
@@ -476,11 +511,27 @@ void Player::to_StepMode()
 void Player::to_StepSuccessMode()
 {
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
-	addScore_.Action();
+	if (isJustStep_) {
+		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);
+	}
 
-	changeAnimation(stepAnimList_.at(nextStep_));
+	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
+
 	//対応したアニメーションの終了時間を取得する
 	stepTime_=animation_.GetAnimMaxTime();
+
+	if (nextStep_ == 2) {
+		std::list<ActorPtr> enemys;
+		world_->findActors("Enemy", enemys);
+
+		attackTarget_ = enemys.front();
+		for (auto& e : enemys) {
+			if (Vector3::Distance(position_, attackTarget_->position()) > Vector3::Distance(position_, e->position())) {
+				attackTarget_ = e;
+			}
+		}
+	}
+
 
 	if (world_->getStepTimer().isJustTime()) {
 
@@ -575,6 +626,11 @@ void Player::end_StumbleMode()
 {
 }
 
+void Player::stepAttack(float deltaTime)
+{
+	position_ += (attackTarget_->position() - position_).Normalize() *2.f;
+}
+
 void Player::changeAnimation(Player_Animation animID, float animSpeed) {
 	animation_.ChangeAnim((int)animID);
 }
@@ -591,6 +647,12 @@ bool Player::isChangeStep() const
 		&&
 		InputChecker::GetInstance().GetPovAngle() != -1
 	};
+}
+bool Player::isCanStamble() const
+{
+	if (state_ == Player_State::Idle || state_ == Player_State::Move || state_ == Player_State::Step)return true;
+	if (state_ == Player_State::Step_Success && (nextStep_ != 2 && nextStep_ != 4))return true;
+	return false;
 }
 
 bool Player::isCanTracking() const

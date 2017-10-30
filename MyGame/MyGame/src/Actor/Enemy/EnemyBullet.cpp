@@ -15,6 +15,11 @@ EnemyBullet::EnemyBullet(IWorld * world, const std::string & name, const Vector3
 
 }
 
+void EnemyBullet::hitOther(const Vector3 & bound)
+{
+	enemy_->hitOther(bound);
+}
+
 void EnemyBullet::onMessage(EventMessage message, void * param)
 {
 }
@@ -36,31 +41,39 @@ void EnemyBullet::onDraw() const
 void EnemyBullet::onCollide(Actor & other)
 {
 	if (other.getName() == "Player") {
-		Vector3 bound = other.position() - position_;
-		bound = bound.Normalize();
-		bound *= boundPower;
-		bound.y = 0.0f;
+		Vector3 bound = mathBound(other);
 		//‘Šè‚ğ’µ‚Ë•Ô‚·
 		static_cast<Player*>(&other)->addVelocity(bound);
-
 		//©g‚à’µ‚Ë•Ô‚é
-		enemy_->hitPlayer(-bound);
+		hitOther(-bound);
 		//velocity_ = -bound;
 	}
 	if (other.getName() == "PlayerBullet") {
-		Vector3 bound = other.position() - position_;
-		bound = bound.Normalize();
-		bound *= boundPower;
-		bound.y = 0.0f;
+		Vector3 bound = mathBound(other);
 		//‘Šè‚ğ’µ‚Ë•Ô‚·
 		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
-
 		//©g‚à’µ‚Ë•Ô‚é
-		enemy_->hitPlayer(-bound);
+		hitOther(-bound);
 		//velocity_ = -bound;
-
+	}
+	if (other.getName() == "EnemyBullet") {
+		Vector3 bound = mathBound(other);
+		//‘Šè‚ğ’µ‚Ë•Ô‚·
+		static_cast<EnemyBullet*>(&other)->hitOther(bound);
+		//©g‚à’µ‚Ë•Ô‚é
+		hitOther(-bound);
 	}
 
+}
+
+Vector3 EnemyBullet::mathBound(Actor & other)
+{
+	Vector3 bound = other.position() - position_;
+	bound = bound.Normalize();
+	bound *= boundPower;
+	bound.y = 0.0f;
+
+	return bound;
 }
 
 Vector3 * EnemyBullet::getPositionPtr()

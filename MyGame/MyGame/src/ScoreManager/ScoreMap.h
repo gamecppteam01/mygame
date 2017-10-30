@@ -1,6 +1,7 @@
 #pragma once
 #include"../Math/Vector3.h"
 #include"../Math/TwoDimensionalArray.h"
+#include"../Method/MethodTimer.h"
 #include<memory>
 #include<vector>
 
@@ -26,11 +27,17 @@ public:
 	void initialize();
 	//未作成
 	void update(float deltaTime);
+	//周囲のポイントで一番スコア倍率の高い物を返す
+	Vector3 getNextPoint(const Vector3& point);
+
+private:
 	//倍率検索
-	void searchScoreRate();
+	void mathScoreRate();
 
 private:
 	IWorld* world_;
+	//スコアレート計算タイマー
+	MethodTimer mathScoreRateTimer_;
 	//スコア位置の
 	TwoDimensionalArray<ScorePoint> points_{
 		4,4,

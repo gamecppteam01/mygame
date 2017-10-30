@@ -38,6 +38,22 @@ public:
 			}
 		}
 	}
+	//指定検索条件に合ったのキーを返す
+	std::pair<int,int> getTargetKey(std::function<bool(T&,T&)> func) {
+		std::pair<int, int> keyXY=std::make_pair(0,0);
+
+		int ySize = dataList_.size();
+		for (int y = 0; y < ySize; y++) {
+			int xSize = dataList_[y].size();
+			for (int x = 0; x < xSize; x++) {
+				//現在の要素:新しい要素
+				if (func(getElement(keyXY.first,keyXY.second),getElement(x, y))) {
+					keyXY = std::make_pair(x, y);
+				}
+			}
+		}
+		return keyXY;
+	}
 	//全要素のポインタコンテナを作成して返す(非推奨)
 	std::vector<T*> getAllDataPtr() {
 		std::vector<T*> result;
@@ -50,6 +66,10 @@ public:
 		}
 		return result;
 	}
+	//二次元配列の行ごとの要素数
+	int getXSize()const { return dataList_[0].size(); }
+	//二次元配列の列ごとの要素数
+	int getYSize()const { return dataList_.size(); }
 private:
 	//データセット用の再帰関数
 	void setData(int xSize, int ySize, int xMaxSize, int yMaxSize, int loopCount, int dataSize){}

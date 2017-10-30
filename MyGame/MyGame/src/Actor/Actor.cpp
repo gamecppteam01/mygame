@@ -69,6 +69,12 @@ void Actor::collide(Actor& other) {
 	eachChildren([&](Actor& child) { child.collide(other); });
 }
 
+void Actor::collideResult()
+{
+	onCollideResult();
+	eachChildren([&](Actor& child) { child.collideResult(); });
+}
+
 
 // éÄñSÇµÇƒÇ¢ÇÈÇ©ÅH
 bool Actor::isDead() const {
@@ -380,6 +386,10 @@ void Actor::onDraw() const {
 
 // è’ìÀÇµÇΩ
 void Actor::onCollide(Actor&) {}
+
+void Actor::onCollideResult()
+{
+}
 
 // è’ìÀîªíË
 bool Actor::isCollide(Actor& other) const {

@@ -48,3 +48,29 @@ CollisionMesh& Field::getMesh()
 {
 	return mesh_;
 }
+
+bool Field::isInField(const Vector3 & position)
+{
+	return std::abs(position.x) < getXWidth() && std::abs(position.z) < getZWidth();
+}
+
+Vector3 Field::CorrectPosition(const Vector3 & position)
+{
+	Vector3 result=position;
+	if (position.x > getXWidth())result.x = getXWidth();
+	if (position.x < -getXWidth())result.x = -getXWidth();
+	if (position.z > getZWidth())result.z = getZWidth();
+	if (position.z < -getZWidth())result.z = -getZWidth();
+
+	return result;
+}
+
+float Field::getXWidth() const
+{
+	return 140.0f;
+}
+
+float Field::getZWidth() const
+{
+	return 140.0f;
+}

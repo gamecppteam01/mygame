@@ -8,18 +8,22 @@
 #include"../../Graphic/DebugDraw.h"
 #include"../../ScoreManager/ScoreManager.h"
 #include"../../Math/Random.h"
+#include"../../ScoreManager/ScoreMap.h"
+#include"../../Field/Field.h"
+#include"../../Input/InputChecker.h"
 
 //男と女の距離
 static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
 //弾き飛ばす力
-static const float boundPower = 10.0f;
+static const float boundPower = 5.0f;
 //視界角度
 static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
-
+//ポジション追跡時の移動の勢い
+static const float movePower = 0.2f;
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber)
+	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
@@ -36,10 +40,11 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	target_ = world_->findActor("Player");
 }
 
-void BaseEnemy::hitPlayer(const Vector3 & velocity)
+void BaseEnemy::hitOther(const Vector3 & velocity)
 {
-	bulletVelocity_ += velocity;
-	velocity_ += velocity;
+	bound_ += velocity;
+	//bulletVelocity_ += velocity;
+	//velocity_ += velocity;
 }
 
 void BaseEnemy::onMessage(EventMessage message, void * param)
@@ -56,7 +61,11 @@ void BaseEnemy::onUpdate(float deltaTime){
 	}
 	case BaseEnemy::Enemy_State::Step: {
 		updateStep(deltaTime);
-		break; 
+		break;
+	}
+	case BaseEnemy::Enemy_State::Track: {
+		updateTrack(deltaTime);
+		break;
 	}
 	default:
 		break;
@@ -64,10 +73,18 @@ void BaseEnemy::onUpdate(float deltaTime){
 	//アニメーションを更新
 	animation_.Update(MathHelper::Sign(deltaTime));
 
-	bulletUpdate(deltaTime);
+	Vector2 result = InputChecker::GetInstance().Stick();
+
+	velocity_+= Vector3(result.x,0.0f,result.y);
 
 	position_ += velocity_;
 	velocity_ *= 0.5f;
+
+	correctPosition();
+
+	bulletUpdate(deltaTime);
+
+
 }
 
 void BaseEnemy::onDraw() const
@@ -90,28 +107,69 @@ void BaseEnemy::onDraw() const
 void BaseEnemy::onCollide(Actor & other)
 {
 	if (other.getName() == "Player") {
-		Vector3 bound= other.position()-position_;
-		bound = bound.Normalize();
-		bound *= boundPower;
-		bound.y = 0.0f;
+		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 		static_cast<Player*>(&other)->addVelocity(bound);
-		
 		//自身も跳ね返る
-		velocity_ = -bound;
+		hitOther(-bound);
 	}
-	if (other.getName() == "PlayerBullet") {
-		Vector3 bound = other.position() - position_;
-		bound = bound.Normalize();
-		bound *= boundPower;
-		bound.y = 0.0f;
+	else if (other.getName() == "PlayerBullet") {
+		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
-		static_cast<PlayerBullet*>(&other)->hitEnemy(name_,bound);
-
+		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
-		velocity_ = -bound;
-
+		hitOther(-bound);
 	}
+	else if (other.getName() == "Enemy") {
+		Vector3 bound = mathBound(other);
+		//相手を跳ね返す
+		static_cast<BaseEnemy*>(&other)->hitOther(bound);
+		//自身も跳ね返る
+		hitOther(-bound);
+	}
+	else if (other.getName() == "EnemyBullet") {
+		if (static_cast<EnemyBullet*>(&other)->enemy_->playerNumber_ == playerNumber_)return;
+		Vector3 bound = mathBound(other);
+		//相手を跳ね返す
+		static_cast<EnemyBullet*>(&other)->hitOther(bound);
+		//自身も跳ね返る
+		hitOther(-bound);
+	}
+
+}
+
+void BaseEnemy::onCollideResult()
+{
+	bound_.y = 0.0f;
+	Vector3 bound = bound_.Normalize()*boundPower;
+	bound.y = 0.0f;
+	
+	bulletVelocity_ += bound;
+	velocity_ += bound;
+
+	bound_ = Vector3::Zero;
+}
+
+Vector3 BaseEnemy::mathBound(Actor & other)
+{
+	Vector3 bound = other.position() - position_;
+	bound = bound.Normalize();
+	bound *= boundPower;
+	bound.y = 0.0f;
+
+	return bound;
+}
+bool BaseEnemy::field(Vector3 & result)
+{
+	Vector3 hit1;
+	Vector3 hit2;
+	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
+	{
+		result = hit1 + ((body_->points(0)));
+
+		return true;
+	}
+	return false;
 }
 
 void BaseEnemy::JustStep()
@@ -167,6 +225,11 @@ void BaseEnemy::bulletUpdate(float deltaTime)
 
 }
 
+void BaseEnemy::addVelocity_NextPosition(float deltaTime)
+{
+	velocity_ += (nextPosition_ - position_).Normalize()*movePower;
+}
+
 void BaseEnemy::changeAnimation(Enemy_Animation animID)
 {
 	animation_.ChangeAnim((int)animID);
@@ -194,10 +257,13 @@ bool BaseEnemy::change_State(Enemy_State state)
 	switch (state_)
 	{
 	case BaseEnemy::Enemy_State::Normal:
+		to_Normal();
 		break;
 	case BaseEnemy::Enemy_State::Step:
 		to_Step();
 		break;
+	case BaseEnemy::Enemy_State::Track:
+		to_Track();
 	default:
 		break;
 	}
@@ -213,6 +279,10 @@ bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID)
 	return true;
 }
 
+void BaseEnemy::to_Normal()
+{
+}
+
 void BaseEnemy::to_Step()
 {
 	world_->getScoreManager().addScore(playerNumber_, 100);
@@ -222,9 +292,18 @@ void BaseEnemy::to_Step()
 
 }
 
+void BaseEnemy::to_Track()
+{
+	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(position_)+Vector3(Random::GetInstance().Range(-20.0f,20.0f),0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
+}
+
 void BaseEnemy::updateNormal(float deltaTime)
 {
 	//searchTarget(deltaTime);
+	gravity_ -= 0.05f;
+
+	Vector3 jumpVector = Vector3(0.0f, gravity_, 0.0f);
+	velocity_ += jumpVector;
 
 }
 
@@ -233,9 +312,32 @@ void BaseEnemy::updateStep(float deltaTime)
 	stepTime_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (stepTime_ <= 0.0f) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Track, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
 
+
+}
+
+void BaseEnemy::updateTrack(float deltaTime)
+{
+	if (Vector2::Distance(Vector2(position_.x, position_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		return;
+	}
+	addVelocity_NextPosition(deltaTime);
+
+}
+void BaseEnemy::correctPosition()
+{
+	Vector3 result;
+	if (field(result)) {
+		position_ = result;
+	}
+	Vector3 start = position_ + body_->points(1);
+	Vector3 end = start + Vector3::Down*(body_->radius() + 1.0f);
+	if (world_->getField()->getMesh().collide_line(start, end)) {
+		gravity_ = 0.0f;
+	}
 
 }

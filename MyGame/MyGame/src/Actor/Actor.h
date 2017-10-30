@@ -32,6 +32,8 @@ public:
 	void draw() const;
 	// Õ“Ëˆ—
 	void collide(Actor& other);
+	// Õ“Ë–Œãˆ—
+	void collideResult();
 	// €–S‚µ‚Ä‚¢‚é‚©H
 	bool isDead() const;
 	// €–S‚·‚é
@@ -110,6 +112,8 @@ private:
 	virtual void onDraw() const;
 	// Õ“Ë‚µ‚½
 	virtual void onCollide(Actor& other);
+	// Õ“Ë‚µ‚½Œã
+	virtual void onCollideResult();
 	// Õ“Ë”»’è
 	bool isCollide(Actor& other) const;
 

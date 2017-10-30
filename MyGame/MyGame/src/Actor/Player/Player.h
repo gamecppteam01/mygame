@@ -68,6 +68,8 @@ private:
 	// 衝突した
 	virtual void onCollide(Actor& other);
 
+	virtual void onCollideResult()override;
+
 //通知処理関連
 private:
 	//ステップ通知時の処理
@@ -75,6 +77,9 @@ private:
 	//エフェクト生成通知の処理
 	virtual void CreateJustEffect()override;
 	
+	// フィールドとの衝突判定(足場と当たった場合はtrueを返す)
+	virtual bool field(Vector3& result = Vector3()) override;
+
 //プレイヤーの移動関係
 private:
 	//重力及びジャンプを更新する
@@ -162,6 +167,11 @@ private:
 	void end_TurnMode();
 	//よろけの終了処理
 	void end_StumbleMode();
+
+private:
+		//攻撃ステップ
+		void stepAttack(float deltaTime);
+
 private:
 	//アニメーションの変更
 	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
@@ -169,6 +179,10 @@ private:
 private:
 	//ステップに変更する状態か
 	bool isChangeStep() const;
+
+	//よろけが発生可能な状態か
+	bool isCanStamble()const;
+
 //弾(女)関係
 private:
 	//女がプレイヤーに追従するかどうか
@@ -198,8 +212,8 @@ private:
 	//男関連
 	//移動ベクトル
 	Vector3 velocity_;
-	//跳ね返りベクトル(現在未使用)
-	Vector3 boundVector_;
+	//跳ね返りベクトル
+	Vector3 bound_;
 	//上方向ベクトル
 	float upVelocity_;
 	//重力
@@ -210,8 +224,10 @@ private:
 	Player_State state_;
 	//エフェクト生成クラスを呼び出す
 	MethodTimer effectCreator_;
-	//スコア加算の管理
-	MethodTimer addScore_;
+	//スコア加算の成否
+	bool isJustStep_{ false };
+	//攻撃対象
+	ActorPtr attackTarget_;
 
 	//女関連
 	//女本体
@@ -234,10 +250,10 @@ private:
 
 private:
 	const Vector3 defaultPosition_;
-	std::map<int,Player_Animation> stepAnimList_{
-		{ 1,Player_Animation::Down },
-		{ 2,Player_Animation::KnockBack },
-		{ 3,Player_Animation::Idle },
-		{ 4,Player_Animation::Turn },
+	std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
+		{ 1,{ Player_Animation::Down,100 } },
+		{ 2,{ Player_Animation::KnockBack,200 } },
+		{ 3,{ Player_Animation::Idle,300 } },
+		{ 4,{ Player_Animation::Turn,400 } },
 	};
 };

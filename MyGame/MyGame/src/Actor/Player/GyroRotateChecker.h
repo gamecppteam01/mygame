@@ -17,6 +17,18 @@ public:
 
 		angle_ = 0.0f;
 	}
+	//加速度依存の傾きをリセット
+	void initRotate() {
+		Vector3 accelAngle = DualShock4Manager::GetInstance().GetAngle3D();
+
+		rotate_.x = accelAngle.x;
+		rotate_.y = accelAngle.y;
+	}
+	//ジャイロセンサーによる回転をリセット
+	void initAngle() {
+		angle_ = angle_-MathHelper::Sign(angle_)*360;
+
+	}
 	//ベクトルを加算する
 	void update() {
 		//ジャイロから来る直接的な回転情報を取得する
@@ -26,6 +38,7 @@ public:
 		rotate_ += rotate2d;
 
 		angle_ += rotate.z;
+		angle_ = std::fmodf(angle_, 360.0f);
 
 		//OutputDebugString(std::to_string(rotate_.x).c_str());
 		//OutputDebugString(":");

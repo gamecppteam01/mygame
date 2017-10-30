@@ -1,4 +1,5 @@
 #include "InputChecker.h"
+#include<string>
 
 InputChecker::InputChecker()
 {
@@ -42,7 +43,12 @@ Vector2 InputChecker::Stick()const
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::W)) result.y -= 1.f;
 	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::S)) result.y += 1.f;
 
-	result += DualShock4Input::GetInstance().GetStick();
+	Vector2 stickVector = DualShock4Input::GetInstance().GetStick();
+	if (std::abs(stickVector.x) <= 0.05f)stickVector.x = 0.f;
+	if (std::abs(stickVector.y) <= 0.05f)stickVector.y = 0.f;
+
+
+	result += stickVector;
 	result = Vector2::Clamp(result, Vector2(-1.f, -1.f), Vector2(1.f, 1.f));
 
 	return result;

@@ -29,6 +29,7 @@ void ActorManager::initialize() {
 void ActorManager::update(float deltaTime) {
 	root_.update(deltaTime);
 	collide();
+	root_.collideResult();
 	root_.removeChildren();
 }
 
@@ -68,6 +69,9 @@ void ActorManager::collide() {
 	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
 	actors_[ActorGroup::PLAYER_BULLET]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
 	actors_[ActorGroup::PLAYER]->collideChildren(*actors_[ActorGroup::PLAYER_BULLET]);
+	actors_[ActorGroup::ENEMY]->collideChildren(*actors_[ActorGroup::ENEMY]);
+	actors_[ActorGroup::ENEMY]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
+	actors_[ActorGroup::ENEMY_BULLET]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
 
 
 }
