@@ -172,7 +172,9 @@
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyTemplate.cpp" />
-    <ClCompile Include="src\Actor\Judge_NPC\Judge_NPC.cpp" />
+    <ClCompile Include="src\Actor\Judge\JudgeBase.cpp" />
+    <ClCompile Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.cpp" />
+    <ClCompile Include="src\Actor\Judge\Judge_NPC\Judge_NPC.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
@@ -225,6 +227,7 @@
     <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
+    <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp" />
     <ClCompile Include="src\Sound\Sound.cpp" />
     <ClCompile Include="src\Tween\TweenManager.cpp" />
     <ClCompile Include="src\Tween\TweenObject.cpp" />
@@ -263,6 +266,9 @@
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyTemplate.h" />
+    <ClInclude Include="src\Actor\Judge\JudgeBase.h" />
+    <ClInclude Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.h" />
+    <ClInclude Include="src\Actor\Judge\Judge_NPC\Judge_NPC.h" />
     <ClInclude Include="src\Actor\Judge_NPC\Judge_NPC.h" />
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
@@ -347,6 +353,7 @@
     <ClInclude Include="src\ScoreManager\ScoreList.h" />
     <ClInclude Include="src\ScoreManager\ScoreManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
+    <ClInclude Include="src\ScoreManager\ScoreRateManager.h" />
     <ClInclude Include="src\Sound\Sound.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />

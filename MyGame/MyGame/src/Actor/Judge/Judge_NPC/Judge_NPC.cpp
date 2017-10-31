@@ -1,17 +1,16 @@
 #include "Judge_NPC.h"
-#include"../../World/IWorld.h"
-#include"../Body/BoundingCapsule.h"
-#include"../ActorGroup.h"
-#include"../../Graphic/Model.h"
-#include"../../Math/Math.h"
-#include"../../Graphic/DebugDraw.h"
-#include"../../Define.h"
+#include"../../../World/IWorld.h"
+#include"../../Body/BoundingCapsule.h"
+#include"../../ActorGroup.h"
+#include"../../../Graphic/Model.h"
+#include"../../../Math/Math.h"
+#include"../../../Graphic/DebugDraw.h"
+#include"../../../Define.h"
 #include<list>
 
 //コンストラクタ
-Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position,float scope_angle)
-	:Actor(world,name,position,	std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f))
-	,m_Scope_angle(scope_angle),yaw(0.0f){
+Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position)
+	:JudgeBase(world,name,position,	std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f)){
 	initialize();
 }
 
@@ -54,6 +53,15 @@ void Judge_NPC::onDraw() const {
 void Judge_NPC::onCollide(Actor & other) {
 }
 
+//判定
+bool Judge_NPC::Judgement(ActorPtr& target) {
+	if (is_Scorp_Angle(target) == true && is_In_Distans(target) == true) {
+		return true;
+	}
+	return false;
+}
+
+//角度の取得
 float Judge_NPC::getAngle() const
 {
 	return m_Angle;
@@ -91,34 +99,4 @@ void Judge_NPC::RegardUpdate(float deltaTime){
 		m_State = Judge_State::Search;
 	}
 	m_Timer -= deltaTime;
-}
-
-//視野角内にいるか？
-bool Judge_NPC::is_Scorp_Angle(ActorPtr& target) const
-{
-	//相手のベクトルの取得
-	Vector3 V1 = target->position() - position_;
-	V1.Normalize();	//正規化
-	//自分の正面のベクトルの取得
-	Vector3 V2 = rotation_.Backward();
-	V2.Normalize();	//正規化
-
-	//自分と相手のベクトルからなす角を取る
-	float result = Vector3::Dot(V1, V2);
-	result = MathHelper::ACos(result);
-
-	//視野角内にいるか？
-	if (result <= m_Scope_angle) {	return true; }
-	return false;
-}
-
-//一定距離内にいるか？
-bool Judge_NPC::is_In_Distans(ActorPtr & target) const
-{
-	float result;
-	//ターゲットと自分の距離を求める
-	result = Vector3::Distance(target->position(), position_);
-	//自分とターゲットとの距離が一定以内だったら真
-	if (result <= 50) {	return true; }
-	return false;
 }

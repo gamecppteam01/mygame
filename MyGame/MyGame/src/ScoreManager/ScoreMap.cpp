@@ -1,6 +1,6 @@
 #include "ScoreMap.h"
 #include"../World/IWorld.h"
-#include"../Actor/Judge_NPC/Judge_NPC.h"
+#include"../Actor/Judge/Judge_NPC/Judge_NPC.h"
 #include"../Judge/JudgeFunction.h"
 #include<list>
 

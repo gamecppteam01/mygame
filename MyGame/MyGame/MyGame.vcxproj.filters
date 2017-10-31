@@ -228,9 +228,6 @@
     <ClCompile Include="src\Actor\Dummy\BetweenPositionActor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actor\Judge_NPC\Judge_NPC.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Input\DualShock4Input.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -256,6 +253,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Judge\Judge_NPC\Judge_NPC.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Actor\Judge\JudgeBase.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -584,9 +593,6 @@
     <ClInclude Include="src\Actor\ScoreJudge\Judge.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actor\Judge_NPC\Judge_NPC.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -633,6 +639,21 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Judge\JudgeFunction.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Judge_NPC\Judge_NPC.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Judge\Judge_NPC\Judge_NPC.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor\Judge\JudgeBase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScoreManager\ScoreRateManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

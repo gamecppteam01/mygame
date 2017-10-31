@@ -6,7 +6,7 @@
 
 //コンストラクタ
 ScoreManager::ScoreManager(IWorld* world):
-m_World(world){
+m_World(world),m_RataManager(world){
 	initialize();
 }
 
@@ -20,12 +20,13 @@ ScoreManager::~ScoreManager(){
 void ScoreManager::initialize(){
 	m_ScoreDataList.clear();
 	m_NumberList.clear();
+	m_RataManager.initialize();
 
 	ActorPtr p = m_World->findActor("Player");
 	if (p != nullptr) {
 		std::shared_ptr<Player> player = std::static_pointer_cast<Player>(p);
-		add(0, player->getPlayerNumber(), 1.0f, p);
-		m_NumberList.push_back(player->getPlayerNumber());
+		add_Player(0, player->getPlayerNumber(), 1.0f, p);	//選手の追加
+		m_NumberList.push_back(player->getPlayerNumber());	//選手番号リストに追加
 	}
 
 	std::list<ActorPtr> enemyList;
@@ -33,13 +34,23 @@ void ScoreManager::initialize(){
 	for (auto& e : enemyList) {
 		if (e == nullptr)continue;
 		std::shared_ptr<BaseEnemy> enemy = std::static_pointer_cast<BaseEnemy>(e);
-		add(0, enemy->getPlayerNumber(), 1.0f, e);
-		m_NumberList.push_back(enemy->getPlayerNumber());
+		add_Player(0, enemy->getPlayerNumber(), 1.0f, e);	//選手の追加
+		m_NumberList.push_back(enemy->getPlayerNumber());	//選手番号リストに追加
+	}
+}
+
+//更新
+void ScoreManager::updata(float deltaTime) {
+	for (auto n : m_NumberList) {
+		//審査員の判定の巡回
+		m_RataManager.Judge_Crawl(m_ScoreDataList.at(n).target_.lock());
+		//倍率の変更
+		ChangeScoreRate(n, m_RataManager.getRata());
 	}
 }
 
 //キャラクターの追加
-void ScoreManager::add(int score, int number ,float rate,const ActorPtr& target){
+void ScoreManager::add_Player(int score, int number ,float rate,const ActorPtr& target){
 	m_ScoreDataList[number] = ScoreData(rate,score,number,target);
 }
 
@@ -73,4 +84,16 @@ int ScoreManager::getMaxScore() const{
 	}
 	//maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
 	return maxScore;
+}
+
+//1位から順に入ったScoreData型のリストを返す
+void ScoreManager::getRankingList(std::list<ScoreData>& list) {
+	int maxScore = 0;
+	int score = 0;
+	maxScore = getMaxScore();
+	for (auto n : m_NumberList) {
+		if (maxScore > m_ScoreDataList.at(n).score_ && score < m_ScoreDataList.at(n).score_) {
+			score = m_ScoreDataList.at(n).score_;
+		}
+	}
 }

@@ -4,6 +4,7 @@
 #include<map>
 #include "../World/IWorld.h"
 #include "../Actor/ActorPtr.h"
+#include "ScoreRateManager.h"
 
 //スコア情報一括管理構造体
 struct ScoreData {
@@ -33,8 +34,10 @@ public:
 	~ScoreManager();
 	//初期化
 	void initialize();
-	//キャラクターの追加
-	void add(int score, int number, float rate ,const ActorPtr& target);
+	//更新
+	void updata(float deltaTime);
+	//選手の追加
+	void add_Player(int score, int number, float rate ,const ActorPtr& target);
 	//スコアの加算
 	void addScore(int number, int score);
 	//倍率の変更
@@ -45,10 +48,14 @@ public:
 	int GetCharacterScore(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
+	//1位から順に入ったScoreData型のリストを返す
+	void getRankingList(std::list<ScoreData>& list);
 
 private:
 	//ワールド
 	IWorld* m_World;
+	//倍率管理クラス
+	ScoreRataManager m_RataManager;
 	//スコアデータリスト
 	std::map<int, ScoreData> m_ScoreDataList;
 	//スコアリスト

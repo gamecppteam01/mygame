@@ -11,7 +11,7 @@
 #include"../Actor/Enemy/BaseEnemy.h"
 #include"../UI/UITemplate.h"
 #include<EffekseerForDXLib.h>
-#include"../Actor/Judge_NPC/Judge_NPC.h"
+#include"../Actor/Judge/Judge_NPC/Judge_NPC.h"
 #include"../UI/UIInclude.h"
 #include"../Input/InputChecker.h"
 

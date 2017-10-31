@@ -1,26 +1,28 @@
 #pragma once
-#include"../Actor.h"
+#include"../JudgeBase.h"
 
 enum class Judge_State {
 	Search,
 	Regard,
 };
 
-class Judge_NPC : public Actor {
+class Judge_NPC : public JudgeBase {
 public:
 	//コンストラクタ
-	Judge_NPC(IWorld* world, const std::string& name, const Vector3& position,float scope_angle = 45.0f);
+	Judge_NPC(IWorld* world, const std::string& name, const Vector3& position);
 	//初期化
 	virtual void initialize()override;
 	// メッセージ処理
-	virtual void onMessage(EventMessage message, void* param);
+	virtual void onMessage(EventMessage message, void* param) override;
 	// 更新
-	virtual void onUpdate(float deltaTime);
+	virtual void onUpdate(float deltaTime) override;
 	// 描画
-	virtual void onDraw() const;
+	virtual void onDraw() const override;
 	// 衝突した
-	virtual void onCollide(Actor& other);
-
+	virtual void onCollide(Actor& other) override;
+	//判定
+	virtual bool Judgement(ActorPtr& target) override;
+	//角度の取得
 	float getAngle()const;
 private:
 	//状態更新
@@ -29,10 +31,6 @@ private:
 	void SearchUpdate(float deltaTime);
 	//注視更新
 	void RegardUpdate(float deltaTime);
-	//視野角内にいるか？
-	bool is_Scorp_Angle(ActorPtr& target) const;
-	//一定距離内にいるか？
-	bool is_In_Distans(ActorPtr& target) const;
 
 private:
 	//状態

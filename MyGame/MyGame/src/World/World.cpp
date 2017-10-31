@@ -35,6 +35,7 @@ void World::FindInitialize() {
 // 更新
 void World::update(float deltaTime) {
 	scoreMap_.update(deltaTime);
+	scoreManager_.updata(deltaTime);
 	stepTimer_.update(deltaTime);
 	field_->update(deltaTime);
 	// アクターの更新処理
