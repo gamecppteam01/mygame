@@ -25,7 +25,7 @@ void ScoreManager::initialize(){
 	ActorPtr p = m_World->findActor("Player");
 	if (p != nullptr) {
 		std::shared_ptr<Player> player = std::static_pointer_cast<Player>(p);
-		add_Player(0, player->getPlayerNumber(), 1.0f, p);	//選手の追加
+		add_Player(0, player->getPlayerNumber(), 1.0f,1, p);	//選手の追加
 		m_NumberList.push_back(player->getPlayerNumber());	//選手番号リストに追加
 	}
 
@@ -34,7 +34,7 @@ void ScoreManager::initialize(){
 	for (auto& e : enemyList) {
 		if (e == nullptr)continue;
 		std::shared_ptr<BaseEnemy> enemy = std::static_pointer_cast<BaseEnemy>(e);
-		add_Player(0, enemy->getPlayerNumber(), 1.0f, e);	//選手の追加
+		add_Player(0, enemy->getPlayerNumber(), 1.0f,1, e);	//選手の追加
 		m_NumberList.push_back(enemy->getPlayerNumber());	//選手番号リストに追加
 	}
 }
@@ -50,8 +50,8 @@ void ScoreManager::updata(float deltaTime) {
 }
 
 //キャラクターの追加
-void ScoreManager::add_Player(int score, int number ,float rate,const ActorPtr& target){
-	m_ScoreDataList[number] = ScoreData(rate,score,number,target);
+void ScoreManager::add_Player(int score, int number ,float rate, int rank,const ActorPtr& target){
+	m_ScoreDataList[number] = ScoreData(rate,score,number,rank,target);
 }
 
 //スコアの加算
@@ -84,6 +84,13 @@ int ScoreManager::getMaxScore() const{
 	}
 	//maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
 	return maxScore;
+}
+
+//list<ScoreData>型のリストを渡す
+void ScoreManager::getScoreDataList(std::list<ScoreData>& list) {
+	for (auto n : m_NumberList) {
+		list.push_back(m_ScoreDataList[n]);
+	}
 }
 
 //1位から順に入ったScoreData型のリストを返す
