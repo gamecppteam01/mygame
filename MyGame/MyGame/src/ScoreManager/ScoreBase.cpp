@@ -19,7 +19,7 @@ void ScoreBase::Initialize()
 	ActorPtr p = world_->findActor("Player");
 	if (p != nullptr) {
 		std::shared_ptr<Player> player = std::static_pointer_cast<Player>(p);
-		scoreList_[player->getPlayerNumber()] = ScoreData(1.0f, 0, player->getPlayerNumber(), p);
+		scoreList_[player->getPlayerNumber()] = ScoreDataCell(1.0f, 0, player->getPlayerNumber(), p);
 	}
 
 	std::list<ActorPtr> enemyList;
@@ -27,7 +27,7 @@ void ScoreBase::Initialize()
 	for (auto& e : enemyList) {
 		if (e == nullptr)continue;
 		std::shared_ptr<BaseEnemy> enemy = std::static_pointer_cast<BaseEnemy>(e);
-		scoreList_[enemy->getPlayerNumber()] = ScoreData(1.0f, 0, enemy->getPlayerNumber(), e);
+		scoreList_[enemy->getPlayerNumber()] = ScoreDataCell(1.0f, 0, enemy->getPlayerNumber(), e);
 	}
 	
 }

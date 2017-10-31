@@ -5,11 +5,11 @@
 #include<map>
 
 //スコア情報一括管理構造体
-struct ScoreData {
-	ScoreData() {
+struct ScoreDataCell {
+	ScoreDataCell() {
 
 	}
-	ScoreData(float rate, int score, int playerNumber,const ActorPtr& target):
+	ScoreDataCell(float rate, int score, int playerNumber,const ActorPtr& target):
 		scoreRate_(rate), score_(score), playerNumber_(playerNumber), target_(target) {
 
 	}
@@ -37,7 +37,7 @@ public:
 	//キャラクターのスコアを返す
 	int GetCharacterScore(int playerNumber);
 private:
-	std::map<int,ScoreData> scoreList_;
+	std::map<int,ScoreDataCell> scoreList_;
 
 	IWorld* world_;
 };
