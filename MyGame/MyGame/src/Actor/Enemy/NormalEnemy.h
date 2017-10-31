@@ -14,9 +14,14 @@ private:
 	virtual void to_Normal()override;
 private:
 	int getNearestPoint(const Vector3& position);
+
+	//次の目的地を設定する
+	void setNextPosition();
 private:
 	//次のポイント
 	int nextPoint_;
+	//次の目的地
+	Vector3 nextPosition_;
 
 	//ステージ周回ポイント配列
 	std::vector<Vector3> roundPoint_;

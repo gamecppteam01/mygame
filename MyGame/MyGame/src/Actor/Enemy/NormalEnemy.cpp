@@ -6,7 +6,7 @@
 #include"../../Math/Random.h"
 
 NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
-	BaseEnemy(world,name,position,playerNumber,body), nextPoint_(0){
+	BaseEnemy(world,name,position,playerNumber,body), nextPoint_(0), nextPosition_(position){
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	nextPoint_ = getNearestPoint(position_);
@@ -61,32 +61,25 @@ void NormalEnemy::updateNormal(float deltaTime)
 		return;
 	}
 
-	float rate = 1.0f;
-	Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(position_, &rate);
-
-	if (rate > 1.05f) {
-		velocity_ += (nextPosition - position_).Normalize()*movePower;
-	}
-	else {
-		velocity_ += (roundPoint_[nextPoint_] - position_).Normalize()*movePower;
-	}
+	velocity_ += (nextPosition_ - position_).Normalize()*movePower;
 	gravity_ -= 0.05f;
 
 	Vector3 jumpVector = Vector3(0.0f, gravity_, 0.0f);
 	velocity_ += jumpVector;
 
 	Vector2 myPos = Vector2(position_.x, position_.z);
-	Vector2 pointPos = Vector2(roundPoint_[nextPoint_].x, roundPoint_[nextPoint_].z);
+	Vector2 pointPos = Vector2(nextPosition_.x, nextPosition_.z);
 
 	//ポイントに到達したら
 	if (Vector2::Distance(myPos, pointPos) <= 10.0f) {
-		nextPoint_=(nextPoint_+1)% roundPoint_.size();
+		setNextPosition();
 	}
 }
 
 void NormalEnemy::to_Normal()
 {
 	nextPoint_ = getNearestPoint(position_);
+	nextPosition_ = roundPoint_[nextPoint_];
 }
 
 int NormalEnemy::getNearestPoint(const Vector3 & position)
@@ -100,4 +93,19 @@ int NormalEnemy::getNearestPoint(const Vector3 & position)
 		}
 	}
 	return result;
+}
+
+void NormalEnemy::setNextPosition()
+{
+	//ターゲットカウントを-1する
+	nextPoint_=(nextPoint_+roundPoint_.size()-1)%roundPoint_.size();
+	
+	float rate = 1.0f;
+	Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(position_, &rate);
+	if (rate >= 1.05f) {
+		nextPosition_ = nextPosition+Vector3(Random::GetInstance().Range(-20.f,20.f),0.0f, Random::GetInstance().Range(-20.f, 20.f));
+		return;
+	}
+	nextPosition_ = roundPoint_[nextPoint_];
+
 }
