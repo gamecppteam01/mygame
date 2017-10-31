@@ -51,6 +51,8 @@ public:
 	int GetCharacterCount()const;
 	//キャラクターのスコアを返す
 	int GetCharacterScore(int number);
+	//キャラクターのスコア倍率を返す
+	int GetCharacterScoreRate(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
 	//一位の選手のスコアデータを返す
@@ -73,4 +75,5 @@ private:
 	std::list<int> m_NumberList;
 	//カウント
 	int m_Count;
+	int timeCount_;
 };

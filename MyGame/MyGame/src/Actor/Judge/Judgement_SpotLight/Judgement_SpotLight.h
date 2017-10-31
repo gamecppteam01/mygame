@@ -17,6 +17,7 @@ public:
 	virtual void onCollide(Actor& other) override;
 	//”»’è
 	virtual bool Judgement(ActorPtr& target) override;
+	virtual bool Judgement(const Vector3& target) override;
 
 private:
 	float m_Distance;

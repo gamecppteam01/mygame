@@ -9,7 +9,7 @@ enum class Judge_State {
 class Judge_NPC : public JudgeBase {
 public:
 	//コンストラクタ
-	Judge_NPC(IWorld* world, const std::string& name, const Vector3& position);
+	Judge_NPC(IWorld* world, const std::string& name, const Vector3& position,const Matrix& rotation);
 	//初期化
 	virtual void initialize()override;
 	// メッセージ処理
@@ -22,6 +22,7 @@ public:
 	virtual void onCollide(Actor& other) override;
 	//判定
 	virtual bool Judgement(ActorPtr& target) override;
+	virtual bool Judgement(const Vector3& target) override;
 	//角度の取得
 	float getAngle()const;
 private:

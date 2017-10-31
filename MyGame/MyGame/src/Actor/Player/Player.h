@@ -254,8 +254,8 @@ private:
 	const Vector3 defaultPosition_;
 	std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
 		{ 1,{ Player_Animation::Down,100 } },
-		{ 2,{ Player_Animation::KnockBack,200 } },
+		{ 2,{ Player_Animation::KnockBack,0 } },
 		{ 3,{ Player_Animation::Idle,300 } },
-		{ 4,{ Player_Animation::Turn,400 } },
+		{ 4,{ Player_Animation::Turn,0 } },
 	};
 };

@@ -55,6 +55,24 @@ bool JudgeBase::is_Scorp_Angle(ActorPtr& target, float angle) const
 	return false;
 }
 
+bool JudgeBase::is_Scorp_Angle(const Vector3 & target, float angle) const
+{
+	//相手のベクトルの取得
+	Vector3 V1 = target - position_;
+	V1.Normalize();	//正規化
+					//自分の正面のベクトルの取得
+	Vector3 V2 = rotation_.Backward();
+	V2.Normalize();	//正規化
+
+					//自分と相手のベクトルからなす角を取る
+	float result = Vector3::Dot(V1, V2);
+	result = MathHelper::ACos(result);
+
+	//視野角内にいるか？
+	if (result <= angle) { return true; }
+	return false;
+}
+
 //一定距離内にいるか？
 bool JudgeBase::is_In_Distans(ActorPtr & target,float distance) const
 {

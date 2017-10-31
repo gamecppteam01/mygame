@@ -21,6 +21,7 @@ void ScoreManager::initialize(){
 	m_ScoreDataList.clear();
 	m_NumberList.clear();
 	m_RataManager.initialize();
+	timeCount_ = 0;
 
 	ActorPtr p = m_World->findActor("Player");
 	if (p != nullptr) {
@@ -41,6 +42,13 @@ void ScoreManager::initialize(){
 
 //更新
 void ScoreManager::updata(float deltaTime) {
+
+	timeCount_++;
+	//20フレームに1回スコア計算を行う
+	if (timeCount_ < 20)return;
+
+	timeCount_ = 0;
+
 	for (auto n : m_NumberList) {
 		//審査員の判定の巡回
 		m_RataManager.Judge_Crawl(m_ScoreDataList.at(n).target_.lock());
@@ -67,6 +75,9 @@ int ScoreManager::GetCharacterCount()const {
 //キャラクターのスコアを返す
 int ScoreManager::GetCharacterScore(int number) {
 	return m_ScoreDataList[number].score_;
+}
+int ScoreManager::GetCharacterScoreRate(int number) {
+	return m_ScoreDataList[number].scoreRate_;
 }
 
 //倍率の変更

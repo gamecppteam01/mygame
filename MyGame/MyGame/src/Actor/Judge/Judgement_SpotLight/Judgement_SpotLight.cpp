@@ -56,3 +56,13 @@ bool Judgement_SpotLight::Judgement(ActorPtr& target) {
 	}
 	return false;
 }
+
+bool Judgement_SpotLight::Judgement(const Vector3 & target)
+{
+	Vector2 myPos = Vector2(position_.x, position_.z);
+	Vector2 targetPos = Vector2(target.x, target.z);
+	if (Vector2::Distance(myPos, targetPos) <= 50.0f) {
+		return true;
+	}
+	return false;
+}

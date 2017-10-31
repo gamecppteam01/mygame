@@ -9,8 +9,9 @@
 #include<list>
 
 //コンストラクタ
-Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position)
+Judge_NPC::Judge_NPC(IWorld * world, const std::string & name, const Vector3 & position,const Matrix& rotation)
 	:JudgeBase(world,name,position,	std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f)){
+	rotation_ = rotation;
 	initialize();
 }
 
@@ -56,6 +57,16 @@ void Judge_NPC::onCollide(Actor & other) {
 //判定
 bool Judge_NPC::Judgement(ActorPtr& target) {
 	if (is_Scorp_Angle(target) == true && is_In_Distans(target) == true) {
+		return true;
+	}
+	return false;
+}
+
+bool Judge_NPC::Judgement(const Vector3 & target)
+{
+	Vector2 myPos = Vector2(position_.x, position_.z);
+	Vector2 targetPos = Vector2(target.x, target.z);
+	if (is_Scorp_Angle(target) == true && Vector2::Distance(myPos, targetPos) <= 50.0f) {
 		return true;
 	}
 	return false;

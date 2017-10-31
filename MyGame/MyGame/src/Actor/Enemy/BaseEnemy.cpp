@@ -20,14 +20,10 @@ static const float boundPower = 5.0f;
 static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
-//ポジション追跡時の移動の勢い
-static const float movePower = 0.5f;
 //基本的なダウン値
 static const int defDownCount = 4;
 //ダウンする時間
 static const float downTime = 2.0f;
-//攻撃する範囲
-static const float attackDistance = 40.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
@@ -230,20 +226,17 @@ void BaseEnemy::JustStep()
 {
 	//if (Random::GetInstance().Range(1, 100) <= 50)return;
 
-	std::vector<int> stepAnim{
-		(int)Enemy_Animation::KnockBack,
-		(int)Enemy_Animation::Move_Forward,
-		(int)Enemy_Animation::Step_Left,
-		(int)Enemy_Animation::Turn
-	};
 
 	//攻撃射程圏内なら
 	if (Vector3::Distance(getNearestActor()->position(), position_)<= attackDistance) {
-		change_State_and_Anim(Enemy_State::Attack, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
+		change_State_and_Anim(Enemy_State::Attack, stepAnim[1].first);
 		return;
 	}
-	change_State_and_Anim(Enemy_State::Step, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
-	world_->getCanChangedScoreManager().addScore(playerNumber_, 100);
+	int key = Random::GetInstance().Range(0, 1);
+	if (key == 1)key++;
+
+	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first);
+	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[key].second);
 }
 
 void BaseEnemy::searchTarget(float deltaTime)
@@ -398,7 +391,7 @@ void BaseEnemy::updateStep(float deltaTime)
 	stepTime_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (stepTime_ <= 0.0f) {
-		if (change_State_and_Anim(Enemy_State::Track, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
 

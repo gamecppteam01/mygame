@@ -101,6 +101,6 @@ void LoadingScene::LoadEtcetera()
 {
 	std::string defaultPath = "res/";//全リソース共通パス
 	Model::GetInstance().Load(defaultPath + "Skybox/skydome.mv1", MODEL_ID::SKYBOX_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/SampleStage_Castle.mv1", MODEL_ID::STAGE_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field.mv1", MODEL_ID::STAGE_MODEL);
 
 }

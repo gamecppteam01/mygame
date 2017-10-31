@@ -17,10 +17,13 @@ public:
 	virtual void onCollide(Actor& other) override;
 	//”»’è
 	virtual bool Judgement(ActorPtr& target) = 0;
+	virtual bool Judgement(const Vector3& position) = 0;
 
 protected:
 	//‹–ìŠp“à‚É‚¢‚é‚©H
-	bool is_Scorp_Angle(ActorPtr& target,float angle = 45.0f) const;
+	bool is_Scorp_Angle(ActorPtr& target, float angle = 45.0f) const;
+	bool is_Scorp_Angle(const Vector3& target, float angle = 45.0f) const;
 	//ˆê’è‹——£“à‚É‚¢‚é‚©H
-	bool is_In_Distans(ActorPtr& target,float distance = 50.0f) const;
+	bool is_In_Distans(ActorPtr& target, float distance = 50.0f) const;
+
 };
