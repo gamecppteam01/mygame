@@ -11,9 +11,12 @@ struct ScoreData {
 	ScoreData() {
 
 	}
-	ScoreData(float rate, int score, int playerNumber,int rank, const ActorPtr& target) :
-		scoreRate_(rate), score_(score), playerNumber_(playerNumber),rank_(rank), target_(target) {
-
+	ScoreData(int score, int playerNumber, float rate, int rank, const ActorPtr& target){
+		score_ = score;
+		playerNumber_ = playerNumber;
+		scoreRate_ = rate;
+		rank_ = rank;
+		target_ = target;
 	}
 	//スコア倍率
 	float scoreRate_;
@@ -50,6 +53,10 @@ public:
 	int GetCharacterScore(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
+	//一位の選手のスコアデータを返す
+	ScoreData getFirst();
+	//指定の倍率を返す
+	float getRata(const int number) const;
 	//list<ScoreData>型のリストを渡す
 	void getScoreDataList(std::list<ScoreData>& list);
 	//1位から順に入ったScoreData型のリストを返す

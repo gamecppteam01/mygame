@@ -25,7 +25,7 @@ void ScoreManager::initialize(){
 	ActorPtr p = m_World->findActor("Player");
 	if (p != nullptr) {
 		std::shared_ptr<Player> player = std::static_pointer_cast<Player>(p);
-		add_Player(0, player->getPlayerNumber(), 1.0f,1, p);	//選手の追加
+		add_Player(0, player->getPlayerNumber(), 1.0f,1, p);//選手の追加
 		m_NumberList.push_back(player->getPlayerNumber());	//選手番号リストに追加
 	}
 
@@ -51,7 +51,7 @@ void ScoreManager::updata(float deltaTime) {
 
 //キャラクターの追加
 void ScoreManager::add_Player(int score, int number ,float rate, int rank,const ActorPtr& target){
-	m_ScoreDataList[number] = ScoreData(rate,score,number,rank,target);
+	m_ScoreDataList[number] = ScoreData(score,number, rate, rank,target);
 }
 
 //スコアの加算
@@ -84,6 +84,22 @@ int ScoreManager::getMaxScore() const{
 	}
 	//maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
 	return maxScore;
+}
+
+//一位の選手のスコアデータを返す
+ScoreData ScoreManager::getFirst() {
+	ScoreData data;
+	for (auto n : m_NumberList) {
+		if (getMaxScore() == m_ScoreDataList[n].score_) {
+			data = m_ScoreDataList[n];
+		}
+	}
+	return data;
+}
+
+//指定の倍率を返す
+float ScoreManager::getRata(const int number) const {
+	return m_ScoreDataList.at(number).scoreRate_;
 }
 
 //list<ScoreData>型のリストを渡す
