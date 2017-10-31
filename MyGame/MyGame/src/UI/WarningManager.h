@@ -29,6 +29,9 @@ public:
 	virtual void draw() const override;
 
 	void stateChange(const Vector3& v2);
+	void stateChange(const Vector2& v2);
+
+	void stateChange(float angle);
 
 private:
 	std::map<warningState, WarningParamter> parameters_;

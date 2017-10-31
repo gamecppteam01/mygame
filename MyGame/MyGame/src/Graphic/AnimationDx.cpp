@@ -98,5 +98,10 @@ float AnimationDx::GetAnimMaxTime() const
 	return maxAnimTime_/60.0f;
 }
 
+float AnimationDx::GetAnimMaxTime(int index) const
+{
+	return MV1GetAnimTotalTime(modelHandle_, index) / 60.0f;
+}
+
 
 

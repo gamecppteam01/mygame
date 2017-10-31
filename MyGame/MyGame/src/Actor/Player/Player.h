@@ -51,7 +51,7 @@ public:
 	//選手番号を取得する
 	int getPlayerNumber()const { return playerNumber_; }
 	//よろけ方向を取得する
-	Vector3 getStumbleDirection()const { return stumbleDirection_; }
+	Vector2 getStumbleDirection()const { return stumbleDirection_; }
 	//よろけ時間を取得する
 	float getStumbleTime()const { return stumbleTime_; }
 	Player_State getState()const { return state_; }
@@ -193,6 +193,8 @@ private:
 private:
 	//スティックのベクトルを右手座標系に変換
 	Vector2 getSticktoMove();
+
+	Vector2 mathStumbleDirection(const Vector2& stumbleDirection);
 private:
 	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン,4横回転)
 	int successStep_;
@@ -205,10 +207,10 @@ private:
 
 	//よろけ関連
 	//ヒットした向き
-	Vector3 stumbleDirection_{ Vector3::Zero };
+	Vector2 stumbleDirection_{ Vector2::Zero };
 	//よろけ時間
 	float stumbleTime_{ 0.0f };
-
+	float downTime_{ 0.0f };
 	//男関連
 	//移動ベクトル
 	Vector3 velocity_;

@@ -53,7 +53,7 @@ Vector2 Vector2::Normalize(const Vector2 & value)
 
 float Vector2::Dot(const Vector2 & vector1, const Vector2 & vector2)
 {
-	return (vector1.x * vector1.x) + (vector2.y * vector2.y);
+	return (vector1.x * vector2.x) + (vector1.y * vector2.y);
 }
 
 float Vector2::Cross(const Vector2 & vector1, const Vector2 & vector2)

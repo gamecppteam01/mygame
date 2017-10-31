@@ -32,6 +32,9 @@ static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
 static const float boundPower = 5.0f;
+static const float downTime = 2.0f;
+//移動速度
+static const float movePower = 0.5f;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
@@ -95,7 +98,11 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
 	bound_ += velocity;
 
-	stumbleDirection_ = -velocity;
+	if (state_ == Player_State::Attack)return;
+
+	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
+
+	//stumbleDirection_ = -velocity;
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
 }
 
@@ -297,8 +304,8 @@ void Player::move_Update(float deltaTime)
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	framevelocity.x += move.x;
-	framevelocity.z += move.y;
+	framevelocity.x += move.x*movePower;
+	framevelocity.z += move.y*movePower;
 
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
 		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
@@ -398,15 +405,19 @@ void Player::stepSuccess_Update(float deltaTime)
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	if (nextStep_ == 2) {
-		stepAttack(deltaTime);
-	}
-
-
 }
 
 void Player::attack_Update(float deltaTime)
 {
+	stepTime_ -= deltaTime;
+	//ステップが終了したら待機状態に戻る
+	if (stepTime_ <= 0.0f) {
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		return;
+	}
+	stepAttack(deltaTime);
+	
+
 }
 
 void Player::shoot_Update(float deltaTime)
@@ -423,8 +434,8 @@ void Player::shoot_Update(float deltaTime)
 		//if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		//return;
 	}
-	framevelocity.x += move.x;
-	framevelocity.z += move.y;
+	framevelocity.x += move.x*movePower;
+	framevelocity.z += move.y*movePower;
 	framevelocity += bulletVelocity_;
 	bulletVelocity_ *= 0.98f;
 
@@ -442,6 +453,11 @@ void Player::knockback_Update(float deltaTime)
 
 void Player::down_Update(float deltaTime)
 {
+	downTime_ += deltaTime;
+
+	if (downTime_ >= downTime) {
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+	}
 }
 
 void Player::turn_Update(float deltaTime)
@@ -458,6 +474,8 @@ void Player::stumble_Update(float deltaTime)
 	//よろけ時間がダウン時間に到達したら転倒
 	if (stumbleTime_ >= fallTime) {
 		//転倒処理を書く
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+
 	}
 
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
@@ -466,12 +484,12 @@ void Player::stumble_Update(float deltaTime)
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	//Vector2 move = getSticktoMove();
 	//よろけ修正方向を向いたら
-	if (Vector3::Angle(stumbleDirection_,Vector3(move.x,0.0f,move.y))<=10.0f) {
+	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.3f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	framevelocity.x += move.x;
-	framevelocity.z += move.y;
+	framevelocity.x += move.x*movePower;
+	framevelocity.z += move.y*movePower;
 
 	upVelocity_ -= upVelocity_*0.5f;
 
@@ -518,18 +536,11 @@ void Player::to_StepSuccessMode()
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
 
 	//対応したアニメーションの終了時間を取得する
-	stepTime_=animation_.GetAnimMaxTime();
+	stepTime_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
 
 	if (nextStep_ == 2) {
-		std::list<ActorPtr> enemys;
-		world_->findActors("Enemy", enemys);
-
-		attackTarget_ = enemys.front();
-		for (auto& e : enemys) {
-			if (Vector3::Distance(position_, attackTarget_->position()) > Vector3::Distance(position_, e->position())) {
-				attackTarget_ = e;
-			}
-		}
+		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
+		return;
 	}
 
 
@@ -540,6 +551,20 @@ void Player::to_StepSuccessMode()
 
 void Player::to_AttackMode()
 {
+	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
+
+	//対応したアニメーションの終了時間を取得する
+	stepTime_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
+
+	std::list<ActorPtr> enemys;
+	world_->findActors("Enemy", enemys);
+
+	attackTarget_ = enemys.front();
+	for (auto& e : enemys) {
+		if (Vector3::Distance(position_, attackTarget_->position()) > Vector3::Distance(position_, e->position())) {
+			attackTarget_ = e;
+		}
+	}
 
 }
 
@@ -681,4 +706,39 @@ Vector2 Player::getSticktoMove()
 	result.y = -result.y;
 	return result;
 
+}
+
+Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
+{
+	
+	Vector2 result = Vector2::Zero;
+
+	Vector2 base = Vector2::One;
+	Vector2 target = stumbleDirection;
+
+	base = base.Normalize();
+	target = target.Normalize();
+
+	float cross = Vector2::Cross(base, target);
+	float dot = Vector2::Dot(base, target);
+	dot = MathHelper::ACos(dot);
+	
+
+	//右が+
+	if (cross >= 0) {
+		dot *= -1;
+	}
+	if (dot >= 0 && dot <= 90) {
+		result = Vector2::Left;
+	}
+	if (dot >= 90 && dot <= 180) {
+		result = Vector2::Up;
+	}
+	if (dot <= 0 && dot >= -90) {
+		result = Vector2::Down;
+	}
+	if (dot <= -90 && dot >= -180) {
+		result = Vector2::Right;
+	}
+	return result;
 }
