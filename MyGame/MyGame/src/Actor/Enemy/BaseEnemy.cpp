@@ -21,9 +21,17 @@ static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
 //ポジション追跡時の移動の勢い
-static const float movePower = 0.2f;
+static const float movePower = 0.5f;
+//基本的なダウン値
+static const int defDownCount = 4;
+//ダウンする時間
+static const float downTime = 2.0f;
+//攻撃する範囲
+static const float attackDistance = 40.0f;
+
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position)
+	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
+	downCount_(defDownCount)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
@@ -67,6 +75,14 @@ void BaseEnemy::onUpdate(float deltaTime){
 		updateTrack(deltaTime);
 		break;
 	}
+	case BaseEnemy::Enemy_State::Attack: {
+		updateAttack(deltaTime);
+		break;
+	}
+	case BaseEnemy::Enemy_State::Down: {
+		updateDown(deltaTime);
+		break;
+	}
 	default:
 		break;
 	}	
@@ -102,6 +118,27 @@ void BaseEnemy::onDraw() const
 	float forwardAngle = MathHelper::ACos(Vector3::Dot(rotation_.Forward().Normalize(), toTarget.Normalize()));
 
 	DebugDraw::DebugDrawFormatString(50, 50, GetColor(255, 255, 255), "%f", forwardAngle);
+
+	switch (state_)
+	{
+	case BaseEnemy::Enemy_State::Normal:
+		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Normal");
+		break;
+	case BaseEnemy::Enemy_State::Step:
+		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Step");
+		break;
+	case BaseEnemy::Enemy_State::Track:
+		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Track");
+		break;
+	case BaseEnemy::Enemy_State::Attack:
+		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Attack");
+		break;
+	case BaseEnemy::Enemy_State::Down:
+		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Down");
+		break;
+	default:
+		break;
+	}
 }
 
 void BaseEnemy::onCollide(Actor & other)
@@ -109,9 +146,11 @@ void BaseEnemy::onCollide(Actor & other)
 	if (other.getName() == "Player") {
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
-		static_cast<Player*>(&other)->addVelocity(bound);
+		static_cast<Player*>(&other)->hitEnemy(name_,bound);
 		//自身も跳ね返る
 		hitOther(-bound);
+		if (state_ == Enemy_State::Attack)return;
+		setCountDown();
 	}
 	else if (other.getName() == "PlayerBullet") {
 		Vector3 bound = mathBound(other);
@@ -119,13 +158,20 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
 		hitOther(-bound);
+		if (state_ == Enemy_State::Attack)return;
+		setCountDown();
 	}
 	else if (other.getName() == "Enemy") {
+		//自分自身なら判定しない
+		if (static_cast<BaseEnemy*>(&other)->getPlayerNumber() == playerNumber_) return;
+
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 		static_cast<BaseEnemy*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
+		if (state_ == Enemy_State::Attack)return;
+		setCountDown();
 	}
 	else if (other.getName() == "EnemyBullet") {
 		if (static_cast<EnemyBullet*>(&other)->enemy_->playerNumber_ == playerNumber_)return;
@@ -134,6 +180,8 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<EnemyBullet*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
+		if (state_ == Enemy_State::Attack)return;
+		setCountDown();
 	}
 
 }
@@ -148,6 +196,12 @@ void BaseEnemy::onCollideResult()
 	velocity_ += bound;
 
 	bound_ = Vector3::Zero;
+
+	downTimer_.Action();
+	//ダウン値が溜まったら
+	if (downCount_ <= 0) {
+		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down);
+	}
 }
 
 Vector3 BaseEnemy::mathBound(Actor & other)
@@ -174,7 +228,7 @@ bool BaseEnemy::field(Vector3 & result)
 
 void BaseEnemy::JustStep()
 {
-	if (Random::GetInstance().Range(1, 100) <= 50)return;
+	//if (Random::GetInstance().Range(1, 100) <= 50)return;
 
 	std::vector<int> stepAnim{
 		(int)Enemy_Animation::KnockBack,
@@ -183,6 +237,11 @@ void BaseEnemy::JustStep()
 		(int)Enemy_Animation::Turn
 	};
 
+	//攻撃射程圏内なら
+	if (Vector3::Distance(getNearestActor()->position(), position_)<= attackDistance) {
+		change_State_and_Anim(Enemy_State::Attack, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
+		return;
+	}
 	change_State_and_Anim(Enemy_State::Step, (Enemy_Animation)Random::GetInstance().Randomize(stepAnim));
 	world_->getCanChangedScoreManager().addScore(playerNumber_, 100);
 }
@@ -235,7 +294,7 @@ void BaseEnemy::changeAnimation(Enemy_Animation animID)
 	animation_.ChangeAnim((int)animID);
 }
 
-bool BaseEnemy::change_State(Enemy_State state)
+bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 {
 	//状態が変わらないなら失敗
 	if (state_ == state)return false;
@@ -256,14 +315,26 @@ bool BaseEnemy::change_State(Enemy_State state)
 	//状態変更を行う
 	switch (state_)
 	{
-	case BaseEnemy::Enemy_State::Normal:
+	case BaseEnemy::Enemy_State::Normal:{
 		to_Normal();
 		break;
-	case BaseEnemy::Enemy_State::Step:
-		to_Step();
+	}
+	case BaseEnemy::Enemy_State::Step:{
+		to_Step(anim);
 		break;
-	case BaseEnemy::Enemy_State::Track:
+	}
+	case BaseEnemy::Enemy_State::Track:{
 		to_Track();
+		break;
+	}
+	case BaseEnemy::Enemy_State::Attack: {
+		to_Attack(anim);
+		break;
+	}
+	case BaseEnemy::Enemy_State::Down: {
+		to_Down();
+		break;
+	}
 	default:
 		break;
 	}
@@ -273,7 +344,7 @@ bool BaseEnemy::change_State(Enemy_State state)
 
 bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID)
 {
-	if (!change_State(state))return false;
+	if (!change_State(state,animID))return false;
 	changeAnimation(animID);
 
 	return true;
@@ -283,18 +354,33 @@ void BaseEnemy::to_Normal()
 {
 }
 
-void BaseEnemy::to_Step()
+void BaseEnemy::to_Step(BaseEnemy::Enemy_Animation anim)
 {
 	world_->getScoreManager().addScore(playerNumber_, 100);
 
 	//対応したアニメーションの終了時間を取得する
-	stepTime_ = animation_.GetAnimMaxTime();
+	stepTime_ = animation_.GetAnimMaxTime((int)anim);
 
 }
 
 void BaseEnemy::to_Track()
 {
 	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(position_)+Vector3(Random::GetInstance().Range(-20.0f,20.0f),0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
+}
+
+void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
+{
+	attackTarget_ = getNearestActor();
+
+	//stepTime_ = animation_.GetAnimMaxTime((int)anim);
+	stepTime_ = 1.5f;
+}
+
+void BaseEnemy::to_Down()
+{
+	//ダウン値を元に戻して
+	downCount_ = defDownCount;
+	downTime_ = 0.0f;
 }
 
 void BaseEnemy::updateNormal(float deltaTime)
@@ -328,6 +414,27 @@ void BaseEnemy::updateTrack(float deltaTime)
 	addVelocity_NextPosition(deltaTime);
 
 }
+void BaseEnemy::updateAttack(float deltaTime)
+{
+	stepTime_ -= deltaTime;
+	//ステップが終了したら待機状態に戻る
+	if (stepTime_ <= 0.0f) {
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		return;
+	}
+
+	position_ += (attackTarget_->position() - position_).Normalize() *movePower;
+
+}
+void BaseEnemy::updateDown(float deltaTime)
+{
+	downTime_ += deltaTime;
+
+	if (downTime_ >= downTime) {
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateDown(deltaTime);
+	}
+
+}
 void BaseEnemy::correctPosition()
 {
 	Vector3 result;
@@ -340,4 +447,32 @@ void BaseEnemy::correctPosition()
 		gravity_ = 0.0f;
 	}
 
+}
+
+ActorPtr BaseEnemy::getNearestActor()
+{
+	ActorPtr attackTarget=nullptr;
+	std::list<ActorPtr> others;
+	world_->findActors("Enemy", others);
+
+	others.remove_if([this] (const ActorPtr& ap){
+		return std::static_pointer_cast<BaseEnemy>(ap)->getPlayerNumber() == getPlayerNumber();
+	});
+	
+	auto player = world_->findActor("Player");
+	others.push_back(player);
+
+	attackTarget = others.front();
+	for (auto& e : others) {
+		if (Vector3::Distance(position_, attackTarget->position()) > Vector3::Distance(position_, e->position())) {
+			attackTarget = e;
+		}
+	}
+	return attackTarget;
+}
+
+void BaseEnemy::setCountDown()
+{
+	downTimer_.Initialize();
+	downTimer_.Add([this] {downCount_--; });
 }

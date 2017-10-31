@@ -25,6 +25,8 @@ public:
 	float GetEndAnimFrame(const int motion) const;
 	//現アニメーションの終了時間を受け取る
 	float GetAnimMaxTime()const;
+	//指定アニメーションの終了時間を受け取る
+	float GetAnimMaxTime(int index)const;
 private:
 	// コピーコンストラクタ
 	AnimationDx(const AnimationDx& other) = delete;

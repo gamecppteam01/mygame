@@ -18,6 +18,7 @@ public:
 	void AddFont(FONT_ID id,const std::string& filename,const std::string& fontname,int fontSize);
 
 	int GetFontHandle(FONT_ID id)const;
+	int GetFontSize(FONT_ID id)const;
 
 	//フォントを利用した文字列描画
 	void DrawTextApplyFont(int x,int y,unsigned int color,FONT_ID id,const std::string& text,...);
@@ -25,4 +26,5 @@ public:
 	void End();
 private:
 	std::map<FONT_ID, int> fontids_;
+	std::map<FONT_ID, int> fontSizes_;
 };

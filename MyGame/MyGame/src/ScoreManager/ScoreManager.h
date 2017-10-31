@@ -11,9 +11,12 @@ struct ScoreData {
 	ScoreData() {
 
 	}
-	ScoreData(float rate, int score, int playerNumber, const ActorPtr& target) :
-		scoreRate_(rate), score_(score), playerNumber_(playerNumber), target_(target) {
-
+	ScoreData(int score, int playerNumber, float rate, int rank, const ActorPtr& target){
+		score_ = score;
+		playerNumber_ = playerNumber;
+		scoreRate_ = rate;
+		rank_ = rank;
+		target_ = target;
 	}
 	//スコア倍率
 	float scoreRate_;
@@ -21,6 +24,8 @@ struct ScoreData {
 	int score_;
 	//対象の出場番号
 	int playerNumber_;
+	//ランク
+	int rank_;
 	//対象
 	std::weak_ptr<Actor> target_;
 };
@@ -37,7 +42,7 @@ public:
 	//更新
 	void updata(float deltaTime);
 	//選手の追加
-	void add_Player(int score, int number, float rate ,const ActorPtr& target);
+	void add_Player(int score, int number, float rate ,int rank ,const ActorPtr& target);
 	//スコアの加算
 	void addScore(int number, int score);
 	//倍率の変更
@@ -48,6 +53,12 @@ public:
 	int GetCharacterScore(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
+	//一位の選手のスコアデータを返す
+	ScoreData getFirst();
+	//指定の倍率を返す
+	float getRata(const int number) const;
+	//list<ScoreData>型のリストを渡す
+	void getScoreDataList(std::list<ScoreData>& list);
 	//1位から順に入ったScoreData型のリストを返す
 	void getRankingList(std::list<ScoreData>& list);
 

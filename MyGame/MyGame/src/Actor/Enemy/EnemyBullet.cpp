@@ -43,7 +43,7 @@ void EnemyBullet::onCollide(Actor & other)
 	if (other.getName() == "Player") {
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
-		static_cast<Player*>(&other)->addVelocity(bound);
+		static_cast<Player*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
 		hitOther(-bound);
 		//velocity_ = -bound;
@@ -57,11 +57,17 @@ void EnemyBullet::onCollide(Actor & other)
 		//velocity_ = -bound;
 	}
 	if (other.getName() == "EnemyBullet") {
+		if (static_cast<EnemyBullet*>(&other)->enemy_->getPlayerNumber() == enemy_->getPlayerNumber())return;
+
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 		static_cast<EnemyBullet*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
+
+		//攻撃状態じゃなかったらカウントを進める
+		if (enemy_->getEnemyState() == BaseEnemy::Enemy_State::Attack)return;
+		enemy_->setCountDown();
 	}
 
 }

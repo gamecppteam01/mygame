@@ -224,7 +224,6 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
-    <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp" />
@@ -349,7 +348,6 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
-    <ClInclude Include="src\ScoreManager\ScoreBase.h" />
     <ClInclude Include="src\ScoreManager\ScoreList.h" />
     <ClInclude Include="src\ScoreManager\ScoreManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
