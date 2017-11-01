@@ -131,15 +131,15 @@ protected:
 	int rhythmTimeCount_{ 0 };
 protected:
 	//攻撃する範囲
-	const float attackDistance{ 10.0f };
+	const float attackDistance{ 30.0f };
 	//ポジション追跡時の移動の勢い
 	const float movePower{ 0.5f };
 
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{
 		{Enemy_Animation::KnockBack,100 },//クォーター
-		{Enemy_Animation::Move_Forward,0},//ハーフ
+		{Enemy_Animation::Idle,0},//ハーフ
 		{Enemy_Animation::Step_Left,200	  },//ターン
-		{Enemy_Animation::Turn,0		  }//スピン
+		{Enemy_Animation::Idle,0		  }//スピン
 	};
 
 };

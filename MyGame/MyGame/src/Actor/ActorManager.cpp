@@ -23,6 +23,8 @@ void ActorManager::initialize() {
 	root_.addChild(actors_[ActorGroup::ENEMY_BULLET]);
 	root_.addChild(actors_[ActorGroup::EFFECT]);
 	root_.addChild(actors_[ActorGroup::DUMMYACTOR]);
+
+	countList_ = 0;
 }
 
 // 更新
@@ -40,6 +42,8 @@ void ActorManager::draw() const {
 
 // アクターの追加
 void ActorManager::addActor(ActorGroup group, const ActorPtr& actor) {
+	actor->setCharacterNumber(countList_);
+	countList_++;
 	actors_[group]->addChild(actor);
 }
 

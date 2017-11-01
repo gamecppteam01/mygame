@@ -9,11 +9,11 @@ public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class EnemyBullet_Animation {
 		Idle = 0,//待機時
-		Move_Forward = 2,//前移動時
-		Step_Left = 8,//左ステップ時
-		Turn = 11,//回転時
-		KnockBack = 14,//被弾時
-		Down = 15,//ダウン時
+		Move_Forward = 1,//前移動時
+		Step_Left = 2,//左ステップ時
+		Turn = 3,//回転時
+		KnockBack = 4,//被弾時
+		Down = 5,//ダウン時
 	    //Jump = 17,//ジャンプ時
 	};
 public:

@@ -23,6 +23,9 @@ private:
 	//次の目的地
 	Vector3 nextPosition_;
 
+	//ボーナス
+	bool isGoBonus_{ false };
+
 	//ステージ周回ポイント配列
 	std::vector<Vector3> roundPoint_;
 };

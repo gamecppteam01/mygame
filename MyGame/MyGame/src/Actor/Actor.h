@@ -82,6 +82,9 @@ public:
 	void handleMessage(EventMessage message, void* param);
 	//通知処理
 	void receiveNotification(Notification start);
+
+	int getCharacterNumber()const { return characterNumber_; }
+	void setCharacterNumber(int num) { characterNumber_ = num; }
 	// コピー禁止
 	Actor(const Actor& other) = delete;
 	Actor& operator = (const Actor& other) = delete;
@@ -118,6 +121,8 @@ private:
 	bool isCollide(Actor& other) const;
 
 protected:
+	//キャラクター識別番号
+	int characterNumber_{ 0 };
 	// ワールド
 	IWorld*	world_;
 	// 名前

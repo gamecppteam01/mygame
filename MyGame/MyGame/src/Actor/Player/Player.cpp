@@ -47,7 +47,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
 
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
-
+	bullet_->changeAnimation(PlayerBullet::PlayerBullet_Animation::Move_Forward);
 	initialize();
 
 	//ŠeíXVŠÖ”‚ğİ’è‚·‚é

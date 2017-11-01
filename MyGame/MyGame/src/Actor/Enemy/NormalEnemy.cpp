@@ -14,6 +14,12 @@ NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3
 
 void NormalEnemy::JustStep()
 {
+	//UŒ‚ŽË’öŒ—“à‚È‚ç
+	if (Vector2::Distance(Vector2(getNearestActor()->position().x, getNearestActor()->position().z), Vector2(position_.x, position_.z)) <= attackDistance) {
+		change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Idle);
+		return;
+	}
+
 	//’ÊíŽž‚Í6”Žq–ˆ
 	int rhythmTime = 6;
 	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
@@ -34,11 +40,6 @@ void NormalEnemy::JustStep()
 		(int)Enemy_Animation::Turn
 	};
 
-	//UŒ‚ŽË’öŒ—“à‚È‚ç
-	if (Vector3::Distance(getNearestActor()->position(), position_) <= attackDistance) {
-		change_State_and_Anim(Enemy_State::Attack,Enemy_Animation::Idle);
-		return;
-	}
 	int r = Random::GetInstance().Range(0, 9);
 	if (r < 3) {
 		//ƒ^[ƒ“
@@ -55,6 +56,8 @@ void NormalEnemy::JustStep()
 
 void NormalEnemy::updateNormal(float deltaTime)
 {
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
+	
 	std::shared_ptr<Player> player = std::static_pointer_cast<Player>(world_->findActor("Player"));
 	if (Vector3::Distance(position_, player->position()) <= 30.0f&&world_->getScoreManager().GetCharacterScoreRate(player->getPlayerNumber()) >= 1.05f) {
 		if (change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn))updateAttack(deltaTime);

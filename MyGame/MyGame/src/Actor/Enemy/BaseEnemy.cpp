@@ -21,7 +21,7 @@ static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
 //基本的なダウン値
-static const int defDownCount = 4;
+static const int defDownCount = 1;
 //ダウンする時間
 static const float downTime = 2.0f;
 
@@ -31,9 +31,9 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
-
+	bullet_->changeAnimation(EnemyBullet::EnemyBullet_Animation::Move_Forward);
 	modelHandle_ = MODEL_ID::ENEMY_MODEL;
-	changeAnimation(Enemy_Animation::Idle);
+	changeAnimation(Enemy_Animation::Move_Forward);
 
 	bullet_->initialize();
 
@@ -42,6 +42,7 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	bulletRotation_ = bullet_->getRotationPtr();
 
 	target_ = world_->findActor("Player");
+	
 }
 
 void BaseEnemy::hitOther(const Vector3 & velocity)
@@ -142,10 +143,11 @@ void BaseEnemy::onCollide(Actor & other)
 	if (other.getName() == "Player") {
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
+
 		static_cast<Player*>(&other)->hitEnemy(name_,bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack)return;
+		if (state_ == Enemy_State::Attack&&other.getCharacterNumber()==attackTarget_->getCharacterNumber())return;
 		setCountDown();
 	}
 	else if (other.getName() == "PlayerBullet") {
@@ -378,6 +380,8 @@ void BaseEnemy::to_Down()
 
 void BaseEnemy::updateNormal(float deltaTime)
 {
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
+
 	//searchTarget(deltaTime);
 	gravity_ -= 0.05f;
 
@@ -401,7 +405,7 @@ void BaseEnemy::updateStep(float deltaTime)
 void BaseEnemy::updateTrack(float deltaTime)
 {
 	if (Vector2::Distance(Vector2(position_.x, position_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
 	addVelocity_NextPosition(deltaTime);
@@ -412,7 +416,7 @@ void BaseEnemy::updateAttack(float deltaTime)
 	stepTime_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (stepTime_ <= 0.0f) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
 

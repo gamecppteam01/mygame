@@ -33,6 +33,8 @@ private:
 	// 衝突判定
 	void collide();
 private:
+	//キャラクターに識別番号を設定する
+	int countList_{ 0 };
 	// ルートノード
 	Actor root_;
 	// アクターグループ
