@@ -70,12 +70,14 @@ void LoadingScene::LoadEffect()
 	Model::GetInstance().Load2D(defaultPath + "circleeffect.png", MODEL_ID::EFFECT_CIRCLE_MODEL);
 	Model::GetInstance().Load2D(defaultPath + "light.png", MODEL_ID::EFFECT_LIGHT_MODEL);
 
-
-
 	//Effekseerを利用したエフェクト
 	defaultPath = "res/Effekseer/";
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SAMPLE_EFFECT, defaultPath+"laser.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::EFFECT_TEST, defaultPath + "testeffect.efk");
+	//仮エフェクト
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::RING_EFFECT, defaultPath + "ringeffect.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HIT_EFFECT, defaultPath + "hiteffect.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::ACTION_EFFECT, defaultPath + "actioneffect.efk");
 }
 
 void LoadingScene::LoadFont()

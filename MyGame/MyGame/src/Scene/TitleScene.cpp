@@ -6,10 +6,17 @@
 #include"../Input/DualShock4Manager.h"
 #include"../Graphic/Model.h"
 #include"../Graphic/EffekseerManager.h"
+#include "../Math/Easing.h"
 
 TitleScene::TitleScene()
 {
-	next_ = SceneType::SCENE_GAMEPLAY;
+	//next_ = SceneType::SCENE_GAMEPLAY;
+	next_ = SceneType::SCENE_CLEAR;
+
+	titleState_ = TitleState::first;
+	SinCount_ = 0;
+	Counter_ = 0;
+	Cursol_ = 0.0f;
 }
 
 TitleScene::~TitleScene()
@@ -20,43 +27,90 @@ TitleScene::~TitleScene()
 void TitleScene::start()
 {
 	isEnd_ = false;
-	_Counter = 0;
+	
 }
+
 
 void TitleScene::update(float deltaTime)
 {
+	float t = 0.0f;
+	
+	//初期状態
+	if (titleState_ == TitleState::first) {
+		if (titleState_ == TitleState::first &&
+			Keyboard::GetInstance().KeyStateDown(KEYCODE::F) ||
+			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
+			titleState_ = TitleState::second;
+		}
 
-	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::UP)) {
-		_Counter += 1;
-		EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SAMPLE_EFFECT);
+		//単発のエフェクト
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::R)) {
+			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SAMPLE_EFFECT, Vector3(1, 0, 0), Vector3::One, Vector3::One);
+		}
+		//連続のエフェクト
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
+			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::EFFECT_TEST, Vector3(1, 0, 0), Vector3::Zero, Vector3::One);
+		}
+		//エフェクトテスト
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Y)) {
+			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::RING_EFFECT, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3::One);
+																				//Vector3(1, 0, 1), Vector3(1, 0, 0), Vector3::One
+			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::HIT_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::ACTION_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+		}																		
+
 	}
-	else if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::DOWN)) {
-		_Counter -= 1;
+	//二段階目
+	else if (titleState_ == TitleState::second)
+	{
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
+			InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
+			Counter_ -= 1;
+			Cursol_ -= 100.0f;
+		}
+		else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
+			InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180)
+		{
+			Counter_ += 1;
+			Cursol_ += 100.0f;
+		}
+
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
+			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
+			//シーン遷移
+			isEnd_ = true;
+		}
+		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
+			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
+			//ゲーム終了
+		}
 	}
-	if (Keyboard::GetInstance().KeyTriggerUp(KEYCODE::A) && _Counter == 0) {
-		isEnd_ = true;
-	}
+	temp = MathHelper::Sin(SinCount_);
+	//min(temp, 0.0f);
+	SinCount_++;
 }
 
 void TitleScene::draw() const
 {
-	//UIclassを作成するかUpdateで移動させる
-	//TextDraw().Draw(100.0f, -100.0f, "counter" + _counter);
-	if (_Counter == 0) {
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_START,  Vector2(150.0f,100.0f));
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_END,    Vector2(150.0f, 300.0f));
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 100.0f));
-	}
-	else if (_Counter == 1) {
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_START,  Vector2(150.0f, 100.0f));
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_END,    Vector2(150.0f, 300.0f));
-		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 300.0f));
-	}
+	//タイトル
+	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SCREEN, Vector2(0.0f, 0.0f), 1.0f);
+	//はじめる
+	if (titleState_ == TitleState::first) {
+		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(0.0f, 400.0f), temp * 1);
 
-	/*prite::GetInstance().Draw(SPRITE_ID::TITLE_START, Vector2(150.0f, 100.0f));
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_END, Vector2(150.0f, 300.0f));
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SELECT, Vector2(50.0f, 100.0f));*/
-	
+	}
+	//ステージ選択か終了
+	if (titleState_ == TitleState::second) {
+		Sprite::GetInstance().Draw(SPRITE_ID::BUTTON_A, Vector2(0.0f, Cursol_ + 100.0f), 1.0f);
+		if (Counter_ == 0) {
+			Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(50.0f, 200.0f), temp * 1);
+			Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(50.0f, 400.0f), 1.0f);
+		}
+		if (Counter_ == 1){
+			Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(50.0f, 200.0f), 1.0f);
+			Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(50.0f, 400.0f), temp * 1);
+		}
+	}
 	Camera::GetInstance().Position.Set(Vector3(0, 0, 30));
 
 	Camera::GetInstance().Target.Set(Vector3::Zero);
@@ -70,11 +124,12 @@ void TitleScene::draw() const
 
 	DrawLine3D(Vector3::Zero, seg, GetColor(255, 255, 255));
 	Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, DualShock4Manager::GetInstance().gyroMat_);
-	//DrawCapsule3D(-seg/2, seg/2,2, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), FALSE);
+	DrawCapsule3D(-seg / 2, seg / 2, 2, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), FALSE);
 
 }
 
 void TitleScene::end()
 {
-	
+
 }
+

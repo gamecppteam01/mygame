@@ -23,6 +23,7 @@ enum SPRITE_ID
 	PLAYER,
 	MINIMAP,
 	WARNING,
+	RESULT,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
@@ -31,6 +32,9 @@ enum EFFECT_ID {
 
 	SAMPLE_EFFECT,
 	EFFECT_TEST,
+	RING_EFFECT,
+	HIT_EFFECT,
+	ACTION_EFFECT,
 
 };
 
