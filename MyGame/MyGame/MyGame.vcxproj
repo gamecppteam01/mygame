@@ -172,6 +172,8 @@
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyTemplate.cpp" />
+    <ClCompile Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.cpp" />
+    <ClCompile Include="src\Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="src\Actor\Judge\JudgeBase.cpp" />
     <ClCompile Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.cpp" />
     <ClCompile Include="src\Actor\Judge\Judge_NPC\Judge_NPC.cpp" />
@@ -265,6 +267,8 @@
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyTemplate.h" />
+    <ClInclude Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.h" />
+    <ClInclude Include="src\Actor\Enemy\NormalEnemy.h" />
     <ClInclude Include="src\Actor\Judge\JudgeBase.h" />
     <ClInclude Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.h" />
     <ClInclude Include="src\Actor\Judge\Judge_NPC\Judge_NPC.h" />

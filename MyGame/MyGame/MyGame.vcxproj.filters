@@ -264,10 +264,10 @@
     <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Actor\Enemy\NormalEnemy.cpp">
+    <ClCompile Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScoreManager\ScoreBase.cpp">
+    <ClCompile Include="src\Actor\Enemy\NormalEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -656,10 +656,10 @@
     <ClInclude Include="src\ScoreManager\ScoreRateManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actor\Enemy\NormalEnemy.h">
+    <ClInclude Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\ScoreManager\ScoreBase.h">
+    <ClInclude Include="src\Actor\Enemy\NormalEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
