@@ -8,7 +8,7 @@
 
 class ScoreDisplay {
 public:
-	ScoreDisplay(ScoreManager* scoreManager);
+	ScoreDisplay(std::list<ScoreData>& list);
 	~ScoreDisplay();
 	void initialize();
 	//（選手番号、スコア）表示

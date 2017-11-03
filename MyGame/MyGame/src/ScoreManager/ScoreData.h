@@ -1,4 +1,6 @@
 #pragma once
+#include<memory>
+#include"../Actor/Actor.h"
 //スコア情報一括管理構造体
 struct ScoreData {
 	ScoreData() {

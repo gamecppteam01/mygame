@@ -10,8 +10,8 @@
 
 TitleScene::TitleScene()
 {
-	//next_ = SceneType::SCENE_GAMEPLAY;
-	next_ = SceneType::SCENE_CLEAR;
+	next_ = SceneType::SCENE_GAMEPLAY;
+	//next_ = SceneType::SCENE_CLEAR;
 
 	titleState_ = TitleState::first;
 	SinCount_ = 0;
@@ -56,8 +56,10 @@ void TitleScene::update(float deltaTime)
 			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::RING_EFFECT, Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3::One);
 																				//Vector3(1, 0, 1), Vector3(1, 0, 0), Vector3::One
 			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::HIT_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
-			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::ACTION_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
-		}																		
+			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::ACTION_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+		}
 
 	}
 	//二段階目
@@ -93,7 +95,7 @@ void TitleScene::update(float deltaTime)
 void TitleScene::draw() const
 {
 	//タイトル
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SCREEN, Vector2(0.0f, 0.0f), 1.0f);
+	//Sprite::GetInstance().Draw(SPRITE_ID::TITLE_SCREEN, Vector2(0.0f, 0.0f), 1.0f);
 	//はじめる
 	if (titleState_ == TitleState::first) {
 		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(0.0f, 400.0f), temp * 1);

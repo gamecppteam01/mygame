@@ -24,7 +24,7 @@ void World::Initialize()
 	actors_.initialize();
 	uiManager_.initialize();
 	stepTimer_.initialize();
-	scoreManager_.initialize();
+	//scoreManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
 void World::FindInitialize() {
