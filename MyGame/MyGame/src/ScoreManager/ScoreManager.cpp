@@ -3,6 +3,7 @@
 #include"../Actor/Actor.h"
 #include"../Actor/Player/Player.h"
 #include"../Actor/Enemy/BaseEnemy.h"
+#include"../DataManager/DataManager.h"
 
 //コンストラクタ
 ScoreManager::ScoreManager(IWorld* world):

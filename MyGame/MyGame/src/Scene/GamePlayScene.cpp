@@ -17,6 +17,7 @@
 #include"../UI/UIInclude.h"
 #include"../Input/InputChecker.h"
 #include"../Game/Time.h"
+#include"../DataManager/DataManager.h"
 
 GamePlayScene::GamePlayScene():world_() {
 }
@@ -90,4 +91,7 @@ void GamePlayScene::draw() const {
 
 void GamePlayScene::end() {
 	world_.Initialize();
+	std::list<ScoreData> list;
+	world_.getScoreManager().getScoreDataList(list);
+	DataManager::GetInstance().setData(list);
 }

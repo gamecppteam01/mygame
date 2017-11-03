@@ -183,6 +183,7 @@
     <ClCompile Include="src\Camera\CameraActor.cpp" />
     <ClCompile Include="src\Camera\OverLookingCamera.cpp" />
     <ClCompile Include="src\Conv\DXConverter.cpp" />
+    <ClCompile Include="src\DataManager\DataManager.cpp" />
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
     <ClCompile Include="src\Effect\Effect.cpp" />
     <ClCompile Include="src\Effect\HitEffect.cpp" />
@@ -226,6 +227,8 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
+    <ClCompile Include="src\ScoreManager\NumberManager.cpp" />
+    <ClCompile Include="src\ScoreManager\ScoreDisplay.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp" />
@@ -284,6 +287,7 @@
     <ClInclude Include="src\Camera\OverLookingCamera.h" />
     <ClInclude Include="src\Conv\ByteConverter.h" />
     <ClInclude Include="src\Conv\DXConverter.h" />
+    <ClInclude Include="src\DataManager\DataManager.h" />
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
@@ -352,6 +356,9 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
+    <ClInclude Include="src\ScoreManager\NumberManager.h" />
+    <ClInclude Include="src\ScoreManager\ScoreData.h" />
+    <ClInclude Include="src\ScoreManager\ScoreDisplay.h" />
     <ClInclude Include="src\ScoreManager\ScoreList.h" />
     <ClInclude Include="src\ScoreManager\ScoreManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
