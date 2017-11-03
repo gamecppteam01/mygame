@@ -1,7 +1,7 @@
 #pragma once
 #include<DxLib.h>
-
 #include<map>
+#include<string>
 #include"../game/ID.h"
 class FontManager{
 private:
@@ -22,6 +22,12 @@ public:
 
 	//フォントを利用した文字列描画
 	void DrawTextApplyFont(int x,int y,unsigned int color,FONT_ID id,const std::string& text,...);
+
+	template<class ...T>
+	//フォントを利用した文字列描画(可変長対応)
+	void DrawTextApplyFont(int x, int y, unsigned int color, FONT_ID id, const std::string& text,T ...args) {
+		DrawFormatStringToHandle(x, y, color, fontids_[id], text.c_str(), args...);
+	}
 
 	void End();
 private:

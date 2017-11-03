@@ -49,7 +49,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "Enemy.png",   SPRITE_ID::ENEMY);
 	Sprite::GetInstance().Load(defaultPath + "Player.png",  SPRITE_ID::PLAYER);
 	Sprite::GetInstance().Load(defaultPath + "MiniMapScreen.png", SPRITE_ID::MINIMAP);
-	
+	Sprite::GetInstance().Load(defaultPath + "Judge.png", SPRITE_ID::JUDGE);
 	Sprite::GetInstance().Load(defaultPath + "MiniMapScreen.png", SPRITE_ID::WARNING);
 	Sprite::GetInstance().Load(defaultPath + "titlescreen.png", SPRITE_ID::TITLE_SCREEN);
 	

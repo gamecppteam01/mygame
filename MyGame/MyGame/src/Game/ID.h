@@ -24,6 +24,7 @@ enum SPRITE_ID
 	MINIMAP,
 	WARNING,
 	RESULT,
+	JUDGE,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

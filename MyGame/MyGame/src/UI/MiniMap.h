@@ -8,18 +8,18 @@
 class MiniMap : public UI {
 public:
 	//コンストラクタ
-	MiniMap(IWorld* world, const Vector2& position);
+	MiniMap(IWorld* world, const Vector2& position
+		,const Vector3& player_position/*, const Vector3& enemy_position*//*, const Vector3& judge_position*/);
 	//開始
 	void initialize() override;
-	void update(float deltaTime) override;
+	void update(float delta_time) override;
 	//描画
 	void draw() const override;
 
 private:
 	const Vector2 position_;
-	Vector2 scale_{ 0.2f,0.2f };
-	Vector2 player_position;
-	std::list<Vector2> enemy_position;
-    int enemy_Number;
+	Vector2 player_position_;
+	std::list<Vector2> enemy_position_;
+	std::list<Vector2> judge_position_;
 	IWorld* world_;
 };
