@@ -21,6 +21,7 @@
 #include"../../Judge/JudgeDefine.h"
 #include"../../ScoreManager/ScoreManager.h"
 #include"../../Graphic/FontManager.h"
+#include"../../Math/MathHelper.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -31,10 +32,12 @@ static const Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
 static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
-static const float boundPower = 5.0f;
+static const float boundPower = 15.0f;
 static const float downTime = 2.0f;
 //移動速度
 static const float movePower = 0.5f;
+//よろけから回復するまでの時間
+static const float defStumbleResurrectTime = 1.0f;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
@@ -53,7 +56,6 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	//各種更新関数を設定する
 	playerUpdateFunc_[Player_State::Idle] = [this](float deltaTime) {idle_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Move] = [this](float deltaTime) {move_Update(deltaTime); };
-	//playerUpdateFunc_[Player_State::Jump] = [this](float deltaTime) {jump_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Step] = [this](float deltaTime) {step_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Step_Success] = [this](float deltaTime) {stepSuccess_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Attack] = [this](float deltaTime) {attack_Update(deltaTime); };
@@ -66,7 +68,6 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	//各種状態変更関数を設定する
 	playerToNextModeFunc_[Player_State::Idle] = [this]() {to_IdleMode(); };
 	playerToNextModeFunc_[Player_State::Move] = [this]() {to_MoveMode(); };
-	//playerToNextModeFunc_[Player_State::Jump] = [this]() {to_JumpMode(); };
 	playerToNextModeFunc_[Player_State::Step] = [this]() {to_StepMode(); };
 	playerToNextModeFunc_[Player_State::Step_Success] = [this]() {to_StepSuccessMode(); };
 	playerToNextModeFunc_[Player_State::Attack] = [this]() {to_AttackMode(); };
@@ -98,8 +99,11 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
 	bound_ += velocity;
 
-	if (state_ == Player_State::Attack)return;
-
+	//攻撃状態ならひるまない
+	if (isAttack()) {
+		change_State_and_Anim(Player_State::Idle, Player_Animation::Idle);
+		return;
+	}
 	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
 
 	//stumbleDirection_ = -velocity;
@@ -162,20 +166,14 @@ void Player::onDraw() const
 
 	DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
 	
-	if (state_ != Player_State::Step)return;
-
-	//float ringSize = stepMaxTime_ - max(justTimer_,0.0f);
-	//ringSize = ringSize / stepMaxTime_;
-	//Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, ringSize*64.0f);
-	//body_->draw(position_);
+	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
+		DebugDraw::DebugDrawFormatString(300, 300, GetColor(255, 255, 255), "スコア高い");
+	}
 
 }
 
 void Player::onCollide(Actor & other)
 {
-	if (other.getName() == "PlayerBullet"&&state_== Player_State::Shoot) {
-		change_State_and_Anim(Player_State::ShootEnd, Player_Animation::ShootEnd);
-	}
 	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet") && isCanStamble()) {
 
 	}
@@ -219,7 +217,6 @@ bool Player::field(Vector3 & result)
 	return false;
 }
 
-
 void Player::gravityUpdate(float deltaTime)
 {
 	gravity_ -= 0.05f;
@@ -228,7 +225,6 @@ void Player::gravityUpdate(float deltaTime)
 	velocity_ += jumpVector;
 
 }
-
 
 void Player::correctPosition()
 {
@@ -278,11 +274,7 @@ void Player::idle_Update(float deltaTime)
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
 		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
 		return;
-		//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
 	}
-	//if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::L1)) {
-	//	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
-	//}
 	if (isChangeStep()) {
 		if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
 		return;
@@ -310,7 +302,6 @@ void Player::move_Update(float deltaTime)
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
 		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
 		return;
-		//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), 5.0f);
 	}
 
 	if (isChangeStep()) {
@@ -320,45 +311,11 @@ void Player::move_Update(float deltaTime)
 
 	upVelocity_ -= upVelocity_*0.5f;
 
-	//framevelocity = framevelocity * rotation_;
 	velocity_ += framevelocity;
 
 	gravityUpdate(deltaTime);
 
 }
-
-/*
-void Player::jump_Update(float deltaTime)
-{
-	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Right)) {
-		framevelocity.x += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Left)) {
-		framevelocity.x -= 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Up)) {
-		framevelocity.z += 1.0f;
-	}
-	if (InputChecker::GetInstance().StickStateDown(InputChecker::Input_Stick::Down)) {
-		framevelocity.z -= 1.0f;
-	}
-
-
-	upVelocity_ -= upVelocity_*0.5f;
-
-	if (!InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
-		if (upVelocity_ < 5.0f&& gravity_ == 0.0f) {
-			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle)) {
-				playerUpdateFunc_[state_](deltaTime);
-			}
-		}
-	}
-	gravityUpdate(deltaTime);
-
-	velocity_ += framevelocity;
-}
-*/
 
 void Player::step_Update(float deltaTime)
 {
@@ -388,8 +345,6 @@ void Player::step_Update(float deltaTime)
 		nextStep_ = successStep_;
 		gyroCheck_.initAngle();
 	}
-	OutputDebugString(std::to_string(DualShock4Manager::GetInstance().GetAngle3D().z).c_str());
-	OutputDebugString("\n");
 	if (DualShock4Manager::GetInstance().GetAngle3D().z > 45.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
 		gyroCheck_.initRotate();
 		nextStep_ = successStep_;
@@ -399,9 +354,9 @@ void Player::step_Update(float deltaTime)
 
 void Player::stepSuccess_Update(float deltaTime)
 {
-	stepTime_ -= deltaTime;
+	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
-	if (stepTime_ <= 0.0f) {
+	if (timeCount_ <= 0.0f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
@@ -409,9 +364,9 @@ void Player::stepSuccess_Update(float deltaTime)
 
 void Player::attack_Update(float deltaTime)
 {
-	stepTime_ -= deltaTime;
+	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
-	if (stepTime_ <= 0.0f) {
+	if (timeCount_ <= 0.0f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
@@ -422,24 +377,18 @@ void Player::attack_Update(float deltaTime)
 
 void Player::shoot_Update(float deltaTime)
 {
+	shootAngle_ += 5.0f;
+
+	Vector3 rotatePos = bulletDistance + bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*3;
+	*bulletPosition_ = position_ + (rotatePos * Matrix::CreateRotationY(shootAngle_));
 	//回転を更新
 	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
-	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
-	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
-	//Vector2 move = getSticktoMove();
-	//回転力を移動速度に追加
-	move *= turnPower_;
-	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
-		//if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
-		//return;
-	}
-	framevelocity.x += move.x*movePower;
-	framevelocity.z += move.y*movePower;
-	framevelocity += bulletVelocity_;
-	bulletVelocity_ *= 0.98f;
+	if (shootAngle_ >= 360.0f) {
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		return;
 
-	*bulletPosition_ += framevelocity;
+	}
 }
 
 void Player::shootend_Update(float deltaTime)
@@ -453,9 +402,9 @@ void Player::knockback_Update(float deltaTime)
 
 void Player::down_Update(float deltaTime)
 {
-	downTime_ += deltaTime;
+	timeCount_ += deltaTime;
 
-	if (downTime_ >= downTime) {
+	if (timeCount_ >= downTime) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 	}
 }
@@ -470,9 +419,9 @@ void Player::turn_Update(float deltaTime)
 
 void Player::stumble_Update(float deltaTime)
 {
-	stumbleTime_ += deltaTime;
+	timeCount_ += deltaTime;
 	//よろけ時間がダウン時間に到達したら転倒
-	if (stumbleTime_ >= fallTime) {
+	if (timeCount_ >= fallTime) {
 		//転倒処理を書く
 		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
 
@@ -484,9 +433,15 @@ void Player::stumble_Update(float deltaTime)
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	//Vector2 move = getSticktoMove();
 	//よろけ修正方向を向いたら
-	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.3f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
-		return;
+	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.2f) {
+		stumbleRegistTimer_ += deltaTime;
+		if (stumbleRegistTimer_ >= defStumbleResurrectTime) {
+			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+			return;
+		}
+	}
+	else {
+		stumbleRegistTimer_ = 0.0f;
 	}
 	framevelocity.x += move.x*movePower;
 	framevelocity.z += move.y*movePower;
@@ -508,14 +463,6 @@ void Player::to_MoveMode()
 {
 
 }
-
-/*
-void Player::to_JumpMode()
-{
-	upVelocity_ = 20.0f;
-}
-*/
-
 void Player::to_StepMode()
 {
 	//ジャスト判定タイミングならスコア加算フラグを有効にする
@@ -536,10 +483,14 @@ void Player::to_StepSuccessMode()
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
 
 	//対応したアニメーションの終了時間を取得する
-	stepTime_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
+	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
 
 	if (nextStep_ == 2) {
 		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
+		return;
+	}
+	if (nextStep_ == 4) {
+		change_State_and_Anim(Player_State::Shoot, stepAnimScoreList_.at(nextStep_).first);
 		return;
 	}
 
@@ -554,7 +505,7 @@ void Player::to_AttackMode()
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
 
 	//対応したアニメーションの終了時間を取得する
-	stepTime_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
+	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
 
 	std::list<ActorPtr> enemys;
 	world_->findActors("Enemy", enemys);
@@ -570,11 +521,7 @@ void Player::to_AttackMode()
 
 void Player::to_ShootMode()
 {
-	std::shared_ptr<BetweenPositionActor> point= std::make_shared<BetweenPositionActor>();
-	point->addTarget(shared_from_this());
-	point->addTarget(bullet_);
-	world_->addActor(ActorGroup::DUMMYACTOR, point);
-	world_->getCamera()->setTarget((ActorPtr)point);
+	shootAngle_ = 0.0f;
 	Vector3 shootVector = *bulletPosition_ - position_;
 	shootVector = shootVector.Normalize();
 	bulletVelocity_ = shootVector*(turnPower_*defaultTurnPower);
@@ -582,7 +529,6 @@ void Player::to_ShootMode()
 
 void Player::to_ShootEndMode()
 {
-	world_->getCamera()->setTarget(shared_from_this());
 
 }
 
@@ -593,7 +539,7 @@ void Player::to_KnockBackMode()
 
 void Player::to_DownMode()
 {
-
+	timeCount_ = 0.0f;
 }
 
 void Player::to_TurnMode()
@@ -602,7 +548,8 @@ void Player::to_TurnMode()
 
 void Player::to_StumbleMode()
 {
-	stumbleTime_ = 0.0f;
+	timeCount_ = 0.0f;
+	stumbleRegistTimer_ = 0.0f;
 }
 
 void Player::end_IdleMode()
@@ -627,8 +574,6 @@ void Player::end_AttackMode()
 
 void Player::end_ShootMode()
 {
-	ActorPtr cameraPoint = world_->findActor("Point");
-	if(cameraPoint!=nullptr)cameraPoint->dead();
 }
 
 void Player::end_ShootEndMode()
@@ -678,6 +623,11 @@ bool Player::isCanStamble() const
 	if (state_ == Player_State::Idle || state_ == Player_State::Move || state_ == Player_State::Step)return true;
 	if (state_ == Player_State::Step_Success && (nextStep_ != 2 && nextStep_ != 4))return true;
 	return false;
+}
+
+bool Player::isAttack()
+{
+	return state_==Player_State::Attack || state_==Player_State::Shoot;
 }
 
 bool Player::isCanTracking() const

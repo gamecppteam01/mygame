@@ -35,7 +35,7 @@ void GameClearScene::draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::RESULT, Vector2::Zero, 1.0f);
 	int i = 0;
 	//リストから値を取り出して順番に表示する
-	ScoreDisplay(DataManager::GetInstance().getData());
+	//ScoreDisplay(DataManager::GetInstance().getData());
 }
 
 void GameClearScene::end()

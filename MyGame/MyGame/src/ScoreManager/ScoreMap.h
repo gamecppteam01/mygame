@@ -32,6 +32,8 @@ public:
 	//周囲のポイントで一番スコア倍率の高い物を返す
 	Vector3 getNextPoint(const Vector3& point,float* resultRate=nullptr);
 
+	Vector3 getNearestBonusPoint(const Vector3& point);
+
 	std::vector<Vector3> getRoundPoint();
 private:
 	//倍率検索

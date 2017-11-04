@@ -67,10 +67,10 @@ Vector3 Field::CorrectPosition(const Vector3 & position)
 
 float Field::getXWidth() const
 {
-	return 140.0f;
+	return 120.0f;
 }
 
 float Field::getZWidth() const
 {
-	return 140.0f;
+	return 120.0f;
 }

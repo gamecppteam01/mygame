@@ -47,13 +47,11 @@ public:
 public:
 	void addVelocity(const Vector3& velocity);
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
-
 	//選手番号を取得する
 	int getPlayerNumber()const { return playerNumber_; }
 	//よろけ方向を取得する
 	Vector2 getStumbleDirection()const { return stumbleDirection_; }
-	//よろけ時間を取得する
-	float getStumbleTime()const { return stumbleTime_; }
+	//現在の状態を取得する
 	Player_State getState()const { return state_; }
 
 private:
@@ -182,6 +180,9 @@ private:
 
 	//よろけが発生可能な状態か
 	bool isCanStamble()const;
+	
+	//攻撃状態かどうか
+	bool isAttack();
 
 //弾(女)関係
 private:
@@ -200,17 +201,17 @@ private:
 	int successStep_;
 	//次のステップ
 	int nextStep_;
-	//ステップの時間
-	float stepTime_{ 0.0f };
 	//選手番号
 	int playerNumber_;
+
+	float shootAngle_;
+	//汎用タイマー
+	float timeCount_;
 
 	//よろけ関連
 	//ヒットした向き
 	Vector2 stumbleDirection_{ Vector2::Zero };
-	//よろけ時間
-	float stumbleTime_{ 0.0f };
-	float downTime_{ 0.0f };
+	float stumbleRegistTimer_{ 0.f };
 	//男関連
 	//移動ベクトル
 	Vector3 velocity_;

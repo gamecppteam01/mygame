@@ -6,7 +6,7 @@
 #include"../../Math/Random.h"
 
 NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
-	BaseEnemy(world,name,position,playerNumber,body), nextPoint_(0), nextPosition_(position){
+	BaseEnemy(world,name,position,playerNumber,body), nextPoint_(0), nextPosition_(position), isGoBonus_(false){
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	nextPoint_ = getNearestPoint(position_);
@@ -14,12 +14,13 @@ NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3
 
 void NormalEnemy::JustStep()
 {
+	ActorPtr act = getNearestActor();
 	//攻撃射程圏内なら
-	if (Vector2::Distance(Vector2(getNearestActor()->position().x, getNearestActor()->position().z), Vector2(position_.x, position_.z)) <= attackDistance) {
+	if (Vector2::Distance(Vector2(getNearestActor()->position().x, getNearestActor()->position().z), Vector2(position_.x, position_.z)) <= attackDistance&&
+		prevHitActorNumber_ != act->getCharacterNumber()) {
 		change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Idle);
 		return;
 	}
-
 	//通常時は6拍子毎
 	int rhythmTime = 6;
 	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
@@ -28,7 +29,12 @@ void NormalEnemy::JustStep()
 	}
 
 	rhythmTimeCount_++;
-	if (rhythmTimeCount_ < rhythmTime)return;
+	if (rhythmTimeCount_ < rhythmTime) {
+		if (isGoBonus_) {
+			setNextPosition();
+		}
+		return;
+	}
 	//if (Random::GetInstance().Range(1, 100) <= 50)return;
 
 	rhythmTimeCount_ = 0;
@@ -74,7 +80,7 @@ void NormalEnemy::updateNormal(float deltaTime)
 	Vector2 pointPos = Vector2(nextPosition_.x, nextPosition_.z);
 
 	//ポイントに到達したら
-	if (Vector2::Distance(myPos, pointPos) <= 10.0f) {
+	if (Vector2::Distance(myPos, pointPos) <= 10.0f&&!isGoBonus_) {
 		setNextPosition();
 	}
 }
@@ -83,6 +89,7 @@ void NormalEnemy::to_Normal()
 {
 	nextPoint_ = getNearestPoint(position_);
 	nextPosition_ = roundPoint_[nextPoint_];
+	isGoBonus_ = false;
 }
 
 int NormalEnemy::getNearestPoint(const Vector3 & position)
@@ -106,7 +113,8 @@ void NormalEnemy::setNextPosition()
 	float rate = 1.0f;
 	Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(position_, &rate);
 	if (rate >= 1.05f) {
-		nextPosition_ = nextPosition+Vector3(Random::GetInstance().Range(-20.f,20.f),0.0f, Random::GetInstance().Range(-20.f, 20.f));
+		isGoBonus_ = true;
+		nextPosition_ = nextPosition +Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
 		return;
 	}
 	nextPosition_ = roundPoint_[nextPoint_];

@@ -8,12 +8,14 @@
 
 class ScoreDisplay {
 public:
-	ScoreDisplay(std::list<ScoreData>& list);
+	ScoreDisplay(ScoreManager* score);
 	~ScoreDisplay();
 	void initialize();
+	void setScoreManager(ScoreManager* score);
+	void finalize();
 	//（選手番号、スコア）表示
-	void Score();
+	void Score() const;
 private:
 	ScoreManager* scoreManager_;
-	std::list<ScoreData> ScoreData_;
+
 };

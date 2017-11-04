@@ -15,19 +15,19 @@
 //男と女の距離
 static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
 //弾き飛ばす力
-static const float boundPower = 5.0f;
+static const float defBoundPower = 5.0f;
 //視界角度
 static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
 //基本的なダウン値
-static const int defDownCount = 1;
+static const int defDownCount = 2;
 //ダウンする時間
 static const float downTime = 2.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
-	downCount_(defDownCount)
+	downCount_(defDownCount), prevHitActorNumber_(0)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
@@ -147,7 +147,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<Player*>(&other)->hitEnemy(name_,bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack&&other.getCharacterNumber()==attackTarget_->getCharacterNumber())return;
+		if (state_ == Enemy_State::Attack&&other.getCharacterNumber() == attackTarget_->getCharacterNumber()) {
+			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
+			return;
+		}
 		setCountDown();
 	}
 	else if (other.getName() == "PlayerBullet") {
@@ -156,7 +159,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack)return;
+		if (state_ == Enemy_State::Attack) {
+			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
+			return;
+		}
 		setCountDown();
 	}
 	else if (other.getName() == "Enemy") {
@@ -168,7 +174,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<BaseEnemy*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack)return;
+		if (state_ == Enemy_State::Attack) {
+			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
+			return;
+		}
 		setCountDown();
 	}
 	else if (other.getName() == "EnemyBullet") {
@@ -178,7 +187,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<EnemyBullet*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack)return;
+		if (state_ == Enemy_State::Attack) {
+			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
+			return;
+		}
 		setCountDown();
 	}
 
@@ -187,7 +199,7 @@ void BaseEnemy::onCollide(Actor & other)
 void BaseEnemy::onCollideResult()
 {
 	bound_.y = 0.0f;
-	Vector3 bound = bound_.Normalize()*boundPower;
+	Vector3 bound = bound_.Normalize()*boundPower_;
 	bound.y = 0.0f;
 	
 	bulletVelocity_ += bound;
@@ -206,13 +218,17 @@ Vector3 BaseEnemy::mathBound(Actor & other)
 {
 	Vector3 bound = other.position() - position_;
 	bound = bound.Normalize();
-	bound *= boundPower;
+	bound *= boundPower_;
 	bound.y = 0.0f;
 
 	return bound;
 }
 bool BaseEnemy::field(Vector3 & result)
 {
+	if (!world_->getField()->isInField(position_)) {
+		position_ = world_->getField()->CorrectPosition(position_);
+	}
+
 	Vector3 hit1;
 	Vector3 hit2;
 	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
@@ -228,9 +244,9 @@ void BaseEnemy::JustStep()
 {
 	//if (Random::GetInstance().Range(1, 100) <= 50)return;
 
-
+	ActorPtr act = getNearestActor();
 	//攻撃射程圏内なら
-	if (Vector3::Distance(getNearestActor()->position(), position_)<= attackDistance) {
+	if (Vector3::Distance(act->position(), position_)<= attackDistance&&prevHitActorNumber_!= act->getCharacterNumber()) {
 		change_State_and_Anim(Enemy_State::Attack, stepAnim[1].first);
 		return;
 	}
@@ -239,6 +255,11 @@ void BaseEnemy::JustStep()
 
 	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first);
 	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[key].second);
+}
+
+void BaseEnemy::setBoundPower(float powerRate)
+{
+	boundPower_ = defBoundPower*powerRate;
 }
 
 void BaseEnemy::searchTarget(float deltaTime)
@@ -366,7 +387,7 @@ void BaseEnemy::to_Track()
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
 	attackTarget_ = getNearestActor();
-
+	prevHitActorNumber_ = attackTarget_->getCharacterNumber();
 	//stepTime_ = animation_.GetAnimMaxTime((int)anim);
 	stepTime_ = 1.5f;
 }

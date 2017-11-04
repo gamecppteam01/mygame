@@ -2,6 +2,7 @@
 
 #include "EffekseerForDXLib.h"
 #include"../Game/ID.h"
+#include"../Math/Math.h"
 #include<map>
 
 class EffekseerManager {

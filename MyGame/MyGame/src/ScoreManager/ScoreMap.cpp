@@ -70,13 +70,23 @@ void ScoreMap::mathScoreRate(ScorePoint & point)
 
 Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 {
-	mathScoreRateTimer_.Action();
+	//スコアレートの計算
+	//mathScoreRateTimer_.Action();
 
+	//次の行き先はとりあえず左上
 	Vector3 next = points_.getElement(0, 0).position_;
 
-	auto targetKey=points_.getTargetKey([this,point](ScorePoint& s1, ScorePoint& s2) {
-		return Vector3::Distance(point, s1.position_) > Vector3::Distance(point, s2.position_);
-	});
+	float nearest = Vector3::Distance(point, points_.getElement(0, 0).position_)+1.f;
+	//自身の位置に一番近いポイントを検索
+	auto targetKey = points_.getTargetKey([this, point,&nearest](ScorePoint& s1, ScorePoint& s2) {
+		float dist = Vector3::Distance(point, s2.position_);
+		if (nearest > dist) {
+			nearest = dist;
+			return true;
+		}
+		else return false;
+		}); 
+	//ポイントの周囲のスコアをまとめて
 	std::vector<ScorePoint> points{
 		points_.getElement(targetKey.first,targetKey.second),//中心
 		points_.getElement(targetKey.first,max(targetKey.second - 1,0)),//上
@@ -84,6 +94,7 @@ Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 		points_.getElement(min(targetKey.first + 1,points_.getXSize() - 1),targetKey.second),//右
 		points_.getElement(targetKey.first,min(targetKey.second + 1,points_.getYSize() - 1)),//下
 	};
+	//スコアを検索
 	for (auto& p : points) {
 		mathScoreRate(p);
 	}
@@ -91,6 +102,7 @@ Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 	float rate = 0.0f;
 	std::vector<Vector3> nextList{ next };
 
+	//スコアが高いところを探して
 	for (auto& i : points) {
 		if (i.rate_ > rate) {
 			nextList.clear();
@@ -101,6 +113,8 @@ Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 			nextList.push_back(i.position_);
 		}
 	}
+
+	//スコア倍率と次のポイントを返す
 	*resultRate = rate;
 	next = nextList[Random::GetInstance().Range(0, nextList.size() - 1)];
 
@@ -113,6 +127,29 @@ Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 	//);
 
 	return next;
+}
+
+Vector3 ScoreMap::getNearestBonusPoint(const Vector3 & point)
+{
+	float rate = 0.f;
+	std::vector<std::pair<int, int>> points;
+	int x = points_.getXSize();
+	int i = 0;
+	for (auto& dp : points_.getAllDataPtr()) {
+		if (dp->rate_ > rate) {
+			rate = dp->rate_;
+			points.clear();
+			points.push_back({ i%x,i / x });
+		}
+		else if(dp->rate_==rate){
+			points.push_back({ i%x,i / x });
+		}
+		i++;
+	}
+	int key = Random::GetInstance().Range(0, points.size() - 1);
+
+
+	return points_.getElement(points[key].first, points[key].second).position_;
 }
 
 std::vector<Vector3> ScoreMap::getRoundPoint()

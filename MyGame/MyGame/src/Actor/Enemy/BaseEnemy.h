@@ -64,7 +64,8 @@ protected:
 protected:
 	//ステップ通知時の処理
 	virtual void JustStep()override;
-
+	//弾きを設定
+	void setBoundPower(float powerRate);
 	//索敵
 	void searchTarget(float deltaTime);
 	//パートナーの更新
@@ -127,8 +128,14 @@ protected:
 
 	Enemy_State state_{ Enemy_State::Normal };
 
+	//前に当たった相手の番号
+	int prevHitActorNumber_{ 0 };
+
 	//拍子タイマー
 	int rhythmTimeCount_{ 0 };
+
+	float boundPower_{ 15.0f };
+
 protected:
 	//攻撃する範囲
 	const float attackDistance{ 30.0f };

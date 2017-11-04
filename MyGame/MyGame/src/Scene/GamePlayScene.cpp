@@ -10,6 +10,9 @@
 #include<memory>
 #include"../Actor/Enemy/BaseEnemy.h"
 #include"../Actor/Enemy/NormalEnemy.h"
+#include"../Actor/Enemy/Enemy_Power.h"
+#include"../Actor/Enemy/Enemy_Quick/Enemy_Quick.h"
+
 #include"../UI/UITemplate.h"
 #include<EffekseerForDXLib.h>
 #include"../Actor/Judge/Judge_NPC/Judge_NPC.h"
@@ -19,7 +22,7 @@
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 
-GamePlayScene::GamePlayScene():world_() {
+GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr){
 }
 
 void GamePlayScene::start() {
@@ -34,9 +37,9 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 1; i++) {
 		playerNumber++;
-		auto enemy = std::make_shared<BaseEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
+		auto enemy = std::make_shared<Enemy_Quick>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
@@ -44,7 +47,7 @@ void GamePlayScene::start() {
 	auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy);
 	playerNumber++;
-	auto enemy2 = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
+	auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy2);
 	world_.addStepTimeListener(enemy);
 	world_.addStepTimeListener(enemy2);
@@ -67,18 +70,18 @@ void GamePlayScene::start() {
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 
+	scoreDisplay_.initialize();
+	scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
+
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 }
 
 void GamePlayScene::update(float deltaTime) {
-
 	world_.update(deltaTime);
 }
 
 void GamePlayScene::draw() const {
-	//Model::GetInstance().Draw(MODEL_ID::PLAYER_MODEL, Matrix::Identity);
-
 	world_.draw();
 
 	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
@@ -87,6 +90,7 @@ void GamePlayScene::draw() const {
 	
 	Time::GetInstance().draw_fps();
 
+	scoreDisplay_.Score();
 }
 
 void GamePlayScene::end() {
@@ -94,4 +98,6 @@ void GamePlayScene::end() {
 	std::list<ScoreData> list;
 	world_.getScoreManager().getScoreDataList(list);
 	DataManager::GetInstance().setData(list);
+
+	scoreDisplay_.finalize();
 }

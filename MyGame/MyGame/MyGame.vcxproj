@@ -172,6 +172,7 @@
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyTemplate.cpp" />
+    <ClCompile Include="src\Actor\Enemy\Enemy_Power.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.cpp" />
     <ClCompile Include="src\Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="src\Actor\Judge\JudgeBase.cpp" />
@@ -187,6 +188,8 @@
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
     <ClCompile Include="src\Effect\Effect.cpp" />
     <ClCompile Include="src\Effect\HitEffect.cpp" />
+    <ClCompile Include="src\Effect\SpinEffect.cpp" />
+    <ClCompile Include="src\Effect\StepEffect.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
     <ClCompile Include="src\Game\Time.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="src\Math\Color.cpp" />
     <ClCompile Include="src\Math\Easing.cpp" />
     <ClCompile Include="src\Math\MathHelper.cpp" />
+    <ClCompile Include="src\Math\MathHelperSupport.cpp" />
     <ClCompile Include="src\Math\Matrix.cpp" />
     <ClCompile Include="src\Math\Point.cpp" />
     <ClCompile Include="src\Math\Quaternion.cpp" />
@@ -228,6 +232,7 @@
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\ScoreManager\NumberManager.cpp" />
+    <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreDisplay.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
@@ -270,6 +275,7 @@
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyTemplate.h" />
+    <ClInclude Include="src\Actor\Enemy\Enemy_Power.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.h" />
     <ClInclude Include="src\Actor\Enemy\NormalEnemy.h" />
     <ClInclude Include="src\Actor\Judge\JudgeBase.h" />
@@ -293,6 +299,8 @@
     <ClInclude Include="src\Effect\Effect.h" />
     <ClInclude Include="src\Effect\GaugeEffect.h" />
     <ClInclude Include="src\Effect\HitEffect.h" />
+    <ClInclude Include="src\Effect\SpinEffect.h" />
+    <ClInclude Include="src\Effect\StepEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
@@ -335,7 +343,9 @@
     <ClInclude Include="src\Math\Easing.h" />
     <ClInclude Include="src\Math\Math.h" />
     <ClInclude Include="src\Math\MathHelper.h" />
+    <ClInclude Include="src\Math\MathHelperSupport.h" />
     <ClInclude Include="src\Math\Matrix.h" />
+    <ClInclude Include="src\Math\MyFuncionList.h" />
     <ClInclude Include="src\Math\Point.h" />
     <ClInclude Include="src\Math\Quaternion.h" />
     <ClInclude Include="src\Math\Random.h" />
@@ -357,6 +367,7 @@
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\ScoreManager\NumberManager.h" />
+    <ClInclude Include="src\ScoreManager\ScoreBase.h" />
     <ClInclude Include="src\ScoreManager\ScoreData.h" />
     <ClInclude Include="src\ScoreManager\ScoreDisplay.h" />
     <ClInclude Include="src\ScoreManager\ScoreList.h" />
@@ -364,6 +375,7 @@
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
     <ClInclude Include="src\ScoreManager\ScoreRateManager.h" />
     <ClInclude Include="src\Sound\Sound.h" />
+    <ClInclude Include="src\test.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />
     <ClInclude Include="src\UI\ButtonUI.h" />

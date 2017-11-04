@@ -2,6 +2,7 @@
 #include"Scene.h"
 #include"../World/World.h"
 #include "../UI/ComboGaugeUI.h"
+#include"../ScoreManager/ScoreDisplay.h"
 
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
@@ -15,4 +16,7 @@ public:
 
 private:
 	World world_;
+
+	ScoreDisplay scoreDisplay_;
+
 };
