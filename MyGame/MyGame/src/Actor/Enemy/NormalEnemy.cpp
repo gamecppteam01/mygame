@@ -14,6 +14,7 @@ NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3
 
 void NormalEnemy::JustStep()
 {
+	nonTargetResetTimer_.Action();
 	ActorPtr act = getNearestActor();
 	//UŒ‚ŽË’öŒ—“à‚È‚ç
 	if (Vector2::Distance(Vector2(getNearestActor()->position().x, getNearestActor()->position().z), Vector2(position_.x, position_.z)) <= attackDistance&&

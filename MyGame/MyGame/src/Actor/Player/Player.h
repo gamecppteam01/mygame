@@ -88,7 +88,7 @@ private:
 //状態関係
 private:
 	//状態変更とアニメーション変更を同時に行う
-	bool change_State_and_Anim(Player_State state, Player_Animation animID, float animSpeed = 1.0f);
+	bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true);
 
 	//状態の更新
 	bool change_State(Player_State state);
@@ -172,7 +172,7 @@ private:
 
 private:
 	//アニメーションの変更
-	void changeAnimation(Player_Animation animID, float animSpeed = 1.0f);
+	void changeAnimation(Player_Animation animID, float animFrame = 0.0f,float animeSpeed=1.0f,bool isLoop=true);
 
 private:
 	//ステップに変更する状態か
@@ -183,7 +183,8 @@ private:
 	
 	//攻撃状態かどうか
 	bool isAttack();
-
+	//姿勢チェックをするかどうか
+	bool isRequiredCheckPosture()const;
 //弾(女)関係
 private:
 	//女がプレイヤーに追従するかどうか
@@ -203,11 +204,14 @@ private:
 	int nextStep_;
 	//選手番号
 	int playerNumber_;
+	//ステップの周期を測る
+	int stepCount_{ 0 };
 
 	float shootAngle_;
 	//汎用タイマー
 	float timeCount_;
-
+	//ダウンする時間
+	float downTime_{ 7.0f };
 	//よろけ関連
 	//ヒットした向き
 	Vector2 stumbleDirection_{ Vector2::Zero };

@@ -9,7 +9,7 @@
 void AnimationDx::Update(const float frameTime)
 {
 	// フラグ初期化
-	isAnimEnd_ = false;
+	if(isLoop_)isAnimEnd_ = false;
 
 	// 前アニメーションをデタッチ
 	MV1DetachAnim(modelHandle_, anim_);
@@ -19,18 +19,18 @@ void AnimationDx::Update(const float frameTime)
 	anim_ = MV1AttachAnim(modelHandle_, motion_);
 	// 今アニメーションを更新
 	maxAnimTime_ = MV1GetAttachAnimTotalTime(modelHandle_, anim_);
-	animTimer_	+= frameTime;
+	animTimer_	+= frameTime*animSpeed_;
 	if (animTimer_ >= maxAnimTime_)
 	{
-		isAnimEnd_ = true;
-		animTimer_ = fmodf(animTimer_, maxAnimTime_);
+		if(isLoop_) animTimer_ = fmodf(animTimer_, maxAnimTime_);
+		else isAnimEnd_ = true;
 	}
 
 	// 前アニメーションをアタッチ
 	prevAnim_ = MV1AttachAnim(modelHandle_, prevMotion_);
 	// 前アニメーション更新
 	float prevMaxAnimTime = MV1GetAttachAnimTotalTime(modelHandle_, prevAnim_);
-	prevAnimTimer_ += frameTime;
+	prevAnimTimer_ += frameTime*animSpeed_;
 	prevAnimTimer_ = fmodf(prevAnimTimer_, prevMaxAnimTime);
 
 	// ブレンド率の更新
@@ -50,7 +50,7 @@ void AnimationDx::Draw(const Matrix& rotation) const
 	Model::GetInstance().Draw(modelHandle_, rotation);
 }
 
-void AnimationDx::ChangeAnim(const int motion, const float frame)
+void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed, bool isLoop)
 {
 	// 現在と同じモーションの場合は何もしない
 	if (motion_ == motion) return;
@@ -71,6 +71,9 @@ void AnimationDx::ChangeAnim(const int motion, const float frame)
 	prevAnim_ = MV1AttachAnim(modelHandle_, prevMotion_);
 
 	maxAnimTime_ = MV1GetAttachAnimTotalTime(modelHandle_, anim_);
+
+	isLoop_ = isLoop;
+	animSpeed_ = animSpeed;
 }
 
 void AnimationDx::SetHandle(const int & handle)

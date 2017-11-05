@@ -33,6 +33,9 @@ float Time::deltaTime() {
 	return m_DeltaTime;
 }
 
+#ifdef NDEBUG
+void Time::draw_fps() {}
+#else
 // fps‚Ì•\Ž¦
 void Time::draw_fps() {
 	if (mFpsTime_i == 0)
@@ -47,3 +50,4 @@ void Time::draw_fps() {
 	if (mFps != 0)
 		DrawFormatString(0, 0, GetColor(255, 255, 255), "FPS %.1f", mFps); //fps‚ð•\Ž¦
 }
+#endif

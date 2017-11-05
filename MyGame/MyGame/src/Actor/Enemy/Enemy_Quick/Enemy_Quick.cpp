@@ -24,6 +24,7 @@ Enemy_Quick::Enemy_Quick(IWorld * world, const std::string & name, const Vector3
 
 //ステップ通知時の処理
 void Enemy_Quick::JustStep() {
+	nonTargetResetTimer_.Action();
 	int rand = Random::GetInstance().Range(1, 10);
 	if (rand <= 6) {
 		//ターン

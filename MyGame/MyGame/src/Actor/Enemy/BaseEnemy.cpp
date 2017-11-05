@@ -10,7 +10,6 @@
 #include"../../Math/Random.h"
 #include"../../ScoreManager/ScoreMap.h"
 #include"../../Field/Field.h"
-#include"../../Input/InputChecker.h"
 
 //男と女の距離
 static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
@@ -22,8 +21,6 @@ static const float viewAngle = 60.0f;
 static const float moveAngle = 20.0f;
 //基本的なダウン値
 static const int defDownCount = 2;
-//ダウンする時間
-static const float downTime = 2.0f;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
@@ -85,10 +82,6 @@ void BaseEnemy::onUpdate(float deltaTime){
 	}	
 	//アニメーションを更新
 	animation_.Update(MathHelper::Sign(deltaTime));
-
-	Vector2 result = InputChecker::GetInstance().Stick();
-
-	velocity_+= Vector3(result.x,0.0f,result.y);
 
 	position_ += velocity_;
 	velocity_ *= 0.5f;
@@ -242,6 +235,7 @@ bool BaseEnemy::field(Vector3 & result)
 
 void BaseEnemy::JustStep()
 {
+	nonTargetResetTimer_.Action();
 	//if (Random::GetInstance().Range(1, 100) <= 50)return;
 
 	ActorPtr act = getNearestActor();
@@ -386,6 +380,10 @@ void BaseEnemy::to_Track()
 
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
+	//10回ステップ来たら攻撃対象をリセット
+	nonTargetResetTimer_.Initialize();
+	nonTargetResetTimer_.AddEmpty(9);
+	nonTargetResetTimer_.Add([&] {prevHitActorNumber_ = -1; });
 	attackTarget_ = getNearestActor();
 	prevHitActorNumber_ = attackTarget_->getCharacterNumber();
 	//stepTime_ = animation_.GetAnimMaxTime((int)anim);

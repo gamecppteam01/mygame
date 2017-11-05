@@ -28,6 +28,7 @@ public:
 		//DXLib初期化処理
 		if (DxLib_Init() == -1)return -1;//エラーが起きたら終了
 		SetDrawScreen(DX_SCREEN_BACK);
+		SetUseBackCulling(TRUE);
 		EffekseerManager::GetInstance().Initialize();
 		start();
 

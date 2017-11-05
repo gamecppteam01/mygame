@@ -33,11 +33,13 @@ static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
 static const float boundPower = 15.0f;
-static const float downTime = 2.0f;
+static const float downTime = 7.0f;
 //移動速度
 static const float movePower = 0.5f;
 //よろけから回復するまでの時間
-static const float defStumbleResurrectTime = 1.0f;
+static const float defStumbleResurrectTime = 0.5f;
+//ステップ回数によるよろけのチェック周期
+static const int defStepCount = 3;
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
@@ -101,7 +103,7 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 
 	//攻撃状態ならひるまない
 	if (isAttack()) {
-		change_State_and_Anim(Player_State::Idle, Player_Animation::Idle);
+		if(state_==Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Idle);
 		return;
 	}
 	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
@@ -193,7 +195,18 @@ void Player::onCollideResult()
 
 void Player::JustStep()
 {
-	
+	//ステップ周期が来たら
+	stepCount_++;
+	//姿勢のチェックが必要なら
+	if (!isRequiredCheckPosture())return;
+	if (stepCount_ >= defStepCount) {
+		stepCount_ = 0;
+		//バランスを取れてるかをチェック
+		if (DualShock4Manager::GetInstance().GetAngle3D().z <= 45.0f) {
+			downTime_ = 2.0f;
+			change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.0f, 1.0f, false);
+		}
+	}
 }
 
 void Player::CreateJustEffect()
@@ -240,10 +253,10 @@ void Player::correctPosition()
 
 }
 
-bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animSpeed)
+bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame,float animSpeed,bool isLoop)
 {
 	if (!change_State(state))return false;
-	changeAnimation(animID, animSpeed);
+	changeAnimation(animID,animFrame, animSpeed,isLoop);
 
 	return true;
 }
@@ -404,7 +417,7 @@ void Player::down_Update(float deltaTime)
 {
 	timeCount_ += deltaTime;
 
-	if (timeCount_ >= downTime) {
+	if (timeCount_ >= downTime_) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 	}
 }
@@ -423,7 +436,8 @@ void Player::stumble_Update(float deltaTime)
 	//よろけ時間がダウン時間に到達したら転倒
 	if (timeCount_ >= fallTime) {
 		//転倒処理を書く
-		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+		downTime_ = downTime;//ダウン時間設定
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false))playerUpdateFunc_[state_](deltaTime);
 
 	}
 
@@ -601,8 +615,8 @@ void Player::stepAttack(float deltaTime)
 	position_ += (attackTarget_->position() - position_).Normalize() *2.f;
 }
 
-void Player::changeAnimation(Player_Animation animID, float animSpeed) {
-	animation_.ChangeAnim((int)animID);
+void Player::changeAnimation(Player_Animation animID,float animFrame, float animSpeed,bool isLoop) {
+	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop);
 }
 
 bool Player::isChangeStep() const
@@ -628,6 +642,11 @@ bool Player::isCanStamble() const
 bool Player::isAttack()
 {
 	return state_==Player_State::Attack || state_==Player_State::Shoot;
+}
+
+bool Player::isRequiredCheckPosture() const
+{
+	return state_==Player_State::Idle||state_==Player_State::Move;
 }
 
 bool Player::isCanTracking() const

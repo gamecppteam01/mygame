@@ -120,6 +120,8 @@ protected:
 	int downCount_;
 	//ダウンカウントの変更タイマー
 	MethodTimer downTimer_;
+	//攻撃対象からの除外設定解除タイマー
+	MethodTimer nonTargetResetTimer_;
 	//ダウンしている時間
 	float downTime_;
 
@@ -141,6 +143,8 @@ protected:
 	const float attackDistance{ 30.0f };
 	//ポジション追跡時の移動の勢い
 	const float movePower{ 0.5f };
+	//ダウンする時間
+	const float downTime{ 7.0f };
 
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{
 		{Enemy_Animation::KnockBack,100 },//クォーター

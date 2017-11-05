@@ -21,6 +21,7 @@ Enemy_Power::Enemy_Power(IWorld * world, const std::string & name, const Vector3
 }
 
 void Enemy_Power::JustStep() {
+	nonTargetResetTimer_.Action();
 	rhythmTimeCount_++;
 
 	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);

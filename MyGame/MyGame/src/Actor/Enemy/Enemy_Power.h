@@ -14,8 +14,6 @@ private:
 
 	virtual void to_Normal()override;
 	virtual void to_Attack(BaseEnemy::Enemy_Animation anim)override;
-	//õ“G
-	void searchTarget(float deltaTime);
 
 private:
 	//‘_‚¤êŠ

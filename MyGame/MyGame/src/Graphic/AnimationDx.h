@@ -14,7 +14,7 @@ public:
 	// 描画
 	void Draw(const Matrix& rotation) const;
 	// アニメーション切り替え
-	void ChangeAnim(const int motion, const float frame = 0.0f);
+	void ChangeAnim(const int motion, const float frame = 0.0f, float animSpeed = 1.0f,bool isLoop=true);
 	// モデルハンドル登録(受け取ったハンドルを基にモデルをコピーするため、受取時のハンドルをそのまま使う事は出来ない)
 	void SetHandle(const int& handle);
 	// アニメーションエンドフラグ
@@ -27,6 +27,10 @@ public:
 	float GetAnimMaxTime()const;
 	//指定アニメーションの終了時間を受け取る
 	float GetAnimMaxTime(int index)const;
+	//ループするかの設定
+	void setLoop(bool isLoop) { isLoop_ = isLoop; }
+	//アニメーションの再生速度を設定する
+	void setAnimSpeed(float animSpeed) { animSpeed_ = animSpeed; }
 private:
 	// コピーコンストラクタ
 	AnimationDx(const AnimationDx& other) = delete;
@@ -56,4 +60,8 @@ private:
 	int		anim_;
 	// 前アニメーション
 	int		prevAnim_;
+	//ループするか
+	bool isLoop_{ true };
+	//アニメーションの再生速度
+	float animSpeed_{ 1.0f };
 };
