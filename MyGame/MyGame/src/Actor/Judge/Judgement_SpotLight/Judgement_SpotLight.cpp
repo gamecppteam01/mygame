@@ -31,12 +31,12 @@ void Judgement_SpotLight::onUpdate(float deltaTime){
 void Judgement_SpotLight::onDraw() const{
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	Model::GetInstance().Draw(MODEL_ID::EFFECT_LIGHT_MODEL, position_,1.0f,Vector3::Zero,Vector3(0.5f,1.0f,0.5f));
 	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
 
 	DebugDraw::DebugDrawFormatString(WINDOW_WIDTH/3, WINDOW_HEIGHT/3, GetColor(255, 255, 255), "スポットライト");
-	
 	std::list<ActorPtr> targets;
-	world_->findActors("Enemy", targets);
+	//world_->findActors("Enemy", targets);
 	targets.push_back(world_->findActor("Player"));
 	for (auto t : targets) {
 		if (is_In_Distans(t) == true) {

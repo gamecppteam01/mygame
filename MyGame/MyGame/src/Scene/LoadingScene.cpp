@@ -61,6 +61,7 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "player.mv1", MODEL_ID::PLAYER_MODEL);
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 
+	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);
 }
 
 void LoadingScene::LoadEffect()
