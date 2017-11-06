@@ -2,6 +2,7 @@
 #include"../Math/Vector3.h"
 #include"../Math/TwoDimensionalArray.h"
 #include"../Method/MethodTimer.h"
+#include"../Define.h"
 #include<memory>
 #include<vector>
 
@@ -46,10 +47,10 @@ private:
 	//スコア位置の
 	TwoDimensionalArray<ScorePoint> points_{
 		4,4,
-		ScorePoint{ Vector3(-120.0f,0.0f,-120.0f) }	,ScorePoint{ Vector3(-40.0f,0.0f,-120.0f) }	,ScorePoint{ Vector3(40.0f,0.0f,-120.0f) }	,ScorePoint{ Vector3(120.0f,0.0f,-120.0f) },
-		ScorePoint{ Vector3(-120.0f,0.0f,-40.0f) }	,ScorePoint{ Vector3(-40.0f,0.0f,-40.0f) }	,ScorePoint{ Vector3(40.0f,0.0f,-40.0f) }	,ScorePoint{ Vector3(120.0f,0.0f,-40.0f) },
-		ScorePoint{ Vector3(-120.0f,0.0f,40.0f) }	,ScorePoint{ Vector3(-40.0f,0.0f,40.0f) }	,ScorePoint{ Vector3(40.0f,0.0f,40.0f) }	,ScorePoint{ Vector3(120.0f,0.0f,40.0f) },
-		ScorePoint{ Vector3(-120.0f,0.0f,120.0f) }	,ScorePoint{ Vector3(-40.0f,0.0f,120.0f) }	,ScorePoint{ Vector3(40.0f,0.0f,120.0f) }	,ScorePoint{ Vector3(120.0f,0.0f,120.0f) }
+		ScorePoint{ Vector3(-200.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,-100.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,-20.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,20.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,100.0f)*FIELD_SCALE }
 	};
 	//審査員リスト
 	std::vector<std::shared_ptr<JudgeBase>> judges_;

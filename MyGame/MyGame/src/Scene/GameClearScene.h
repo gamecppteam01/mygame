@@ -22,4 +22,6 @@ private:
 	//ƒ[ƒ‹ƒh
 	World world_;
 	std::list<ScoreData> datas_;
+
+	int sinCount_;
 };

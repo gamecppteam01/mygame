@@ -72,6 +72,9 @@ void World::addCamera(const CameraPtr & camera)
 void World::addLight(DirectionalLight light)
 {
 	light_.SetDirectionalLight(light.handlename, light.vector);
+	light_.SetAmbientColor(light.handlename, light.color.ambient);
+	light_.SetDiffuseColor(light.handlename, light.color.diffuse);
+	light_.SetAmbientColor(light.handlename, light.color.ambient);
 }
 
 void World::addLight(SpotLight light)

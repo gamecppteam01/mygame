@@ -7,6 +7,6 @@ enum class SceneType {
 	SCENE_GAMEOVER,
 	SCENE_CLEAR,
 	SCENE_CREDIT,
-	
+	SCENE_EXIT,//ダミーシーン
 
 };

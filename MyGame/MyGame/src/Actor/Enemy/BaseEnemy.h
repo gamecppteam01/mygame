@@ -93,6 +93,8 @@ protected:
 	virtual void updateAttack(float deltaTime);
 	virtual void updateDown(float deltaTime);
 
+	//ステップ可能か
+	bool isCanStep()const;
 protected:
 	float stepTime_{ 0.0f };
 	Vector3 velocity_;
@@ -145,7 +147,8 @@ protected:
 	const float movePower{ 0.5f };
 	//ダウンする時間
 	const float downTime{ 7.0f };
-
+	
+	const float attackPower{ 1.0f };
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{
 		{Enemy_Animation::KnockBack,100 },//クォーター
 		{Enemy_Animation::Idle,0},//ハーフ

@@ -3,6 +3,7 @@
 #include"../../Graphic/AnimationDx.h"
 
 class Player;
+
 //プレイヤーの攻撃(女)
 class PlayerBullet:public Actor {
 	friend class Player;
@@ -25,7 +26,8 @@ public:
 	virtual void initialize() override;
 
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
-
+	//プレイヤーを取得する
+	const Player* getPlayer()const;
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);

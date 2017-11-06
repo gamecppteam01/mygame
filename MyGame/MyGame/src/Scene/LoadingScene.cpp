@@ -34,12 +34,15 @@ void LoadingScene::end() {
 void LoadingScene::LoadSprite()
 {
 	std::string defaultPath = "res/Sprite/";//全リソース共通パス
-	Sprite::GetInstance().Load(defaultPath + "gamestartText.png", SPRITE_ID::START_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "gamestartText.bmp", SPRITE_ID::START_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "gameendText.bmp", SPRITE_ID::END_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "totitleText.bmp", SPRITE_ID::TOTITLE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "whitescreen.png", SPRITE_ID::WHITE_SCREEN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "blackscreen.png", SPRITE_ID::BLACK_SCREEN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleStart.png", SPRITE_ID::TITLE_START);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleEnd.png", SPRITE_ID::TITLE_END);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleSelect.png", SPRITE_ID::TITLE_SELECT);
+	Sprite::GetInstance().Load(defaultPath + "result.png", SPRITE_ID::RESULT);
 
 	Sprite::GetInstance().Load(defaultPath + "gauge.png",   SPRITE_ID::GAUGE_UI);
 	Sprite::GetInstance().Load(defaultPath + "ButtonA.png", SPRITE_ID::BUTTON_A);

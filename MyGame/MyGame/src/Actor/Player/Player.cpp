@@ -393,7 +393,7 @@ void Player::shoot_Update(float deltaTime)
 	shootAngle_ += 5.0f;
 
 	Vector3 rotatePos = bulletDistance + bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*3;
-	*bulletPosition_ = position_ + (rotatePos * Matrix::CreateRotationY(shootAngle_));
+	*bulletPosition_ = position_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//âÒì]ÇçXêV
 	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 

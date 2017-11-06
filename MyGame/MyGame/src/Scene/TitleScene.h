@@ -2,7 +2,10 @@
 #include "Scene.h"
 
 #include"../Math/Vector3.h"
+#include"../Math/Vector2.h"
+#include"../Define.h"
 
+#include<vector>
 enum TitleState
 {
 	//初期状態
@@ -27,14 +30,20 @@ public:
 	void end() override;
 
 private:
-	//
-	int Counter_;
-	int handle;
+	//カーソル位置
+	int cursor_{ 0 };
+
 	Vector3 scale{ Vector3::One };
 	//画面状態
 	TitleState titleState_;
 	//サイン波
 	int SinCount_;
 	float temp;
-	float Cursol_;
+
+private:
+	//カーソルの位置及びボタンの位置リスト
+	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
+		{Vector2{ 300.0f,500.f },SceneType::SCENE_GAMEPLAY},
+		{Vector2{ 300.0f,600.f },SceneType::SCENE_EXIT }//ゲーム終了(遷移先はダミー)
+	};
 };

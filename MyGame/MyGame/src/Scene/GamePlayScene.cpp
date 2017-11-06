@@ -22,6 +22,9 @@
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 
+//ゲームの時間
+static const float gameTime = 60.0f;
+
 GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr){
 }
 
@@ -54,13 +57,11 @@ void GamePlayScene::start() {
 
 	world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(70.0f, 10.0f, 20.0f),Matrix::CreateRotationY(30.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-80.0f, 10.0f, -20.0f), Matrix::CreateRotationY(130.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-30.0f, 10.0f, 95.0f), Matrix::CreateRotationY(-60.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(100.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-150.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(40.0f, 10.0f, -40.0f), Matrix::CreateRotationY(-150.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-20.0f, 10.0f, 30.0f), Matrix::CreateRotationY(-150.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, "Judge", Vector3(0.0f, 10.0f, 0.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-110.0f, 10.0f, 60.0f),Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, "Judge", Vector3(0.0f, 2.0f, 0.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
 	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1000, 0),player->position());
@@ -73,12 +74,22 @@ void GamePlayScene::start() {
 	scoreDisplay_.initialize();
 	scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
 
+	timeCount_ = gameTime;
+
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
+
 }
 
 void GamePlayScene::update(float deltaTime) {
 	world_.update(deltaTime);
+
+	timeCount_ -= deltaTime;
+	if (timeCount_ <= 0.0f) {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_CLEAR;
+		return;
+	}
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
 		isEnd_ = true;
@@ -93,9 +104,12 @@ void GamePlayScene::draw() const {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
 	
+	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)timeCount_);
+
 	Time::GetInstance().draw_fps();
 
 	scoreDisplay_.Score();
+
 }
 
 void GamePlayScene::end() {

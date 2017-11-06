@@ -19,6 +19,11 @@ void PlayerBullet::hitEnemy(const std::string& hitName,const Vector3& velocity)
 	player_->hitEnemy(hitName, velocity);
 }
 
+const Player* PlayerBullet::getPlayer() const
+{
+	return player_;
+}
+
 void PlayerBullet::onMessage(EventMessage message, void * param)
 {
 }

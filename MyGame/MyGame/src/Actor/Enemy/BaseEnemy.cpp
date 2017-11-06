@@ -99,36 +99,6 @@ void BaseEnemy::onDraw() const
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix::CreateRotationY(180.0f)*Matrix(rotation_).Translation(drawPosition));
 	
-	//ターゲットが存在しなければ索敵無効
-	if (target_ == nullptr)return;
-	//ターゲットの位置を検索
-	Vector3 targetPos = target_->position();
-	//ターゲット方向のベクトル
-	Vector3 toTarget = targetPos - position_;
-	float forwardAngle = MathHelper::ACos(Vector3::Dot(rotation_.Forward().Normalize(), toTarget.Normalize()));
-
-	DebugDraw::DebugDrawFormatString(50, 50, GetColor(255, 255, 255), "%f", forwardAngle);
-
-	switch (state_)
-	{
-	case BaseEnemy::Enemy_State::Normal:
-		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Normal");
-		break;
-	case BaseEnemy::Enemy_State::Step:
-		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Step");
-		break;
-	case BaseEnemy::Enemy_State::Track:
-		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Track");
-		break;
-	case BaseEnemy::Enemy_State::Attack:
-		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Attack");
-		break;
-	case BaseEnemy::Enemy_State::Down:
-		DebugDraw::DebugDrawFormatString(100, 100, GetColor(255, 255, 255), "Down");
-		break;
-	default:
-		break;
-	}
 }
 
 void BaseEnemy::onCollide(Actor & other)
@@ -137,7 +107,11 @@ void BaseEnemy::onCollide(Actor & other)
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 
-		static_cast<Player*>(&other)->hitEnemy(name_,bound);
+		auto pl = static_cast<Player*>(&other);
+		pl->hitEnemy(name_, bound);
+		if (pl->getState() == Player::Player_State::Shoot)setBoundPower(4);
+		else setBoundPower(3);
+
 		//自身も跳ね返る
 		hitOther(-bound);
 		if (state_ == Enemy_State::Attack&&other.getCharacterNumber() == attackTarget_->getCharacterNumber()) {
@@ -149,7 +123,10 @@ void BaseEnemy::onCollide(Actor & other)
 	else if (other.getName() == "PlayerBullet") {
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
-		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
+		auto pl = static_cast<PlayerBullet*>(&other);
+		pl->hitEnemy(name_, bound);
+		if(pl->getPlayer()->getState()==Player::Player_State::Shoot)setBoundPower(4);
+		else setBoundPower(3);
 		//自身も跳ね返る
 		hitOther(-bound);
 		if (state_ == Enemy_State::Attack) {
@@ -171,7 +148,7 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		setCountDown();
+		//setCountDown();
 	}
 	else if (other.getName() == "EnemyBullet") {
 		if (static_cast<EnemyBullet*>(&other)->enemy_->playerNumber_ == playerNumber_)return;
@@ -184,7 +161,7 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		setCountDown();
+		//setCountDown();
 	}
 
 }
@@ -235,9 +212,10 @@ bool BaseEnemy::field(Vector3 & result)
 
 void BaseEnemy::JustStep()
 {
+	//ターゲット指定のリセットはとりあえずやる
 	nonTargetResetTimer_.Action();
-	//if (Random::GetInstance().Range(1, 100) <= 50)return;
-
+	//ステップ出来るときだけステップする
+	if (!isCanStep())return;
 	ActorPtr act = getNearestActor();
 	//攻撃射程圏内なら
 	if (Vector3::Distance(act->position(), position_)<= attackDistance&&prevHitActorNumber_!= act->getCharacterNumber()) {
@@ -382,7 +360,7 @@ void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
 	//10回ステップ来たら攻撃対象をリセット
 	nonTargetResetTimer_.Initialize();
-	nonTargetResetTimer_.AddEmpty(9);
+	nonTargetResetTimer_.AddEmpty(3);
 	nonTargetResetTimer_.Add([&] {prevHitActorNumber_ = -1; });
 	attackTarget_ = getNearestActor();
 	prevHitActorNumber_ = attackTarget_->getCharacterNumber();
@@ -439,7 +417,7 @@ void BaseEnemy::updateAttack(float deltaTime)
 		return;
 	}
 
-	position_ += (attackTarget_->position() - position_).Normalize() *movePower;
+	position_ += (attackTarget_->position() - position_).Normalize() *attackPower;
 
 }
 void BaseEnemy::updateDown(float deltaTime)
@@ -450,6 +428,10 @@ void BaseEnemy::updateDown(float deltaTime)
 		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateDown(deltaTime);
 	}
 
+}
+bool BaseEnemy::isCanStep() const
+{
+	return state_ == Enemy_State::Normal || state_ == Enemy_State::Track;
 }
 void BaseEnemy::correctPosition()
 {
@@ -489,6 +471,8 @@ ActorPtr BaseEnemy::getNearestActor()
 
 void BaseEnemy::setCountDown()
 {
+	//ダウンしてなければダウン値蓄積を有効化
+	if (state_ == Enemy_State::Down)return;
 	downTimer_.Initialize();
 	downTimer_.Add([this] {downCount_--; });
 }

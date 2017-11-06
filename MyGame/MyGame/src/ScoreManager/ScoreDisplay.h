@@ -15,6 +15,7 @@ public:
 	void finalize();
 	//（選手番号、スコア）表示
 	void Score() const;
+	static void Score(const std::list<ScoreData>& score,const Vector2& position);
 private:
 	ScoreManager* scoreManager_;
 
