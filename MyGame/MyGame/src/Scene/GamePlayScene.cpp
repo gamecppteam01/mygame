@@ -108,7 +108,7 @@ void GamePlayScene::draw() const {
 
 	Time::GetInstance().draw_fps();
 
-	scoreDisplay_.Score();
+	scoreDisplay_.Score(Vector2(0,100),5);
 
 }
 

@@ -27,7 +27,7 @@ void ScoreDisplay::finalize()
 	scoreManager_ = nullptr;
 }
 
-void ScoreDisplay::Score()const
+void ScoreDisplay::Score(const Vector2& position, int digit)const
 {
 	std::list<ScoreData> scores;
 	scoreManager_->getScoreDataList(scores);
@@ -39,13 +39,13 @@ void ScoreDisplay::Score()const
 	//‘¼‚ÌList‚É“ü‚ê‚é
 	int a = 1;
 	for(auto i: scores){
-		FontManager::GetInstance().DrawTextApplyFont(0, 100 + a * 35, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT, "PLAYER%d:", i.playerNumber_);
-		NumberManager::GetInstance().drawT(Vector2(100 , 100 + a * 35), i.score_, 5);
+		FontManager::GetInstance().DrawTextApplyFont(position.x, position.y + a * 35, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT, "PLAYER%d:", i.playerNumber_);
+		NumberManager::GetInstance().drawT(Vector2(position.x + 30 + 17.5 *digit, position.y + a * 35), i.score_, digit);
 		a++;
 	}
 }
 
-void ScoreDisplay::Score(const std::list<ScoreData>& score,const Vector2& position)
+void ScoreDisplay::Score(const std::list<ScoreData>& score,const Vector2& position,int digit)
 {
 	std::list<ScoreData> scores = score;
 	auto score_less = [](const ScoreData& x, const ScoreData& y) { return x.score_ > y.score_; };
@@ -57,7 +57,7 @@ void ScoreDisplay::Score(const std::list<ScoreData>& score,const Vector2& positi
 	int a = 1;
 	for (auto i : scores) {
 		FontManager::GetInstance().DrawTextApplyFont(position.x, position.y + a * 35, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT, "PLAYER%d:", i.playerNumber_);
-		NumberManager::GetInstance().drawT(Vector2(position.x+100, position.y + a * 35), i.score_, 5);
+		NumberManager::GetInstance().drawT(Vector2(position.x + 30 + 17.5 * digit, position.y + a * 35), i.score_, digit);
 		a++;
 	}
 
