@@ -13,7 +13,7 @@ public:
 	void initialize();
 	void setScoreManager(ScoreManager* score);
 	void finalize();
-	//（選手番号、スコア）表示
+	//スコア表示(座標、最大桁数)
 	void Score(const Vector2& position,int digit) const;
 	static void Score(const std::list<ScoreData>& score,const Vector2& position,int digit);
 private:

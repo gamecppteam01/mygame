@@ -38,7 +38,7 @@ void GameClearScene::draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::RESULT, Vector2(WINDOW_WIDTH/2,200.f),origin, 1.0f,Vector2::One);
 	int i = 0;
 	//リストから値を取り出して順番に表示する
-	ScoreDisplay::Score(DataManager::GetInstance().getData(),Vector2(WINDOW_WIDTH/2-150,WINDOW_HEIGHT/2-100));
+	ScoreDisplay::Score(DataManager::GetInstance().getData(),Vector2(WINDOW_WIDTH/2-150,WINDOW_HEIGHT/2-100),5);
 
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
 	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2(WINDOW_WIDTH / 2, 600.0f), origin, std::abs(MathHelper::Sin((float)sinCount_)), Vector2::One);

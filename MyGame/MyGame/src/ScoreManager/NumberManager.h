@@ -12,8 +12,6 @@ public:
 	}
 	//数値描画(ポジション、数値、最大表示桁数,字間)
 	void DrawNumber(Vector2& position,int score,int digit, int space);
-	//数値描画(ポジション、数値、最大表示桁数)
-	void DrawNumber(Vector2& position, int score, int digit);
 	//数値描画(ポジション、数値)
 	void DrawNumber(Vector2& position, int score);
 

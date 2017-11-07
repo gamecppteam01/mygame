@@ -2,11 +2,9 @@
 #include<list>
 
 MiniMap::MiniMap(IWorld* world,const Vector2 & position 
-	,const Vector3& player_position/*,const Vector3& enemy_position*//*, const Vector2& judge_position*/)
-	:UI{ "MiniMap",position },position_(position){
+	,const Vector2& origin)
+	:UI{ "MiniMap",position },position_(position),origin_(origin){
 	world_ = world;
-	player_position_ = { player_position.x,player_position.z };
-	//enemy_position_.push_back(enemy_position);
 }
 
 void MiniMap::initialize()
@@ -37,11 +35,11 @@ void MiniMap::draw() const
 {
 	//èÍèäÇ∏ÇÁÇµÇƒÇ‡ëÂè‰ïvÇ»ÇÊÇ§Ç…
 	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP, position_, Vector2::Zero, Vector2(0.6f,0.6f));
-	Sprite::GetInstance().Draw(SPRITE_ID::PLAYER, player_position_, Sprite::GetInstance().GetSize(SPRITE_ID::PLAYER) / 2 + Vector2(-1100.0f, -170.0f), Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::PLAYER, player_position_, Sprite::GetInstance().GetSize(SPRITE_ID::PLAYER) / 2 - origin_, Vector2::One);
 	for (auto i : enemy_position_) {
-		Sprite::GetInstance().Draw(SPRITE_ID::ENEMY, i, Sprite::GetInstance().GetSize(SPRITE_ID::ENEMY) / 2 + Vector2(-1100.0f, -170.0f), Vector2::One);
+		Sprite::GetInstance().Draw(SPRITE_ID::ENEMY, i, Sprite::GetInstance().GetSize(SPRITE_ID::ENEMY) / 2 - origin_, Vector2::One);
 	}
 	for (auto i : judge_position_) {
-		Sprite::GetInstance().Draw(SPRITE_ID::JUDGE, i, Sprite::GetInstance().GetSize(SPRITE_ID::JUDGE) / 2 + Vector2(-1100.0f, -170.0f), Vector2::One);
+		Sprite::GetInstance().Draw(SPRITE_ID::JUDGE, i, Sprite::GetInstance().GetSize(SPRITE_ID::JUDGE) / 2 - origin_, Vector2::One);
 	}
 }

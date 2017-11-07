@@ -64,7 +64,7 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, "Judge", Vector3(0.0f, 2.0f, 0.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
-	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1000, 0),player->position());
+	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100),Vector2(1150,100));
 	world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
 	world_.addUI(warningUI);
@@ -108,7 +108,7 @@ void GamePlayScene::draw() const {
 
 	Time::GetInstance().draw_fps();
 
-	scoreDisplay_.Score(Vector2(0,100),5);
+	scoreDisplay_.Score(Vector2(0,25),5);
 
 }
 
