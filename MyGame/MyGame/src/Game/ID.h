@@ -81,7 +81,7 @@ enum BGM_ID
 
 enum FONT_ID {
 	JAPANESE_FONT,
-	
+	DEFAULT_FONT,
 	COUNT_FONT//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

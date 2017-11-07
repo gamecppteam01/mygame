@@ -36,7 +36,7 @@ void NumberManager::draw(const Vector2 & position, const std::string & score){
 		if (score[i] == ' ')continue;
 		const int n = score[i] - '0';
 		unsigned int C = GetColor(255, 255, 255);
-		FontManager::GetInstance().DrawTextApplyFont(position.x + i * 25, position.y, C, FONT_ID::JAPANESE_FONT, "%d", n);
+		FontManager::GetInstance().DrawTextApplyFont(position.x + i * 25, position.y, C, FONT_ID::DEFAULT_FONT, "%d", n);
 	}
 }
 
@@ -47,6 +47,6 @@ void NumberManager::drawT(const Vector2 & position, int score, int digit){
 	auto position_ = position;
 	position_.x = position.x + 30 * digit;
 	for (int i = 0; i < (int)drawscore.size(); i++) {
-		FontManager::GetInstance().DrawTextApplyFont(position_.x - 17.5 * i, position_.y, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT, "%d", drawscore.at(i));
+		FontManager::GetInstance().DrawTextApplyFont(position_.x - 22.5 * i, position_.y, GetColor(255, 255, 255), FONT_ID::DEFAULT_FONT, "%d", drawscore.at(i));
 	}
 }
