@@ -5,4 +5,3 @@
 // アクターポインタ
 class Actor;
 using ActorPtr = std::shared_ptr<Actor>;
-

@@ -10,6 +10,9 @@ NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	nextPoint_ = getNearestPoint(position_);
+
+	player_ = std::static_pointer_cast<Player>(world_->findActor("Player"));
+
 }
 
 void NormalEnemy::JustStep()
@@ -67,8 +70,7 @@ void NormalEnemy::updateNormal(float deltaTime)
 {
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 	
-	std::shared_ptr<Player> player = std::static_pointer_cast<Player>(world_->findActor("Player"));
-	if (Vector3::Distance(position_, player->position()) <= 30.0f&&world_->getScoreManager().GetCharacterScoreRate(player->getPlayerNumber()) >= 1.05f) {
+	if (Vector3::Distance(position_, player_.lock()->position()) <= 30.0f&&world_->getScoreManager().GetCharacterScoreRate(player_.lock()->getPlayerNumber()) >= 1.05f) {
 		if (change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn))updateAttack(deltaTime);
 		return;
 	}

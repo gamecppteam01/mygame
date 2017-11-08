@@ -271,13 +271,6 @@ public:
 //		}
 //
 //		if (result != nullptr) {
-//			OutputDebugString(" x:");
-//			OutputDebugString(std::to_string(result_end.x).c_str());
-//			OutputDebugString(" y:");
-//			OutputDebugString(std::to_string(result_end.y).c_str());
-//			OutputDebugString(" z:");
-//			OutputDebugString(std::to_string(result_end.z).c_str());
-//			OutputDebugString("\n");
 //			*result = result_end;
 //		}
 //		MV1CollResultPolyDimTerminate(HitDim);

@@ -8,9 +8,9 @@
 #include<list>
 
 enum class ActorGroup;
-class StepTimer;
 class ScoreManager;
 class ScoreMap;
+class TempoManager;
 // ワールド抽象インターフェース
 class IWorld {
 public:
@@ -29,9 +29,9 @@ public:
 	// フィールドの取得
 	virtual FieldPtr getField() const = 0;
 	virtual CameraPtr getCamera() = 0;
-	virtual StepTimer getStepTimer()const = 0;
 	virtual ScoreManager getScoreManager()const = 0;
 	virtual ScoreManager& getCanChangedScoreManager() = 0;
 	virtual ScoreMap& getCanChangedScoreMap() = 0;
 	virtual void addStepTimeListener(const ActorPtr& actor) = 0;
+	virtual TempoManager& getCanChangedTempoManager() = 0;
 };

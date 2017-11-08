@@ -91,13 +91,13 @@ void TitleScene::draw() const
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::END_SPRITE) / 2;
 		Sprite::GetInstance().Draw(SPRITE_ID::END_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y),origin, cursor_ == 1 ? std::abs(temp) : 1.0f,Vector2::One);
 	}
-	Camera::GetInstance().Position.Set(Vector3(0, 0, 30));
+	Camera::GetInstance().Position.Set(Vector3(0, 10, 300));
 
 	Camera::GetInstance().Target.Set(Vector3::Zero);
 	Camera::GetInstance().SetRange(0.1f, 1000.0f);
 	Camera::GetInstance().SetViewAngle(60.0f);
 	Camera::GetInstance().Up.Set(Vector3::Up);
-
+	
 	Camera::GetInstance().Update();
 
 }

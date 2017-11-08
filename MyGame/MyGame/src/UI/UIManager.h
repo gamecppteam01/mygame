@@ -8,6 +8,7 @@ class UIManager {
 public:
 	//コンストラクタ
 	UIManager();
+	~UIManager();
 	//初期化
 	void initialize();
 	//更新

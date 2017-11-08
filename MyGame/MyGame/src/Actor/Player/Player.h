@@ -247,7 +247,8 @@ private:
 	Vector3 bulletVelocity_;
 	//回転力
 	float turnPower_;
-	
+	//エフェクトのサイズ
+	float effectSize_{ 0.0f };
 	//ジャイロの回転チェッククラス
 	GyroRotateChecker gyroCheck_;
 

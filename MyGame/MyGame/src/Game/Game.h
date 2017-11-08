@@ -7,6 +7,7 @@
 #include"../Camera/Camera.h"
 #include"../Input/DualShock4Manager.h"
 #include"../Graphic/EffekseerManager.h"
+#include"../Fade/FadePanel.h"
 
 class Game {
 protected:
@@ -30,6 +31,8 @@ public:
 		SetDrawScreen(DX_SCREEN_BACK);
 		SetUseBackCulling(TRUE);
 		EffekseerManager::GetInstance().Initialize();
+		FadePanel::GetInstance().Initialize();
+
 		start();
 
 		// キーが押されるまでループします
@@ -38,7 +41,7 @@ public:
 
 			update();
 			draw();
-
+			FadePanel::GetInstance().Draw();
 			frameEnd();
 			//Time::GetInstance().draw_fps();
 			// 裏画面の内容を表画面に反映させる
@@ -74,8 +77,9 @@ private:
 		InputChecker::GetInstance().Update();
 		//DualShock4専用の入力更新
 		DualShock4Manager::GetInstance().Update();
-
 		EffekseerManager::GetInstance().Update();
+		FadePanel::GetInstance().Update(Time::GetInstance().deltaTime());
+
 	}
 private:
 	// コピー禁止

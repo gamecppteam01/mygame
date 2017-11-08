@@ -22,6 +22,7 @@
 #include"../../ScoreManager/ScoreManager.h"
 #include"../../Graphic/FontManager.h"
 #include"../../Math/MathHelper.h"
+#include"../../Sound/TempoManager.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -152,6 +153,9 @@ void Player::onUpdate(float deltaTime)
 	//女を更新する
 	if(isCanTracking())bulletUpdate(deltaTime);
 
+	float tempo = std::abs(world_->getCanChangedTempoManager().getTempoCount() - 0.5f);
+	float pow = 2.0f;
+	effectSize_ = 1.0f-(std::powf(tempo, pow)*2.0f*pow);
 }
 
 void Player::onDraw() const
@@ -160,18 +164,15 @@ void Player::onDraw() const
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
-
-	if (world_->getStepTimer().isJustTime()) {
-		DebugDraw::DebugDrawFormatString(0, 0, GetColor(255, 255, 255), "akrmkermekr");
-	}
-
-
 	DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
 	
 	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
 		DebugDraw::DebugDrawFormatString(300, 300, GetColor(255, 255, 255), "スコア高い");
 	}
-
+	Vector2 origin = Vector2(0.5f,0.5f);
+	if(world_->getCanChangedTempoManager().getBeatCount()%3==0)SetDrawBright(255, 0, 0);
+	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_*64.0f, origin, 0.0f, 1.0f);
+	SetDrawBright(255, 255, 255);
 }
 
 void Player::onCollide(Actor & other)
@@ -202,16 +203,16 @@ void Player::JustStep()
 	if (stepCount_ >= defStepCount) {
 		stepCount_ = 0;
 		//バランスを取れてるかをチェック
-		if (DualShock4Manager::GetInstance().GetAngle3D().z <= 45.0f) {
-			downTime_ = 2.0f;
-			change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.0f, 1.0f, false);
-		}
+		//if (DualShock4Manager::GetInstance().GetAngle3D().z <= 45.0f) {
+		//	downTime_ = 2.0f;
+		//	change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.0f, 1.0f, false);
+		//}
 	}
 }
 
 void Player::CreateJustEffect()
 {
-	createCircleEffect();
+	//createCircleEffect();
 }
 
 bool Player::field(Vector3 & result)
@@ -480,7 +481,7 @@ void Player::to_MoveMode()
 void Player::to_StepMode()
 {
 	//ジャスト判定タイミングならスコア加算フラグを有効にする
-	isJustStep_ = world_->getStepTimer().isJustTime();
+	isJustStep_ = world_->getCanChangedTempoManager().getBeatCount()%3==0;
 
 	gyroCheck_.initialize();
 	successStep_ = 0;
@@ -508,10 +509,6 @@ void Player::to_StepSuccessMode()
 		return;
 	}
 
-
-	if (world_->getStepTimer().isJustTime()) {
-
-	}
 }
 
 void Player::to_AttackMode()

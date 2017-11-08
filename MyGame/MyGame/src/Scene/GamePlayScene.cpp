@@ -21,6 +21,7 @@
 #include"../Input/InputChecker.h"
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
+#include"../Sound/TempoManager.h"
 
 //ゲームの時間
 static const float gameTime = 60.0f;
@@ -79,6 +80,8 @@ void GamePlayScene::start() {
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
+	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
+	world_.getCanChangedTempoManager().startMusic();
 }
 
 void GamePlayScene::update(float deltaTime) {

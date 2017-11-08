@@ -375,6 +375,7 @@
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
     <ClInclude Include="src\ScoreManager\ScoreRateManager.h" />
     <ClInclude Include="src\Sound\Sound.h" />
+    <ClInclude Include="src\Sound\TempoManager.h" />
     <ClInclude Include="src\test.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />

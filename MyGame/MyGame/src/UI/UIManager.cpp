@@ -7,6 +7,11 @@ UIManager::UIManager()
 	initialize();
 }
 
+UIManager::~UIManager()
+{
+	UIs_.clear();
+}
+
 //‰Šú‰»
 void UIManager::initialize()
 {

@@ -11,7 +11,8 @@ World::World() :
 	uiManager_(),
 	stepTimer_(),
 	scoreManager_(this),
-	scoreMap_(this) {
+	scoreMap_(this),
+	tempo_(){
 }
 
 //初期化
@@ -24,6 +25,7 @@ void World::Initialize()
 	actors_.initialize();
 	uiManager_.initialize();
 	stepTimer_.initialize();
+	tempo_.initialize();
 	//scoreManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
 }
@@ -42,6 +44,7 @@ void World::update(float deltaTime) {
 	actors_.update(deltaTime);
 	camera_->update(deltaTime);
 	uiManager_.update(deltaTime);
+	tempo_.update(deltaTime);
 }
 
 // 描画
@@ -51,6 +54,7 @@ void World::draw() const {
 	// アクターの描画処理
 	actors_.draw();
 	uiManager_.draw();
+	tempo_.draw();
 }
 
 // メッセージ処理
@@ -107,11 +111,6 @@ CameraPtr World::getCamera()
 	return camera_;
 }
 
-StepTimer World::getStepTimer() const
-{
-	return stepTimer_;
-}
-
 inline ScoreManager World::getScoreManager() const { return scoreManager_; }
 
 inline ScoreManager & World::getCanChangedScoreManager() {
@@ -121,6 +120,11 @@ inline ScoreManager & World::getCanChangedScoreManager() {
 ScoreMap & World::getCanChangedScoreMap()
 {
 	return scoreMap_;
+}
+
+TempoManager & World::getCanChangedTempoManager()
+{
+	return tempo_;
 }
 
 // アクターの追加

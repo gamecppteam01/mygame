@@ -8,9 +8,9 @@
 #include"../Graphic/Light.h"
 #include"../Light/LightType.h"
 #include"../UI/UIManager.h"
-#include"../Judge/StepTimer.h"
 #include"../ScoreManager/ScoreManager.h"
 #include"../ScoreManager/ScoreMap.h"
+#include"../Sound/TempoManager.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -41,10 +41,10 @@ public:
 	// フィールドの取得
 	virtual FieldPtr getField() const override;
 	virtual CameraPtr getCamera() override;
-	virtual StepTimer getStepTimer()const override;
 	virtual ScoreManager getScoreManager()const override;
 	virtual ScoreManager& getCanChangedScoreManager()override;
 	virtual ScoreMap& getCanChangedScoreMap()override;
+	virtual TempoManager& getCanChangedTempoManager()override;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
@@ -71,6 +71,8 @@ private:
 	ScoreMap scoreMap_;
 	//ステップ通知
 	StepTimer stepTimer_;
+
+	TempoManager tempo_;
 	// イベントリスナー
 	std::function<void(EventMessage, void*)> listener_;
 };

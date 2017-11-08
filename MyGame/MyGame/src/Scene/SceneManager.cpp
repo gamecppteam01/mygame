@@ -22,7 +22,6 @@ void SceneManager::start() {
 
 void SceneManager::update(float deltaTime) {
 	scenes_[currentScene_]->update(deltaTime);
-
 }
 
 void SceneManager::draw() {
