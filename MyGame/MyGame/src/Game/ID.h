@@ -27,6 +27,7 @@ enum SPRITE_ID
 	WARNING,
 	RESULT,
 	JUDGE,
+	SPOTLIGHT,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
