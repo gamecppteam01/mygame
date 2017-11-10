@@ -15,6 +15,11 @@ World::World() :
 	tempo_(){
 }
 
+World::~World()
+{
+	lateDrawFuncList_.clear();
+}
+
 //初期化
 void World::Initialize()
 {
@@ -28,6 +33,8 @@ void World::Initialize()
 	tempo_.initialize();
 	//scoreManager_.initialize();
 	listener_ = [](EventMessage, void*) {};
+
+	lateDrawFuncList_.clear();
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -45,6 +52,8 @@ void World::update(float deltaTime) {
 	camera_->update(deltaTime);
 	uiManager_.update(deltaTime);
 	tempo_.update(deltaTime);
+
+	lateDrawFuncList_.clear();//描画関数のリセット
 }
 
 // 描画
@@ -53,8 +62,13 @@ void World::draw() const {
 	camera_->draw();
 	// アクターの描画処理
 	actors_.draw();
+	//アクター系の遅延描画
+	for (auto& d : lateDrawFuncList_) {
+		d();
+	}
 	uiManager_.draw();
 	tempo_.draw();
+
 }
 
 // メッセージ処理
@@ -137,7 +151,10 @@ ActorPtr World::findActor(const std::string& name) {
 	return actors_.findActor(name);
 }
 
-void World::findActors(const std::string & name, std::list<ActorPtr>& actorList){
+void World::findActors(const std::string & name, std::list<ActorPtr>& actorList) {
+	actors_.findActor(name, actorList);
+}
+void World::findActors(const std::string & name, std::list<std::weak_ptr<Actor>>& actorList) {
 	actors_.findActor(name, actorList);
 }
 
@@ -157,4 +174,9 @@ void World::end()
 	field_ = nullptr;
 	actors_.initialize();
 	listener_ = nullptr;
+}
+
+void World::setLateDraw(std::function<void()> draw)
+{
+	lateDrawFuncList_.emplace_back(draw);
 }

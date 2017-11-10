@@ -114,7 +114,7 @@ void BaseEnemy::onCollide(Actor & other)
 
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack&&other.getCharacterNumber() == attackTarget_->getCharacterNumber()) {
+		if (state_ == Enemy_State::Attack&&other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber()) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -358,12 +358,12 @@ void BaseEnemy::to_Track()
 
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
-	//10回ステップ来たら攻撃対象をリセット
+	//3回ステップ来たら攻撃対象をリセット
 	nonTargetResetTimer_.Initialize();
 	nonTargetResetTimer_.AddEmpty(3);
 	nonTargetResetTimer_.Add([&] {prevHitActorNumber_ = -1; });
 	attackTarget_ = getNearestActor();
-	prevHitActorNumber_ = attackTarget_->getCharacterNumber();
+	prevHitActorNumber_ = attackTarget_.lock()->getCharacterNumber();
 	//stepTime_ = animation_.GetAnimMaxTime((int)anim);
 	stepTime_ = 1.5f;
 }
@@ -417,7 +417,7 @@ void BaseEnemy::updateAttack(float deltaTime)
 		return;
 	}
 
-	position_ += (attackTarget_->position() - position_).Normalize() *attackPower;
+	position_ += (attackTarget_.lock()->position() - position_).Normalize() *attackPower;
 
 }
 void BaseEnemy::updateDown(float deltaTime)
@@ -431,7 +431,7 @@ void BaseEnemy::updateDown(float deltaTime)
 }
 bool BaseEnemy::isCanStep() const
 {
-	return state_ == Enemy_State::Normal || state_ == Enemy_State::Track;
+	return state_ == Enemy_State::Normal;
 }
 void BaseEnemy::correctPosition()
 {

@@ -4,6 +4,7 @@
 #include"../../Math/MathHelperSupport.h"
 #include"../../Math/Random.h"
 #include"../../ScoreManager/ScoreManager.h"
+#include"../../Sound/TempoManager.h"
 
 Enemy_Power::Enemy_Power(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
 	BaseEnemy(world, name, position, playerNumber, body){
@@ -37,7 +38,7 @@ void Enemy_Power::JustStep() {
 		if (dist <= nearest&&prevHitActorNumber_ != p->getCharacterNumber()) {
 			nearest = dist;
 			attackTarget_ = p;
-			prevHitActorNumber_ = attackTarget_->getCharacterNumber();
+			prevHitActorNumber_ = attackTarget_.lock()->getCharacterNumber();
 			isAttack = true;
 		}
 	}
@@ -69,6 +70,8 @@ void Enemy_Power::JustStep() {
 
 void Enemy_Power::updateNormal(float deltaTime)
 {
+	//3”–Ú‚Í“®‚©‚È‚¢
+	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
 	position_ += (targetPos_ - position_).Normalize()*movePower;
 	
 	

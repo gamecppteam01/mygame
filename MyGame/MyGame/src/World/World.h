@@ -17,6 +17,7 @@ class World : public IWorld {
 public:
 	// コンストラクタ
 	World();
+	~World();
 	//初期化
 	void Initialize();
 	//検索の必要なクラスの初期化
@@ -50,13 +51,17 @@ public:
 	// アクターの検索
 	virtual ActorPtr findActor(const std::string& name) override;
 	//アクターの一括検索
-	virtual void findActors(const std::string& name,std::list<ActorPtr>& actorList) override;
+	virtual void findActors(const std::string& name, std::list<ActorPtr>& actorList) override;
+	//アクターの一括検索
+	virtual void findActors(const std::string& name, std::list<std::weak_ptr<Actor>>& actorList) override;
 	// メッセージの送信
 	virtual void sendMessage(EventMessage message, void* param = nullptr)  override;
 	// イベントリスナーの追加
 	void addEventMessageListener(std::function<void(EventMessage, void*)> listener);
 	void end();
 	
+	virtual void setLateDraw(std::function<void()> draw) override;
+
 	// コピー禁止
 	World(const World& other) = delete;
 	World& operator = (const World& other) = delete;
@@ -71,6 +76,8 @@ private:
 	ScoreMap scoreMap_;
 	//ステップ通知
 	StepTimer stepTimer_;
+
+	std::list<std::function<void()>> lateDrawFuncList_;
 
 	TempoManager tempo_;
 	// イベントリスナー

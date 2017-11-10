@@ -22,6 +22,7 @@ public:
 		Track,//追跡中
 		Attack,//攻撃
 		Down,//転倒
+
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
@@ -128,7 +129,7 @@ protected:
 	float downTime_;
 
 	//攻撃対象
-	ActorPtr attackTarget_;
+	std::weak_ptr<Actor> attackTarget_;
 
 	Enemy_State state_{ Enemy_State::Normal };
 

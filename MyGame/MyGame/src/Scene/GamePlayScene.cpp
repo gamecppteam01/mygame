@@ -12,6 +12,7 @@
 #include"../Actor/Enemy/NormalEnemy.h"
 #include"../Actor/Enemy/Enemy_Power.h"
 #include"../Actor/Enemy/Enemy_Quick/Enemy_Quick.h"
+#include"../Actor/Enemy/Enemy_Rival/Enemy_Rival.h"
 
 #include"../UI/UITemplate.h"
 #include<EffekseerForDXLib.h>
@@ -41,7 +42,7 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 0; i++) {
 		playerNumber++;
 		auto enemy = std::make_shared<Enemy_Quick>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
@@ -53,8 +54,12 @@ void GamePlayScene::start() {
 	playerNumber++;
 	auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy2);
+	playerNumber++;
+	auto enemy3 = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy3);
 	world_.addStepTimeListener(enemy);
 	world_.addStepTimeListener(enemy2);
+	world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
 

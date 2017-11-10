@@ -23,7 +23,9 @@ public:
 	// アクターの検索
 	ActorPtr findActor(const std::string& name);
 	// アクターの検索
-	void findActor(const std::string& name,std::list<ActorPtr>& actorList);
+	void findActor(const std::string& name, std::list<ActorPtr>& actorList);
+	// アクターの検索
+	void findActor(const std::string& name,std::list<std::weak_ptr<Actor>>& actorList);
 	// メッセージ処理
 	void handleMessage(EventMessage message, void* param);
 	// コピー禁止

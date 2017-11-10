@@ -58,6 +58,12 @@ void ActorManager::findActor(const std::string & name, std::list<ActorPtr>& acto
 		act.second->findCildren(name, actorList);
 	}
 }
+void ActorManager::findActor(const std::string & name, std::list<std::weak_ptr<Actor>>& actorList)
+{
+	for (auto& act : actors_) {
+		act.second->findCildren(name, actorList);
+	}
+}
 
 // メッセージ処理
 void ActorManager::handleMessage(EventMessage message, void* param) {
