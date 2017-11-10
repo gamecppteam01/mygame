@@ -12,6 +12,7 @@ class PlayerBullet;
 
 class Player :public Actor {
 public:
+
 	enum class Player_State {
 		Idle,//待機
 		Move,//移動
@@ -53,7 +54,8 @@ public:
 	Vector2 getStumbleDirection()const { return stumbleDirection_; }
 	//現在の状態を取得する
 	Player_State getState()const { return state_; }
-
+	//現在のステップの種類を返す(1=クォーター,2=ハーフ,3=ターン,4=スピン)
+	int getStep()const { return nextStep_; }
 private:
 	void createBullet();
 	virtual void initialize()override;
@@ -258,10 +260,13 @@ private:
 
 private:
 	const Vector3 defaultPosition_;
-	std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
+
+	const std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
 		{ 1,{ Player_Animation::Down,100 } },
 		{ 2,{ Player_Animation::KnockBack,0 } },
 		{ 3,{ Player_Animation::Idle,300 } },
 		{ 4,{ Player_Animation::Turn,0 } },
 	};
+
+
 };
