@@ -165,14 +165,18 @@ void Player::onDraw() const
 	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
 	DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
-	
+
 	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
 		DebugDraw::DebugDrawFormatString(300, 300, GetColor(255, 255, 255), "ƒXƒRƒA‚‚¢");
 	}
-	Vector2 origin = Vector2(0.5f,0.5f);
-	if(world_->getCanChangedTempoManager().getBeatCount()%3==0)SetDrawBright(255, 0, 0);
-	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_*64.0f, origin, 0.0f, 1.0f);
-	SetDrawBright(255, 255, 255);
+
+	world_->setLateDraw([this] {
+		if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(255, 0, 0);
+		Vector2 origin = Vector2(0.5f, 0.5f);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_*64.0f, origin, 0.0f, 1.0f);
+		SetDrawBright(255, 255, 255); 
+	}
+	);
 }
 
 void Player::onCollide(Actor & other)

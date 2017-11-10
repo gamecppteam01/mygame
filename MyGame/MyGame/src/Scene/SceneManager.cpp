@@ -38,6 +38,10 @@ void SceneManager::checkIsEnd() {
 //次のシーンへ遷移する
 
 void SceneManager::next() {
+	//音声を終了して
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().StopSE();
+
 	//シーンを終了して
 	scenes_[currentScene_]->end();
 	SceneType nextScene = scenes_[currentScene_]->nextScene();

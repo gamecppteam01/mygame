@@ -6,6 +6,7 @@
 #include"../Game/ID.h"
 #include <string>
 #include<list>
+#include<functional>
 
 enum class ActorGroup;
 class ScoreManager;
@@ -24,8 +25,13 @@ public:
 	virtual ActorPtr findActor(const std::string& name) = 0;
 	// アクターの複数検索
 	virtual void findActors(const std::string& name, std::list<ActorPtr>& actorList) = 0;
+	// アクターの複数検索
+	virtual void findActors(const std::string& name, std::list<std::weak_ptr<Actor>>& actorList) = 0;
 	// メッセージの送信
 	virtual void sendMessage(EventMessage message, void* param = nullptr) = 0;
+	//描画関数終了後に描画をセットする関数
+	virtual void setLateDraw(std::function<void()> draw) = 0;
+
 	// フィールドの取得
 	virtual FieldPtr getField() const = 0;
 	virtual CameraPtr getCamera() = 0;

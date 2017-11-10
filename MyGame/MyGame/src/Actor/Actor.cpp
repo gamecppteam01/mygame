@@ -136,6 +136,14 @@ void Actor::findCildren(const std::string & name, std::list<ActorPtr>& actorList
 		}
 	}
 }
+void Actor::findCildren(const std::string & name, std::list<std::weak_ptr<Actor>>& actorList)
+{
+	for (auto& c : children_) {
+		if (c->getName() == name) {
+			actorList.push_back(c);
+		}
+	}
+}
 
 // q‚ÌÕ“Ë”»’è
 void Actor::collideChildren(Actor& other) {
