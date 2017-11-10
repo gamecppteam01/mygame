@@ -25,6 +25,10 @@ public:
 	void addScore(int number, int score);
 	//倍率の変更
 	void ChangeScoreRate(const int number, const float rate);
+	//倍率計算(スポットライト含む)
+	float mathScoreRata_All(const Vector3& target);
+	//倍率計算(スポットライト含まない)
+	float mathScoreRata_All_Not(const Vector3& target);
 	//登録されているキャラ数を返す
 	int GetCharacterCount()const;
 	//キャラクターのスコアを返す

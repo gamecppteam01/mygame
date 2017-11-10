@@ -4,7 +4,7 @@
 class Judgement_SpotLight : public JudgeBase {
 public:
 	//コンストラクタ
-	Judgement_SpotLight(IWorld* world, const std::string& name, const Vector3& position);
+	Judgement_SpotLight(IWorld* world, const Vector3& position);
 	//初期化
 	virtual void initialize()override;
 	// メッセージ処理

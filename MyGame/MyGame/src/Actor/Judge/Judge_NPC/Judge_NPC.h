@@ -9,7 +9,7 @@ enum class Judge_State {
 class Judge_NPC : public JudgeBase {
 public:
 	//コンストラクタ
-	Judge_NPC(IWorld* world, const std::string& name, const Vector3& position,const Matrix& rotation);
+	Judge_NPC(IWorld* world, const Vector3& position,const Matrix& rotation);
 	//初期化
 	virtual void initialize()override;
 	// メッセージ処理

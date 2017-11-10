@@ -3,6 +3,7 @@
 #include"../Actor/Judge/JudgeBase.h"
 #include"../Judge/JudgeFunction.h"
 #include"../Math/Random.h"
+#include"ScoreManager.h"
 #include<list>
 
 ScoreMap::ScoreMap(IWorld * world):world_(world)
@@ -56,14 +57,8 @@ void ScoreMap::mathScoreRate(ScorePoint & point)
 {
 	//今回のフレームで計算が終了していたら戻る
 	if (point.alreadyChecked_)return;
-
-	float nextRate = 1.0f;
-	for (auto& j : judges_) {
-		if (j->Judgement(point.position_)) {
-			nextRate += 0.2f;
-		}
-	}
-	point.rate_ = nextRate;
+	
+	point.rate_ = world_->getScoreManager().mathScoreRata_All_Not(point.position_);
 	point.alreadyChecked_ = true;
 
 }

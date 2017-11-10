@@ -86,6 +86,18 @@ void ScoreManager::ChangeScoreRate(const int number, const float rate) {
 	m_ScoreDataList[number].scoreRate_ = rate;
 }
 
+//倍率計算(スポットライト含む)
+float ScoreManager::mathScoreRata_All(const Vector3 & target)
+{
+	return m_RataManager.mathScoreRata_All(target);
+}
+
+//倍率計算(スポットライト含まない)
+float ScoreManager::mathScoreRata_All_Not(const Vector3 & target)
+{
+	return m_RataManager.mathScoreRata_All_Not(target);
+}
+
 //最大スコアを返す
 int ScoreManager::getMaxScore() const{
 	int maxScore = 0;
