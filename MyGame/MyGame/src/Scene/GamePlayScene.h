@@ -16,8 +16,6 @@ public:
 
 private:
 	World world_;
-	//ƒQ[ƒ€ŠÔ
-	float timeCount_;
 	ScoreDisplay scoreDisplay_;
 
 };

@@ -49,3 +49,8 @@ static const float		PERSON_CENTER_HEIGHT = PERSON_HEIGHT * HALF;
 static const float		PERSON_RADIUS = PERSON_CENTER_HEIGHT * HALF;
 ///乗り上げることのできる斜面の限界
 static const float		HIT_SLOPE_LIMIT = 0.5f;
+
+//クォーターステップのスコア
+static const int SCORE_QUARTER = 50;
+//ターンステップのスコア
+static const int SCORE_TURN = 100;

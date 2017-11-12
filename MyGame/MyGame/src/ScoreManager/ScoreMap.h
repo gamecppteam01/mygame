@@ -47,10 +47,10 @@ private:
 	//スコア位置の
 	TwoDimensionalArray<ScorePoint> points_{
 		4,4,
-		ScorePoint{ Vector3(-200.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,-100.0f)*FIELD_SCALE },
-		ScorePoint{ Vector3(-200.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,-20.0f)*FIELD_SCALE },
-		ScorePoint{ Vector3(-200.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,20.0f)*FIELD_SCALE },
-		ScorePoint{ Vector3(-200.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,0.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,0.0f,100.0f)*FIELD_SCALE }
+		ScorePoint{ Vector3(-200.0f,10.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,10.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,	10.0f,-100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,10.0f,-100.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,10.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,	10.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,		10.0f,-20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,	10.0f,-20.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,	10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,		10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,	10.0f,20.0f)*FIELD_SCALE },
+		ScorePoint{ Vector3(-200.0f,10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,	10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,		10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,	10.0f,100.0f)*FIELD_SCALE }
 	};
 	//審査員リスト
 	std::vector<std::shared_ptr<JudgeBase>> judges_;

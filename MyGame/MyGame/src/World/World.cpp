@@ -140,6 +140,10 @@ TempoManager & World::getCanChangedTempoManager()
 {
 	return tempo_;
 }
+TempoManager World::getTempoManager()const
+{
+	return tempo_;
+}
 
 // アクターの追加
 void World::addActor(ActorGroup group, const ActorPtr& actor) {

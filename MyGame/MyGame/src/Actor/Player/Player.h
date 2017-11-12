@@ -7,6 +7,7 @@
 #include"../../Method/MethodTimer.h"
 #include"Step_Type.h"
 #include"GyroRotateChecker.h"
+#include"../../Define.h"
 
 class PlayerBullet;
 
@@ -199,6 +200,8 @@ private:
 	Vector2 getSticktoMove();
 
 	Vector2 mathStumbleDirection(const Vector2& stumbleDirection);
+
+	bool isJustTiming()const;
 private:
 	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン,4横回転)
 	int successStep_;
@@ -250,7 +253,7 @@ private:
 	//回転力
 	float turnPower_;
 	//エフェクトのサイズ
-	float effectSize_{ 0.0f };
+	std::array<float,3> effectSize_{ 0.0f,0.0f,0.0f };
 	//ジャイロの回転チェッククラス
 	GyroRotateChecker gyroCheck_;
 
@@ -262,9 +265,9 @@ private:
 	const Vector3 defaultPosition_;
 
 	const std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
-		{ 1,{ Player_Animation::Down,100 } },
+		{ 1,{ Player_Animation::Down,SCORE_QUARTER } },
 		{ 2,{ Player_Animation::KnockBack,0 } },
-		{ 3,{ Player_Animation::Idle,300 } },
+		{ 3,{ Player_Animation::Idle,SCORE_TURN } },
 		{ 4,{ Player_Animation::Turn,0 } },
 	};
 

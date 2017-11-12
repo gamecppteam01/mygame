@@ -73,6 +73,7 @@ void LoadingScene::LoadEffect()
 	std::string defaultPath = "res/Sprite/Effect/";//全リソース共通パス
 	Model::GetInstance().Load2D(defaultPath + "circleeffect.png", MODEL_ID::EFFECT_CIRCLE_MODEL);
 	Model::GetInstance().Load2D(defaultPath + "light.png", MODEL_ID::EFFECT_LIGHT_MODEL);
+	Model::GetInstance().Load2D(defaultPath + "justcircle.png", MODEL_ID::JUST_CIRCLE_MODEL);
 
 	//Effekseerを利用したエフェクト
 	defaultPath = "res/Effekseer/";

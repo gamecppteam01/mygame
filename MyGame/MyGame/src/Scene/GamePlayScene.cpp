@@ -48,17 +48,17 @@ void GamePlayScene::start() {
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
-	playerNumber++;
-	auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy);
-	playerNumber++;
-	auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy2);
+	//playerNumber++;
+	//auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy);
+	//playerNumber++;
+	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy2);
 	playerNumber++;
 	auto enemy3 = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy3);
-	world_.addStepTimeListener(enemy);
-	world_.addStepTimeListener(enemy2);
+	//world_.addStepTimeListener(enemy);
+	//world_.addStepTimeListener(enemy2);
 	world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
@@ -80,8 +80,6 @@ void GamePlayScene::start() {
 	scoreDisplay_.initialize();
 	scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
 
-	timeCount_ = gameTime;
-
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
@@ -92,8 +90,7 @@ void GamePlayScene::start() {
 void GamePlayScene::update(float deltaTime) {
 	world_.update(deltaTime);
 
-	timeCount_ -= deltaTime;
-	if (timeCount_ <= 0.0f) {
+	if (world_.getCanChangedTempoManager().isEnd()) {
 		isEnd_ = true;
 		next_ = SceneType::SCENE_CLEAR;
 		return;
@@ -112,7 +109,7 @@ void GamePlayScene::draw() const {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
 	
-	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)timeCount_);
+	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
 
 	Time::GetInstance().draw_fps();
 

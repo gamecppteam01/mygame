@@ -277,9 +277,9 @@ void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 	velocity_ += (nextPosition_ - position_).Normalize()*movePower;
 }
 
-void BaseEnemy::changeAnimation(Enemy_Animation animID)
+void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
 {
-	animation_.ChangeAnim((int)animID);
+	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop);
 }
 
 bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
@@ -344,7 +344,7 @@ void BaseEnemy::to_Normal()
 
 void BaseEnemy::to_Step(BaseEnemy::Enemy_Animation anim)
 {
-	world_->getScoreManager().addScore(playerNumber_, 100);
+	world_->getScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 
 	//対応したアニメーションの終了時間を取得する
 	stepTime_ = animation_.GetAnimMaxTime((int)anim);

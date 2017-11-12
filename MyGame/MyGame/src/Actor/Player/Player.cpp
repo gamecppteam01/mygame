@@ -153,9 +153,28 @@ void Player::onUpdate(float deltaTime)
 	//女を更新する
 	if(isCanTracking())bulletUpdate(deltaTime);
 
-	float tempo = std::abs(world_->getCanChangedTempoManager().getTempoCount() - 0.5f);
-	float pow = 2.0f;
-	effectSize_ = 1.0f-(std::powf(tempo, pow)*2.0f*pow);
+	//float tempo = std::abs(world_->getCanChangedTempoManager().getTempoCount() - 0.5f);
+	//float pow = 2.0f;
+	//effectSize_ = 1.0f-(std::powf(tempo, pow)*2.0f*pow);
+
+
+	float tempo = world_->getCanChangedTempoManager().getTempoCount();
+	float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
+	effectSize_[0] = 3.0f - (tempo+beat);
+	effectSize_[0] = effectSize_[0] / 3.f;
+
+	//effectSize_[1] = (1 - max((beat - 1.0f + tempo), 0.0f));
+
+	//3連ジャスト判定用
+	/*
+	float tempo = world_->getCanChangedTempoManager().getTempoCount();
+	int key = world_->getCanChangedTempoManager().getBeatCount() % 3;
+	effectSize_[key] = (1.0f - tempo);
+	key = (key + 1+3) % 3;
+	effectSize_[key] = max((1.2f - (tempo / 3.f)), 1.0f);
+	key = (key + 1+3) % 3;
+	effectSize_[key] = max((1.4f - (tempo / 3.f)), 1.2f);
+	*/
 }
 
 void Player::onDraw() const
@@ -171,10 +190,30 @@ void Player::onDraw() const
 	}
 
 	world_->setLateDraw([this] {
-		if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(255, 0, 0);
 		Vector2 origin = Vector2(0.5f, 0.5f);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_*64.0f, origin, 0.0f, 1.0f);
+		float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
+		if (isJustTiming()) {
+			SetDrawBright(200, 0, 0);
+		}
+		Model::GetInstance().Draw2D(MODEL_ID::JUST_CIRCLE_MODEL, position_, 0, 32.0f, origin, 0.0f, 1.0f);
+		SetDrawBright(200, 0, 0);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[0] * 48.0f, origin, 0.0f, 1.0f);
+		SetDrawBright(255, 255, 255);
+
+		//3連ジャストサークル
+		/*
+		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(200, 0, 0);
+		SetDrawBright(200, 0, 0);
+		Vector2 origin = Vector2(0.5f, 0.5f);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[0]*64.0f, origin, 0.0f, 1.0f);
+		SetDrawBright(255, 255, 255);
+		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)SetDrawBright(200, 0, 0);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[1]*64.0f, origin, 0.0f, 1.0f);
+		//SetDrawBright(255, 255, 255);
+		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 1)SetDrawBright(200, 0, 0);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[2]*64.0f, origin, 0.0f, 1.0f);
 		SetDrawBright(255, 255, 255); 
+		*/
 	}
 	);
 }
@@ -485,7 +524,7 @@ void Player::to_MoveMode()
 void Player::to_StepMode()
 {
 	//ジャスト判定タイミングならスコア加算フラグを有効にする
-	isJustStep_ = world_->getCanChangedTempoManager().getBeatCount()%3==0;
+	isJustStep_ = isJustTiming();
 
 	gyroCheck_.initialize();
 	successStep_ = 0;
@@ -711,4 +750,10 @@ Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 		result = Vector2::Right;
 	}
 	return result;
+}
+
+bool Player::isJustTiming() const
+{
+	//return world_->getCanChangedTempoManager().getBeatCount() % 3 == 0;
+	return (world_->getCanChangedTempoManager().getBeatCount() % 3) != 0;
 }

@@ -2,7 +2,7 @@
 #include"Enemy.h"
 #include"../Body/BoundingCapsule.h"
 #include"../../Method/MethodTimer.h"
-
+#include"../../Define.h"
 class EnemyBullet;
 
 class BaseEnemy :public Enemy {
@@ -37,7 +37,7 @@ public:
 	Enemy_State getEnemyState()const { return state_; }
 
 	//転倒カウントのセット
-	void setCountDown();
+	virtual void setCountDown();
 protected:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -76,7 +76,7 @@ protected:
 	void addVelocity_NextPosition(float deltaTime);
 
 	//アニメーションの変更
-	void changeAnimation(Enemy_Animation animID);
+	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true);
 	//状態の更新
 	bool change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim);
 	//状態変更とアニメーション変更を同時に行う
@@ -151,9 +151,9 @@ protected:
 	
 	const float attackPower{ 1.0f };
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{
-		{Enemy_Animation::KnockBack,100 },//クォーター
+		{Enemy_Animation::KnockBack,SCORE_QUARTER },//クォーター
 		{Enemy_Animation::Idle,0},//ハーフ
-		{Enemy_Animation::Step_Left,200	  },//ターン
+		{Enemy_Animation::Step_Left,SCORE_TURN },//ターン
 		{Enemy_Animation::Idle,0		  }//スピン
 	};
 

@@ -46,6 +46,7 @@ public:
 	virtual ScoreManager& getCanChangedScoreManager()override;
 	virtual ScoreMap& getCanChangedScoreMap()override;
 	virtual TempoManager& getCanChangedTempoManager()override;
+	virtual TempoManager getTempoManager()const override;
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索

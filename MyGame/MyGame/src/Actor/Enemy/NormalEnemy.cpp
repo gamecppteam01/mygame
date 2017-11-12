@@ -55,11 +55,11 @@ void NormalEnemy::JustStep()
 	int r = Random::GetInstance().Range(0, 9);
 	if (r < 3) {
 		//ターン
-		world_->getCanChangedScoreManager().addScore(playerNumber_, 200);
+		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
 	}
 	else {
 		//クォーター
-		world_->getCanChangedScoreManager().addScore(playerNumber_, 100);
+		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 
 	}
 	change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Move_Forward);

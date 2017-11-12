@@ -33,12 +33,15 @@ public:
 		//SetFrequencySoundMem(44100, soundHandle_);
 		//bpmを設定する
 		bpm_ = bpm;
+		//楽曲時間を取得する
+		soundSize_ = GetSoundTotalSample(soundHandle_);
 
 	}
 	//楽曲を再生する
 	void startMusic() {
 		//サウンドを再生
 		PlaySoundMem(soundHandle_, DX_PLAYTYPE_BACK);
+		pause_ = false;
 	}
 	//楽曲を停止する
 	void stopMusic() {
@@ -59,7 +62,7 @@ public:
 			justStepTimer_.Initialize();
 			justStepTimer_.Add([&] {
 				for (auto& act : actors_) {
-					act->receiveNotification(Notification::Call_CreateJustEffect);
+					act.lock()->receiveNotification(Notification::Call_CreateJustEffect);
 				}
 			});
 		}
@@ -78,15 +81,22 @@ public:
 	int getBeatCount() const{
 		float oneTimeSample = 60.0f / bpm_ *sps_;//1判定毎の合計サンプル数
 		float bpmSample = sample_/ oneTimeSample;//1判定毎に区切る
-		OutputDebugString(std::to_string((int)bpmSample).c_str());
-		OutputDebugString("\n");
-		return bpmSample;
+		int result = max((int)bpmSample, 0);
+		return result;
 	}
 	void draw()const {
 		if(getBeatCount() % 3 == 0)return;
 		DebugDraw::DebugDrawCircle(400, 400, 30, GetColor(255, 255, 255));
 	}
-
+	//再生が終了したか
+	bool isEnd()const {
+		//ポーズでの再生停止でなく楽曲が再生されてない場合終了
+		return  !pause_&&CheckSoundMem(soundHandle_)==FALSE;
+	}
+	//残り再生時間
+	int getRemainTime()const {
+		return (soundSize_ - sample_) / sps_;
+	}
 private:
 	//サウンドリソースのファイルパス(一応)
 	std::string fileName_;
@@ -99,7 +109,11 @@ private:
 	//0～255の範囲でテンポを取るタイマー
 	float tempoCount_;
 	MethodTimer justStepTimer_;
-	std::vector<ActorPtr> actors_;
+	std::vector<std::weak_ptr<Actor>> actors_;
+	//楽曲サンプル数
+	int soundSize_;
+	//中断フラグ
+	bool pause_{ false };
 private:
 	//サンプリング周波数(デフォルト44,1khz)
 	int sps_{ 44100 };
