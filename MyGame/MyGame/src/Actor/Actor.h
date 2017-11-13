@@ -41,7 +41,7 @@ public:
 	// 名前を返す
 	const std::string& getName() const;
 	// 座標を返す
-	Vector3& position();
+	virtual Vector3& position();
 	// 回転行列を返す
 	Matrix& rotation();
 	// 変換行列を返す

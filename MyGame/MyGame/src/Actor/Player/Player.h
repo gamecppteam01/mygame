@@ -57,6 +57,9 @@ public:
 	Player_State getState()const { return state_; }
 	//現在のステップの種類を返す(1=クォーター,2=ハーフ,3=ターン,4=スピン)
 	int getStep()const { return nextStep_; }
+
+	virtual Vector3& position()override { return centerPosition_; }
+	Vector3 getCenterPos()const { return centerPosition_; }
 private:
 	void createBullet();
 	virtual void initialize()override;
@@ -217,6 +220,8 @@ private:
 	float timeCount_;
 	//ダウンする時間
 	float downTime_{ 7.0f };
+	//2体の中心
+	Vector3 centerPosition_{ Vector3::Zero };
 	//よろけ関連
 	//ヒットした向き
 	Vector2 stumbleDirection_{ Vector2::Zero };

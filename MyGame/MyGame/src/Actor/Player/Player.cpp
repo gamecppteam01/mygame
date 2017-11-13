@@ -28,7 +28,7 @@
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
 //男と女の距離
-static const Vector3 bulletDistance{ 0.0f,0.0f,-8.0f };
+static const Vector3 bulletDistance{ 0.0f,0.0f,4.0f };
 //回転力の基本係数
 static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
@@ -45,7 +45,7 @@ static const int defStepCount = 3;
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
-	state_(Player_State::Idle), defaultPosition_(position), 
+	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_()
 {
@@ -120,7 +120,7 @@ void Player::createBullet()
 
 void Player::initialize()
 {
-	position_ = defaultPosition_;
+	position_ = centerPosition_ + bulletDistance;
 	gravity_ = 0.0f;
 	state_ = Player_State::Idle;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
@@ -132,6 +132,8 @@ void Player::initialize()
 	//女の移動と回転の操作権を得る
 	bulletPosition_ = bullet_->getPositionPtr();
 	bulletRotation_ = bullet_->getRotationPtr();
+
+	*bulletPosition_ = centerPosition_ - bulletDistance;
 
 	gyroCheck_.initialize();
 }
@@ -146,7 +148,12 @@ void Player::onUpdate(float deltaTime)
 	animation_.Update(MathHelper::Sign(deltaTime));
 
 	//今フレームの更新を適用
-	position_ += velocity_;
+	centerPosition_ += velocity_;
+
+	if (state_ != Player_State::Shoot) {
+		position_ = bulletDistance*rotation_ + centerPosition_;
+		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
+	}
 	velocity_ -= velocity_*0.5f;
 	correctPosition();
 
@@ -193,13 +200,19 @@ void Player::onDraw() const
 		Vector2 origin = Vector2(0.5f, 0.5f);
 		float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
 		if (isJustTiming()) {
-			SetDrawBright(200, 0, 0);
+			SetDrawBright(200, 30, 100);
 		}
-		Model::GetInstance().Draw2D(MODEL_ID::JUST_CIRCLE_MODEL, position_, 0, 32.0f, origin, 0.0f, 1.0f);
-		SetDrawBright(200, 0, 0);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[0] * 48.0f, origin, 0.0f, 1.0f);
+		float size = 1.0f;
+		float tempo = world_->getCanChangedTempoManager().getTempoCount();
+		if (tempo <= 0.3f) {
+			size = 1.0f+ (0.3f - tempo);
+		}
+		Model::GetInstance().Draw2D(MODEL_ID::JUST_CIRCLE_MODEL, centerPosition_, 0, 24.0f*size , origin, 0.0f, 1.0f);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 22.0f*size, origin, 0.0f, 0.7f);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 10.0f*size, origin, 0.0f, 0.7f);
+		SetDrawBright(0, 255, 255);
+		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, effectSize_[0] * 32.0f*size, origin, 0.0f, 1.0f);
 		SetDrawBright(255, 255, 255);
-
 		//3連ジャストサークル
 		/*
 		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(200, 0, 0);
@@ -235,6 +248,11 @@ void Player::onCollideResult()
 	if (state_ != Player_State::Shoot)velocity_ += bound;
 
 	bound_ = Vector3::Zero;
+
+	if (state_ == Player_State::Shoot)return;
+
+	position_ = bulletDistance*rotation_ + centerPosition_;
+	*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
 }
 
 void Player::JustStep()
@@ -260,14 +278,20 @@ void Player::CreateJustEffect()
 
 bool Player::field(Vector3 & result)
 {
-	if (!world_->getField()->isInField(position_)) {
-		position_ = world_->getField()->CorrectPosition(position_);
+	if (!world_->getField()->isInField(centerPosition_)) {
+		centerPosition_ = world_->getField()->CorrectPosition(centerPosition_);
+		if (state_ != Player_State::Shoot) {
+			position_ = bulletDistance*rotation_ + centerPosition_;
+			*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
+		}
 	}
 	Vector3 hit1;
 	Vector3 hit2;
+	//中心をそのままcenterに入れよう
 	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
 	{
-		result = hit1 + ((body_->points(0)));
+		//本体と弾の中心を返す
+		result = (hit1+hit2)*0.5f + ((body_->points(0)));
 
 		return true;
 	}
@@ -287,9 +311,9 @@ void Player::correctPosition()
 {
 	Vector3 result;
 	if (field(result)) {
-		position_ = result;
+		centerPosition_ = result;
 	}
-	Vector3 start = position_ + body_->points(1);
+	Vector3 start = centerPosition_ + body_->points(1);
 	Vector3 end = start + Vector3::Down*(body_->radius() + 1.0f);
 	if (world_->getField()->getMesh().collide_line(start, end)) {
 		gravity_ = 0.0f;
@@ -435,9 +459,13 @@ void Player::attack_Update(float deltaTime)
 void Player::shoot_Update(float deltaTime)
 {
 	shootAngle_ += 5.0f;
+	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * 3;
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
+	//回転を更新
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
-	Vector3 rotatePos = bulletDistance + bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*3;
-	*bulletPosition_ = position_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
+	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*3;
+	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//回転を更新
 	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
@@ -566,7 +594,7 @@ void Player::to_AttackMode()
 
 	attackTarget_ = enemys.front();
 	for (auto& e : enemys) {
-		if (Vector3::Distance(position_, attackTarget_->position()) > Vector3::Distance(position_, e->position())) {
+		if (Vector3::Distance(centerPosition_, attackTarget_->position()) > Vector3::Distance(centerPosition_, e->position())) {
 			attackTarget_ = e;
 		}
 	}
@@ -652,7 +680,7 @@ void Player::end_StumbleMode()
 
 void Player::stepAttack(float deltaTime)
 {
-	position_ += (attackTarget_->position() - position_).Normalize() *2.f;
+	centerPosition_ += (attackTarget_->position() - centerPosition_).Normalize() *2.f;
 }
 
 void Player::changeAnimation(Player_Animation animID,float animFrame, float animSpeed,bool isLoop) {
@@ -697,16 +725,17 @@ bool Player::isCanTracking() const
 
 void Player::bulletUpdate(float deltaTime)
 {
-	*bulletPosition_ = position_ + (bulletDistance*rotation_);
+	*bulletPosition_ = centerPosition_ + (-bulletDistance*rotation_);
 	
-	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+	*bulletRotation_ = rotation_*Matrix::CreateFromAxisAngle(rotation_.Up(),180.0f);
+	//*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
 }
 
 void Player::createCircleEffect()
 {
 	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justEffectStartTime);
-	world_->addActor(ActorGroup::EFFECT, std::make_shared<TrackingEffectActor>(world_,"CircleEffect",position_, circleEffect,shared_from_this()));
+	world_->addActor(ActorGroup::EFFECT, std::make_shared<TrackingEffectActor>(world_,"CircleEffect", centerPosition_, circleEffect,shared_from_this()));
 }
 
 Vector2 Player::getSticktoMove()
