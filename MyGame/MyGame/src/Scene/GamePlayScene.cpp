@@ -23,15 +23,19 @@
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
+#include"../Fade/FadePanel.h"
 
 //ÉQÅ[ÉÄÇÃéûä‘
-static const float gameTime = 60.0f;
+static const float gameTime = 5.0f;
 
 GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr){
 }
 
 void GamePlayScene::start() {
 	world_.Initialize();
+	FadePanel::GetInstance().SetInTime(1.0f);
+	FadePanel::GetInstance().FadeIn();
+	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
 
 	std::shared_ptr<Field> field =std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -63,11 +67,11 @@ void GamePlayScene::start() {
 
 	world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-110.0f, 10.0f, 60.0f),Matrix::CreateRotationY(-45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, "Judge", Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, "Judge", Vector3(0.0f, 2.0f, 0.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, 60.0f),Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 
 	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100),Vector2(1150,100));
