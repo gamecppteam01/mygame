@@ -52,18 +52,18 @@ void GamePlayScene::start() {
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
-	//playerNumber++;
-	//auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy);
+	playerNumber++;
+	auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy);
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	playerNumber++;
-	auto enemy3 = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy3);
-	//world_.addStepTimeListener(enemy);
+	//playerNumber++;
+	//auto enemy3 = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy3);
+	world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);
-	world_.addStepTimeListener(enemy3);
+	//world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
 
@@ -89,6 +89,14 @@ void GamePlayScene::start() {
 
 	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
 	world_.getCanChangedTempoManager().startMusic();
+
+	SetLightEnable(true);
+	//DirectionalLight dirLight("DirectionalLight", Vector3(1, 1, 1),LightColor(Color(0.2f,0.2f,0.2f),Color(1.0f,1.0f,1.0f),Color(1.0f,1.0f,1.0f)));
+	//world_.addLight(dirLight);
+	SetUseLighting(true);
+	
+	lighthandle = CreateSpotLightHandle(VGet(0.0f, 100.0f, 0.0f),VGet(0.0f,-1.0f,0.0f),DX_PI_F / 2.0f,DX_PI_F / 4.0f,200,0.2,0.01f,0.0f);
+	SetLightAmbColorHandle(lighthandle,GetColorF(0.2f, 0.2f, 0.2f,0.0f));
 }
 
 void GamePlayScene::update(float deltaTime) {
@@ -104,6 +112,11 @@ void GamePlayScene::update(float deltaTime) {
 		isEnd_ = true;
 		next_ = SceneType::SCENE_TITLE;
 	}
+	/*auto target = world_.findActor("Player");
+	Vector3 pos = target->position();
+	ChangeLightTypePoint(VGet(pos.x,pos.y,pos.z), 100, 0.2f, 0.005f, 0.00f);
+	SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,1.0f));
+	SetLightDifColor(GetColorF(1.0f, 1.0f, 1.0f, 1.0f));*/
 }
 
 void GamePlayScene::draw() const {
@@ -128,4 +141,5 @@ void GamePlayScene::end() {
 	DataManager::GetInstance().setData(list);
 
 	scoreDisplay_.finalize();
+	DeleteLightHandle(lighthandle);
 }

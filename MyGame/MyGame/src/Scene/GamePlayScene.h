@@ -17,5 +17,5 @@ public:
 private:
 	World world_;
 	ScoreDisplay scoreDisplay_;
-
+	int lighthandle;
 };

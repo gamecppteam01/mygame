@@ -4,6 +4,7 @@
 #include"../../ScoreManager/ScoreMap.h"
 #include"../../Actor/Player/Player.h"
 #include"../../Math/Random.h"
+#include"../../Sound/TempoManager.h"
 
 NormalEnemy::NormalEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
 	BaseEnemy(world,name,position,playerNumber,body), nextPoint_(0), nextPosition_(position), isGoBonus_(false){
@@ -68,6 +69,9 @@ void NormalEnemy::JustStep()
 
 void NormalEnemy::updateNormal(float deltaTime)
 {
+	//3”–Ú‚Í“®‚©‚È‚¢
+	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
+
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 	
 	if (Vector3::Distance(position_, player_.lock()->position()) <= 30.0f&&world_->getScoreManager().GetCharacterScoreRate(player_.lock()->getPlayerNumber()) >= 1.05f) {
