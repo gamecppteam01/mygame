@@ -38,6 +38,7 @@ public:
 	void addLight(PointLight light);
 	//UIの追加
 	void addUI(UIPtr ui);
+	UIPtr findUI(const std::string& name);
 	virtual void addStepTimeListener(const ActorPtr& actor) override;
 	// フィールドの取得
 	virtual FieldPtr getField() const override;

@@ -20,6 +20,7 @@ private:
 	const Vector2 position_;
 	const Vector2 origin_;
 	Vector2 player_position_;
+	Vector2 spotLight_position_;
 	std::list<Vector2> enemy_position_;
 	std::list<Vector2> judge_position_;
 	IWorld* world_;

@@ -24,6 +24,7 @@
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
 #include"../Fade/FadePanel.h"
+#include "../UI/EndUI.h"
 
 //ÉQÅ[ÉÄÇÃéûä‘
 static const float gameTime = 5.0f;
@@ -36,6 +37,8 @@ void GamePlayScene::start() {
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
+
+	state_ = GamePlayState::Play;
 
 	std::shared_ptr<Field> field =std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -78,6 +81,8 @@ void GamePlayScene::start() {
 	world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
 	world_.addUI(warningUI);
+	std::shared_ptr<EndUI> endUI = std::make_shared<EndUI>(&world_.getCanChangedTempoManager(), Vector2(500, 500));
+	world_.addUI(endUI);
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 
@@ -103,9 +108,16 @@ void GamePlayScene::update(float deltaTime) {
 	world_.update(deltaTime);
 
 	if (world_.getCanChangedTempoManager().isEnd()) {
-		isEnd_ = true;
-		next_ = SceneType::SCENE_CLEAR;
-		return;
+		if (state_ == GamePlayState::Play) {
+			UIPtr p = world_.findUI("EndUI");
+			std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
+			if (endUi->end() == true) state_ = GamePlayState::End;
+		}
+		if (state_ == GamePlayState::End) {
+			isEnd_ = true;
+			next_ = SceneType::SCENE_CLEAR;
+			return;
+		}
 	}
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {

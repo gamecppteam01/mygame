@@ -109,6 +109,10 @@ void World::addUI(UIPtr ui)
 {
 	uiManager_.add(ui);
 }
+UIPtr World::findUI(const std::string & name)
+{
+	return uiManager_.find(name);
+}
 
 void World::addStepTimeListener(const ActorPtr & actor)
 {

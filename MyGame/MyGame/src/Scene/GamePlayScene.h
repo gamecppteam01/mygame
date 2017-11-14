@@ -4,6 +4,12 @@
 #include "../UI/ComboGaugeUI.h"
 #include"../ScoreManager/ScoreDisplay.h"
 
+enum GamePlayState
+{
+	Start,
+	Play,
+	End,
+};
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
 public:
@@ -18,4 +24,5 @@ private:
 	World world_;
 	ScoreDisplay scoreDisplay_;
 	int lighthandle;
+	GamePlayState state_;
 };

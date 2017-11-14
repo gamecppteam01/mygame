@@ -1,10 +1,8 @@
 #include "MiniMap.h"
 #include<list>
 
-MiniMap::MiniMap(IWorld* world,const Vector2 & position 
-	,const Vector2& origin)
-	:UI{ "MiniMap",position },position_(position),origin_(origin){
-	world_ = world;
+MiniMap::MiniMap(IWorld* world,const Vector2& position ,const Vector2& origin)
+	:UI{ "MiniMap",position },world_(world),position_(position),origin_(origin){
 }
 
 void MiniMap::initialize()
@@ -15,6 +13,8 @@ void MiniMap::update(float delta_time)
 {
 	auto player = world_->findActor("Player");
 	player_position_ = { player->position().x,-player->position().z };
+	auto spotlight = world_->findActor("SpotLight");
+	spotLight_position_ = { spotlight->position().x , -spotlight->position().z };
 	std::list<ActorPtr> enemy;
 	enemy_position_.clear();
 	world_->findActors("Enemy", enemy);
@@ -34,7 +34,8 @@ void MiniMap::update(float delta_time)
 void MiniMap::draw() const
 {
 	//èÍèäÇ∏ÇÁÇµÇƒÇ‡ëÂè‰ïvÇ»ÇÊÇ§Ç…
-	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP, position_, Vector2::Zero, Vector2(0.6f,0.6f));
+	Sprite::GetInstance().Draw(SPRITE_ID::MINIMAP, position_, Vector2::Zero, Vector2(0.6f, 0.6f));
+	Sprite::GetInstance().Draw(SPRITE_ID::SPOTLIGHT, spotLight_position_, Sprite::GetInstance().GetSize(SPRITE_ID::SPOTLIGHT) / 2 - origin_, Vector2::One);
 	Sprite::GetInstance().Draw(SPRITE_ID::PLAYER, player_position_, Sprite::GetInstance().GetSize(SPRITE_ID::PLAYER) / 2 - origin_, Vector2::One);
 	for (auto i : enemy_position_) {
 		Sprite::GetInstance().Draw(SPRITE_ID::ENEMY, i, Sprite::GetInstance().GetSize(SPRITE_ID::ENEMY) / 2 - origin_, Vector2::One);
