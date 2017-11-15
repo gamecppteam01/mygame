@@ -10,6 +10,8 @@
 #include"../../Math/Random.h"
 #include"../../ScoreManager/ScoreMap.h"
 #include"../../Field/Field.h"
+#include"../../Sound/TempoManager.h"
+#include"../../Math/Easing.h"
 
 //男と女の距離
 static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
@@ -210,6 +212,36 @@ bool BaseEnemy::field(Vector3 & result)
 	return false;
 }
 
+float BaseEnemy::mathSpeed(float current, float maxSpeed,float maxTime, float topTime)
+{
+	//2拍分の時間
+	float maxEaseTime = maxTime;
+	//0.5拍を取得、ここを勢いの頂点とする
+	float quarter = topTime;
+
+	speedEaseTimer_ = min(speedEaseTimer_, maxEaseTime);
+	float  timing = speedEaseTimer_ - quarter;
+	float answer;
+
+	//～0.5秒
+	if (timing < 0.0f) {
+		answer = Easing::EaseInCubic(speedEaseTimer_, 0.0f, maxSpeed, quarter);
+		//answer = 1.f - std::abs(timing)*4.f;
+	}
+	else {
+		answer = Easing::EaseOutQuad(speedEaseTimer_ - quarter, maxSpeed, -maxSpeed, maxEaseTime - quarter);
+		//answer = 1.f - std::abs(timing)*(3.0f-speedEaseTimer_);
+
+	}
+	return answer;
+}
+
+float BaseEnemy::mathSpeedUnderPower(float current, float maxSpeed, float maxTime, float topTime)
+{
+	float answer = mathSpeed(current, maxSpeed, maxTime, topTime);
+	return MathHelper::Max((1.0f + answer), 0.0f);
+}
+
 void BaseEnemy::JustStep()
 {
 	//ターゲット指定のリセットはとりあえずやる
@@ -377,6 +409,11 @@ void BaseEnemy::to_Down()
 
 void BaseEnemy::updateNormal(float deltaTime)
 {
+	float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+	speedEaseTimer_ += deltaTime;
+	float time = speedEaseTimer_ / maxEaseTime;
+	float ease = Easing::EaseInOutCirc(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+	float normal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	//searchTarget(deltaTime);

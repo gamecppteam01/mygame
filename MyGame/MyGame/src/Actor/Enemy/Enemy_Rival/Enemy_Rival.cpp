@@ -6,6 +6,7 @@
 #include"../../../ScoreManager/ScoreManager.h"
 #include"../../Player/Player.h"
 #include"../../../Sound/TempoManager.h"
+#include"../../../Math/Easing.h"
 
 static const float attackResetDistance = 40.0f;
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
@@ -51,10 +52,15 @@ void Enemy_Rival::onDraw() const
 		default:
 			break;
 		}
+		DebugDraw::DebugDrawFormatString(350, 300, GetColor(255, 255, 255), "%d", rhythmTimeCount_);
+		
+		DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", position_.x, position_.y, position_.z);
 	});
 }
 
 void Enemy_Rival::JustStep() {
+	speedEaseTimer_ = 0.0f;
+
 	nonTargetResetTimer_.Action();
 	if (state_ == Enemy_State::Track) {
 		justStepTrack();
@@ -70,6 +76,7 @@ void Enemy_Rival::JustStep() {
 	//通常時は6拍子毎
 	int rhythmTime = 6;
 	if (rhythmTimeCount_ < rhythmTime) {
+		if (state_ == Enemy_State::Normal)return;
 		//攻撃するかを決定する
 		chooseStepIsAttack();
 		return;
@@ -137,12 +144,45 @@ void Enemy_Rival::JustStep() {
 void Enemy_Rival::updateNormal(float deltaTime)
 {
 	//3拍目は動かない
-	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
+	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {
+		OutputDebugString("\n");
+		return;
+	}
 
-	position_ += (targetPos_ - position_).Normalize()*movePower;
+	//2拍分の時間
+	float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+	//0.5拍を取得、ここを勢いの頂点とする
+	float quarter=maxEaseTime*0.25f;
+	
+	speedEaseTimer_ += deltaTime;
+	float maxp = 2.f;
+	float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
+
+	//float answer = 1.f-std::abs(speedEaseTimer_ - quarter)*5.f;
+	/*
+	float ptime = speedEaseTimer_ / maxEaseTime;
+	float pease = Easing::EaseInOutCubic(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+	float pnormal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+
+	speedEaseTimer_ += deltaTime;
+	float time = speedEaseTimer_ / maxEaseTime;
+	float ease = Easing::EaseInOutCubic(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+	float normal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+
+	float answer = (ease - pease);
+	answer = powf(answer, 2);
+	answer *= 300.0f;
+	*/
+
+	OutputDebugString(std::to_string(answer).c_str());
+	OutputDebugString("\n");
+
+	Vector3 vel = (targetPos_ - position_);
+	vel.y = 0.0f;
+	position_ += vel.Normalize()*movePower*answer;
 
 	//ポイントに近づいたら次のポイントに移動
-	if (Vector3::Distance(position_, targetPos_) <= 10.0f)setNextPosition();
+	if (Vector2::Distance(Vector2(position_.x,position_.z), Vector2(targetPos_.x,targetPos_.z)) <= 10.0f)setNextPosition();
 
 }
 
@@ -160,8 +200,16 @@ void Enemy_Rival::updateTrack(float deltaTime)
 		//3拍目は動かない
 		if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
 		
+		//2拍分の時間
+		float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+		//0.5拍を取得、ここを勢いの頂点とする
+		float quarter = maxEaseTime*0.25f;
+		speedEaseTimer_ += deltaTime;
+		float maxp = 2.f;
+		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
+
 		//攻撃位置に移動する
-		position_ += (targetPos_ - position_).Normalize()*movePower;
+		position_ += (targetPos_ - position_).Normalize()*movePower*answer;
 		//攻撃位置に到達したら
 		if (Vector3::Distance(position_, targetPos_) <= 10.0f) {
 			toNextStepTrackMode(chooseAttackTargetMode::Attack);
@@ -188,7 +236,16 @@ void Enemy_Rival::updateTrack(float deltaTime)
 	case Enemy_Rival::chooseAttackTargetMode::Return: {
 		//3拍目は動かない
 		if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
-		position_ += (attackStartDefaultPos_ - position_).Normalize()*movePower;
+
+		//2拍分の時間
+		float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+		//0.5拍を取得、ここを勢いの頂点とする
+		float quarter = maxEaseTime*0.25f;
+		speedEaseTimer_ += deltaTime;
+		float maxp = 2.f;
+		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
+
+		position_ += (attackStartDefaultPos_ - position_).Normalize()*movePower*answer;
 		//ステップ位置へ移動する
 		if (Vector3::Distance(position_, attackStartDefaultPos_) <= 10.0f)toNextStepTrackMode(chooseAttackTargetMode::StepMove);
 		break; 
@@ -209,8 +266,20 @@ void Enemy_Rival::updateTrack(float deltaTime)
 		break;
 	}
 	case Enemy_Rival::chooseAttackTargetMode::StepMove:{
+		//3拍目は動かない
+		if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
+		
+
+		//2拍分の時間
+		float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+		//0.5拍を取得、ここを勢いの頂点とする
+		float quarter = maxEaseTime*0.25f;
+		speedEaseTimer_ += deltaTime;
+		float maxp = 2.f;
+		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
+
 		//ステップ開始位置に移動する
-		position_ += (targetPos_ - position_).Normalize()*movePower;
+		position_ += (targetPos_ - position_).Normalize()*movePower*answer;
 		//目的地に到達したらステップを開始する
 		if (Vector3::Distance(position_, targetPos_) <= 10.0f) {
 			toNextStepTrackMode(chooseAttackTargetMode::Step);
@@ -228,6 +297,7 @@ void Enemy_Rival::to_Normal()
 {
 	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
 	//setNextPosition();
+	speedEaseTimer_ = 0.0f;
 }
 
 void Enemy_Rival::to_Track()
@@ -419,7 +489,7 @@ void Enemy_Rival::setNextPosition()
 	//	nextPosition_ = nextPosition + Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
 	//	return;
 	//}
-	nextPosition_ = roundPoint_[nextPoint_];
+	targetPos_ = roundPoint_[nextPoint_];
 
 }
 void Enemy_Rival::setCountDown()

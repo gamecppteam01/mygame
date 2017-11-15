@@ -62,6 +62,11 @@ protected:
 	//一番近いキャラクターを受け取る
 	ActorPtr getNearestActor();
 	
+
+	//topTime:最大値になる時間
+	float mathSpeed(float current,float maxSpeed, float maxTime, float topTime);
+
+	float mathSpeedUnderPower(float current, float maxSpeed, float maxTime, float topTime);
 protected:
 	//ステップ通知時の処理
 	virtual void JustStep()override;
@@ -114,6 +119,9 @@ protected:
 	//回転力
 	float turnPower_;
 
+	//イージングタイマー
+	float speedEaseTimer_{ 0.0f };
+
 	ActorPtr target_;
 
 	//選手番号
@@ -145,7 +153,7 @@ protected:
 	//攻撃する範囲
 	const float attackDistance{ 30.0f };
 	//ポジション追跡時の移動の勢い
-	const float movePower{ 0.5f };
+	const float movePower{ 0.7f };
 	//ダウンする時間
 	const float downTime{ 7.0f };
 	

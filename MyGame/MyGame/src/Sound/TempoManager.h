@@ -62,10 +62,13 @@ public:
 			justStepTimer_.Initialize();
 			justStepTimer_.Add([&] {
 				for (auto& act : actors_) {
-					act.lock()->receiveNotification(Notification::Call_CreateJustEffect);
+					act.lock()->receiveNotification(Notification::Call_JustStep);
 				}
+
 			});
 		}
+		//1拍目以外はジャストを飛ばさない
+		if (getBeatCount() % 3 != 0)return;
 		if (tempoCount_ < 0.1f) {
 			justStepTimer_.Action();
 		}
@@ -96,6 +99,10 @@ public:
 	//残り再生時間
 	int getRemainTime()const {
 		return (soundSize_ - sample_) / sps_;
+	}
+	//1拍ごとの時間を返す
+	float getOneBeatTime()const {
+		return 60.0f / bpm_;
 	}
 private:
 	//サウンドリソースのファイルパス(一応)

@@ -243,7 +243,10 @@
     <ClCompile Include="src\Tween\TweenObject.cpp" />
     <ClCompile Include="src\UI\ButtonUI.cpp" />
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
+    <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
+    <ClCompile Include="src\UI\StepUI.cpp" />
+    <ClCompile Include="src\UI\StepUIManager.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UITemplate.cpp" />
@@ -384,7 +387,11 @@
     <ClInclude Include="src\UI\ButtonUI.h" />
     <ClInclude Include="src\UI\ButtonUIPtr.h" />
     <ClInclude Include="src\UI\ComboGaugeUI.h" />
+    <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
+    <ClInclude Include="src\UI\StepUI.h" />
+    <ClInclude Include="src\UI\StepUIManager.h" />
+    <ClInclude Include="src\UI\StepUIPtr.h" />
     <ClInclude Include="src\UI\UI.h" />
     <ClInclude Include="src\UI\UIInclude.h" />
     <ClInclude Include="src\UI\UIManager.h" />

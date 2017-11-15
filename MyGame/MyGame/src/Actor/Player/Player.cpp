@@ -43,6 +43,9 @@ static const float defStumbleResurrectTime = 0.5f;
 //ステップ回数によるよろけのチェック周期
 static const int defStepCount = 3;
 
+//スピンの回転範囲
+static const float spinPower = 6.0f;
+
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
@@ -440,7 +443,6 @@ void Player::stepSuccess_Update(float deltaTime)
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
-		EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, position_);
 		return;
 	}
 }
@@ -461,12 +463,12 @@ void Player::attack_Update(float deltaTime)
 void Player::shoot_Update(float deltaTime)
 {
 	shootAngle_ += 5.0f;
-	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * 3;
+	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * spinPower;
 	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//回転を更新
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
-	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*3;
+	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*spinPower;
 	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//回転を更新
 	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
@@ -563,6 +565,8 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
+	int key=EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
+	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT,key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	if (isJustStep_) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);

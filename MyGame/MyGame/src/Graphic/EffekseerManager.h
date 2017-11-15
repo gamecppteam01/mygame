@@ -10,13 +10,17 @@ private:
 	EffekseerManager() {
 		Initialize();
 	}
-	
+	~EffekseerManager() {
+		trackEffectList_.clear();
+	}
 public:
 	static EffekseerManager &GetInstance() {
 		static EffekseerManager f;
 		return f;
 	}
 	void Initialize() {
+		trackEffectList_.clear();
+
 		if (Effkseer_Init(2000) == -1)return;
 
 		// Zバッファを有効にする。
@@ -57,7 +61,9 @@ public:
 		SetPosPlayEffect3D(handle, position);
 		return handle;
 	}
-	
+	void SetPositionTrackTarget(EFFECT_ID effectid,int handle,Vector3* position) {
+		trackEffectList_.push_back(std::make_tuple(effectid,handle,position));
+	}
 	//場所
 	int SetPosPlayEffect3D(int handle, Vector3 position) {
 		return SetPosPlayingEffekseer3DEffect(handle, position.x, position.y, position.z);
@@ -86,6 +92,16 @@ public:
 		// DXライブラリのカメラとEffekseerのカメラを同期する。
 		Effekseer_Sync3DSetting();
 		
+		trackEffectList_.remove_if([&](std::tuple<EFFECT_ID,int, Vector3*>& target) {
+			EFFECT_ID key = std::get<0>(target);
+			return !IsEffekseer3DEffectPlaying(effectList_[key]);
+		});
+
+		for (auto& tel : trackEffectList_) {
+			if (std::get<2>(tel) == nullptr)continue;
+
+			SetPosPlayEffect3D(std::get<1>(tel), *std::get<2>(tel));
+		}
 		// Effekseerにより再生中のエフェクトを更新する。
 		UpdateEffekseer3D();
 
@@ -101,5 +117,6 @@ public:
 
 private:
 	std::map<EFFECT_ID, int> effectList_;
+	std::list<std::tuple<EFFECT_ID,int,Vector3*>> trackEffectList_;
 	bool IsStopFlg_;
 };

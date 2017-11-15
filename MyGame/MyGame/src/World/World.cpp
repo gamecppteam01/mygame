@@ -116,7 +116,7 @@ UIPtr World::findUI(const std::string & name)
 
 void World::addStepTimeListener(const ActorPtr & actor)
 {
-	stepTimer_.addActor(actor);
+	tempo_.setActor(actor);
 }
 
 FieldPtr World::getField() const
