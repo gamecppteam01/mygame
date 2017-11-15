@@ -117,6 +117,11 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
 }
 
+float Player::getPlayerScoreRate() const
+{
+	world_->getScoreManager().GetCharacterScoreRate(playerNumber_);
+}
+
 void Player::createBullet()
 {
 	bullet_ = std::make_shared<PlayerBullet>(world_, position_, this);

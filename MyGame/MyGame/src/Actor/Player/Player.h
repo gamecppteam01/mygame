@@ -60,6 +60,8 @@ public:
 
 	virtual Vector3& position()override { return centerPosition_; }
 	Vector3 getCenterPos()const { return centerPosition_; }
+	//ƒXƒRƒA”{—¦‚ğæ“¾‚·‚é
+	float getPlayerScoreRate()const;
 private:
 	void createBullet();
 	virtual void initialize()override;
