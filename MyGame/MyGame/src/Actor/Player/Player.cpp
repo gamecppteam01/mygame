@@ -23,6 +23,7 @@
 #include"../../Graphic/FontManager.h"
 #include"../../Math/MathHelper.h"
 #include"../../Sound/TempoManager.h"
+#include"../../Graphic/EffekseerManager.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -439,6 +440,7 @@ void Player::stepSuccess_Update(float deltaTime)
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, position_);
 		return;
 	}
 }
