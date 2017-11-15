@@ -13,8 +13,6 @@
 #include"../../Sound/TempoManager.h"
 #include"../../Math/Easing.h"
 
-//男と女の距離
-static const Vector3 bulletDistance{ 0.0f,0.0f,8.0f };
 //弾き飛ばす力
 static const float defBoundPower = 5.0f;
 //視界角度
@@ -85,9 +83,13 @@ void BaseEnemy::onUpdate(float deltaTime){
 	//アニメーションを更新
 	animation_.Update(MathHelper::Sign(deltaTime));
 
-	position_ += velocity_;
+	centerPosition_ += velocity_;
 	velocity_ *= 0.5f;
 
+	if (state_ != Enemy_State::Attack) {
+		position_ = bulletDistance*rotation_ + centerPosition_;
+		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
+	}
 	correctPosition();
 
 	bulletUpdate(deltaTime);
@@ -99,7 +101,7 @@ void BaseEnemy::onDraw() const
 {
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	animation_.Draw(Matrix::CreateRotationY(180.0f)*Matrix(rotation_).Translation(drawPosition));
+	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
 	
 }
 
@@ -188,7 +190,7 @@ void BaseEnemy::onCollideResult()
 
 Vector3 BaseEnemy::mathBound(Actor & other)
 {
-	Vector3 bound = other.position() - position_;
+	Vector3 bound = other.position() - centerPosition_;
 	bound = bound.Normalize();
 	bound *= boundPower_;
 	bound.y = 0.0f;
@@ -197,15 +199,20 @@ Vector3 BaseEnemy::mathBound(Actor & other)
 }
 bool BaseEnemy::field(Vector3 & result)
 {
-	if (!world_->getField()->isInField(position_)) {
-		position_ = world_->getField()->CorrectPosition(position_);
+	if (!world_->getField()->isInField(centerPosition_)) {
+		centerPosition_ = world_->getField()->CorrectPosition(centerPosition_);
+		position_ = bulletDistance*rotation_ + centerPosition_;
+		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
+
 	}
 
 	Vector3 hit1;
 	Vector3 hit2;
 	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
 	{
-		result = hit1 + ((body_->points(0)));
+		//本体と弾の中心を返す
+		result = (hit1 + hit2)*0.5f + ((body_->points(0)));
+		//result = hit1 + ((body_->points(0)));
 
 		return true;
 	}
@@ -250,7 +257,7 @@ void BaseEnemy::JustStep()
 	if (!isCanStep())return;
 	ActorPtr act = getNearestActor();
 	//攻撃射程圏内なら
-	if (Vector3::Distance(act->position(), position_)<= attackDistance&&prevHitActorNumber_!= act->getCharacterNumber()) {
+	if (Vector3::Distance(act->position(), centerPosition_)<= attackDistance&&prevHitActorNumber_!= act->getCharacterNumber()) {
 		change_State_and_Anim(Enemy_State::Attack, stepAnim[1].first);
 		return;
 	}
@@ -273,7 +280,7 @@ void BaseEnemy::searchTarget(float deltaTime)
 	//ターゲットの位置を検索
 	Vector3 targetPos = target_->position();
 	//ターゲット方向のベクトル
-	Vector3 toTarget = targetPos - position_;
+	Vector3 toTarget = targetPos - centerPosition_;
 	//角度を求める
 	float forwardAngle = MathHelper::ACos(Vector3::Dot(rotation_.Forward().Normalize(), toTarget.Normalize()));
 	float leftAngle = MathHelper::ACos(Vector3::Dot(rotation_.Left().Normalize(), toTarget.Normalize()));
@@ -282,7 +289,7 @@ void BaseEnemy::searchTarget(float deltaTime)
 	if (forwardAngle < moveAngle) {
 		float moveSpeed = 0.5f;
 		//ターゲット方向に前進
-		position_ += toTarget.Normalize()*moveSpeed;
+		centerPosition_ += toTarget.Normalize()*moveSpeed;
 	}
 	//視界範囲内だったら
 	if (forwardAngle < viewAngle) {
@@ -298,15 +305,16 @@ void BaseEnemy::searchTarget(float deltaTime)
 
 void BaseEnemy::bulletUpdate(float deltaTime)
 {
-	*bulletPosition_ = position_ + (bulletDistance*rotation_);
 
-	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+	*bulletPosition_ = centerPosition_ + (-bulletDistance*rotation_);
+
+	*bulletRotation_ = rotation_*Matrix::CreateFromAxisAngle(rotation_.Up(), 180.0f);
 
 }
 
 void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 {
-	velocity_ += (nextPosition_ - position_).Normalize()*movePower;
+	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
 }
 
 void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
@@ -385,7 +393,7 @@ void BaseEnemy::to_Step(BaseEnemy::Enemy_Animation anim)
 
 void BaseEnemy::to_Track()
 {
-	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(position_)+Vector3(Random::GetInstance().Range(-20.0f,20.0f),0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
+	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(centerPosition_)+Vector3(Random::GetInstance().Range(-20.0f,20.0f),0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
 }
 
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
@@ -438,7 +446,7 @@ void BaseEnemy::updateStep(float deltaTime)
 
 void BaseEnemy::updateTrack(float deltaTime)
 {
-	if (Vector2::Distance(Vector2(position_.x, position_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
+	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
 		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
@@ -454,7 +462,16 @@ void BaseEnemy::updateAttack(float deltaTime)
 		return;
 	}
 
-	position_ += (attackTarget_.lock()->position() - position_).Normalize() *attackPower;
+	centerPosition_ += (attackTarget_.lock()->position() - centerPosition_).Normalize() *attackPower;
+
+	//ここから回転
+	Vector3 baseRotatePos = bulletDistance;
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
+	//回転を更新
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+
+	Vector3 rotatePos = -bulletDistance;
+	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
 
 }
 void BaseEnemy::updateDown(float deltaTime)
@@ -474,9 +491,9 @@ void BaseEnemy::correctPosition()
 {
 	Vector3 result;
 	if (field(result)) {
-		position_ = result;
+		centerPosition_ = result;
 	}
-	Vector3 start = position_ + body_->points(1);
+	Vector3 start = centerPosition_ + body_->points(1);
 	Vector3 end = start + Vector3::Down*(body_->radius() + 1.0f);
 	if (world_->getField()->getMesh().collide_line(start, end)) {
 		gravity_ = 0.0f;
@@ -499,7 +516,7 @@ ActorPtr BaseEnemy::getNearestActor()
 
 	attackTarget = others.front();
 	for (auto& e : others) {
-		if (Vector3::Distance(position_, attackTarget->position()) > Vector3::Distance(position_, e->position())) {
+		if (Vector3::Distance(centerPosition_, attackTarget->position()) > Vector3::Distance(centerPosition_, e->position())) {
 			attackTarget = e;
 		}
 	}

@@ -13,7 +13,7 @@ Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3
 	BaseEnemy(world, name, position, playerNumber, body) {
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
+	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 
 	world_->findActors("Enemy", players_);
 
@@ -54,7 +54,7 @@ void Enemy_Rival::onDraw() const
 		}
 		DebugDraw::DebugDrawFormatString(350, 300, GetColor(255, 255, 255), "%d", rhythmTimeCount_);
 		
-		DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", position_.x, position_.y, position_.z);
+		DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", centerPosition_.x, centerPosition_.y, centerPosition_.z);
 	});
 }
 
@@ -84,7 +84,7 @@ void Enemy_Rival::JustStep() {
 	rhythmTimeCount_ = 0;
 
 	//移動先のポイントを検索する
-	Vector3 nextPos = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
+	Vector3 nextPos = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 	//一位の情報を取得する
 	auto targetScore = world_->getScoreManager().getFirst();
 
@@ -103,7 +103,7 @@ void Enemy_Rival::JustStep() {
 		attackTarget_ = targetScore.target_;
 		Enemy_Animation nextAnim;
 		//攻撃の射程圏内なら
-		if (Vector3::Distance(position_, attackTarget_.lock()->position()) <= attackDistance) {
+		if (Vector3::Distance(centerPosition_, attackTarget_.lock()->position()) <= attackDistance) {
 			toNextStepTrackMode(chooseAttackTargetMode::AttackMove);
 			nextAnim = Enemy_Animation::Move_Forward;
 		}
@@ -177,12 +177,12 @@ void Enemy_Rival::updateNormal(float deltaTime)
 	OutputDebugString(std::to_string(answer).c_str());
 	OutputDebugString("\n");
 
-	Vector3 vel = (targetPos_ - position_);
+	Vector3 vel = (targetPos_ - centerPosition_);
 	vel.y = 0.0f;
-	position_ += vel.Normalize()*movePower*answer;
+	centerPosition_ += vel.Normalize()*movePower*answer;
 
 	//ポイントに近づいたら次のポイントに移動
-	if (Vector2::Distance(Vector2(position_.x,position_.z), Vector2(targetPos_.x,targetPos_.z)) <= 10.0f)setNextPosition();
+	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(targetPos_.x,targetPos_.z)) <= 10.0f)setNextPosition();
 
 }
 
@@ -209,9 +209,9 @@ void Enemy_Rival::updateTrack(float deltaTime)
 		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
 
 		//攻撃位置に移動する
-		position_ += (targetPos_ - position_).Normalize()*movePower*answer;
+		centerPosition_ += (targetPos_ - centerPosition_).Normalize()*movePower*answer;
 		//攻撃位置に到達したら
-		if (Vector3::Distance(position_, targetPos_) <= 10.0f) {
+		if (Vector3::Distance(centerPosition_, targetPos_) <= 10.0f) {
 			toNextStepTrackMode(chooseAttackTargetMode::Attack);
 		}
 		break;
@@ -229,7 +229,17 @@ void Enemy_Rival::updateTrack(float deltaTime)
 			}
 			return;
 		}
-		position_ += (attackTarget_.lock()->position() - position_).Normalize() *attackPower;
+		centerPosition_ += (attackTarget_.lock()->position() - centerPosition_).Normalize() *attackPower;
+		
+		//ここから回転
+		Vector3 baseRotatePos = bulletDistance;
+		position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
+		//回転を更新
+		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+
+		Vector3 rotatePos = -bulletDistance;
+		*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
+
 		break;
 	}
 	//スコア取得位置に戻る												  
@@ -245,9 +255,9 @@ void Enemy_Rival::updateTrack(float deltaTime)
 		float maxp = 2.f;
 		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
 
-		position_ += (attackStartDefaultPos_ - position_).Normalize()*movePower*answer;
+		centerPosition_ += (attackStartDefaultPos_ - centerPosition_).Normalize()*movePower*answer;
 		//ステップ位置へ移動する
-		if (Vector3::Distance(position_, attackStartDefaultPos_) <= 10.0f)toNextStepTrackMode(chooseAttackTargetMode::StepMove);
+		if (Vector3::Distance(centerPosition_, attackStartDefaultPos_) <= 10.0f)toNextStepTrackMode(chooseAttackTargetMode::StepMove);
 		break; 
 	}
 	case Enemy_Rival::chooseAttackTargetMode::Step:{
@@ -279,9 +289,9 @@ void Enemy_Rival::updateTrack(float deltaTime)
 		float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
 
 		//ステップ開始位置に移動する
-		position_ += (targetPos_ - position_).Normalize()*movePower*answer;
+		centerPosition_ += (targetPos_ - centerPosition_).Normalize()*movePower*answer;
 		//目的地に到達したらステップを開始する
-		if (Vector3::Distance(position_, targetPos_) <= 10.0f) {
+		if (Vector3::Distance(centerPosition_, targetPos_) <= 10.0f) {
 			toNextStepTrackMode(chooseAttackTargetMode::Step);
 		}
 		break;
@@ -295,7 +305,7 @@ void Enemy_Rival::updateTrack(float deltaTime)
 
 void Enemy_Rival::to_Normal()
 {
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
+	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 	//setNextPosition();
 	speedEaseTimer_ = 0.0f;
 }
@@ -393,7 +403,7 @@ void Enemy_Rival::toNextStepTrackMode(chooseAttackTargetMode nextMode)
 	}
 	case Enemy_Rival::chooseAttackTargetMode::StepMove: {
 		//行き先を最も近い巡回ポイントに決定
-		targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
+		targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 		break;
 	}
 	default: {
@@ -411,7 +421,7 @@ void Enemy_Rival::chooseStepAttackTarget(const ActorPtr & player)
 		toNextStepTrackMode(chooseAttackTargetMode::NotAttack);
 	}
 	else {
-		if (Vector3::Distance(position_, playerPos) <= attackDistance) {
+		if (Vector3::Distance(centerPosition_, playerPos) <= attackDistance) {
 			//プレイヤーに攻撃する
 			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn);
 			attackTarget_ = player;
@@ -436,7 +446,7 @@ void Enemy_Rival::chooseStepAttackTopPlayer(const ActorPtr & player,const Vector
 	attackTargetDefaultPos_ = playerPos;
 	attackStartDefaultPos_ = basePos;
 	//プレイヤーが攻撃範囲内なら
-	if (Vector3::Distance(position_, playerPos) <= attackDistance) {
+	if (Vector3::Distance(centerPosition_, playerPos) <= attackDistance) {
 		toNextStepTrackMode(chooseAttackTargetMode::Attack);
 		//プレイヤーに攻撃する
 		change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn);
@@ -455,14 +465,14 @@ void Enemy_Rival::chooseStepAttackTopPlayer(const ActorPtr & player,const Vector
 bool Enemy_Rival::chooseStepIsAttack()
 {
 	//移動先を決定する
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(position_);
+	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 
 	bool isAttack = false;
-	float nearest = Vector3::Distance(position_, players_.front().lock()->position());
+	float nearest = Vector3::Distance(centerPosition_, players_.front().lock()->position());
 	for (const auto& p : players_) {
 		//範囲内に選手がいなければ次へ
-		if (MathHelperSupport::MathDistance_Segment_Point(position_, targetPos_, p.lock()->position()) > attackDistance)continue;
-		float dist = Vector3::Distance(position_, p.lock()->position());
+		if (MathHelperSupport::MathDistance_Segment_Point(centerPosition_, targetPos_, p.lock()->position()) > attackDistance)continue;
+		float dist = Vector3::Distance(centerPosition_, p.lock()->position());
 		if (dist <= nearest&&prevHitActorNumber_ != p.lock()->getCharacterNumber()) {
 			nearest = dist;
 			attackTarget_ = p;
