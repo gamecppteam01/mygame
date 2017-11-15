@@ -38,6 +38,10 @@ public:
 
 	//転倒カウントのセット
 	virtual void setCountDown();
+
+	virtual Vector3& position()override {
+		return centerPosition_;
+	}
 protected:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -108,6 +112,8 @@ protected:
 	Vector3 bound_{ Vector3::Zero };
 	//次に向かう対象
 	Vector3 nextPosition_;
+	//2キャラの中心
+	Vector3 centerPosition_{ Vector3::Zero };
 	//本体
 	std::shared_ptr<EnemyBullet> bullet_;
 	//女の位置、男側で直に書き換える

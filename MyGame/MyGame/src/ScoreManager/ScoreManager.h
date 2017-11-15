@@ -34,7 +34,7 @@ public:
 	//キャラクターのスコアを返す
 	int GetCharacterScore(int number);
 	//キャラクターのスコア倍率を返す
-	int GetCharacterScoreRate(int number);
+	float GetCharacterScoreRate(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
 	//一位の選手のスコアデータを返す

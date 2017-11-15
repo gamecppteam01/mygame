@@ -129,9 +129,9 @@ CameraPtr World::getCamera()
 	return camera_;
 }
 
-inline ScoreManager World::getScoreManager() const { return scoreManager_; }
+ScoreManager World::getScoreManager() const { return scoreManager_; }
 
-inline ScoreManager & World::getCanChangedScoreManager() {
+ScoreManager & World::getCanChangedScoreManager() {
 	return scoreManager_; 
 }
 

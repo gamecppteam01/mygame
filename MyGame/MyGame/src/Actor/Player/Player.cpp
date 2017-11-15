@@ -224,8 +224,11 @@ void Player::onDraw() const
 		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[2]*64.0f, origin, 0.0f, 1.0f);
 		SetDrawBright(255, 255, 255); 
 		*/
+
+		DebugDraw::DebugDrawFormatString(100, 200, GetColor(255, 255, 255), "%f", getPlayerScoreRate());
 	}
 	);
+
 }
 
 void Player::onCollide(Actor & other)

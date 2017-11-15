@@ -77,7 +77,7 @@ int ScoreManager::GetCharacterCount()const {
 int ScoreManager::GetCharacterScore(int number) {
 	return m_ScoreDataList[number].score_;
 }
-int ScoreManager::GetCharacterScoreRate(int number) {
+float ScoreManager::GetCharacterScoreRate(int number) {
 	return m_ScoreDataList[number].scoreRate_;
 }
 
