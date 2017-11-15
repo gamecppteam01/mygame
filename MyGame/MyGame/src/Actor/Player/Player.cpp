@@ -119,7 +119,7 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 
 float Player::getPlayerScoreRate() const
 {
-	world_->getScoreManager().GetCharacterScoreRate(playerNumber_);
+	return world_->getScoreManager().GetCharacterScoreRate(playerNumber_);
 }
 
 void Player::createBullet()
@@ -159,7 +159,7 @@ void Player::onUpdate(float deltaTime)
 	//今フレームの更新を適用
 	centerPosition_ += velocity_;
 
-	if (state_ != Player_State::Shoot) {
+	if (state_ != Player_State::Shoot&&state_!=Player_State::Attack) {
 		position_ = bulletDistance*rotation_ + centerPosition_;
 		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
 	}
@@ -179,18 +179,6 @@ void Player::onUpdate(float deltaTime)
 	effectSize_[0] = 3.0f - (tempo+beat);
 	effectSize_[0] = effectSize_[0] / 3.f;
 
-	//effectSize_[1] = (1 - max((beat - 1.0f + tempo), 0.0f));
-
-	//3連ジャスト判定用
-	/*
-	float tempo = world_->getCanChangedTempoManager().getTempoCount();
-	int key = world_->getCanChangedTempoManager().getBeatCount() % 3;
-	effectSize_[key] = (1.0f - tempo);
-	key = (key + 1+3) % 3;
-	effectSize_[key] = max((1.2f - (tempo / 3.f)), 1.0f);
-	key = (key + 1+3) % 3;
-	effectSize_[key] = max((1.4f - (tempo / 3.f)), 1.2f);
-	*/
 }
 
 void Player::onDraw() const
@@ -461,7 +449,17 @@ void Player::attack_Update(float deltaTime)
 		return;
 	}
 	stepAttack(deltaTime);
-	
+
+	shootAngle_ += 5.0f;
+
+	Vector3 baseRotatePos = bulletDistance;
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
+	//回転を更新
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+
+	Vector3 rotatePos = -bulletDistance;
+	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
+
 
 }
 
@@ -595,6 +593,8 @@ void Player::to_StepSuccessMode()
 
 void Player::to_AttackMode()
 {
+	shootAngle_ = 0.0f;
+	
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
 
 	//対応したアニメーションの終了時間を取得する
