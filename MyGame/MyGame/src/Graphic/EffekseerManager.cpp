@@ -109,8 +109,8 @@ void EffekseerManager::Update()
 	Effekseer_Sync3DSetting();
 
 	trackEffectList_.remove_if([&](std::tuple<EFFECT_ID, int, Vector3*>& target) {
-		EFFECT_ID key = std::get<0>(target);
-		return IsEffekseer3DEffectPlaying(effectList_[key])==-1;
+		int key = std::get<1>(target);
+		return IsEffekseer3DEffectPlaying(key)==-1;
 	});
 
 	for (auto& tel : trackEffectList_) {

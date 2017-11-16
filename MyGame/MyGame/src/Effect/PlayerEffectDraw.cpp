@@ -23,7 +23,7 @@ void PlayerEffectDraw::Update(float deltatime){
 	if (player_->getPlayerScoreRate() > 1.0f) {
 		if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
 			//EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, player_->position());
-		key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SAMPLE_EFFECT, player_->position(), Vector3::Zero, Vector3::One);
+		key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, player_->position(), Vector3::Zero, Vector3::One);
 		//EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::POINT_UP_EFFECT, key, &player_->position());
 		DrawFormatString(100, 400, GetColor(255, 255, 255), "エフェクト出てる！スコア高くなってる！");
 	}
