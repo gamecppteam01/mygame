@@ -24,6 +24,10 @@ public:
 	//再生
 	int PlayEffect2D(EFFECT_ID id, Vector3 position = Vector3::Zero, Vector3 rotation = Vector3::Zero, Vector3 scale = Vector3::One);
 	int PlayEffect3D(EFFECT_ID id, Vector3 position = Vector3::Zero, Vector3 rotation = Vector3::Zero, Vector3 scale = Vector3::One);
+	//エフェクトが再生されているか
+	bool isPlayEffect3D(int id);
+
+	void StopEffect3D(int id);
 
 	void SetPositionTrackTarget(EFFECT_ID effectid, int handle, Vector3* position);
 

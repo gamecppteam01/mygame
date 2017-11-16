@@ -12,4 +12,6 @@ public:
 	void Draw()const;
 private:
 	Player* player_;
+	int key_;
+
 };

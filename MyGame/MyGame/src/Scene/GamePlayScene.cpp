@@ -133,13 +133,14 @@ void GamePlayScene::update(float deltaTime) {
 	ChangeLightTypePoint(VGet(pos.x,pos.y,pos.z), 100, 0.2f, 0.005f, 0.00f);
 	SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,1.0f));
 	SetLightDifColor(GetColorF(1.0f, 1.0f, 1.0f, 1.0f));*/
+
+	playerEffectDraw_.Update(deltaTime);
+
 }
 
 void GamePlayScene::draw() const {
 	
 	world_.draw();
-	
-	playerEffectDraw_.Draw();
 	
 	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));

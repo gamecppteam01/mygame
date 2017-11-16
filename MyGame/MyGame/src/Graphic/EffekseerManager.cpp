@@ -1,4 +1,6 @@
 #include "EffekseerManager.h"
+#include "EffekseerManager.h"
+#include "EffekseerManager.h"
 
 EffekseerManager::EffekseerManager()
 {
@@ -55,23 +57,19 @@ int EffekseerManager::PlayEffect3D(EFFECT_ID id, Vector3 position, Vector3 rotat
 	return handle_;
 }
 
+bool EffekseerManager::isPlayEffect3D(int id)
+{
+	return IsEffekseer3DEffectPlaying(id) == 0;
+}
+
+void EffekseerManager::StopEffect3D(int id)
+{
+	int a = StopEffekseer3DEffect(id);
+}
+
 void EffekseerManager::SetPositionTrackTarget(EFFECT_ID effectid, int handle, Vector3 * position)
 {
 	trackEffectList_.push_back(std::make_tuple(effectid, handle, position));
-}
-
-int EffekseerManager::EffectStop2D(EFFECT_ID id, int handle)
-{
-	handle = StopEffekseer2DEffect(effectList_[id]);
-	return handle;
-	return handle == 0 ? true : false;
-}
-
-int EffekseerManager::EffectStop3D(EFFECT_ID id, int handle)
-{
-	handle = StopEffekseer3DEffect(effectList_[id]);
-	return handle;
-	return handle == 0 ? true : false;
 }
 
 int EffekseerManager::SetPosPlayEffect3D(int handle, Vector3 position)
@@ -112,7 +110,7 @@ void EffekseerManager::Update()
 
 	trackEffectList_.remove_if([&](std::tuple<EFFECT_ID, int, Vector3*>& target) {
 		EFFECT_ID key = std::get<0>(target);
-		return !IsEffekseer3DEffectPlaying(effectList_[key]);
+		return IsEffekseer3DEffectPlaying(effectList_[key])==-1;
 	});
 
 	for (auto& tel : trackEffectList_) {
