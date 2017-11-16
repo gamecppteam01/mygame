@@ -83,6 +83,9 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_EFFECT, defaultPath + "Spin.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_SUCCESS_EFFECT, defaultPath + "stepSuccess.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_EFFECT, defaultPath + "pointUP.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::COL_EFFECT, defaultPath + "collision.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_START_EFFECT, defaultPath + "charge_Start.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_EFFECT, defaultPath + "charge.efk");
 	//仮エフェクト
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::RING_EFFECT, defaultPath + "ringeffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HIT_EFFECT, defaultPath + "hiteffect.efk");

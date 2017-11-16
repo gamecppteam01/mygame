@@ -1,6 +1,6 @@
 #pragma once
-#include "../World/IWorld.h"
-#include "../Math/Math.h"
+#include "../../World/IWorld.h"
+#include "../../Math/Math.h"
 
 class SpinEffect {
 public:

@@ -1,6 +1,6 @@
 #include "SpinEffect.h"
-#include "../Actor/Player/Player.h"
-#include "../Graphic/EffekseerManager.h"
+#include "../../Actor/Player/Player.h"
+#include "../../Graphic/EffekseerManager.h"
 
 
 SpinEffect::SpinEffect(IWorld * world)
