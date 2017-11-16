@@ -282,9 +282,6 @@
     <ClCompile Include="src\Actor\Enemy\Enemy_Power.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Effect\SpinEffect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Effect\StepEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -307,6 +304,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Effect\PlayerEffectDraw.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effect\EffekseerEffect\ColEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effect\EffekseerEffect\SpinEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effect\EffekseerEffect\Step_NowEffect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphic\EffekseerManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -716,9 +725,6 @@
     <ClInclude Include="src\Actor\Enemy\Enemy_Power.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Effect\SpinEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Effect\StepEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -753,6 +759,15 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Effect\PlayerEffectDraw.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effect\EffekseerEffect\ColEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effect\EffekseerEffect\SpinEffect.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effect\EffekseerEffect\Step_NowEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

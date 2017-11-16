@@ -188,9 +188,11 @@
     <ClCompile Include="src\DataManager\DataManager.cpp" />
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
     <ClCompile Include="src\Effect\Effect.cpp" />
+    <ClCompile Include="src\Effect\EffekseerEffect\ColEffect.cpp" />
+    <ClCompile Include="src\Effect\EffekseerEffect\SpinEffect.cpp" />
+    <ClCompile Include="src\Effect\EffekseerEffect\Step_NowEffect.cpp" />
     <ClCompile Include="src\Effect\HitEffect.cpp" />
     <ClCompile Include="src\Effect\PlayerEffectDraw.cpp" />
-    <ClCompile Include="src\Effect\SpinEffect.cpp" />
     <ClCompile Include="src\Effect\StepEffect.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
@@ -199,6 +201,7 @@
     <ClCompile Include="src\Graphic\Animation.cpp" />
     <ClCompile Include="src\Graphic\AnimationDx.cpp" />
     <ClCompile Include="src\Graphic\Anime.cpp" />
+    <ClCompile Include="src\Graphic\EffekseerManager.cpp" />
     <ClCompile Include="src\Graphic\FontManager.cpp" />
     <ClCompile Include="src\Graphic\Light.cpp" />
     <ClCompile Include="src\Graphic\Model.cpp" />
@@ -303,10 +306,12 @@
     <ClInclude Include="src\Define.h" />
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\ColEffect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\SpinEffect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\Step_NowEffect.h" />
     <ClInclude Include="src\Effect\GaugeEffect.h" />
     <ClInclude Include="src\Effect\HitEffect.h" />
     <ClInclude Include="src\Effect\PlayerEffectDraw.h" />
-    <ClInclude Include="src\Effect\SpinEffect.h" />
     <ClInclude Include="src\Effect\StepEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Field\Field.h" />

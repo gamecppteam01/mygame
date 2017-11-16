@@ -1,0 +1,4 @@
+C:\Users\tk9hs\Documents\各種ツール\Effekseer\MAGICALxSPIRAL\meteo1.efkproj
+System.ArgumentException: 使用されたパラメーターが有効ではありません。
+   場所 System.Drawing.Bitmap..ctor(String filename)
+   場所 Effekseer.GUI.Component.PathForImage.UpdatePreview(String path)
