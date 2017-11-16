@@ -3,6 +3,7 @@
 #include"../World/World.h"
 #include "../UI/ComboGaugeUI.h"
 #include"../ScoreManager/ScoreDisplay.h"
+#include"../Effect/PlayerEffectDraw.h"
 
 enum GamePlayState
 {
@@ -25,4 +26,5 @@ private:
 	ScoreDisplay scoreDisplay_;
 	int lighthandle;
 	GamePlayState state_;
+	PlayerEffectDraw playerEffectDraw_;
 };

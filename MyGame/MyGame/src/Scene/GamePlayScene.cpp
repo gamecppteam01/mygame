@@ -29,7 +29,7 @@
 //ÉQÅ[ÉÄÇÃéûä‘
 static const float gameTime = 5.0f;
 
-GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr){
+GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr){
 }
 
 void GamePlayScene::start() {
@@ -102,6 +102,9 @@ void GamePlayScene::start() {
 	
 	lighthandle = CreateSpotLightHandle(VGet(0.0f, 100.0f, 0.0f),VGet(0.0f,-1.0f,0.0f),DX_PI_F / 2.0f,DX_PI_F / 4.0f,200,0.2,0.01f,0.0f);
 	SetLightAmbColorHandle(lighthandle,GetColorF(0.2f, 0.2f, 0.2f,0.0f));
+
+	playerEffectDraw_.Initialize();
+	playerEffectDraw_.setPlayerEffectDraw(player.get());
 }
 
 void GamePlayScene::update(float deltaTime) {
@@ -141,9 +144,8 @@ void GamePlayScene::draw() const {
 	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
 
 	Time::GetInstance().draw_fps();
-
 	scoreDisplay_.Score(Vector2(0,25),5);
-
+	playerEffectDraw_.Draw();
 }
 
 void GamePlayScene::end() {
