@@ -136,7 +136,7 @@ void GamePlayScene::update(float deltaTime) {
 
 void GamePlayScene::draw() const {
 	world_.draw();
-
+	playerEffectDraw_.Draw();
 	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
@@ -145,7 +145,6 @@ void GamePlayScene::draw() const {
 
 	Time::GetInstance().draw_fps();
 	scoreDisplay_.Score(Vector2(0,25),5);
-	playerEffectDraw_.Draw();
 }
 
 void GamePlayScene::end() {
