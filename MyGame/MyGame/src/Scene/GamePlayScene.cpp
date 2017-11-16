@@ -96,6 +96,7 @@ void GamePlayScene::start() {
 	world_.getCanChangedTempoManager().startMusic();
 
 	SetLightEnable(true);
+	ChangeLightTypeDir(VGet(0.5f, -0.5f, 0.5f));
 	//DirectionalLight dirLight("DirectionalLight", Vector3(1, 1, 1),LightColor(Color(0.2f,0.2f,0.2f),Color(1.0f,1.0f,1.0f),Color(1.0f,1.0f,1.0f)));
 	//world_.addLight(dirLight);
 	SetUseLighting(true);
@@ -135,8 +136,11 @@ void GamePlayScene::update(float deltaTime) {
 }
 
 void GamePlayScene::draw() const {
+	
 	world_.draw();
+	
 	playerEffectDraw_.Draw();
+	
 	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}

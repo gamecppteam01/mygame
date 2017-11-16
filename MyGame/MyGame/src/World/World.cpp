@@ -35,6 +35,11 @@ void World::Initialize()
 	listener_ = [](EventMessage, void*) {};
 
 	lateDrawFuncList_.clear();
+
+	//シャドウマップの設定
+	ShadowMapHandle = MakeShadowMap(4096, 4096);
+	SetShadowMapLightDirection(ShadowMapHandle, VGet(0.0f, -1.0f, 0.0f));
+	SetShadowMapDrawArea(ShadowMapHandle, VGet(-1000.0f, -1.0f, -1000.0f), VGet(1000.0f, 1000.0f, 1000.0f));
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -54,14 +59,25 @@ void World::update(float deltaTime) {
 	tempo_.update(deltaTime);
 
 	lateDrawFuncList_.clear();//描画関数のリセット
+
+	//シャドウマップに描画
+	ShadowMap_DrawSetup(ShadowMapHandle);
+	//field_->draw();
+	// アクターの描画処理
+	actors_.draw();
+	ShadowMap_DrawEnd();
 }
 
 // 描画
 void World::draw() const {
-	field_->draw();
+	//使用したいシャドウマップを設定して描画
+	SetUseShadowMap(0, ShadowMapHandle);
 	camera_->draw();
+	field_->draw();
 	// アクターの描画処理
 	actors_.draw();
+	SetUseShadowMap(0, -1);
+
 	//アクター系の遅延描画
 	for (auto& d : lateDrawFuncList_) {
 		d();
@@ -182,6 +198,7 @@ void World::end()
 	field_ = nullptr;
 	actors_.initialize();
 	listener_ = nullptr;
+	DeleteShadowMap(ShadowMapHandle);
 }
 
 void World::setLateDraw(std::function<void()> draw)

@@ -84,4 +84,6 @@ private:
 	TempoManager tempo_;
 	// イベントリスナー
 	std::function<void(EventMessage, void*)> listener_;
+	//シャドウマップハンドル
+	int ShadowMapHandle;
 };
