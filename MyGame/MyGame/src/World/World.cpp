@@ -13,7 +13,8 @@ World::World() :
 	stepTimer_(),
 	scoreManager_(this),
 	scoreMap_(this),
-	tempo_(){
+	tempo_(),
+	shadowmap_() {
 }
 
 World::~World()
@@ -38,12 +39,13 @@ void World::Initialize()
 
 	lateDrawFuncList_.clear();
 
-	if (ShadowMapHandle != -1) return;
+	//if (ShadowMapHandle != -1) return;
 
 	//シャドウマップの設定
-	ShadowMapHandle = MakeShadowMap(4096, 4096);
-	SetShadowMapLightDirection(ShadowMapHandle, VGet(0.0f, -1.0f, 0.0f));
-	SetShadowMapDrawArea(ShadowMapHandle, VGet(-1000.0f, -1.0f, -1000.0f), VGet(1000.0f, 1000.0f, 1000.0f));
+	shadowflag_ = false;
+	shadowmap_.Clear();
+	shadowmap_.Set(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_4096, -Vector3::Up);
+	shadowmap_.SetRange(Vector3(-1000.0f, -1.0f, -1000.0f), Vector3(1000.0f, 1000.0f, 1000.0f));
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -63,24 +65,20 @@ void World::update(float deltaTime) {
 	tempo_.update(deltaTime);
 
 	lateDrawFuncList_.clear();//描画関数のリセット
-
-	//シャドウマップに描画
-	ShadowMap_DrawSetup(ShadowMapHandle);
-	//field_->draw();
-	// アクターの描画処理
-	actors_.draw();
-	ShadowMap_DrawEnd();
 }
 
 // 描画
 void World::draw() const {
-	//使用したいシャドウマップを設定して描画
-	SetUseShadowMap(0, ShadowMapHandle);
-	camera_->draw();
-	field_->draw();
-	// アクターの描画処理
-	actors_.draw();
-	SetUseShadowMap(0, -1);
+	switch (shadowflag_)
+	{
+	case true:
+		shadowdraw();
+		break;
+	case false:
+		normaldraw();
+		break;
+	}
+
 	EffekseerManager::GetInstance().Draw();
 
 	//アクター系の遅延描画
@@ -118,7 +116,7 @@ void World::addLight(DirectionalLight light)
 
 void World::addLight(SpotLight light)
 {
-	light_.SetSpotLight(light.handlename,light.position, light.vector, light.cone_outangle, light.cone_inangle, light.range);
+	light_.SetSpotLight(light.handlename, light.position, light.vector, light.cone_outangle, light.cone_inangle, light.range);
 }
 
 void World::addLight(PointLight light)
@@ -153,7 +151,7 @@ CameraPtr World::getCamera()
 ScoreManager World::getScoreManager() const { return scoreManager_; }
 
 ScoreManager & World::getCanChangedScoreManager() {
-	return scoreManager_; 
+	return scoreManager_;
 }
 
 ScoreMap & World::getCanChangedScoreMap()
@@ -203,10 +201,37 @@ void World::end()
 	field_ = nullptr;
 	actors_.initialize();
 	listener_ = nullptr;
-	DeleteShadowMap(ShadowMapHandle);
+	shadowmap_.Clear();
 }
 
 void World::setLateDraw(std::function<void()> draw)
 {
 	lateDrawFuncList_.emplace_back(draw);
+}
+
+void World::setShadowMap(const bool flag) {
+	shadowflag_ = flag;
+}
+
+void World::normaldraw() const {
+	camera_->draw();
+	field_->draw();
+	// アクターの描画処理
+	actors_.draw();
+}
+
+void World::shadowdraw() const {
+	//シャドウマップに描画
+	shadowmap_.Begin(SHADOW_MAP_ID::SHADOW_MAP_01);
+	// アクターの描画処理
+	actors_.draw();
+	shadowmap_.End();
+
+	//使用したいシャドウマップを設定して描画
+	shadowmap_.Enable(SHADOW_MAP_ID::SHADOW_MAP_01, 0);
+	camera_->draw();
+	field_->draw();
+	// アクターの描画処理
+	actors_.draw();
+	shadowmap_.Disable(0);
 }

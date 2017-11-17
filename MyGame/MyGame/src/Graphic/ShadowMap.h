@@ -28,6 +28,8 @@ public:
 	///</summary>
 	void Delete(const SHADOW_MAP_ID& id);
 
+	void Clear();
+
 	///<summary>
 	/// 想定するライトの方向をセットする
 	///</summary>
@@ -70,7 +72,7 @@ private:
 	///</summary>
 	void NoneGrow(const SHADOW_MAP_ID& id) const;
 
-	std::unordered_map<const SHADOW_MAP_ID, int> m_shadowmaps;// シャドウマップ達を格納
+	std::unordered_map<SHADOW_MAP_ID, int> m_shadowmaps;// シャドウマップ達を格納
 
 public:
 	static const Point RESOLUTION_1024;

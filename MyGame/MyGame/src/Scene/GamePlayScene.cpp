@@ -20,6 +20,7 @@
 #include"../Actor/Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 #include"../UI/UIInclude.h"
 #include"../Input/InputChecker.h"
+#include"../Input/Keyboard.h"
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
@@ -34,6 +35,7 @@ GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw
 
 void GamePlayScene::start() {
 	world_.Initialize();
+	world_.setShadowMap(true);
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
@@ -122,6 +124,12 @@ void GamePlayScene::update(float deltaTime) {
 			next_ = SceneType::SCENE_CLEAR;
 			return;
 		}
+	}
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A)) {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_CLEAR;
+		return;
 	}
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {

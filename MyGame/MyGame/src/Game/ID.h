@@ -27,6 +27,7 @@ enum SPRITE_ID
 	WARNING,
 	RESULT,
 	JUDGE,
+	JUDGE_VISION,
 	SPOTLIGHT,
 	POINTUP_LIGHT,
 	POINTUP_AUDIENCE_RIGHT,
@@ -98,6 +99,13 @@ enum FONT_ID {
 	COUNT_FONT//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };
+
+enum SHADOW_MAP_ID {
+	SHADOW_MAP_01,
+
+	COUNT_SHADOW_MAP//全リソース数確認用キー(このキーにリソースを設定しないこと)
+};
+
 
 enum class EventMessage {
 

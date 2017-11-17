@@ -64,10 +64,15 @@ public:
 	void end();
 	
 	virtual void setLateDraw(std::function<void()> draw) override;
+	void setShadowMap(const bool flag);
 
 	// コピー禁止
 	World(const World& other) = delete;
 	World& operator = (const World& other) = delete;
+
+private:
+	void normaldraw() const;
+	void shadowdraw() const;
 private:
 	FieldPtr field_;
 	CameraPtr camera_;
@@ -88,4 +93,5 @@ private:
 	//シャドウマップ
 	ShadowMap shadowmap_;
 	int ShadowMapHandle;
+	bool shadowflag_{ false };
 };

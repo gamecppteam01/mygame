@@ -2,11 +2,11 @@
 #include "../conv/DXConverter.h"
 
 //解像度
-const Point RESOLUTION_1024 = Point(1024, 1024);
-const Point RESOLUTION_2048 = Point(2048, 2048);
-const Point RESOLUTION_4096 = Point(4096, 4096);
-const Point RESOLUTION_8192 = Point(8192, 8192);
-const Point RESOLUTION_16384 = Point(16384, 16384);
+const Point ShadowMap::RESOLUTION_1024 = Point(1024, 1024);
+const Point ShadowMap::RESOLUTION_2048 = Point(2048, 2048);
+const Point ShadowMap::RESOLUTION_4096 = Point(4096, 4096);
+const Point ShadowMap::RESOLUTION_8192 = Point(8192, 8192);
+const Point ShadowMap::RESOLUTION_16384 = Point(16384, 16384);
 
 ShadowMap::~ShadowMap()
 {
@@ -36,6 +36,11 @@ void ShadowMap::Delete(const SHADOW_MAP_ID& id)
 	m_shadowmaps.erase(id);
 }
 
+void ShadowMap::Clear()
+{
+	m_shadowmaps.clear();
+}
+
 // 想定するライトの方向をセットする
 void ShadowMap::SetLightDirection(const SHADOW_MAP_ID& id, const Vector3& lightdirection) const
 {
@@ -56,6 +61,12 @@ void ShadowMap::Enable(int slot) const
 		SetUseShadowMap(slot, shadow.second);
 }
 
+void ShadowMap::Enable(const SHADOW_MAP_ID& id, int slot) const
+{
+	SetUseShadowMap(slot, m_shadowmaps.at(id));
+}
+
+
 void ShadowMap::Disable(int slot) const
 {
 	for (auto& shadow : m_shadowmaps)
@@ -69,16 +80,16 @@ void ShadowMap::Begin() const
 		ShadowMap_DrawSetup(shadow.second);
 }
 
-// シャドウマップを終了する
-void ShadowMap::End() const
-{
-	ShadowMap_DrawEnd();
-}
-
 // 指定したシャドウマップを開始する
 void ShadowMap::Begin(const SHADOW_MAP_ID& id) const
 {
 	ShadowMap_DrawSetup(m_shadowmaps.at(id));
+}
+
+// シャドウマップを終了する
+void ShadowMap::End() const
+{
+	ShadowMap_DrawEnd();
 }
 
 // 既に指定のシャドウマップが存在していたら、スローする
