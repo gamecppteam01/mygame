@@ -38,6 +38,8 @@ void World::Initialize()
 
 	lateDrawFuncList_.clear();
 
+	if (ShadowMapHandle != -1) return;
+
 	//シャドウマップの設定
 	ShadowMapHandle = MakeShadowMap(4096, 4096);
 	SetShadowMapLightDirection(ShadowMapHandle, VGet(0.0f, -1.0f, 0.0f));

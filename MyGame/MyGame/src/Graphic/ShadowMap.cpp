@@ -1,39 +1,46 @@
 #include "ShadowMap.h"
 #include "../conv/DXConverter.h"
 
+//解像度
+const Point RESOLUTION_1024 = Point(1024, 1024);
+const Point RESOLUTION_2048 = Point(2048, 2048);
+const Point RESOLUTION_4096 = Point(4096, 4096);
+const Point RESOLUTION_8192 = Point(8192, 8192);
+const Point RESOLUTION_16384 = Point(16384, 16384);
+
 ShadowMap::~ShadowMap()
 {
-	
+
 }
 
 // シャドウマップをセットする（sizeは2のn乗で設定する）
-void ShadowMap::Set(const std::string& handlename, Point& size)
+void ShadowMap::Set(const SHADOW_MAP_ID& id, const Point& size)
 {
-	AlreadyGrow(handlename);
-	m_shadowmaps[handlename] = MakeShadowMap(size.x, size.y);
+	AlreadyGrow(id);
+	m_shadowmaps[id] = MakeShadowMap(size.x, size.y);
 }
 
 // シャドウマップをセットする（sizeは2のn乗で設定する）
-void ShadowMap::Set(const std::string& handlename, Point& size, Vector3& lightdirection)
+void ShadowMap::Set(const SHADOW_MAP_ID& id, const Point& size, Vector3& lightdirection)
 {
-	AlreadyGrow(handlename);
-	m_shadowmaps[handlename] = MakeShadowMap(size.x, size.y);
-	SetShadowMapLightDirection(m_shadowmaps[handlename], VGet(lightdirection.x, lightdirection.y, lightdirection.z));
+	AlreadyGrow(id);
+	m_shadowmaps[id] = MakeShadowMap(size.x, size.y);
+	SetShadowMapLightDirection(m_shadowmaps[id], VGet(lightdirection.x, lightdirection.y, lightdirection.z));
 }
 
 // シャドウマップを削除する
-void ShadowMap::Delete(const std::string& handlename)
+void ShadowMap::Delete(const SHADOW_MAP_ID& id)
 {
-	NoneGrow(handlename);
-	DeleteShadowMap(m_shadowmaps[handlename]);
-	m_shadowmaps.erase(handlename);
+	NoneGrow(id);
+	DeleteShadowMap(m_shadowmaps[id]);
+	m_shadowmaps.erase(id);
 }
 
 // 想定するライトの方向をセットする
-void ShadowMap::SetLightDirection(const std::string& handlename, const Vector3& lightdirection) const
+void ShadowMap::SetLightDirection(const SHADOW_MAP_ID& id, const Vector3& lightdirection) const
 {
-	NoneGrow(handlename);
-	SetShadowMapLightDirection(m_shadowmaps.at(handlename), VGet(lightdirection.x, lightdirection.y, lightdirection.z));
+	NoneGrow(id);
+	SetShadowMapLightDirection(m_shadowmaps.at(id), VGet(lightdirection.x, lightdirection.y, lightdirection.z));
 }
 
 // シャドウマップに描画する範囲を設定する
@@ -68,20 +75,26 @@ void ShadowMap::End() const
 	ShadowMap_DrawEnd();
 }
 
-// 既に指定のシャドウマップが存在していたら、スローする
-void ShadowMap::AlreadyGrow(const std::string& handlename) const
+// 指定したシャドウマップを開始する
+void ShadowMap::Begin(const SHADOW_MAP_ID& id) const
 {
-	if (m_shadowmaps.find(handlename) != m_shadowmaps.end())
+	ShadowMap_DrawSetup(m_shadowmaps.at(id));
+}
+
+// 既に指定のシャドウマップが存在していたら、スローする
+void ShadowMap::AlreadyGrow(const SHADOW_MAP_ID& id) const
+{
+	if (m_shadowmaps.find(id) != m_shadowmaps.end())
 	{
-		throw std::string(handlename + "シャドウマップをもうひとつ生成しようとしました");
+		throw std::string(id + "シャドウマップをもうひとつ生成しようとしました");
 	}
 }
 
 // 指定のシャドウマップが存在していなければ、スローする
-void ShadowMap::NoneGrow(const std::string& handlename) const
+void ShadowMap::NoneGrow(const SHADOW_MAP_ID& id) const
 {
-	if (m_shadowmaps.find(handlename) == m_shadowmaps.end())
+	if (m_shadowmaps.find(id) == m_shadowmaps.end())
 	{
-		throw std::string(handlename + "シャドウマップは存在していません");
+		throw std::string(id + "シャドウマップは存在していません");
 	}
 }

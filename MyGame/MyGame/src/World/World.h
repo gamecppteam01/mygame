@@ -11,6 +11,7 @@
 #include"../ScoreManager/ScoreManager.h"
 #include"../ScoreManager/ScoreMap.h"
 #include"../Sound/TempoManager.h"
+#include"../Graphic/ShadowMap.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -84,6 +85,7 @@ private:
 	TempoManager tempo_;
 	// イベントリスナー
 	std::function<void(EventMessage, void*)> listener_;
-	//シャドウマップハンドル
+	//シャドウマップ
+	ShadowMap shadowmap_;
 	int ShadowMapHandle;
 };
