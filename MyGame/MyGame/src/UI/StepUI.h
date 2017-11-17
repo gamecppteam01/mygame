@@ -5,12 +5,10 @@
 
 class StepUI : public UI {
 public:
-	StepUI(const SPRITE_ID& id,const Vector2& position
-		,const Vector2& origin,float alpha,const Vector2& scale);
+	StepUI(const SPRITE_ID& id,const Vector2& position);
 	void initialize() override;
 	void update(float deltaTime) override;
 	void draw() const override;
-	void end();
 
 private:
 	//ステップUIの座標

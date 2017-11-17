@@ -56,7 +56,9 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "SpotLight.png", SPRITE_ID::SPOTLIGHT);
 	Sprite::GetInstance().Load(defaultPath + "MiniMapScreen.png", SPRITE_ID::WARNING);
 	Sprite::GetInstance().Load(defaultPath + "titlescreen.png", SPRITE_ID::TITLE_SCREEN);
-	
+	Sprite::GetInstance().Load(defaultPath + "pointUp_side.png", SPRITE_ID::POINTUP_LIGHT);
+	Sprite::GetInstance().Load(defaultPath + "audience_left.png", SPRITE_ID::POINTUP_AUDIENCE_LEFT);
+	Sprite::GetInstance().Load(defaultPath + "audience_right.png", SPRITE_ID::POINTUP_AUDIENCE_RIGHT);
 }
 
 void LoadingScene::LoadModel()

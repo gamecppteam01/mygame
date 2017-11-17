@@ -17,9 +17,7 @@ public:
 	//描画
 	void draw()const override;
 	//ステップ成功か否か
-	bool is_StepSuccess();
-	//ステップの判定
-	void step_Decision();
+	bool is_StepSuccess() const;
 private:
 	IWorld* world_;
 	std::weak_ptr<Player> player_;
