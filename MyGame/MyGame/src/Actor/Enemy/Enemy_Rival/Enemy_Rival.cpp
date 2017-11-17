@@ -76,7 +76,7 @@ void Enemy_Rival::JustStep() {
 	//通常時は6拍子毎
 	int rhythmTime = 6;
 	if (rhythmTimeCount_ < rhythmTime) {
-		if (state_ == Enemy_State::Normal)return;
+		//if (state_ == Enemy_State::Normal)return;
 		//攻撃するかを決定する
 		chooseStepIsAttack();
 		return;
@@ -180,6 +180,8 @@ void Enemy_Rival::updateNormal(float deltaTime)
 	Vector3 vel = (targetPos_ - centerPosition_);
 	vel.y = 0.0f;
 	centerPosition_ += vel.Normalize()*movePower*answer;
+
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	//ポイントに近づいたら次のポイントに移動
 	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(targetPos_.x,targetPos_.z)) <= 10.0f)setNextPosition();
@@ -314,11 +316,6 @@ void Enemy_Rival::to_Track()
 {
 }
 
-void Enemy_Rival::to_Attack(BaseEnemy::Enemy_Animation anim)
-{
-	stepTime_ = 1.5f;
-
-}
 
 int Enemy_Rival::getNearestPoint(const Vector3 & position)
 {
@@ -465,15 +462,18 @@ void Enemy_Rival::chooseStepAttackTopPlayer(const ActorPtr & player,const Vector
 bool Enemy_Rival::chooseStepIsAttack()
 {
 	//移動先を決定する
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
+	if(state_!=Enemy_State::Normal)targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
 
 	bool isAttack = false;
 	float nearest = Vector3::Distance(centerPosition_, players_.front().lock()->position());
 	for (const auto& p : players_) {
 		//範囲内に選手がいなければ次へ
-		if (MathHelperSupport::MathDistance_Segment_Point(centerPosition_, targetPos_, p.lock()->position()) > attackDistance)continue;
+		if (
+			(MathHelperSupport::MathDistance_Segment_Point(centerPosition_, targetPos_, p.lock()->position()) > attackDistance)&&//進行方向に敵がいない
+			(Vector3::Distance(p.lock()->position(),centerPosition_)>attackDistance)//攻撃範囲内に敵がいない
+			)continue;
 		float dist = Vector3::Distance(centerPosition_, p.lock()->position());
-		if (dist <= nearest&&prevHitActorNumber_ != p.lock()->getCharacterNumber()) {
+		if (dist <= attackDistance&&prevHitActorNumber_ != p.lock()->getCharacterNumber()) {
 			nearest = dist;
 			attackTarget_ = p;
 			prevHitActorNumber_ = attackTarget_.lock()->getCharacterNumber();

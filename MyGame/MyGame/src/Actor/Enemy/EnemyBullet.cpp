@@ -47,6 +47,15 @@ void EnemyBullet::onCollide(Actor & other)
 		//自身も跳ね返る
 		hitOther(-bound);
 		//velocity_ = -bound;
+		int keysub;
+		if (enemy_->attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == enemy_->attackTarget_.lock()->getCharacterNumber();
+		if (enemy_->state_ == BaseEnemy::Enemy_State::Attack && (keysub == 0 || keysub == -1)) {
+			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
+			return;
+		}
+		enemy_->setCountDown();
+
 	}
 	if (other.getName() == "PlayerBullet") {
 		Vector3 bound = mathBound(other);
@@ -55,7 +64,34 @@ void EnemyBullet::onCollide(Actor & other)
 		//自身も跳ね返る
 		hitOther(-bound);
 		//velocity_ = -bound;
+		int keysub;
+		if (enemy_->attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == enemy_->attackTarget_.lock()->getCharacterNumber();
+		if (enemy_->state_ == BaseEnemy::Enemy_State::Attack && (keysub == 0 || keysub == 1)) {
+			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
+			return;
+		}
+		enemy_->setCountDown();
 	}
+	else if (other.getName() == "Enemy") {
+		//自分自身なら判定しない
+		if (static_cast<BaseEnemy*>(&other)->getPlayerNumber() == enemy_->playerNumber_) return;
+
+		Vector3 bound = mathBound(other);
+		//相手を跳ね返す
+		static_cast<BaseEnemy*>(&other)->hitOther(bound);
+		//自身も跳ね返る
+		hitOther(-bound);
+		int keysub;
+		if (enemy_->attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == enemy_->attackTarget_.lock()->getCharacterNumber();
+		if (enemy_->state_ == BaseEnemy::Enemy_State::Attack && (keysub == 0 || keysub == -1)) {
+			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
+			return;
+		}
+		//setCountDown();
+	}
+
 	if (other.getName() == "EnemyBullet") {
 		if (static_cast<EnemyBullet*>(&other)->enemy_->getPlayerNumber() == enemy_->getPlayerNumber())return;
 
@@ -66,7 +102,14 @@ void EnemyBullet::onCollide(Actor & other)
 		hitOther(-bound);
 
 		//攻撃状態じゃなかったらカウントを進める
-		if (enemy_->getEnemyState() == BaseEnemy::Enemy_State::Attack)return;
+		int keysub;
+		if (enemy_->attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == enemy_->attackTarget_.lock()->getCharacterNumber();
+		if (enemy_->state_ == BaseEnemy::Enemy_State::Attack && (keysub == 0 || keysub == 1)) {
+			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
+			return;
+		}
+
 		enemy_->setCountDown();
 	}
 

@@ -2,6 +2,9 @@ Library/
 DxLib_VC/
 Debug/
 Release/
+sivira/
+yukari/
+shall_we_dance_model/
 .vs/
 # Git‚ÌŠÇ—‰º‚©‚çŠO‚·Šg’£q
 *.vcxproj
@@ -15,3 +18,4 @@ Release/
 
 
 Log.txt
+stage1a_bgm.wav

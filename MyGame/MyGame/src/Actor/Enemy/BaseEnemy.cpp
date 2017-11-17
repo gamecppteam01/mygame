@@ -20,7 +20,7 @@ static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
 //基本的なダウン値
-static const int defDownCount = 2;
+static const int defDownCount = 1;
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
@@ -118,7 +118,11 @@ void BaseEnemy::onCollide(Actor & other)
 
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack&&other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber()) {
+		//プレイヤーとプレイヤー弾は必ず連番であるため、プレイヤー+1は弾
+		int keysub;
+		if (attackTarget_.expired())keysub = 2;
+		else keysub=other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack&&(keysub==0|| keysub==-1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -133,7 +137,11 @@ void BaseEnemy::onCollide(Actor & other)
 		else setBoundPower(3);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack) {
+		//プレイヤーとプレイヤー弾は必ず連番であるため、プレイヤー弾-1はプレイヤー
+		int keysub;
+		if (attackTarget_.expired())keysub = 2;
+		else keysub=other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack&&(keysub==0||keysub==1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -148,7 +156,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<BaseEnemy*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack) {
+		int keysub;
+		if (attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack && (keysub == 0 || keysub == -1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -161,7 +172,10 @@ void BaseEnemy::onCollide(Actor & other)
 		static_cast<EnemyBullet*>(&other)->hitOther(bound);
 		//自身も跳ね返る
 		hitOther(-bound);
-		if (state_ == Enemy_State::Attack) {
+		int keysub;
+		if (attackTarget_.expired())keysub = 2;
+		else keysub = other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack && (keysub == 0 || keysub == 1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -417,11 +431,11 @@ void BaseEnemy::to_Down()
 
 void BaseEnemy::updateNormal(float deltaTime)
 {
-	float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
-	speedEaseTimer_ += deltaTime;
-	float time = speedEaseTimer_ / maxEaseTime;
-	float ease = Easing::EaseInOutCirc(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
-	float normal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+	//float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+	//speedEaseTimer_ += deltaTime;
+	//float time = speedEaseTimer_ / maxEaseTime;
+	//float ease = Easing::EaseInOutCirc(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
+	//float normal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	//searchTarget(deltaTime);

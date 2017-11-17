@@ -18,7 +18,6 @@ private:
 	// •`‰æ
 	virtual void draw() override {
 		sceneManager_.draw();
-		EffekseerManager::GetInstance().Draw();
 	}
 	virtual void frameEnd()override {
 		sceneManager_.checkIsEnd();

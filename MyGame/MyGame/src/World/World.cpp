@@ -1,6 +1,7 @@
 #include "World.h"
 #include"../Field/Field.h"
 #include"../Camera/OverLookingCamera.h"
+#include"../Graphic/EffekseerManager.h"
 
 // コンストラクタ
 World::World() :
@@ -18,6 +19,7 @@ World::World() :
 World::~World()
 {
 	lateDrawFuncList_.clear();
+	end();
 }
 
 //初期化
@@ -77,6 +79,7 @@ void World::draw() const {
 	// アクターの描画処理
 	actors_.draw();
 	SetUseShadowMap(0, -1);
+	EffekseerManager::GetInstance().Draw();
 
 	//アクター系の遅延描画
 	for (auto& d : lateDrawFuncList_) {

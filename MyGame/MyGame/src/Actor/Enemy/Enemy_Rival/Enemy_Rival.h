@@ -27,7 +27,6 @@ private:
 	virtual void updateTrack(float deltaTime)override;
 	virtual void to_Normal()override;
 	virtual void to_Track()override;
-	virtual void to_Attack(BaseEnemy::Enemy_Animation anim)override;
 	//周回ポイント一覧のうち最も近い点を求める
 	int getNearestPoint(const Vector3 & position);
 

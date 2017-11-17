@@ -82,7 +82,10 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::EFFECT_TEST, defaultPath + "testeffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_EFFECT, defaultPath + "Spin.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_SUCCESS_EFFECT, defaultPath + "stepSuccess.efk");
-	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_EFFECT, defaultPath + "pointUP.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_EFFECT, defaultPath + "pueffect/pointUp_blow.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_BEGIN_EFFECT, defaultPath + "pueffect/pointUp_fadeIn.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_LOOP_EFFECT, defaultPath + "pueffect/pointUp.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_END_EFFECT, defaultPath + "pueffect/pointUp_fadeOut.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::COL_EFFECT, defaultPath + "collision.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_START_EFFECT, defaultPath + "charge_Start.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_EFFECT, defaultPath + "charge.efk");

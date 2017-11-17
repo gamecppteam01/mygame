@@ -6,6 +6,7 @@
 class EnemyBullet;
 
 class BaseEnemy :public Enemy {
+	friend class EnemyBullet;
 public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class Enemy_Animation {
@@ -161,7 +162,7 @@ protected:
 	//ポジション追跡時の移動の勢い
 	const float movePower{ 0.7f };
 	//ダウンする時間
-	const float downTime{ 7.0f };
+	const float downTime{ 0.1f };
 	//男と女の距離
 	const Vector3 bulletDistance{ 0.0f,0.0f,6.0f };
 

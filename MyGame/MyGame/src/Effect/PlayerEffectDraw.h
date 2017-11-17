@@ -14,4 +14,11 @@ private:
 	Player* player_;
 	int key_;
 
+	float time_{ 0.0f };
+
+	int beginKey_{ -1 };
+	int loopKey_{ -1 };
+	int endKey_{ -1 };
+
+	int playState_{ 0 };
 };
