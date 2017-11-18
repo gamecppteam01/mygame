@@ -38,8 +38,6 @@ static const float boundPower = 15.0f;
 static const float downTime = 7.0f;
 //移動速度
 static const float movePower = 0.5f;
-//よろけから回復するまでの時間
-static const float defStumbleResurrectTime = 0.5f;
 //ステップ回数によるよろけのチェック周期
 static const int defStepCount = 3;
 
@@ -118,6 +116,7 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
 
 	//stumbleDirection_ = -velocity;
+	stumbleResurrectTime_ = 0.5f;
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
 }
 
@@ -366,7 +365,13 @@ void Player::idle_Update(float deltaTime)
 		return;
 	}
 	if (isChangeStep()) {
-		if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
+		if (isJustTiming()) {
+			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
+		}
+		else {
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+
+		}
 		return;
 	}
 	upVelocity_ -= upVelocity_*0.5f;
@@ -395,7 +400,13 @@ void Player::move_Update(float deltaTime)
 	}
 
 	if (isChangeStep()) {
-		if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
+		if (isJustTiming()) {
+			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
+		}
+		else {
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+
+		}
 		return;
 	}
 
@@ -540,7 +551,7 @@ void Player::stumble_Update(float deltaTime)
 	//よろけ修正方向を向いたら
 	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.2f) {
 		stumbleRegistTimer_ += deltaTime;
-		if (stumbleRegistTimer_ >= defStumbleResurrectTime) {
+		if (stumbleRegistTimer_ >= stumbleResurrectTime_) {
 			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
 			return;
 		}

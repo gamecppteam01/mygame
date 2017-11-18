@@ -99,6 +99,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,6 +114,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -175,6 +177,7 @@
     <ClCompile Include="src\Actor\Enemy\Enemy_Power.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy_Rival\Enemy_Rival.cpp" />
+    <ClCompile Include="src\Actor\Enemy\Enemy_Round\Enemy_Round.cpp" />
     <ClCompile Include="src\Actor\Enemy\NormalEnemy.cpp" />
     <ClCompile Include="src\Actor\Judge\JudgeBase.cpp" />
     <ClCompile Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.cpp" />
@@ -287,6 +290,7 @@
     <ClInclude Include="src\Actor\Enemy\Enemy_Power.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy_Quick\Enemy_Quick.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy_Rival\Enemy_Rival.h" />
+    <ClInclude Include="src\Actor\Enemy\Enemy_Round\Enemy_Round.h" />
     <ClInclude Include="src\Actor\Enemy\NormalEnemy.h" />
     <ClInclude Include="src\Actor\Judge\JudgeBase.h" />
     <ClInclude Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.h" />

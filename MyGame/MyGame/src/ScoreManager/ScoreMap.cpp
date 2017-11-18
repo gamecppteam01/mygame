@@ -8,6 +8,19 @@
 
 ScoreMap::ScoreMap(IWorld * world):world_(world)
 {
+	//とりあえずスコアポイントの周回分を入れておく
+	roundPoints_.push_back(points_.getElement(0, 0).position_);
+	roundPoints_.push_back(points_.getElement(1, 0).position_);
+	roundPoints_.push_back(points_.getElement(2, 0).position_);
+	roundPoints_.push_back(points_.getElement(3, 0).position_);
+	roundPoints_.push_back(points_.getElement(3, 1).position_);
+	roundPoints_.push_back(points_.getElement(3, 2).position_);
+	roundPoints_.push_back(points_.getElement(3, 3).position_);
+	roundPoints_.push_back(points_.getElement(2, 3).position_);
+	roundPoints_.push_back(points_.getElement(1, 3).position_);
+	roundPoints_.push_back(points_.getElement(0, 3).position_);
+	roundPoints_.push_back(points_.getElement(0, 2).position_);
+	roundPoints_.push_back(points_.getElement(0, 1).position_);
 }
 
 ScoreMap::~ScoreMap()
@@ -44,7 +57,7 @@ void ScoreMap::mathScoreRate()
 	points_.loopElement([this](ScorePoint& s) {
 		float nextRate = 1.0f;
 		for (auto& j : judges_) {
-			if (j->Judgement(s.position_)) {
+			if (j.lock()->Judgement(s.position_)) {
 				nextRate += 0.2f;
 			}
 		}
@@ -168,4 +181,9 @@ std::vector<Vector3> ScoreMap::getRoundPoint()
 	}
 
 	return result;
+}
+
+std::vector<Vector3> ScoreMap::getEnemy_Round_CrawlPoint()
+{
+	return roundPoints_;
 }

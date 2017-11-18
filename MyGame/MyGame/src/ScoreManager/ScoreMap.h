@@ -35,7 +35,11 @@ public:
 
 	Vector3 getNearestBonusPoint(const Vector3& point);
 
+	//スコアポイントの外周を取得
 	std::vector<Vector3> getRoundPoint();
+
+	//Enemy_Round用の巡回ポイント取得
+	std::vector<Vector3> getEnemy_Round_CrawlPoint();
 private:
 	//倍率検索
 	void mathScoreRate();
@@ -52,8 +56,12 @@ private:
 		ScorePoint{ Vector3(-200.0f,10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,	10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,		10.0f,20.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,	10.0f,20.0f)*FIELD_SCALE },
 		ScorePoint{ Vector3(-200.0f,10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(-40.0f,	10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(40.0f,		10.0f,100.0f)*FIELD_SCALE }	,ScorePoint{ Vector3(200.0f,	10.0f,100.0f)*FIELD_SCALE }
 	};
+
+	//Enemy_Roundの周回用ポイント
+	std::vector<Vector3> roundPoints_;
+
 	//審査員リスト
-	std::vector<std::shared_ptr<JudgeBase>> judges_;
+	std::vector<std::weak_ptr<JudgeBase>> judges_;
 	std::shared_ptr<Judgement_SpotLight> spotLight_;
 
 };

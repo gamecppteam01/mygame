@@ -248,6 +248,10 @@ private:
 	//UŒ‚‘ÎÛ
 	ActorPtr attackTarget_;
 
+	//‚æ‚ë‚¯‚©‚ç‰ñ•œ‚·‚é‚Ü‚Å‚ÌŠÔ
+	float stumbleResurrectTime_{ 0.5f };
+
+
 	//—ŠÖ˜A
 	//—–{‘Ì
 	std::shared_ptr<PlayerBullet> bullet_{};
