@@ -8,7 +8,7 @@
 #include"Step_Type.h"
 #include"GyroRotateChecker.h"
 #include"../../Define.h"
-
+#include"../../Sound/MusicScoreManager.h"
 class PlayerBullet;
 
 class Player :public Actor {
@@ -263,6 +263,8 @@ private:
 	std::array<float,3> effectSize_{ 0.0f,0.0f,0.0f };
 	//ジャイロの回転チェッククラス
 	GyroRotateChecker gyroCheck_;
+	//譜面管理クラス
+	MusicScoreManager musicScore_;
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerEndModeFunc_;

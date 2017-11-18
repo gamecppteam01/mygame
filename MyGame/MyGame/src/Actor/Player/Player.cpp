@@ -51,7 +51,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_()
+	gyroCheck_(), musicScore_()
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -94,7 +94,11 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerEndModeFunc_[Player_State::KnockBack] = [this]() {end_KnockBackMode(); };
 	playerEndModeFunc_[Player_State::Down] = [this]() {		end_DownMode(); };
 	playerEndModeFunc_[Player_State::Stumble] = [this]() {		end_StumbleMode(); };
-	
+
+	musicScore_.SetWorld(world);
+	musicScore_.SetSize(Vector2{ 250.0f,20.0f });
+	musicScore_.SetMeasure(3.f);
+
 }
 
 void Player::addVelocity(const Vector3 & velocity)
@@ -179,6 +183,7 @@ void Player::onUpdate(float deltaTime)
 	effectSize_[0] = 3.0f - (tempo+beat);
 	effectSize_[0] = effectSize_[0] / 3.f;
 
+	musicScore_.Update(deltaTime);
 }
 
 void Player::onDraw() const
@@ -194,6 +199,7 @@ void Player::onDraw() const
 	}
 
 	world_->setLateDraw([this] {
+		
 		Vector2 origin = Vector2(0.5f, 0.5f);
 		float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
 		if (isJustTiming()) {
@@ -224,10 +230,13 @@ void Player::onDraw() const
 		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[2]*64.0f, origin, 0.0f, 1.0f);
 		SetDrawBright(255, 255, 255); 
 		*/
-
-		DebugDraw::DebugDrawFormatString(100, 200, GetColor(255, 255, 255), "%f", getPlayerScoreRate());
 	}
 	);
+	world_->setLateDraw([this] {
+		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
+		musicScore_.Draw(position_);
+	}
+	, false);
 
 }
 

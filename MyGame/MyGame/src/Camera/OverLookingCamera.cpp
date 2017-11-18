@@ -6,7 +6,7 @@
 //‘ÎÛ‚©‚çŒã‚ë‘¤‚É—£‚ê‚é‹——£
 static const float backwardLength = 3.0f;
 //‘ÎÛ‚©‚çã‘¤‚É—£‚ê‚é‹——£
-static const float upLength = 100.0f;
+static const float upLength = 150.0f;
 
 OverLookingCamera::OverLookingCamera(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Actor(world, name, position, body), target_(nullptr), targetTranslate_(Vector3::Zero)

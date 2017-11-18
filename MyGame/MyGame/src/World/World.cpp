@@ -20,6 +20,7 @@ World::World() :
 World::~World()
 {
 	lateDrawFuncList_.clear();
+	lateDrawFuncListAfterUI_.clear();
 	end();
 }
 
@@ -38,6 +39,7 @@ void World::Initialize()
 	listener_ = [](EventMessage, void*) {};
 
 	lateDrawFuncList_.clear();
+	lateDrawFuncListAfterUI_.clear();
 
 	//if (ShadowMapHandle != -1) return;
 
@@ -65,6 +67,8 @@ void World::update(float deltaTime) {
 	tempo_.update(deltaTime);
 
 	lateDrawFuncList_.clear();//ï`âÊä÷êîÇÃÉäÉZÉbÉg
+	lateDrawFuncListAfterUI_.clear();
+
 }
 
 // ï`âÊ
@@ -86,6 +90,10 @@ void World::draw() const {
 		d();
 	}
 	uiManager_.draw();
+	for (auto& d : lateDrawFuncListAfterUI_) {
+		d();
+	}
+
 	tempo_.draw();
 
 }
@@ -204,9 +212,10 @@ void World::end()
 	shadowmap_.Clear();
 }
 
-void World::setLateDraw(std::function<void()> draw)
+void World::setLateDraw(std::function<void()> draw, bool isBeforeUI)
 {
-	lateDrawFuncList_.emplace_back(draw);
+	if (isBeforeUI)lateDrawFuncList_.emplace_back(draw);
+	else lateDrawFuncListAfterUI_.emplace_back(draw);
 }
 
 void World::setShadowMap(const bool flag) {

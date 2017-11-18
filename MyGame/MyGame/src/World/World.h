@@ -63,7 +63,7 @@ public:
 	void addEventMessageListener(std::function<void(EventMessage, void*)> listener);
 	void end();
 	
-	virtual void setLateDraw(std::function<void()> draw) override;
+	virtual void setLateDraw(std::function<void()> draw, bool isBeforeUI = true) override;
 	void setShadowMap(const bool flag);
 
 	// コピー禁止
@@ -86,6 +86,7 @@ private:
 	StepTimer stepTimer_;
 
 	std::list<std::function<void()>> lateDrawFuncList_;
+	std::list<std::function<void()>> lateDrawFuncListAfterUI_;
 
 	TempoManager tempo_;
 	// イベントリスナー
