@@ -59,7 +59,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "pointUp_side.png", SPRITE_ID::POINTUP_LIGHT);
 	Sprite::GetInstance().Load(defaultPath + "audience_left.png", SPRITE_ID::POINTUP_AUDIENCE_LEFT);
 	Sprite::GetInstance().Load(defaultPath + "audience_right.png", SPRITE_ID::POINTUP_AUDIENCE_RIGHT);
-	Sprite::GetInstance().Load(defaultPath + "Effect/circleeffect2.png", SPRITE_ID::CIRCLE_EFFET);
+	Sprite::GetInstance().Load(defaultPath + "Effect/justcircle.png", SPRITE_ID::CIRCLE_EFFECT);
 }
 
 void LoadingScene::LoadModel()

@@ -234,7 +234,7 @@ void Player::onDraw() const
 	);
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
-		musicScore_.Draw(position_);
+		musicScore_.Draw(centerPosition_);
 	}
 	, false);
 

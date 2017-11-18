@@ -74,46 +74,51 @@ void MusicScoreManager::Draw(const Vector2& position) const
 
 void MusicScoreManager::Draw(const Vector3& position) const
 {
-	int handle = Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT);
+	Vector3 pos = ConvWorldPosToScreenPos(position);
 
-	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::CIRCLE_EFFECT);
-
-	float notes = std::fmodf(currentMeasure_, 3);
-	float timer = notes / 3.f;
-
-	float angle = MathHelper::Lerp(0.0f, 360.0f, timer);
-	
-	float x1, y1, x2, y2, x3, y3, x4, y4;
-	x1 = size.x / 2;
-	y1 = 0.0f;
-	y2 = 0.0f;
-
-	if (angle <= 45.0f) {
-		x2 = MathHelper::Lerp(size.x / 2, size.x, angle / 45.0f);
-		x3 = size.x / 2;
-		y3 = size.y / 2;
-		x4 = size.x / 2;
-		y4 = size.y / 2;
-	}
-	else if (angle <= 135.0f) {
-		x2 = size.x;
-		x3 = size.x;
-		y3 = MathHelper::Lerp(0.0f, size.y, (angle - 45.0f) / 90.0f);
-		x4 = size.x / 2;
-		y4 = size.y / 2;
-	}
-	//else if (angle <= 180.0f) {
-	else{
-		x2 = size.x;
-		x3 = size.x;
-		y3 = size.y;
-		x4 = size.x / 2;
-		y4 = size.y / 2;
-
-	
+	DrawCircleGauge(pos.x, pos.y, std::fmodf(currentMeasure_, 3) / 3 * 100.f, Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT));
 
 
-	}
+	//int handle = Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT);
+
+	//Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::CIRCLE_EFFECT);
+
+	//float notes = std::fmodf(currentMeasure_, 3);
+	//float timer = notes / 3.f;
+
+	//float angle = MathHelper::Lerp(0.0f, 360.0f, timer);
+	//
+	//float x1, y1, x2, y2, x3, y3, x4, y4;
+	//x1 = size.x / 2;
+	//y1 = 0.0f;
+	//y2 = 0.0f;
+
+	//if (angle <= 45.0f) {
+	//	x2 = MathHelper::Lerp(size.x / 2, size.x, angle / 45.0f);
+	//	x3 = size.x / 2;
+	//	y3 = size.y / 2;
+	//	x4 = size.x / 2;
+	//	y4 = size.y / 2;
+	//}
+	//else if (angle <= 135.0f) {
+	//	x2 = size.x;
+	//	x3 = size.x;
+	//	y3 = MathHelper::Lerp(0.0f, size.y, (angle - 45.0f) / 90.0f);
+	//	x4 = size.x / 2;
+	//	y4 = size.y / 2;
+	//}
+	////else if (angle <= 180.0f) {
+	//else{
+	//	x2 = size.x;
+	//	x3 = size.x;
+	//	y3 = size.y;
+	//	x4 = size.x / 2;
+	//	y4 = size.y / 2;
+
+	//
+
+
+	//}
+	////DrawModiBillboard3D(position, x1, y1, x2, y2, x3, y3, x4, y4, handle, TRUE);
 	//DrawModiBillboard3D(position, x1, y1, x2, y2, x3, y3, x4, y4, handle, TRUE);
-	DrawModiBillboard3D(position, x1, y1, x2, y2, x3, y3, x4, y4, handle, TRUE);
 }
