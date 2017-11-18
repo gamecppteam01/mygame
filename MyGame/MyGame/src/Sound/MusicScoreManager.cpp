@@ -76,8 +76,13 @@ void MusicScoreManager::Draw(const Vector3& position) const
 {
 	Vector3 pos = ConvWorldPosToScreenPos(position);
 
-	DrawCircleGauge(pos.x, pos.y, std::fmodf(currentMeasure_, 3) / 3 * 100.f, Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT));
+	float percent = std::fmodf(currentMeasure_, 3) / 3 * 100.f;
+	if (percent >= 66.6f)SetDrawBright(200, 130, 0);
+	DrawCircleGauge(pos.x, pos.y, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
+	SetDrawBright(255, 255, 255);
 
+	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
+	DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
 
 	//int handle = Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT);
 

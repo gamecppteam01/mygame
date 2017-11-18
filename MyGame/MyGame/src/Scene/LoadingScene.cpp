@@ -60,6 +60,10 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "audience_left.png", SPRITE_ID::POINTUP_AUDIENCE_LEFT);
 	Sprite::GetInstance().Load(defaultPath + "audience_right.png", SPRITE_ID::POINTUP_AUDIENCE_RIGHT);
 	Sprite::GetInstance().Load(defaultPath + "Effect/justcircle.png", SPRITE_ID::CIRCLE_EFFECT);
+	Sprite::GetInstance().Load(defaultPath + "stepgauge.png", SPRITE_ID::JUST_GAUGE);
+	Sprite::GetInstance().Load(defaultPath + "stepgaugeframe.png", SPRITE_ID::JUST_GAUGE_FRAME);
+	
+		
 }
 
 void LoadingScene::LoadModel()
