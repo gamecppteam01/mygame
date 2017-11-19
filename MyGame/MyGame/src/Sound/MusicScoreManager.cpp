@@ -31,17 +31,22 @@ void MusicScoreManager::Initialize()
 
 void MusicScoreManager::Update(float deltaTime)
 {
+	currentMeasure_ = std::fmodf(world_->getCanChangedTempoManager().getMeasureCount(),world_->getCanChangedTempoManager().getMusicCount())*world_->getCanChangedTempoManager().getBeat();//何小節目か
+	currentMeasure_ += std::fmodf(world_->getCanChangedTempoManager().getBeatCount(),world_->getCanChangedTempoManager().getBeat());//拍数
+	currentMeasure_ += world_->getCanChangedTempoManager().getTempoCount();//1拍内での今の位置
+
+	/*
 	//currentBeatには何拍目のどのあたりにいるかが入る
 	currentMeasure_ = world_->getCanChangedTempoManager().getBeatCount();//何拍目か
 	currentBeat_ = currentMeasure_;
 	currentMeasure_ += world_->getCanChangedTempoManager().getTempoCount();//1拍内での今の位置
-	
+	*/
 	
 }
 
 void MusicScoreManager::Draw(const Vector2& position) const
 {
-	DrawCircleGauge(position.x, position.y, std::fmodf(currentMeasure_, 3) / 3*100.f, Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT));
+	DrawCircleGauge(position.x, position.y, std::fmodf(currentMeasure_, world_->getCanChangedTempoManager().getMusicCount()) / world_->getCanChangedTempoManager().getMusicCount()*100.f, Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT));
 	//DrawGraph(position.x, position.y, Sprite::GetInstance().GetHandle(SPRITE_ID::BUTTON_A), TRUE);
 	/*
 	float right = position.x + scoreSize_.x;//右端
@@ -76,8 +81,8 @@ void MusicScoreManager::Draw(const Vector3& position) const
 {
 	Vector3 pos = ConvWorldPosToScreenPos(position);
 
-	float percent = std::fmodf(currentMeasure_, 3) / 3 * 100.f;
-	if (percent >= 66.6f)SetDrawBright(200, 130, 0);
+	float percent = currentMeasure_/(world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
+	if (percent >= 75.0f)SetDrawBright(200, 130, 0);//4小節毎に判定
 	DrawCircleGauge(pos.x, pos.y, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
 	SetDrawBright(255, 255, 255);
 

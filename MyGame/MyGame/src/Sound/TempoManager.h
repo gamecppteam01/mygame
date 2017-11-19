@@ -20,7 +20,7 @@ public:
 		justStepTimer_.Initialize();
 	}
 	//楽曲を設定する
-	void setMusic(const std::string& filename,float bpm) {
+	void setMusic(const std::string& filename,float bpm,int beat=3,int musicCount=4) {
 		//前の曲を消す
 		DeleteSoundMem(soundHandle_);
 
@@ -36,6 +36,7 @@ public:
 		//楽曲時間を取得する
 		soundSize_ = GetSoundTotalSample(soundHandle_);
 
+		beat_ = beat;
 	}
 	//楽曲を再生する
 	void startMusic() {
@@ -58,7 +59,7 @@ public:
 		float bpmSample = fmodf(sample_, oneTimeSample);//1判定毎に区切る
 		tempoCount_ = bpmSample / oneTimeSample;
 
-		if (tempoCount_ > 0.5f) {
+		if (getMeasureCount() % musicCount_ == 0) {
 			justStepTimer_.Initialize();
 			justStepTimer_.Add([&] {
 				for (auto& act : actors_) {
@@ -68,7 +69,7 @@ public:
 			});
 		}
 		//1拍目以外はジャストを飛ばさない
-		if (getBeatCount() % 3 != 0)return;
+		if (getMeasureCount() % musicCount_ != musicCount_-1)return;
 		if (tempoCount_ < 0.1f) {
 			justStepTimer_.Action();
 		}
@@ -76,7 +77,7 @@ public:
 		//float bpmSample = timeSample / (bpm_ / 60.0f);
 		//float frameSample = bpmSample / sps;
 	}
-	//テンポを取得する
+	//現在拍での割合を取得する
 	float getTempoCount() const{
 		return tempoCount_;
 	}
@@ -87,8 +88,12 @@ public:
 		int result = max((int)bpmSample, 0);
 		return result;
 	}
+	//現在何小節目かを返す
+	int getMeasureCount()const {
+		return getBeatCount() / beat_;
+	}
 	void draw()const {
-		if(getBeatCount() % 3 == 0)return;
+		if(getBeatCount() % beat_ == 0)return;
 		DebugDraw::DebugDrawCircle(400, 400, 30, GetColor(255, 255, 255));
 	}
 	//再生が終了したか
@@ -104,6 +109,14 @@ public:
 	float getOneBeatTime()const {
 		return 60.0f / bpm_;
 	}
+	//何拍子かを返す
+	int getBeat()const {
+		return beat_;
+	}
+	//何小節毎で区切るか
+	int getMusicCount()const {
+		return musicCount_;
+	}
 private:
 	//サウンドリソースのファイルパス(一応)
 	std::string fileName_;
@@ -113,6 +126,11 @@ private:
 	float bpm_;
 	//現在のサンプル数
 	int sample_;
+
+	//1小節あたりの拍数
+	int beat_{ 3 };
+	//何小節区切りにするか
+	int musicCount_{ 4 };
 	//0～255の範囲でテンポを取るタイマー
 	float tempoCount_;
 	MethodTimer justStepTimer_;

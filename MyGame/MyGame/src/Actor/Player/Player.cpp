@@ -818,5 +818,5 @@ Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 bool Player::isJustTiming() const
 {
 	//return world_->getCanChangedTempoManager().getBeatCount() % 3 == 0;
-	return (world_->getCanChangedTempoManager().getBeatCount() % 3) != 0;
+	return (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount()-1;
 }
