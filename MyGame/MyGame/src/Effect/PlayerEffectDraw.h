@@ -21,4 +21,14 @@ private:
 	int endKey_{ -1 };
 
 	int playState_{ 0 };
+
+	float sincount{ 0.0f };
+
+	Vector2 PointLight_position;
+	Vector2 PointLeft_position;
+	Vector2 PointRight_position;
+	
+	float PointLeft_alpha{ 1.0f };
+	float PointRight_alpha{ 1.0f };
+	float PointLight_alpha{ 0.0f };
 };

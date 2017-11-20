@@ -1,6 +1,8 @@
 #include "PlayerEffectDraw.h"
 #include "../Graphic/EffekseerManager.h"
+#include "../Graphic/Sprite.h"
 #include"../Graphic/DebugDraw.h"
+#include"../Define.h"
 
 
 static const float defTime = 0.2f;
@@ -15,6 +17,10 @@ PlayerEffectDraw::~PlayerEffectDraw(){
 void PlayerEffectDraw::Initialize(){
 	playState_ = 0;
 	time_ = 0.0f;
+	sincount = 0.0f;
+	PointLight_alpha = 0.0f;
+	PointLeft_position = Vector2(0,SCREEN_SIZE.y);
+	PointRight_position = Vector2(SCREEN_SIZE);
 }
 
 void PlayerEffectDraw::setPlayerEffectDraw(Player * player){
@@ -26,13 +32,16 @@ void PlayerEffectDraw::finalize(){
 }
 
 void PlayerEffectDraw::Update(float deltatime){
-
 	//”{—¦ã‚ª‚Á‚Ä‚½‚ç
 	if (player_->getPlayerScoreRate() > 1.0f) {
 		switch (playState_)
 		{
 		case 0: {
 			if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
+			sincount = 0.0f;
+			PointLight_alpha = 0.0f;
+			PointLeft_position = Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150);
+			PointRight_position = Vector2(SCREEN_SIZE) + Vector2(150, 150);
 			playState_++;
 			beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(beginKey_, Vector3{ 0.0f,10.0f,0.0f });
@@ -40,6 +49,9 @@ void PlayerEffectDraw::Update(float deltatime){
 		}
 		case 1: {
 			time_ += deltatime;
+			PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150), Vector2(0, SCREEN_SIZE.y), time_ * 5);
+			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE) + Vector2(150, 150), Vector2(SCREEN_SIZE), time_ * 5);
+			PointLight_alpha = time_ * 5;
 			if (time_ < defTime)return;
 			//if (EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))return;
 			playState_++;
@@ -48,6 +60,10 @@ void PlayerEffectDraw::Update(float deltatime){
 			break;
 		}
 		case 2: {
+						sincount += 4;
+			sincount = std::fmodf(sincount, 360);
+			PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(150, -150), std::abs(MathHelper::Sin(sincount)));
+			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
 			if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
 			key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(key_, Vector3{ 0.0f,10.0f,0.0f });
@@ -109,6 +125,9 @@ void PlayerEffectDraw::Update(float deltatime){
 }
 
 void PlayerEffectDraw::Draw()const{
-
-	DebugDraw::DebugDrawFormatString(700, 100, GetColor(255, 255, 255), "%d", playState_);
+	if (player_->getPlayerScoreRate() > 1.0f) {
+		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_AUDIENCE_LEFT, PointLeft_position, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_AUDIENCE_LEFT) / 2 ,PointLeft_alpha ,Vector2::One*0.5f);
+		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_AUDIENCE_RIGHT, PointRight_position, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_AUDIENCE_RIGHT) / 2, PointRight_alpha,Vector2::One*0.5f);
+		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_LIGHT, SCREEN_SIZE - Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, PointLight_alpha,Vector2::One);
+	}
 }
