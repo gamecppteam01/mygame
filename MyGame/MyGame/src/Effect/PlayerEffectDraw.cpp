@@ -18,7 +18,10 @@ void PlayerEffectDraw::Initialize(){
 	playState_ = 0;
 	time_ = 0.0f;
 	sincount = 0.0f;
+	endtime = 0.0f;
 	PointLight_alpha = 0.0f;
+	PointRight_alpha = 1.0f;
+	PointLeft_alpha = 1.0f;
 	PointLeft_position = Vector2(0,SCREEN_SIZE.y);
 	PointRight_position = Vector2(SCREEN_SIZE);
 }
@@ -40,8 +43,11 @@ void PlayerEffectDraw::Update(float deltatime){
 			if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
 			sincount = 0.0f;
 			PointLight_alpha = 0.0f;
+			PointRight_alpha = 1.0f;
+			PointLeft_alpha = 1.0f;
 			PointLeft_position = Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150);
 			PointRight_position = Vector2(SCREEN_SIZE) + Vector2(150, 150);
+
 			playState_++;
 			beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(beginKey_, Vector3{ 0.0f,10.0f,0.0f });
@@ -52,6 +58,7 @@ void PlayerEffectDraw::Update(float deltatime){
 			PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150), Vector2(0, SCREEN_SIZE.y), time_ * 5);
 			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE) + Vector2(150, 150), Vector2(SCREEN_SIZE), time_ * 5);
 			PointLight_alpha = time_ * 5;
+
 			if (time_ < defTime)return;
 			//if (EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))return;
 			playState_++;
@@ -60,10 +67,11 @@ void PlayerEffectDraw::Update(float deltatime){
 			break;
 		}
 		case 2: {
-						sincount += 4;
+			sincount += 4;
 			sincount = std::fmodf(sincount, 360);
 			PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(150, -150), std::abs(MathHelper::Sin(sincount)));
 			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
+			
 			if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
 			key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(key_, Vector3{ 0.0f,10.0f,0.0f });
@@ -88,12 +96,24 @@ void PlayerEffectDraw::Update(float deltatime){
 				EffekseerManager::GetInstance().StopEffect3D(beginKey_);
 			case 2: {
 				if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
+				endtime = 0.0f;
 				playState_++;
 				endKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_END_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
 				EffekseerManager::GetInstance().SetPosPlayEffect3D(endKey_, Vector3{ 0.0f,10.0f,0.0f });
 				break;
 			}
 			case 3: {
+				endtime += deltatime;
+				endtime = min(endtime, 0.2f);
+				PointLight_alpha = 1 - endtime * 5;
+				PointRight_alpha = 1 - endtime * 5;
+				PointLeft_alpha = 1 - endtime * 5;
+				sincount += 4;
+				sincount = std::fmodf(sincount, 360);
+				PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(150, -150), std::abs(MathHelper::Sin(sincount)));
+				PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
+				//PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150), endtime * 5);
+				//PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) + Vector2(150, 150), endtime * 5);
 				if (!EffekseerManager::GetInstance().isPlayEffect3D(endKey_)) {
 					time_ = 0.0f;
 					playState_ = 0;
@@ -125,7 +145,7 @@ void PlayerEffectDraw::Update(float deltatime){
 }
 
 void PlayerEffectDraw::Draw()const{
-	if (player_->getPlayerScoreRate() > 1.0f) {
+	if (player_->getPlayerScoreRate() > 1.0f || endtime <= 0.199f) {
 		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_AUDIENCE_LEFT, PointLeft_position, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_AUDIENCE_LEFT) / 2 ,PointLeft_alpha ,Vector2::One*0.5f);
 		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_AUDIENCE_RIGHT, PointRight_position, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_AUDIENCE_RIGHT) / 2, PointRight_alpha,Vector2::One*0.5f);
 		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_LIGHT, SCREEN_SIZE - Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, PointLight_alpha,Vector2::One);

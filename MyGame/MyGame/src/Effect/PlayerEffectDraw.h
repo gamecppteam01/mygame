@@ -23,6 +23,7 @@ private:
 	int playState_{ 0 };
 
 	float sincount{ 0.0f };
+	float endtime{ 0.0f };
 
 	Vector2 PointLight_position;
 	Vector2 PointLeft_position;
