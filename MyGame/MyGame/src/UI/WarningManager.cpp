@@ -15,11 +15,15 @@ WarningManager::WarningManager(IWorld* world)
 
 void WarningManager::initialize()
 {
+	pos = Vector2::Zero;
+	sincount = 0.0f;
+	count = 0;
+
 	//プレイヤーのポインタを取得
 	player_= std::static_pointer_cast<Player>(world_->findActor("Player"));
 
 	//画像の中心
-	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::WARNING) / 2;
+	Vector2 origin = Vector2(100, 0)/*Sprite::GetInstance().GetSize(SPRITE_ID::WARNING) / 2*/;
 
 	//上
 	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::UP),
@@ -31,11 +35,11 @@ void WarningManager::initialize()
 
 	//左
 	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::LEFT),
-		std::forward_as_tuple(Vector2(0.0f, WINDOW_HEIGHT/2), Vector2::One, 90.0f, origin));
+		std::forward_as_tuple(Vector2(0.0f, WINDOW_HEIGHT/2), Vector2::One, -90.0f, origin));
 
 	//右
 	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::RIGHT),
-		std::forward_as_tuple(Vector2(WINDOW_WIDTH, WINDOW_HEIGHT/2), Vector2::One, -90.0f, origin));
+		std::forward_as_tuple(Vector2(WINDOW_WIDTH, WINDOW_HEIGHT/2), Vector2::One, 90.0f, origin));
 
 	//空
 	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::None),
@@ -45,9 +49,31 @@ void WarningManager::initialize()
 
 void WarningManager::update(float deltaTime)
 {
+	//危険値が最大20あり10以上で警告の色を変える
+
 	//向きを決定
 	Vector2 target = player_.lock()->getStumbleDirection();
 	stateChange(target);
+
+	sincount += 8;
+	sincount = std::fmodf(sincount, 360);
+	switch (state_)
+	{
+	case warningState::UP:
+		pos = Vector2::Lerp(Vector2(0, 0), Vector2(0, 50), std::abs(MathHelper::Sin(sincount)));
+		break;
+	case warningState::DOWN:
+		pos = Vector2::Lerp(Vector2(0, 0), Vector2(0, -50), std::abs(MathHelper::Sin(sincount)));
+		break;
+	case warningState::RIGHT:
+		pos = Vector2::Lerp(Vector2(0, 0), Vector2(-50, 0), std::abs(MathHelper::Sin(sincount)));
+		break;
+	case warningState::LEFT:
+		pos = Vector2::Lerp(Vector2(0, 0), Vector2(50, 0), std::abs(MathHelper::Sin(sincount)));
+		break;
+	case warningState::None:
+		break;
+	}
 
 	/*
 	//上
@@ -80,7 +106,19 @@ void WarningManager::draw() const
 	if (player_.lock()->getState() != Player::Player_State::Stumble)return;
 
 	WarningParamter wp = parameters_.at(state_);
-	Sprite::GetInstance().Draw(SPRITE_ID::WARNING, wp.warningPos_, wp.origin_, wp.scale_, wp.angle_);
+	if (warningCount() <= 9) {
+		Sprite::GetInstance().Draw(SPRITE_ID::WARNING, wp.warningPos_ + pos, wp.origin_, wp.scale_, wp.angle_);
+	}
+	else {
+		Sprite::GetInstance().Draw(SPRITE_ID::WARNING2, wp.warningPos_ + pos, wp.origin_, wp.scale_, wp.angle_);
+	}
+}
+
+float WarningManager::warningCount()const{
+	if (player_.lock()->getState() == Player::Player_State::Stumble) {
+		return player_.lock()->getTimer() / 7 * 20;
+	}
+	return 0;
 }
 
 
@@ -96,7 +134,6 @@ void WarningManager::stateChange(const Vector3& v2)
 	float result = Vector3::Dot(V1, V2);
 	result = MathHelper::ACos(result);
 	
-
 	if (cross.y >= 0) {
 		result = result * -1;
 	}

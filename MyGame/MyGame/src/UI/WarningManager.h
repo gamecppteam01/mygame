@@ -12,7 +12,6 @@ class Player;
 	DOWN,
 	RIGHT,
 	LEFT,
-
 	None,
 
 };
@@ -28,6 +27,8 @@ public:
 	//•`‰æ
 	virtual void draw() const override;
 
+	float warningCount()const;
+
 	void stateChange(const Vector3& v2);
 	void stateChange(const Vector2& v2);
 
@@ -36,7 +37,9 @@ public:
 private:
 	std::map<warningState, WarningParamter> parameters_;
 	warningState state_;
-	
+	Vector2 pos;
+	float sincount;
+	int count;
 	IWorld* world_;
 
 	
