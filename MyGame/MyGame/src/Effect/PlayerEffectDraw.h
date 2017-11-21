@@ -10,6 +10,10 @@ public:
 	void finalize();
 	void Update(float deltatime);
 	void Draw()const;
+
+	int getBeginKey()const { return beginKey_; }
+	int getLoopKey()const { return loopKey_; }
+	int getEndKey()const { return endKey_; }
 private:
 	Player* player_;
 	int key_;
