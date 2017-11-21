@@ -100,9 +100,9 @@ void GamePlayScene::start() {
 
 	//標準ライトの設定
 	standardLight_.initialize();
-	standardLight_.changeLightTypeDir(Vector3(0.5f, -0.5f, 0.5f));
+	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
 	//ライトハンドルの設定
-	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), DX_PI_F / 2.0f, DX_PI_F / 4.0f, 200, 0.2, 0.01f, 0.0f);
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), DX_PI_F / 2.4f, DX_PI_F / 4.8f, 500, 0.1f, 0.01f, 0.0f);
 	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.2f, 0.2f, 0.2f, 1.0f));
 
 	playerEffectDraw_.Initialize();
@@ -135,13 +135,8 @@ void GamePlayScene::update(float deltaTime) {
 		isEnd_ = true;
 		next_ = SceneType::SCENE_TITLE;
 	}
-	/*auto target = world_.findActor("Player");
-	Vector3 pos = target->position();
-	ChangeLightTypePoint(VGet(pos.x,pos.y,pos.z), 100, 0.2f, 0.005f, 0.00f);
-	SetLightAmbColor(GetColorF(0.2f, 0.2f, 0.2f,1.0f));
-	SetLightDifColor(GetColorF(1.0f, 1.0f, 1.0f, 1.0f));*/
 
-	playerEffectDraw_.Update(deltaTime);
+	//playerEffectDraw_.Update(deltaTime);
 
 }
 
