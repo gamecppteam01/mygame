@@ -3,6 +3,7 @@
 #include "../Actor/ActorPtr.h"
 #include"../Field/FieldPtr.h"
 #include"../Camera/CameraPtr.h"
+#include"../UI/UIPtr.h"
 #include"../Game/ID.h"
 #include <string>
 #include<list>
