@@ -32,6 +32,8 @@ public:
 	//描画関数終了後に描画をセットする関数
 	virtual void setLateDraw(std::function<void()> draw, bool isBeforeUI=true) = 0;
 
+	virtual void addUI(UIPtr ui) = 0;
+
 	// フィールドの取得
 	virtual FieldPtr getField() const = 0;
 	virtual CameraPtr getCamera() = 0;
