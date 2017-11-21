@@ -6,8 +6,8 @@ PlayerBullet::PlayerBullet(IWorld* world,const Vector3 & position, Player* playe
 	Actor(world,"PlayerBullet",position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),Matrix::Identity, 20.0f, 3.0f)),
 	player_(player)
 {
-	modelHandle_ = MODEL_ID::PLAYER_MODEL;
-	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL));
+	modelHandle_ = MODEL_ID::PLAYER_BULLET_MODEL;
+	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_BULLET_MODEL));
 }
 
 void PlayerBullet::initialize()
@@ -30,6 +30,7 @@ void PlayerBullet::onMessage(EventMessage message, void * param)
 
 void PlayerBullet::onUpdate(float deltaTime)
 {
+	animation_.Update(MathHelper::Sign(deltaTime));
 }
 
 void PlayerBullet::onDraw() const
@@ -56,8 +57,8 @@ Matrix * PlayerBullet::getRotationPtr()
 	return &rotation_;
 }
 
-void PlayerBullet::changeAnimation(PlayerBullet_Animation animID, float animSpeed)
+void PlayerBullet::changeAnimation(PlayerBullet_Animation animID, float animFrame, float animSpeed, bool isLoop)
 {
-	animation_.ChangeAnim((int)animID);
+	animation_.ChangeAnim((int)animID,animFrame,animSpeed,isLoop);
 
 }

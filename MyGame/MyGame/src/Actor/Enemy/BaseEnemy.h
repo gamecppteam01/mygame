@@ -162,7 +162,7 @@ protected:
 	//ポジション追跡時の移動の勢い
 	const float movePower{ 0.7f };
 	//ダウンする時間
-	const float downTime{ 0.1f };
+	const float downTime{ 3.0f };
 	//男と女の距離
 	const Vector3 bulletDistance{ 0.0f,0.0f,6.0f };
 

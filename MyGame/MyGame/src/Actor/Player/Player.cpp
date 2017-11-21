@@ -24,6 +24,7 @@
 #include"../../Math/MathHelper.h"
 #include"../../Sound/TempoManager.h"
 #include"../../Graphic/EffekseerManager.h"
+#include"../../Math/Random.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -43,6 +44,19 @@ static const int defStepCount = 3;
 
 //スピンの回転範囲
 static const float spinPower = 6.0f;
+
+//男->女でアニメーションを変換
+static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Animation> animConvList{
+	{ Player::Player_Animation::Move_Forward,PlayerBullet::PlayerBullet_Animation::Move_Forward },
+	{ Player::Player_Animation::Idle,PlayerBullet::PlayerBullet_Animation::Idle },
+	{ Player::Player_Animation::Attack,PlayerBullet::PlayerBullet_Animation::Attack },
+	{ Player::Player_Animation::Down,PlayerBullet::PlayerBullet_Animation::Down },
+	{ Player::Player_Animation::KnockBack,PlayerBullet::PlayerBullet_Animation::KnockBack },
+	{ Player::Player_Animation::Shoot,PlayerBullet::PlayerBullet_Animation::Shoot },
+	{ Player::Player_Animation::ShootEnd,PlayerBullet::PlayerBullet_Animation::ShootEnd },
+	{ Player::Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
+	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn }
+};
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
@@ -110,11 +124,10 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 
 	//攻撃状態ならひるまない
 	if (isAttack()) {
-		if(state_==Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Idle);
+		if(state_==Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward);
 		return;
 	}
 	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
-
 	//stumbleDirection_ = -velocity;
 	stumbleResurrectTime_ = 0.5f;
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
@@ -136,7 +149,7 @@ void Player::initialize()
 	gravity_ = 0.0f;
 	state_ = Player_State::Idle;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
-	changeAnimation(Player_Animation::Idle);
+	changeAnimation(Player_Animation::Move_Forward);
 
 	turnPower_ = 1.0f;
 	bullet_->initialize();
@@ -331,8 +344,11 @@ void Player::correctPosition()
 
 bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame,float animSpeed,bool isLoop)
 {
-	if (!change_State(state))return false;
-	changeAnimation(animID,animFrame, animSpeed,isLoop);
+	if (state_ == state)return false;
+
+	changeAnimation(animID, animFrame, animSpeed, isLoop);
+	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop);
+	change_State(state);
 
 	return true;
 }
@@ -369,6 +385,14 @@ void Player::idle_Update(float deltaTime)
 			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
 		}
 		else {
+			std::vector<Vector2> stumbleList{
+				Vector2::Right,
+				Vector2::Left,
+				Vector2::Up,
+				Vector2::Down
+			};
+			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+
 			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -382,13 +406,13 @@ void Player::idle_Update(float deltaTime)
 
 void Player::move_Update(float deltaTime)
 {
-	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
+	//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	Vector3 framevelocity{ 0.0f,0.0f,0.0f };
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	//Vector2 move = getSticktoMove();
 	if (std::abs(move.x) < ignoreSlope && std::abs(move.y) < ignoreSlope) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	framevelocity.x += move.x*movePower;
@@ -404,6 +428,14 @@ void Player::move_Update(float deltaTime)
 			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
 		}
 		else {
+			std::vector<Vector2> stumbleList{
+				Vector2::Right,
+				Vector2::Left,
+				Vector2::Up,
+				Vector2::Down
+			};
+			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+
 			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -427,7 +459,7 @@ void Player::step_Update(float deltaTime)
 			return;
 		}
 		else {
-			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 			return;
 		}
 	}
@@ -458,7 +490,7 @@ void Player::stepSuccess_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 }
@@ -468,7 +500,7 @@ void Player::attack_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	stepAttack(deltaTime);
@@ -508,7 +540,7 @@ void Player::shoot_Update(float deltaTime)
 
 void Player::shootend_Update(float deltaTime)
 {
-	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 }
 
 void Player::knockback_Update(float deltaTime)
@@ -520,7 +552,7 @@ void Player::down_Update(float deltaTime)
 	timeCount_ += deltaTime;
 
 	if (timeCount_ >= downTime_) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 	}
 }
 
@@ -552,7 +584,7 @@ void Player::stumble_Update(float deltaTime)
 	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.2f) {
 		stumbleRegistTimer_ += deltaTime;
 		if (stumbleRegistTimer_ >= stumbleResurrectTime_) {
-			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Idle))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 			return;
 		}
 	}

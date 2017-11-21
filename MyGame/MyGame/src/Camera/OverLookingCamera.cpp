@@ -4,7 +4,7 @@
 #include"../Actor/Dummy/BetweenPositionActor.h"
 
 //‘ÎÛ‚©‚çŒã‚ë‘¤‚É—£‚ê‚é‹——£
-static const float backwardLength = 3.0f;
+static const float backwardLength = 5.0f;
 //‘ÎÛ‚©‚çã‘¤‚É—£‚ê‚é‹——£
 static const float upLength = 150.0f;
 

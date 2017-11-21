@@ -11,6 +11,7 @@
 #include"../Actor/Enemy/BaseEnemy.h"
 #include"../Actor/Enemy/NormalEnemy.h"
 #include"../Actor/Enemy/Enemy_Power.h"
+#include"../Actor/Enemy/Enemy_Round/Enemy_Round.h"
 #include"../Actor/Enemy/Enemy_Quick/Enemy_Quick.h"
 #include"../Actor/Enemy/Enemy_Rival/Enemy_Rival.h"
 
@@ -64,7 +65,7 @@ void GamePlayScene::start() {
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
 	playerNumber++;
-	auto enemy3 = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy3);
 	//world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);

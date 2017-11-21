@@ -31,8 +31,8 @@ public:
 	};
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class Player_Animation {
-		Idle = 0,//待機時
-		Move_Forward = 2,//前移動時
+		Move_Forward = 0,//前移動時
+		Idle = 1,//待機時
 		Step_Left = 8,//左ステップ時
 		Attack = 11,//攻撃時
 		Shoot = 12,//発射時
@@ -62,6 +62,8 @@ public:
 	Vector3 getCenterPos()const { return centerPosition_; }
 	//スコア倍率を取得する
 	float getPlayerScoreRate()const;
+	//汎用のタイマーを渡す
+	float getTimer()const { return timeCount_; }
 private:
 	void createBullet();
 	virtual void initialize()override;

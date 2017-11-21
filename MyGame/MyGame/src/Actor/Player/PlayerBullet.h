@@ -10,14 +10,16 @@ class PlayerBullet:public Actor {
 public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class PlayerBullet_Animation {
-		Idle = 0,//待機時
-		Move_Forward = 2,//前移動時
-		Step_Left = 8,//左ステップ時
-		Attack = 11,//攻撃時
+		Move_Forward = 0,//前移動時
+		Idle = 1,//待機時
+		Shoot = 8,//左ステップ時
+		ShootEnd=9,
+		Step_Left=10,
+		Turn = 11,//回転時
+		Attack = 12,//攻撃時
 		KnockBack = 14,//被弾時
 		Down = 15,//ダウン時
 		//Jump = 17,//ジャンプ時
-		Turn = 11,//回転時
 	};
 
 public:
@@ -43,7 +45,7 @@ private:
 	Vector3* getPositionPtr();
 	Matrix* getRotationPtr();
 	//アニメーションの変更
-	void changeAnimation(PlayerBullet_Animation animID, float animSpeed = 1.0f);
+	void changeAnimation(PlayerBullet_Animation animID, float animFrame = 0.0f, float animeSpeed = 1.0f, bool isLoop = true);
 	Player* player_;
 private:
 

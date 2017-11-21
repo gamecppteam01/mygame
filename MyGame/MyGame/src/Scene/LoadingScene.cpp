@@ -70,7 +70,8 @@ void LoadingScene::LoadSprite()
 void LoadingScene::LoadModel()
 {
 	std::string defaultPath = "res/Model/";//全リソース共通パス
-	Model::GetInstance().Load(defaultPath + "player.mv1", MODEL_ID::PLAYER_MODEL);
+	Model::GetInstance().Load(defaultPath + "player/player_men/player_men.pmx", MODEL_ID::PLAYER_MODEL);
+	Model::GetInstance().Load(defaultPath + "player/player_women/player_women.pmx", MODEL_ID::PLAYER_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 
 	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);
