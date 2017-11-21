@@ -13,6 +13,11 @@ Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3
 
 void Enemy_Round::JustStep()
 {
+	rhythmTimeCount_++;
+	if(rhythmTimeCount_ >= 2) {
+		rhythmTimeCount_ = 0;
+		nextPosition();
+	}
 	//ポイント移動を再開する
 	isGoPoint_ = true;
 
@@ -29,7 +34,7 @@ void Enemy_Round::JustStep()
 
 void Enemy_Round::to_Normal()
 {
-	setNearestPoint();
+	//setNearestPoint();
 }
 
 void Enemy_Round::updateNormal(float deltaTime)
@@ -54,4 +59,12 @@ void Enemy_Round::setNearestPoint()
 		}
 		i++;
 	}
+}
+
+void Enemy_Round::nextPosition()
+{
+	nextKey_ = (nextKey_ + 1) % points_.size();
+	nextPosition_ = points_[nextKey_];
+
+
 }

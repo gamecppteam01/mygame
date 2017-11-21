@@ -12,6 +12,7 @@ public:
 	virtual void updateNormal(float deltaTime) override;
 
 	void setNearestPoint();
+	void nextPosition();
 private:
 	std::vector<Vector3> points_;
 	//ポイントキー

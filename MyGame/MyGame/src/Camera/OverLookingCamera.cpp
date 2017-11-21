@@ -3,10 +3,10 @@
 #include"../Graphic/Model.h"
 #include"../Actor/Dummy/BetweenPositionActor.h"
 
-//‘ÎÛ‚©‚çŒã‚ë‘¤‚É—£‚ê‚é‹——£
-static const float backwardLength = 5.0f;
-//‘ÎÛ‚©‚çã‘¤‚É—£‚ê‚é‹——£
-static const float upLength = 150.0f;
+//‘ÎÛ‚©‚çŒã‚ë‘¤‚É—£‚ê‚é‹——£(z²ˆÚ“®)
+static const float backwardLength = 10.0f;
+//‘ÎÛ‚©‚çã‘¤‚É—£‚ê‚é‹——£(y²ˆÚ“®)
+static const float upLength = 100.0f;
 
 OverLookingCamera::OverLookingCamera(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Actor(world, name, position, body), target_(nullptr), targetTranslate_(Vector3::Zero)

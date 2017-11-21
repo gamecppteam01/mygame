@@ -83,6 +83,7 @@ void MusicScoreManager::Draw(const Vector3& position) const
 
 	float percent = currentMeasure_/(world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
 	if (percent >= 75.0f)SetDrawBright(200, 130, 0);//4è¨êﬂñàÇ…îªíË
+	else SetDrawBright(0, 130,200);
 	DrawCircleGauge(pos.x, pos.y, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
 	SetDrawBright(255, 255, 255);
 
