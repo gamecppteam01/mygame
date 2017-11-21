@@ -31,7 +31,7 @@
 //ゲームの時間
 static const float gameTime = 5.0f;
 
-GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr){
+GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(){
 }
 
 void GamePlayScene::start() {
@@ -98,14 +98,12 @@ void GamePlayScene::start() {
 	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
 	world_.getCanChangedTempoManager().startMusic();
 
-	SetLightEnable(true);
-	ChangeLightTypeDir(VGet(0.5f, -0.5f, 0.5f));
-	//DirectionalLight dirLight("DirectionalLight", Vector3(1, 1, 1),LightColor(Color(0.2f,0.2f,0.2f),Color(1.0f,1.0f,1.0f),Color(1.0f,1.0f,1.0f)));
-	//world_.addLight(dirLight);
-	SetUseLighting(true);
-	
-	lighthandle = CreateSpotLightHandle(VGet(0.0f, 100.0f, 0.0f),VGet(0.0f,-1.0f,0.0f),DX_PI_F / 2.0f,DX_PI_F / 4.0f,200,0.2,0.01f,0.0f);
-	SetLightAmbColorHandle(lighthandle,GetColorF(0.2f, 0.2f, 0.2f,0.0f));
+	//標準ライトの設定
+	standardLight_.initialize();
+	standardLight_.changeLightTypeDir(Vector3(0.5f, -0.5f, 0.5f));
+	//ライトハンドルの設定
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), DX_PI_F / 2.0f, DX_PI_F / 4.0f, 200, 0.2, 0.01f, 0.0f);
+	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.2f, 0.2f, 0.2f, 1.0f));
 
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
@@ -170,5 +168,5 @@ void GamePlayScene::end() {
 	DataManager::GetInstance().setData(list);
 
 	scoreDisplay_.finalize();
-	DeleteLightHandle(lighthandle);
+	lightHandle_.deleteLightHandleAll();
 }

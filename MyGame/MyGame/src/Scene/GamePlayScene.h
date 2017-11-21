@@ -4,6 +4,8 @@
 #include "../UI/ComboGaugeUI.h"
 #include"../ScoreManager/ScoreDisplay.h"
 #include"../Effect/PlayerEffectDraw.h"
+#include"../Light/StandardLight.h"
+#include"../Light/LightHandle.h"
 
 enum GamePlayState
 {
@@ -24,7 +26,10 @@ public:
 private:
 	World world_;
 	ScoreDisplay scoreDisplay_;
-	int lighthandle;
 	GamePlayState state_;
 	PlayerEffectDraw playerEffectDraw_;
+	//標準ライトクラス
+	StandardLight standardLight_;
+	//ライトハンドルクラス
+	LightHandle lightHandle_;
 };
