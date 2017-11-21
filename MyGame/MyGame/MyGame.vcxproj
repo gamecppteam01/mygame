@@ -218,6 +218,8 @@
     <ClCompile Include="src\Input\InputChecker.cpp" />
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Judge\StepTimer.cpp" />
+    <ClCompile Include="src\Light\LightHandle.cpp" />
+    <ClCompile Include="src\Light\StandardLight.cpp" />
     <ClCompile Include="src\Math\Collision\Collision.cpp" />
     <ClCompile Include="src\Math\Color.cpp" />
     <ClCompile Include="src\Math\Easing.cpp" />
@@ -349,6 +351,8 @@
     <ClInclude Include="src\Judge\JudgeDefine.h" />
     <ClInclude Include="src\Judge\JudgeFunction.h" />
     <ClInclude Include="src\Judge\StepTimer.h" />
+    <ClInclude Include="src\Light\LightHandle.h" />
+    <ClInclude Include="src\Light\StandardLight.h" />
     <ClInclude Include="src\Light\LightType.h" />
     <ClInclude Include="src\Math\Collision\Collision.h" />
     <ClInclude Include="src\Math\Collision\CollisionDX.h" />
