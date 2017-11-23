@@ -28,6 +28,7 @@ public:
 		fileName_ = filename;
 		//サウンドリソースの読み込み
 		soundHandle_=LoadSoundMem(fileName_.c_str());
+		ChangeVolumeSoundMem(80, soundHandle_);
 		//周波数の設定(44.1khz)固定値にする
 		sps_ = GetFrequencySoundMem(soundHandle_);
 		//SetFrequencySoundMem(44100, soundHandle_);

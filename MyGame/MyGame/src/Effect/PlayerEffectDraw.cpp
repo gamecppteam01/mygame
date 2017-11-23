@@ -3,6 +3,7 @@
 #include "../Graphic/Sprite.h"
 #include"../Graphic/DebugDraw.h"
 #include"../Define.h"
+#include"../Sound/Sound.h"
 
 
 static const float defTime = 0.2f;
@@ -37,6 +38,9 @@ void PlayerEffectDraw::finalize(){
 void PlayerEffectDraw::Update(float deltatime){
 	//î{ó¶è„Ç™Ç¡ÇƒÇΩÇÁ
 	if (player_->getPlayerScoreRate() > 1.0f) {
+		if (!Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE)) {
+			Sound::GetInstance().PlaySE(SE_ID::CHEER_SE);
+		}
 		switch (playState_)
 		{
 		case 0: {
@@ -90,6 +94,8 @@ void PlayerEffectDraw::Update(float deltatime){
 	}
 	//î{ó¶è„Ç™Ç¡Çƒñ≥Ç©Ç¡ÇΩÇÁ
 	else {
+		if(Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE))Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+
 		if (playState_ != 0) {
 			switch (playState_) {
 			case 1:

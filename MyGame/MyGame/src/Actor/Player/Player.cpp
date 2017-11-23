@@ -255,8 +255,8 @@ void Player::onDraw() const
 
 void Player::onCollide(Actor & other)
 {
-	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet") && isCanStamble()) {
-
+	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet")) {
+		Sound::GetInstance().PlaySE(SE_ID::HIT_SE);
 	}
 
 }

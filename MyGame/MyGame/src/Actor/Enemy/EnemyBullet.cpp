@@ -7,11 +7,11 @@
 //’e‚«”ò‚Î‚·—Í
 static const float boundPower = 10.0f;
 
-EnemyBullet::EnemyBullet(IWorld * world, const std::string & name, const Vector3 & position,BaseEnemy* enemy, const IBodyPtr & body):
+EnemyBullet::EnemyBullet(IWorld * world, const std::string & name, const Vector3 & position,BaseEnemy* enemy, MODEL_ID id, const IBodyPtr & body):
 	Enemy(world, "EnemyBullet", position, body), enemy_(enemy)
 {
-		modelHandle_ = MODEL_ID::ENEMY_MODEL;
-		animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
+		modelHandle_ = id;
+		animation_.SetHandle(Model::GetInstance().GetHandle(id));
 
 }
 

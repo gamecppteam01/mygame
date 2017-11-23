@@ -116,8 +116,8 @@ public:
 
 	void Update();
 
-	Sound(const Sound& other);
-	Sound& operator = (const Sound& other);
+	Sound(const Sound& other) = delete;
+	Sound& operator = (const Sound& other) = delete;
 
 private:
 	std::string Split(const std::string& filename);

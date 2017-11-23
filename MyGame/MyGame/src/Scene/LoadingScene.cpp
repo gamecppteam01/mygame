@@ -74,7 +74,9 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "player/player_men/player_men.pmx", MODEL_ID::PLAYER_MODEL);
 	Model::GetInstance().Load(defaultPath + "player/player_women/player_women.pmx", MODEL_ID::PLAYER_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
-
+	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_men/balanceEnemy_men.pmx", MODEL_ID::BALANCEENEMY_MODEL);
+	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_women/balanceEnemy_women.pmd", MODEL_ID::BALANCEENEMY_BULLET_MODEL);
+	
 	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);
 }
 
@@ -123,6 +125,10 @@ void LoadingScene::LoadSE()
 {
 	std::string defaultPath = "res/Sound/se/";//全リソース共通パス
 	Sound::GetInstance().LoadSE(defaultPath + "check.mp3", SE_ID::CHECK_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "cheer2_se.mp3", SE_ID::CHEER_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "hit_se.mp3", SE_ID::HIT_SE);
+	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
+
 }
 
 void LoadingScene::LoadEtcetera()

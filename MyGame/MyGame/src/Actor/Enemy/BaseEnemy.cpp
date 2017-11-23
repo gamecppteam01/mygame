@@ -22,14 +22,24 @@ static const float moveAngle = 20.0f;
 //基本的なダウン値
 static const int defDownCount = 1;
 
-BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
+//男->女でアニメーションを変換
+static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Animation> animConvList{
+	{ BaseEnemy::Enemy_Animation::Idle, EnemyBullet::EnemyBullet_Animation::Idle },
+	{ BaseEnemy::Enemy_Animation::Down,EnemyBullet::EnemyBullet_Animation::Down },
+	{ BaseEnemy::Enemy_Animation::KnockBack,EnemyBullet::EnemyBullet_Animation::KnockBack },
+	{ BaseEnemy::Enemy_Animation::Move_Forward,EnemyBullet::EnemyBullet_Animation::Move_Forward },
+	{ BaseEnemy::Enemy_Animation::Step_Left,EnemyBullet::EnemyBullet_Animation::Step_Left },
+	{ BaseEnemy::Enemy_Animation::Turn,EnemyBullet::EnemyBullet_Animation::Turn },
+};
+
+BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
+	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this, bulletid,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
 	downCount_(defDownCount), prevHitActorNumber_(0),centerPosition_(position)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
-	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
+	animation_.SetHandle(Model::GetInstance().GetHandle(id));
 	bullet_->changeAnimation(EnemyBullet::EnemyBullet_Animation::Move_Forward);
-	modelHandle_ = MODEL_ID::ENEMY_MODEL;
+	modelHandle_ = id;
 	changeAnimation(Enemy_Animation::Move_Forward);
 
 	bullet_->initialize();
@@ -334,6 +344,8 @@ void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
 {
 	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop);
+	bullet_->changeAnimation(animConvList.at(animID));
+	
 }
 
 bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
@@ -493,7 +505,7 @@ void BaseEnemy::updateDown(float deltaTime)
 	downTime_ += deltaTime;
 
 	if (downTime_ >= downTime) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateDown(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateDown(deltaTime);
 	}
 
 }

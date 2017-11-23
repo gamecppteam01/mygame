@@ -58,18 +58,18 @@ void GamePlayScene::start() {
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
-	//playerNumber++;
-	//auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy);
+	playerNumber++;
+	auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy);
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	playerNumber++;
-	auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy3);
-	//world_.addStepTimeListener(enemy);
+	//playerNumber++;
+	//auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy3);
+	world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);
-	world_.addStepTimeListener(enemy3);
+	//world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
 

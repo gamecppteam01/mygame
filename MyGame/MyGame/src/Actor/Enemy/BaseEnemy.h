@@ -10,8 +10,8 @@ class BaseEnemy :public Enemy {
 public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class Enemy_Animation {
+		Move_Forward = 0,//前移動時
 		Idle = 0,//待機時
-		Move_Forward = 1,//前移動時
 		Step_Left = 2,//左ステップ時
 		Turn = 3,//回転時
 		KnockBack = 4,//被弾時
@@ -27,7 +27,7 @@ public:
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
-	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f), MODEL_ID id = MODEL_ID::ENEMY_MODEL, MODEL_ID bulletid = MODEL_ID::ENEMY_MODEL);
 	virtual ~BaseEnemy(){}
 	void hitOther(const Vector3& velocity);
 

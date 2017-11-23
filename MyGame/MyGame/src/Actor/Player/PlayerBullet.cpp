@@ -2,6 +2,7 @@
 #include"../../Graphic/Model.h"
 #include"../Body/BoundingCapsule.h"
 #include"Player.h"
+#include"../../Sound/Sound.h"
 PlayerBullet::PlayerBullet(IWorld* world,const Vector3 & position, Player* player):
 	Actor(world,"PlayerBullet",position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),Matrix::Identity, 20.0f, 3.0f)),
 	player_(player)
@@ -45,6 +46,11 @@ void PlayerBullet::onDraw() const
 
 void PlayerBullet::onCollide(Actor & other)
 {
+	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet")) {
+		Sound::GetInstance().PlaySE(SE_ID::HIT_SE);
+	}
+
+
 }
 
 Vector3 * PlayerBullet::getPositionPtr()
