@@ -17,6 +17,4 @@ private:
 	std::vector<Vector3> points_;
 	//ポイントキー
 	int nextKey_;
-	//ポイントへ向かうか
-	bool isGoPoint_{ true };
 };

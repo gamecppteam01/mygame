@@ -18,8 +18,6 @@ void Enemy_Round::JustStep()
 		rhythmTimeCount_ = 0;
 		nextPosition();
 	}
-	//ポイント移動を再開する
-	isGoPoint_ = true;
 
 	//ターゲット指定のリセットはとりあえずやる
 	nonTargetResetTimer_.Action();
@@ -39,12 +37,9 @@ void Enemy_Round::to_Normal()
 
 void Enemy_Round::updateNormal(float deltaTime)
 {
-	if (!isGoPoint_)return;
 	Vector3 pos = (nextPosition_ - position_).Normalize()*movePower;
 	centerPosition_ += pos;
-	if (Vector3::Distance(centerPosition_, nextPosition_) <= 10.0f) {
-		isGoPoint_ = false;
-	}
+	if (Vector3::Distance(centerPosition_, nextPosition_) <= 10.0f) nextPosition();
 }
 
 void Enemy_Round::setNearestPoint()
@@ -63,7 +58,7 @@ void Enemy_Round::setNearestPoint()
 
 void Enemy_Round::nextPosition()
 {
-	nextKey_ = (nextKey_ + 1) % points_.size();
+	nextKey_ = (nextKey_ - 1+ points_.size()) % points_.size();
 	nextPosition_ = points_[nextKey_];
 
 
