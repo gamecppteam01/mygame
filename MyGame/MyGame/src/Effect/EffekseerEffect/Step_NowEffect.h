@@ -15,4 +15,5 @@ class Step_NowEffect {
 private:
 	std::shared_ptr<Player> player_;
 	IWorld* world_;
+	Vector3 playerPos_;
 };

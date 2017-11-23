@@ -42,7 +42,6 @@ void World::Initialize()
 	lateDrawFuncListAfterUI_.clear();
 
 	//if (ShadowMapHandle != -1) return;
-
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.Clear();
@@ -56,19 +55,20 @@ void World::FindInitialize() {
 
 // 更新
 void World::update(float deltaTime) {
-	scoreMap_.update(deltaTime);
-	stepTimer_.update(deltaTime);
-	field_->update(deltaTime);
-	scoreManager_.updata(deltaTime);
-	// アクターの更新処理
-	actors_.update(deltaTime);
 	camera_->update(deltaTime);
 	uiManager_.update(deltaTime);
+	field_->update(deltaTime);
+	scoreMap_.update(deltaTime);
 	tempo_.update(deltaTime);
 
-	lateDrawFuncList_.clear();//描画関数のリセット
-	lateDrawFuncListAfterUI_.clear();
+	if (IsPause_ == false) return;
 
+	stepTimer_.update(deltaTime);
+	scoreManager_.updata(deltaTime);
+
+	// アクターの更新処理
+	actors_.update(deltaTime);
+	lateDrawFuncList_.clear();//描画関数のリセット
 }
 
 // 描画
@@ -197,6 +197,16 @@ void World::findActors(const std::string & name, std::list<std::weak_ptr<Actor>>
 // メッセージの送信
 void World::sendMessage(EventMessage message, void* param) {
 	handleMessage(message, param);
+}
+
+void World::worldStop()
+{
+	IsPause_ = false;
+}
+
+void World::worldStart()
+{
+	IsPause_ = true;
 }
 
 // イベントリスナーの追加

@@ -59,6 +59,10 @@ public:
 	virtual void findActors(const std::string& name, std::list<std::weak_ptr<Actor>>& actorList) override;
 	// メッセージの送信
 	virtual void sendMessage(EventMessage message, void* param = nullptr)  override;
+	//一時停止
+	void worldStop();
+	//再開
+	void worldStart();
 	// イベントリスナーの追加
 	void addEventMessageListener(std::function<void(EventMessage, void*)> listener);
 	void end();
@@ -95,4 +99,5 @@ private:
 	ShadowMap shadowmap_;
 	int ShadowMapHandle;
 	bool shadowflag_{ false };
+	bool IsPause_{ false };
 };

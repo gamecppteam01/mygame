@@ -7,6 +7,8 @@
 #include"../Graphic/Model.h"
 #include"../Graphic/EffekseerManager.h"
 #include "../Math/Easing.h"
+#include"../Fade/FadePanel.h" 
+#include "../Sound/Sound.h"
 
 TitleScene::TitleScene()
 {
@@ -15,7 +17,6 @@ TitleScene::TitleScene()
 
 	titleState_ = TitleState::first;
 	SinCount_ = 0;
-
 }
 
 TitleScene::~TitleScene()
@@ -28,6 +29,8 @@ void TitleScene::start()
 	isEnd_ = false;
 	titleState_ = TitleState::first;
 	cursor_ = 0;
+	FadePanel::GetInstance().SetInTime(1.0f);
+	FadePanel::GetInstance().FadeIn();
 }
 
 
@@ -40,6 +43,7 @@ void TitleScene::update(float deltaTime)
 		if (titleState_ == TitleState::first &&
 			Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
 			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
+			//Sound::GetInstance().PlaySE(SE_ID::CHECK_SE);
 			titleState_ = TitleState::second;
 			return;
 		}
@@ -48,19 +52,26 @@ void TitleScene::update(float deltaTime)
 	else if (titleState_ == TitleState::second)
 	{
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
-			InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
+			InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) 
+		{
+			//Sound::GetInstance().PlaySE(SE_ID::CHECK_SE);
 			cursor_=(cursor_-1+ cursorPoses.size())% cursorPoses.size();
 		}
 		else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
 			InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180)
 		{
+			//Sound::GetInstance().PlaySE(SE_ID::CHECK_SE);
 			cursor_=(cursor_+1)%cursorPoses.size();
 		}
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
-			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
+			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A))
+		{
+			//Sound::GetInstance().PlaySE(SE_ID::CHECK_SE);
+			FadePanel::GetInstance().SetOutTime(1.0f);
+			FadePanel::GetInstance().FadeOut();
+			FadePanel::GetInstance().AddCollBack([&]() { isEnd_ = true; });
 			//シーン遷移
-			isEnd_ = true;
 			auto next = cursorPoses[cursor_].second;
 			if (next == SceneType::SCENE_EXIT)exit(0);
 			else next_ = next;
@@ -69,6 +80,11 @@ void TitleScene::update(float deltaTime)
 	temp = MathHelper::Sin(SinCount_);
 	//min(temp, 0.0f);
 	SinCount_+=3;
+
+	//エフェクト再生テスト
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::G)) {
+		EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3(10.0f, 10.0f, 10.0f));
+	}
 }
 
 void TitleScene::draw() const

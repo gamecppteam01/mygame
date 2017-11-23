@@ -4,7 +4,6 @@
 #include "../ScoreManager/ScoreDisplay.h"
 #include "../World/IWorld.h"
 #include "../World/World.h"
-#include <list>
 
 /* 順位とスコアを並べる、タイトルに戻る */
 /* すべてのスコアをソートして降順に画面に表示する */
@@ -22,6 +21,6 @@ private:
 	//ワールド
 	World world_;
 	std::list<ScoreData> datas_;
-
 	int sinCount_;
+	float timer_;
 };

@@ -12,6 +12,7 @@ enum GamePlayState
 	Start,
 	Play,
 	End,
+	Pause
 };
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
@@ -32,4 +33,5 @@ private:
 	StandardLight standardLight_;
 	//ライトハンドルクラス
 	LightHandle lightHandle_;
+	int startCount_;
 };

@@ -20,7 +20,7 @@ void SpinEffect::update(float deltaTime)
 
 void SpinEffect::draw() const
 {
-	EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT, position_);
+	EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT, position_, Vector3::Zero, Vector3(10.0f, 10.0f, 10.0f));
 }
 
 void SpinEffect::end()

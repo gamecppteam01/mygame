@@ -18,4 +18,5 @@ public:
 private:
 	IWorld* world_;
 	std::shared_ptr<Player> player_;
+	Vector3 playerPos_;
 };

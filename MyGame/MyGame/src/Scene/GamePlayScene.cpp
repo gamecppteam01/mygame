@@ -30,6 +30,8 @@
 
 //ゲームの時間
 static const float gameTime = 5.0f;
+//ゲーム開始までの時間
+static const int COUNDDOWN = 180.0f;
 
 GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(){
 }
@@ -40,8 +42,11 @@ void GamePlayScene::start() {
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
-
-	state_ = GamePlayState::Play;
+	startCount_ = 0;
+	state_ = GamePlayState::Start;
+	startCount_ = COUNDDOWN;
+	world_.worldStop();
+	
 
 	std::shared_ptr<Field> field =std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -96,7 +101,7 @@ void GamePlayScene::start() {
 	world_.FindInitialize();
 
 	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
-	world_.getCanChangedTempoManager().startMusic();
+	//world_.getCanChangedTempoManager().startMusic();
 
 	//標準ライトの設定
 	standardLight_.initialize();
@@ -113,10 +118,30 @@ void GamePlayScene::update(float deltaTime) {
 	world_.update(deltaTime);
 
 	if (world_.getCanChangedTempoManager().isEnd()) {
+		if (state_ == GamePlayState::Start) {
+			startCount_ -= deltaTime;
+			if (startCount_ <= 0) {
+				world_.worldStart();
+				state_ = GamePlayState::Play;
+				world_.getCanChangedTempoManager().startMusic();
+			}
+		}
 		if (state_ == GamePlayState::Play) {
 			UIPtr p = world_.findUI("EndUI");
 			std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
-			if (endUi->end() == true) state_ = GamePlayState::End;
+			//if (endUi->end() == true) state_ = GamePlayState::End;
+			if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)) {
+				world_.worldStop();
+				state_ = GamePlayState::Pause;
+			}
+		}
+		if (state_ == GamePlayState::Pause) {
+			//一時停止
+			DebugDraw::DebugDrawFormatString(100, 100, GetColor(255.0f, 255.0f, 255.0f), "pause中");
+			/*if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::T)){
+			world_.worldStart();
+			state_ = GamePlayState::Play;
+			}*/
 		}
 		if (state_ == GamePlayState::End) {
 			isEnd_ = true;
@@ -141,19 +166,30 @@ void GamePlayScene::update(float deltaTime) {
 }
 
 void GamePlayScene::draw() const {
-	
 	world_.draw();
-	
-	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
-		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
+	if (state_ == GamePlayState::Start)
+	{
+		DebugDraw::DebugDrawFormatString(100, 200, GetColor(255.0f, 255.0f, 255.0f), "%d", startCount_);
+
 	}
-	
-	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
+	if (state_ == GamePlayState::Play)
+	{
+		//world_.draw();
 
-	Time::GetInstance().draw_fps();
-	scoreDisplay_.Score(Vector2(0,25),5);
+		for (int i = 1; i < world_.getScoreManager().GetCharacterCount() + 1; i++) {
+			DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
+		}
 
-	playerEffectDraw_.Draw();
+		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
+
+		Time::GetInstance().draw_fps();
+		scoreDisplay_.Score(Vector2(0, 25), 5);
+
+		playerEffectDraw_.Draw();
+	}
+	if (state_ == GamePlayState::Pause) {
+		//ポーズ画面の画面描画
+	}
 }
 
 void GamePlayScene::end() {
