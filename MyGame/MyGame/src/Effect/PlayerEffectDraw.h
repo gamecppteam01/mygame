@@ -18,6 +18,8 @@ private:
 	Player* player_;
 	int key_;
 
+	float seVolume_{ 0.1f };//SE‰¹—Ê
+
 	float time_{ 0.0f };
 
 	int beginKey_{ -1 };

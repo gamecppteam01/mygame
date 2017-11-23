@@ -20,6 +20,7 @@ void PlayerEffectDraw::Initialize(){
 	time_ = 0.0f;
 	sincount = 0.0f;
 	endtime = 0.0f;
+	seVolume_ = 0.0f;
 	PointLight_alpha = 0.0f;
 	PointRight_alpha = 1.0f;
 	PointLeft_alpha = 1.0f;
@@ -39,7 +40,13 @@ void PlayerEffectDraw::Update(float deltatime){
 	//î{ó¶è„Ç™Ç¡ÇƒÇΩÇÁ
 	if (player_->getPlayerScoreRate() > 1.0f) {
 		if (!Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE)) {
+			Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, seVolume_);
 			Sound::GetInstance().PlaySE(SE_ID::CHEER_SE);
+		}
+		else {
+			seVolume_ += deltatime;
+			Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE,seVolume_);
+
 		}
 		switch (playState_)
 		{
@@ -94,8 +101,12 @@ void PlayerEffectDraw::Update(float deltatime){
 	}
 	//î{ó¶è„Ç™Ç¡Çƒñ≥Ç©Ç¡ÇΩÇÁ
 	else {
-		if(Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE))Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+		if (Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE)) {
+			seVolume_ -= deltatime;
+			Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, seVolume_);
 
+			if(Sound::GetInstance().IsSEVolume(SE_ID::CHEER_SE)<=0.01f)Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+		}
 		if (playState_ != 0) {
 			switch (playState_) {
 			case 1:
