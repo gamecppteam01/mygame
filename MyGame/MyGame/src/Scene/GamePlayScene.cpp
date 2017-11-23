@@ -136,7 +136,7 @@ void GamePlayScene::update(float deltaTime) {
 		next_ = SceneType::SCENE_TITLE;
 	}
 
-	//playerEffectDraw_.Update(deltaTime);
+	playerEffectDraw_.Update(deltaTime);
 
 }
 
@@ -154,6 +154,7 @@ void GamePlayScene::draw() const {
 	scoreDisplay_.Score(Vector2(0,25),5);
 
 	playerEffectDraw_.Draw();
+
 }
 
 void GamePlayScene::end() {

@@ -333,6 +333,7 @@
     <ClInclude Include="src\Graphic\Anime.h" />
     <ClInclude Include="src\Graphic\BlendMode.h" />
     <ClInclude Include="src\Graphic\DebugDraw.h" />
+    <ClInclude Include="src\Graphic\DxlibGraphic.h" />
     <ClInclude Include="src\Graphic\EffekseerManager.h" />
     <ClInclude Include="src\Graphic\FontManager.h" />
     <ClInclude Include="src\Graphic\Light.h" />

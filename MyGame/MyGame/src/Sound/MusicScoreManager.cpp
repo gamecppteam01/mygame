@@ -1,6 +1,8 @@
 #include "MusicScoreManager.h"
 #include"TempoManager.h"
 #include"../Graphic/Sprite.h"
+#include"../Graphic/DxlibGraphic.h"
+#include"../Math/Color.h"
 
 MusicScoreManager::MusicScoreManager(IWorld* world):
 	world_(world), currentBeat_(0.0f), currentMeasure_(0.0f)
@@ -77,18 +79,21 @@ void MusicScoreManager::Draw(const Vector2& position) const
 	*/
 }
 
-void MusicScoreManager::Draw(const Vector3& position) const
+void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) const
 {
+	float size = 20.0f;
+
 	Vector3 pos = ConvWorldPosToScreenPos(position);
 
 	float percent = currentMeasure_/(world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
-	if (percent >= 75.0f)SetDrawBright(200, 130, 0);//4è¨êﬂñàÇ…îªíË
-	else SetDrawBright(0, 130,200);
-	DrawCircleGauge(pos.x, pos.y, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
-	SetDrawBright(255, 255, 255);
+	Color c{ 0,130,200,255 };
+	if (percent >= 75.0f)c=Color(200, 130, 0,255);//4è¨êﬂñàÇ…îªíË
+	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
 
-	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
-	DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
+	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME));
+		
+	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
+	//DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
 
 	//int handle = Sprite::GetInstance().GetHandle(SPRITE_ID::CIRCLE_EFFECT);
 

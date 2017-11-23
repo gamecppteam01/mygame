@@ -5,7 +5,7 @@
 #include"../Math/Vector3.h"
 #include"../Math/Matrix.h"
 
-static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector, const int handle, float percent) {
+static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigned char R, unsigned char G, unsigned char B, unsigned char A,float size, float percent, const int handle= DX_NONE_GRAPH) {
 	//100%を0～4の範囲に変換する
 	float useparam = fabs(percent) / 25.0f;
 
@@ -23,7 +23,7 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector, const 
 
 		VERTEX_3D vec[3];
 
-		Vector3 rotVector = Vector3::Cross(upVector, Vector3::Right);
+		Vector3 rotVector = Vector3::Cross(upVector, Vector3::Left)*size;
 		//90°毎の回転行列を作成
 		Matrix rotMatrix = Matrix::CreateFromAxisAngle(upVector, ang*90.0f + 90.0f*i);
 		//位置を指定
@@ -36,89 +36,66 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector, const 
 
 		//色は暫定
 		for (int j = 0; j < 3; ++j) {
-			vec[j].a = 255;
-			vec[j].r = 255;
-			vec[j].g = 255;
-			vec[j].b = 255;
+			vec[j].a = A;
+			vec[j].r = R;
+			vec[j].g = G;
+			vec[j].b = B;
 		}
 
 		//テクスチャ座標
-		vec[0].u = sinf((i + 0)*0.5f*DX_PI_F)*1.0f + 0.5f;
-		vec[0].v = cosf((i + 0)*0.5f*DX_PI_F)*1.0f + 0.5f;
+		vec[0].u = sinf((i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[0].v = cosf((i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
 
-		vec[1].u = sinf((i + ang)*0.5f*DX_PI_F)*1.0f + 0.5f;
-		vec[1].v = cosf((i + ang)*0.5f*DX_PI_F)*1.0f + 0.5f;
+		vec[1].u = sinf((i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[1].v = cosf((i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
 
 		vec[2].u = 0.5f;
 		vec[2].v = 0.5f;
 
-		vec[0].pos = Vector3{ 10.0f,15.0f,0.0f };
-		vec[1].pos = Vector3{ 10.0f,15.0f,10.0f };
-		vec[2].pos = Vector3{ 0.0f,15.0f,10.0f };
-
+		/*
+		vec[0].pos = Vector3{ 0.0f,10.0f,10.0f };
+		vec[1].pos = Vector3{ 10.0f,10.0f,0.0f };
+		vec[2].pos = Vector3{ 0.0f,10.0f,0.0f };
+		*/
 		//描画
-		//DrawPolygon3D(vec, 3, handle, TRUE);
-		DrawPolygon3D(vec, 1, handle, TRUE);
+		DrawPolygon3DBase(vec, 3, DX_PRIMTYPE_TRIANGLESTRIP, handle, TRUE);
+		//DrawPolygon3DBase(vec, 3, DX_PRIMTYPE_TRIANGLESTRIP, DX_NONE_GRAPH, TRUE);
 		//DrawGraph(10, 10, handle, TRUE);
 		//角度を消費しきってたら中断
 		if (useparam <= 0.0f)break;
 	}
 }
-// paramに負を与えると反対方向、sangleが開始角。
-//void DrawMyCircleGauge(const Vector3& pos, const int handle, const float param, const float sangle) {
-//	//パラメータを取得
-//	float useparam = fabs(param) / 25.0f;
-//	int rev = (param>0.0) * 2 - 1;
-//
-//	//長さを取得
-//	int SX, SY;
-//	GetGraphSize(handle, &SX, &SY);
-//
-//	//４つに分ける
-//	for (int i = 0; i<4; ++i) {
-//		//使用する角度分
-//		float ang = useparam;
-//		if (ang>1.0f)ang = 1.0f;
-//
-//		//使用した分だけ消費
-//		useparam -= ang;
-//
-//		//宣言
-//		VERTEX_3D vec[3];
-//
-//		//位置を指定
-//		vec[0].pos = x + sinf(sangle + (i + 0)*0.5f*DX_PI_F*rev)*SX - 0.5f;
-//		vec[0].y = y + cosf(sangle + (i + 0)*0.5f*DX_PI_F*rev)*SY - 0.5f;
-//
-//		vec[1].x = x + sinf(sangle + (i + ang)*0.5f*DX_PI_F*rev)*SX - 0.5f;
-//		vec[1].y = y + cosf(sangle + (i + ang)*0.5f*DX_PI_F*rev)*SY - 0.5f;
-//
-//		vec[2].x = (float)x - 0.5f;
-//		vec[2].y = (float)y - 0.5f;
-//
-//
-//		//色は暫定
-//		for (int j = 0; j<3; ++j) {
-//			vec[j].a = 255;
-//			vec[j].r = 255;
-//			vec[j].g = 255;
-//			vec[j].b = 255;
-//		}
-//
-//		//テクスチャ座標
-//		vec[0].u = sinf(sangle + (i + 0)*0.5f*DX_PI_F*rev)*1.0f + 0.5f;
-//		vec[0].v = cosf(sangle + (i + 0)*0.5f*DX_PI_F*rev)*1.0f + 0.5f;
-//
-//		vec[1].u = sinf(sangle + (i + ang)*0.5f*DX_PI_F*rev)*1.0f + 0.5f;
-//		vec[1].v = cosf(sangle + (i + ang)*0.5f*DX_PI_F*rev)*1.0f + 0.5f;
-//
-//		vec[2].u = 0.5f;
-//		vec[2].v = 0.5f;
-//
-//		//描画
-//		DrawPolygon3D(vec, 3, handle, TRUE, FALSE);
-//
-//		//角度を消費しきってたら中断
-//		if (useparam <= 0.0f)break;
-//	}
-//}
+void DrawSprite3D(const Vector3& position,float size,int handle) {
+	//ゲージ枠の描画情報を入力
+	VERTEX_3D vec[4];
+	vec[0].pos = position + Vector3{ -size,0.0f,size };
+	vec[1].pos = position + Vector3{ size,0.0f,size };
+	vec[2].pos = position + Vector3{ -size,0.0f,-size };
+	vec[3].pos = position + Vector3{ size,0.0f,-size };
+	vec[0].r = 255;
+	vec[1].r = 255;
+	vec[2].r = 255;
+	vec[3].r = 255;
+	vec[0].g = 255;
+	vec[1].g = 255;
+	vec[2].g = 255;
+	vec[3].g = 255;
+	vec[0].b = 255;
+	vec[1].b = 255;
+	vec[2].b = 255;
+	vec[3].b = 255;
+	vec[0].a = 255;
+	vec[1].a = 255;
+	vec[2].a = 255;
+	vec[3].a = 255;
+	vec[0].u = 0.0f;
+	vec[0].v = 0.0f;
+	vec[1].u = 1.0f;
+	vec[1].v = 0.0f;
+	vec[2].u = 0.0f;
+	vec[2].v = 1.0f;
+	vec[3].u = 1.0f;
+	vec[3].v = 1.0f;
+
+	DrawPolygon3DBase(vec, 4, DX_PRIMTYPE_TRIANGLESTRIP, handle, TRUE);
+}

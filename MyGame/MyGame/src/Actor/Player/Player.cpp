@@ -210,43 +210,44 @@ void Player::onDraw() const
 		DebugDraw::DebugDrawFormatString(300, 300, GetColor(255, 255, 255), "スコア高い");
 	}
 
-	world_->setLateDraw([this] {
-		
-		Vector2 origin = Vector2(0.5f, 0.5f);
-		float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
-		if (isJustTiming()) {
-			SetDrawBright(200, 30, 100);
-		}
-		float size = 1.0f;
-		float tempo = world_->getCanChangedTempoManager().getTempoCount();
-		if (tempo <= 0.3f) {
-			size = 1.0f+ (0.3f - tempo);
-		}
-		Model::GetInstance().Draw2D(MODEL_ID::JUST_CIRCLE_MODEL, centerPosition_, 0, 24.0f*size , origin, 0.0f, 1.0f);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 22.0f*size, origin, 0.0f, 0.7f);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 10.0f*size, origin, 0.0f, 0.7f);
-		SetDrawBright(0, 255, 255);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, effectSize_[0] * 32.0f*size, origin, 0.0f, 1.0f);
-		SetDrawBright(255, 255, 255);
-		//3連ジャストサークル
-		/*
-		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(200, 0, 0);
-		SetDrawBright(200, 0, 0);
-		Vector2 origin = Vector2(0.5f, 0.5f);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[0]*64.0f, origin, 0.0f, 1.0f);
-		SetDrawBright(255, 255, 255);
-		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)SetDrawBright(200, 0, 0);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[1]*64.0f, origin, 0.0f, 1.0f);
-		//SetDrawBright(255, 255, 255);
-		//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 1)SetDrawBright(200, 0, 0);
-		Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[2]*64.0f, origin, 0.0f, 1.0f);
-		SetDrawBright(255, 255, 255); 
-		*/
-	}
-	);
+
+	//world_->setLateDraw([this] {
+	//	
+	//	Vector2 origin = Vector2(0.5f, 0.5f);
+	//	float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
+	//	if (isJustTiming()) {
+	//		SetDrawBright(200, 30, 100);
+	//	}
+	//	float size = 1.0f;
+	//	float tempo = world_->getCanChangedTempoManager().getTempoCount();
+	//	if (tempo <= 0.3f) {
+	//		size = 1.0f+ (0.3f - tempo);
+	//	}
+	//	Model::GetInstance().Draw2D(MODEL_ID::JUST_CIRCLE_MODEL, centerPosition_, 0, 24.0f*size , origin, 0.0f, 1.0f);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 22.0f*size, origin, 0.0f, 0.7f);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, 10.0f*size, origin, 0.0f, 0.7f);
+	//	SetDrawBright(0, 255, 255);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, centerPosition_, 0, effectSize_[0] * 32.0f*size, origin, 0.0f, 1.0f);
+	//	SetDrawBright(255, 255, 255);
+	//	//3連ジャストサークル
+	//	/*
+	//	//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 0)SetDrawBright(200, 0, 0);
+	//	SetDrawBright(200, 0, 0);
+	//	Vector2 origin = Vector2(0.5f, 0.5f);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[0]*64.0f, origin, 0.0f, 1.0f);
+	//	SetDrawBright(255, 255, 255);
+	//	//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)SetDrawBright(200, 0, 0);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[1]*64.0f, origin, 0.0f, 1.0f);
+	//	//SetDrawBright(255, 255, 255);
+	//	//if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 1)SetDrawBright(200, 0, 0);
+	//	Model::GetInstance().Draw2D(MODEL_ID::EFFECT_CIRCLE_MODEL, position_, 0, effectSize_[2]*64.0f, origin, 0.0f, 1.0f);
+	//	SetDrawBright(255, 255, 255); 
+	//	*/
+	//}
+	//);
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
-		musicScore_.Draw(centerPosition_);
+		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
 	}
 	, false);
 
