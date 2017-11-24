@@ -38,12 +38,18 @@ public:
 		soundSize_ = GetSoundTotalSample(soundHandle_);
 
 		beat_ = beat;
+
+		sample_ = 0;
+		tempoCount_ = 0.0f;
 	}
 	//楽曲を再生する
 	void startMusic() {
 		//サウンドを再生
 		PlaySoundMem(soundHandle_, DX_PLAYTYPE_BACK);
 		pause_ = false;
+		sample_ = 0;
+		tempoCount_ = 0.0f;
+
 	}
 	//楽曲を停止する
 	void stopMusic() {

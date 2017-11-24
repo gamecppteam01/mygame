@@ -23,8 +23,12 @@ public:
 	void Initialize();
 	//検索の必要なクラスの初期化
 	virtual void FindInitialize()override;
+
+	void pause();
+	void restart();
 	// 更新
 	void update(float deltaTime);
+	void update_end(float deltaTime);
 	// 描画
 	void draw() const;
 	// メッセージ処理

@@ -45,6 +45,28 @@ void Actor::initialize()
 {
 }
 
+void Actor::pause()
+{
+	onPause();
+	eachChildren([&](Actor& child) { child.pause(); });
+
+}
+
+void Actor::restart()
+{
+	onRestart();
+	eachChildren([&](Actor& child) { child.restart(); });
+
+}
+
+void Actor::onPause()
+{
+}
+
+void Actor::onRestart()
+{
+}
+
 // çXêV
 void Actor::update(float deltaTime) {
 	onUpdate(deltaTime);

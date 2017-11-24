@@ -14,6 +14,8 @@ public:
 	ActorManager();
 	// ‰Šú‰»
 	void initialize();
+	void pause();
+	void restart();
 	// XV
 	void update(float deltaTime);
 	// •`‰æ

@@ -163,6 +163,35 @@ void Player::initialize()
 	gyroCheck_.initialize();
 }
 
+void Player::onPause()
+{
+	restartSEList_.clear();
+
+	if (Sound::GetInstance().IsPlaySE(SE_ID::HIT_SE)) {
+		Sound::GetInstance().StopSE(SE_ID::HIT_SE);
+		restartSEList_.push_back(SE_ID::HIT_SE);
+	}
+	if (Sound::GetInstance().IsPlaySE(SE_ID::HALF_SE)) {
+		Sound::GetInstance().StopSE(SE_ID::HALF_SE);
+		restartSEList_.push_back(SE_ID::HALF_SE);
+	}
+	if (Sound::GetInstance().IsPlaySE(SE_ID::STEP_SUCCESS_SE)) {
+		Sound::GetInstance().StopSE(SE_ID::STEP_SUCCESS_SE);
+		restartSEList_.push_back(SE_ID::STEP_SUCCESS_SE);
+	}
+
+
+
+}
+
+void Player::onRestart()
+{
+	for (auto& r : restartSEList_) {
+		Sound::GetInstance().PlaySE(r, DX_PLAYTYPE_BACK, FALSE);
+	}
+	restartSEList_.clear();
+}
+
 void Player::onMessage(EventMessage message, void * param)
 {
 }
@@ -522,6 +551,7 @@ void Player::attack_Update(float deltaTime)
 
 void Player::shoot_Update(float deltaTime)
 {
+	velocity_ = Vector3::Zero;
 	shootAngle_ += 5.0f;
 	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * spinPower;
 	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));

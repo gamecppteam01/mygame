@@ -11,6 +11,9 @@ public:
 	void Update(float deltatime);
 	void Draw()const;
 
+	void pauseSound();
+	void restartSound();
+
 	int getBeginKey()const { return beginKey_; }
 	int getLoopKey()const { return loopKey_; }
 	int getEndKey()const { return endKey_; }

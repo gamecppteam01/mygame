@@ -149,14 +149,19 @@ void GamePlayScene::end() {
 
 	scoreDisplay_.finalize();
 	lightHandle_.deleteLightHandleAll();
+	playerEffectDraw_.finalize();
+
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().StopSE();
 }
 
 void GamePlayScene::update_Start(float deltaTime)
 {
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 		changeState(GamePlayState::Play);
+		return;
 	}
-
+	world_.update_end(deltaTime);
 }
 
 void GamePlayScene::update_Play(float deltaTime)
@@ -164,28 +169,13 @@ void GamePlayScene::update_Play(float deltaTime)
 	world_.update(deltaTime);
 
 	if (world_.getCanChangedTempoManager().isEnd()) {
-		if (state_ == GamePlayState::Play) {
-			UIPtr p = world_.findUI("EndUI");
-			std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
-			if (endUi->end() == true) state_ = GamePlayState::End;
-		}
-		if (state_ == GamePlayState::End) {
-			isEnd_ = true;
-			next_ = SceneType::SCENE_CLEAR;
-			return;
-		}
-	}
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A)) {
-		world_.getCanChangedTempoManager().pauseMusic();
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S)) {
-		world_.getCanChangedTempoManager().restartMusic();
+		changeState(GamePlayState::End);
+		return;
 	}
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
-		isEnd_ = true;
-		next_ = SceneType::SCENE_TITLE;
+		changeState(GamePlayState::Pause);
+		return;
 	}
 
 	playerEffectDraw_.Update(deltaTime);
@@ -194,15 +184,47 @@ void GamePlayScene::update_Play(float deltaTime)
 
 void GamePlayScene::update_Pause(float deltaTime)
 {
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
+		changeState(GamePlayState::Play);
+		return;
+	}
+	world_.update_end(deltaTime);
 }
 
 void GamePlayScene::update_End(float deltaTime)
 {
+	UIPtr p = world_.findUI("EndUI");
+	std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
+	if (endUi->end()) {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_CLEAR;
+	}
+	world_.update_end(deltaTime);
+
 }
 
 void GamePlayScene::changeState(GamePlayState state)
 {
 	if (state_ == state)return;//Šù‚É‚»‚Ìó‘Ô‚È‚ç‘JˆÚ‚µ‚È‚¢
+
+	//ó‘Ô‚ÌI—¹ˆ—‚ğs‚¤
+	switch (state_)
+	{
+	case Start:
+		world_.getCanChangedTempoManager().startMusic();//‰¹‚ğÄ¶
+		break;
+	case Play:
+		break;
+	case Pause:
+		playerEffectDraw_.restartSound();
+
+		world_.restart();
+		break;
+	case End:
+		break;
+	default:
+		break;
+	}
 
 	//ó‘Ô‚ğ•Ï‚¦‚Ä
 	state_ = state;
@@ -213,10 +235,11 @@ void GamePlayScene::changeState(GamePlayState state)
 	case Start:
 		break;
 	case Play:
-		world_.getCanChangedTempoManager().startMusic();//‰¹‚ğÄ¶
-
 		break;
 	case Pause:
+		playerEffectDraw_.pauseSound();
+
+		world_.pause();
 		break;
 	case End:
 		break;

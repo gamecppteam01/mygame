@@ -67,6 +67,8 @@ public:
 private:
 	void createBullet();
 	virtual void initialize()override;
+	virtual void onPause()override;
+	virtual void onRestart()override;
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
 	// 更新
@@ -275,6 +277,8 @@ private:
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
 	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
+
+	std::list<SE_ID> restartSEList_;
 
 private:
 	const Vector3 defaultPosition_;

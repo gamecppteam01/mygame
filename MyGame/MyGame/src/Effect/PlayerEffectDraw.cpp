@@ -12,7 +12,6 @@ PlayerEffectDraw::PlayerEffectDraw(Player * player):player_(player),key_(-1){
 }
 
 PlayerEffectDraw::~PlayerEffectDraw(){
-	finalize();
 }
 
 void PlayerEffectDraw::Initialize(){
@@ -24,8 +23,8 @@ void PlayerEffectDraw::Initialize(){
 	PointLight_alpha = 0.0f;
 	PointRight_alpha = 1.0f;
 	PointLeft_alpha = 1.0f;
-	PointLeft_position = Vector2(0,SCREEN_SIZE.y);
-	PointRight_position = Vector2(SCREEN_SIZE);
+	PointLeft_position = Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150);
+	PointRight_position = Vector2(SCREEN_SIZE) + Vector2(150, 150);
 }
 
 void PlayerEffectDraw::setPlayerEffectDraw(Player * player){
@@ -34,6 +33,10 @@ void PlayerEffectDraw::setPlayerEffectDraw(Player * player){
 
 void PlayerEffectDraw::finalize(){
 	player_ = nullptr;
+	if(EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))EffekseerManager::GetInstance().StopEffect3D(beginKey_);
+	if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))EffekseerManager::GetInstance().StopEffect3D(loopKey_);
+	if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))EffekseerManager::GetInstance().StopEffect3D(endKey_);
+
 }
 
 void PlayerEffectDraw::Update(float deltatime){
@@ -170,4 +173,17 @@ void PlayerEffectDraw::Draw()const{
 		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_AUDIENCE_RIGHT, PointRight_position, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_AUDIENCE_RIGHT) / 2, PointRight_alpha,Vector2::One*0.5f);
 		Sprite::GetInstance().Draw(SPRITE_ID::POINTUP_LIGHT, SCREEN_SIZE - Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, Sprite::GetInstance().GetSize(SPRITE_ID::POINTUP_LIGHT) / 2, PointLight_alpha,Vector2::One);
 	}
+}
+
+void PlayerEffectDraw::pauseSound()
+{
+	Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+}
+
+void PlayerEffectDraw::restartSound()
+{
+	if (player_->getPlayerScoreRate() <= 1.0f)return;
+
+	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE, DX_PLAYTYPE_BACK, FALSE);
+
 }

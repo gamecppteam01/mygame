@@ -77,7 +77,6 @@ private:
 		InputChecker::GetInstance().Update();
 		//DualShock4ê—p‚Ì“ü—ÍXV
 		DualShock4Manager::GetInstance().Update();
-		EffekseerManager::GetInstance().Update();
 		FadePanel::GetInstance().Update(Time::GetInstance().deltaTime());
 
 	}

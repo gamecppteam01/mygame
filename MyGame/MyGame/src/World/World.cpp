@@ -54,6 +54,18 @@ void World::FindInitialize() {
 	scoreMap_.initialize();
 }
 
+void World::pause()
+{
+	actors_.pause();
+	tempo_.pauseMusic();
+}
+
+void World::restart()
+{
+	actors_.restart();
+	tempo_.restartMusic();
+}
+
 // 更新
 void World::update(float deltaTime) {
 	scoreMap_.update(deltaTime);
@@ -69,6 +81,13 @@ void World::update(float deltaTime) {
 	lateDrawFuncList_.clear();//描画関数のリセット
 	lateDrawFuncListAfterUI_.clear();
 
+	EffekseerManager::GetInstance().Update();
+}
+
+void World::update_end(float deltaTime)
+{
+	lateDrawFuncList_.clear();
+	lateDrawFuncListAfterUI_.clear();
 }
 
 // 描画

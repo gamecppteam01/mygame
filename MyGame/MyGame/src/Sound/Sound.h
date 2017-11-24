@@ -47,7 +47,7 @@ public:
 	///<summary>
 	/// SE‚ğ–Â‚ç‚·
 	///</summary>
-	void PlaySE(const SE_ID& id, int playtype = DX_PLAYTYPE_BACK);
+	void PlaySE(const SE_ID& id, int playtype = DX_PLAYTYPE_BACK, int isTop=TRUE);
 	///<summary>
 	/// “¯ˆêSE‚ªd‚È‚ç‚È‚¢‚æ‚¤‚É–Â‚ç‚·
 	///</summary>

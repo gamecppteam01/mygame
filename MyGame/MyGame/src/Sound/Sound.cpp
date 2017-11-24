@@ -96,13 +96,13 @@ void Sound::PlayBGM(const BGM_ID& id, int playtype)
 }
 
 // SE‚ð–Â‚ç‚·
-void Sound::PlaySE(const SE_ID& id, int playtype)
+void Sound::PlaySE(const SE_ID& id, int playtype,int isTop)
 {
 	if (IsPlaySE(id) && playtype == DX_PLAYTYPE_LOOP)
 		return;
 
 	ChangeVolumeSoundMem((int)((m_se_volume * m_SE_Volumes[id]) * 255), m_SEs[id]);
-	PlaySoundMem(m_SEs[id], playtype);
+	PlaySoundMem(m_SEs[id], playtype, isTop);
 }
 
 void Sound::PlaySEDuplicate(const SE_ID& id, int playtype)

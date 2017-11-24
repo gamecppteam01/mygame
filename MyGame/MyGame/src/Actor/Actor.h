@@ -26,6 +26,10 @@ public:
 	virtual ~Actor() {}
 	//初期化(必要なキャラクターのみoverride)
 	virtual void initialize();
+	void pause();
+	void restart();
+	virtual void onPause();
+	virtual void onRestart();
 	// 更新
 	void update(float deltaTime);
 	// 描画

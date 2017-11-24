@@ -27,6 +27,16 @@ void ActorManager::initialize() {
 	countList_ = 0;
 }
 
+void ActorManager::pause()
+{
+	root_.pause();
+}
+
+void ActorManager::restart()
+{
+	root_.restart();
+}
+
 // XV
 void ActorManager::update(float deltaTime) {
 	root_.update(deltaTime);
