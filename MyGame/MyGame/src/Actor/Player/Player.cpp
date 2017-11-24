@@ -481,6 +481,7 @@ void Player::step_Update(float deltaTime)
 	}
 	if (DualShock4Manager::GetInstance().GetAngle3D().z > 45.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
 		gyroCheck_.initRotate();
+		if (nextStep_ != successStep_)Sound::GetInstance().PlaySE(SE_ID::STEP_SUCCESS_SE);//‰¹¬—§
 		nextStep_ = successStep_;
 	}
 
@@ -637,6 +638,7 @@ void Player::to_StepSuccessMode()
 	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
 
 	if (nextStep_ == 2) {
+		Sound::GetInstance().PlaySE(SE_ID::HALF_SE);
 		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
 		return;
 	}

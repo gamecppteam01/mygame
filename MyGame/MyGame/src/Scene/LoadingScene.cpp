@@ -127,8 +127,11 @@ void LoadingScene::LoadSE()
 	Sound::GetInstance().LoadSE(defaultPath + "check.mp3", SE_ID::CHECK_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "cheer2_se.mp3", SE_ID::CHEER_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "hit_se.mp3", SE_ID::HIT_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "count_se.mp3", SE_ID::COUNT_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "countFinish_se.mp3", SE_ID::COUNT_FINISH_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "stepSuccess_se.mp3", SE_ID::STEP_SUCCESS_SE);
 	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
-
 }
 
 void LoadingScene::LoadEtcetera()

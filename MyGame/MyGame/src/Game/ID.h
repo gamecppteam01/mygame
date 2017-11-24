@@ -87,8 +87,12 @@ enum MODEL_ID
 enum SE_ID
 {
 	CHECK_SE,
-	CHEER_SE,
-	HIT_SE,
+	CHEER_SE,//ボーナスエリア進入時
+	HIT_SE,//接触時
+	COUNT_SE,//カウントダウン
+	COUNT_FINISH_SE,//カウントダウン終了
+	HALF_SE,//ハーフ成功時
+	STEP_SUCCESS_SE,//ステップ成立時
 	COUNT_CHECK//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

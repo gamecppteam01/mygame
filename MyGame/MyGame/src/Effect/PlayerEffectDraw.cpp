@@ -37,6 +37,8 @@ void PlayerEffectDraw::finalize(){
 }
 
 void PlayerEffectDraw::Update(float deltatime){
+	seVolume_ = MathHelper::Clamp(seVolume_, 0.0f, 0.4f);
+
 	//”{—¦ã‚ª‚Á‚Ä‚½‚ç
 	if (player_->getPlayerScoreRate() > 1.0f) {
 		if (!Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE)) {
@@ -158,6 +160,7 @@ void PlayerEffectDraw::Update(float deltatime){
 	//	if (!EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
 	//	EffekseerManager::GetInstance().StopEffect3D(key_);
 	//}
+	
 
 }
 
