@@ -11,6 +11,8 @@ public:
 	void initialize();
 	//ライティング計算処理を使用するかどうかを設定する
 	void setUseLighting(bool value);
+	//ピクセルシェーダでライティング計算をするかどうか設定する
+	void setUsePixelLighting(bool valeu);
 	//グローバルアンビエントカラーを設定する
 	void setGlobalAmbientLight(Color& color);
 	//標準ライトのタイプをディレクショナルライトにする(方向)

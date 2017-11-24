@@ -164,7 +164,7 @@ protected:
 	//ƒ_ƒEƒ“‚·‚éŠÔ
 	const float downTime{ 3.0f };
 	//’j‚Æ—‚Ì‹——£
-	const Vector3 bulletDistance{ 0.0f,0.0f,6.0f };
+	const Vector3 bulletDistance{ 0.0f,0.0f,4.0f };
 
 	const float attackPower{ 1.0f };
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{

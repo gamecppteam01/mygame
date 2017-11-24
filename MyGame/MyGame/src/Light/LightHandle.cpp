@@ -22,6 +22,11 @@ void LightHandle::setUseLighting(bool value) {
 	SetUseLighting(value);
 }
 
+//ピクセルシェーダでライティング計算をするかどうか設定する
+void LightHandle::setUsePixelLighting(bool valeu) {
+	SetUsePixelLighting(valeu);
+}
+
 //グローバルアンビエントカラーを設定する
 void LightHandle::setGlobalAmbientLight(Color& color) {
 	SetGlobalAmbientLight(GetColorF(color.r, color.g, color.b, color.a));

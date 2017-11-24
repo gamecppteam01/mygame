@@ -108,9 +108,15 @@ void GamePlayScene::start() {
 	//標準ライトの設定
 	standardLight_.initialize();
 	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
+	standardLight_.setLightEnable(false);
 	//ライトハンドルの設定
-	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), DX_PI_F / 2.4f, DX_PI_F / 4.8f, 500, 0.1f, 0.01f, 0.0f);
-	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.2f, 0.2f, 0.2f, 1.0f));
+	lightHandle_.setUsePixelLighting(true);
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1, atten2);
+	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
+	lightHandle_.setLightDiffuseColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	//グローバルアンビエントの設定
+	standardLight_.setGlobalAmbientLight(Color(0, 0, 0, 0));
 
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
@@ -133,6 +139,14 @@ void GamePlayScene::draw() const {
 	}
 	
 	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
+	
+	//ライトテスト変数デバック描画
+	DebugDraw::DebugDrawFormatString(300, 500, GetColor(255, 0, 255), "out_angle:%f", out_angle);
+	DebugDraw::DebugDrawFormatString(300, 530, GetColor(255, 0, 255), "in_angle:%f", in_angle);
+	DebugDraw::DebugDrawFormatString(300, 560, GetColor(255, 0, 255), "atten0:%f", atten0);
+	DebugDraw::DebugDrawFormatString(300, 590, GetColor(255, 0, 255), "atten1:%f", atten1);
+	DebugDraw::DebugDrawFormatString(300, 620, GetColor(255, 0, 255), "atten2:%f", atten2);
+	DebugDraw::DebugDrawFormatString(300, 650, GetColor(255, 0, 255), "range:%f", range);
 
 	Time::GetInstance().draw_fps();
 	scoreDisplay_.Score(Vector2(0,25),5);
@@ -178,7 +192,47 @@ void GamePlayScene::update_Play(float deltaTime)
 		return;
 	}
 
-	playerEffectDraw_.Update(deltaTime);
+	//スポットライトの値操作(値が定まったら消します)
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S)) {
+		out_angle += 0.1f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)) {
+		out_angle -= 0.1f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::D)) {
+		in_angle += 0.1f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)) {
+		in_angle -= 0.1f;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F)) {
+		atten0 += 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::V)) {
+		atten0 -= 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::G)) {
+		atten1 += 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B)) {
+		atten1 -= 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Y)) {
+		atten2 += 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N)) {
+		atten2 -= 0.001f;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::J)) {
+		range += 1.0f;
+	}
+	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M)) {
+		range -= 1.0f;
+	}
+	lightHandle_.setLightAngleHandle("Spot", out_angle, in_angle);
+	lightHandle_.setLightRangeAttenHandle("Spot", range, atten0, atten1, atten2);
+
+	//playerEffectDraw_.Update(deltaTime);
 
 }
 
