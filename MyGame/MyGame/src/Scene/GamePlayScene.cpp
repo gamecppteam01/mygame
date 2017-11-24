@@ -93,6 +93,8 @@ void GamePlayScene::start() {
 	world_.addUI(warningUI);
 	std::shared_ptr<EndUI> endUI = std::make_shared<EndUI>(&world_.getCanChangedTempoManager(), Vector2(500, 500));
 	world_.addUI(endUI);
+	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
+	world_.addUI(timeUI);
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 
@@ -138,7 +140,7 @@ void GamePlayScene::draw() const {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
 	
-	NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
+	//NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
 	
 	//ライトテスト変数デバック描画
 	DebugDraw::DebugDrawFormatString(300, 500, GetColor(255, 0, 255), "out_angle:%f", out_angle);

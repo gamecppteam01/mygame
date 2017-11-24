@@ -1,6 +1,5 @@
 #pragma once
 #include "../Math/Math.h"
-#include"../Graphic/FontManager.h"
 
 class NumberManager {
 private:
@@ -10,16 +9,18 @@ public:
 		static NumberManager n;
 		return n;
 	}
-	//数値描画(ポジション、数値、最大表示桁数,字間)
-	void DrawNumber(Vector2& position,int score,int digit, int space);
-	//数値描画(ポジション、数値)
-	void DrawNumber(Vector2& position, int score);
+	//数値描画フォント(ポジション、数値)
+	void DrawNumber(const Vector2& position,const int number);
+	//数値描画フォント(ポジション、数値、色)(1:白,2:赤,3:緑,4:青)
+	void DrawNumber(const Vector2& position, const int number,int colornumebr);
+	//数値描画テクスチャ(テクスチャID、ポジション、数値、画像サイズ、表示サイズ)
+	void DrawNumberTexture( const Vector2& position, int number, const Vector2& size, const Vector2& scale);
+	//数値描画テクスチャ(テクスチャID、ポジション、数値、画像サイズ、表示サイズ)
+	//赤色の数字(後からＩＤで変えれるように変更します)
+	void DrawNumberTexture2(const Vector2& position, int number, const Vector2& size, const Vector2& scale);
 
-	//処理
-	void draw(Vector2& position, int score,int digit ,char fill = '0');
-	void draw(Vector2& position,int score,char fill = '0');
-	void draw(const Vector2& position, int score);
-	void draw(const Vector2& positon, const std::string& score);
 
-	void drawT(const Vector2& position, int score, int digit);
+	void drawT(const Vector2& position, int number, int digit);
+private:
+	int C{ 0 };
 };

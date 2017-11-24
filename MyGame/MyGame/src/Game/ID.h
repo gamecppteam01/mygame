@@ -36,6 +36,8 @@ enum SPRITE_ID
 	CIRCLE_EFFECT,
 	JUST_GAUGE,
 	JUST_GAUGE_FRAME,
+	NUMBER,
+	REDNUMBER,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

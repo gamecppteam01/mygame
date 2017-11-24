@@ -6,6 +6,7 @@
 #include"WarningManager.h"
 #include"StepUIManager.h"
 #include"EndUI.h"
+#include"TimeUI.h"
 
 
 
