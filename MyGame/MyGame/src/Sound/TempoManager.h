@@ -50,6 +50,16 @@ public:
 		//サウンドを停止
 		StopSoundMem(soundHandle_);
 	}
+	//楽曲の一時停止
+	void pauseMusic() {
+		pause_ = true;
+		StopSoundMem(soundHandle_);
+	}
+	//楽曲の再開
+	void restartMusic() {
+		PlaySoundMem(soundHandle_, DX_PLAYTYPE_BACK, FALSE);
+		pause_ = false;
+	}
 	void setActor(const ActorPtr& actor) {
 		actors_.push_back(actor);
 	}

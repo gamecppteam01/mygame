@@ -7,6 +7,8 @@ public:
 
 	void setTarget(ActorPtr& target);
 
+	//ターゲットが設定されている場合、初期位置をセットする
+	void setFirstPos();
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
@@ -17,10 +19,12 @@ private:
 	// 衝突した時の処理
 	virtual void onCollide(Actor& other);
 
+
 private:
 	void cameraMove(float deltaTime);
 private:
 	ActorPtr target_;
 
+	Vector3 prevPosition_;
 	Vector3 targetTranslate_;
 };

@@ -96,6 +96,11 @@ Vector3& Actor::position() {
 	return position_;
 }
 
+Vector3 Actor::prevPosition()
+{
+	return previousPosition_;
+}
+
 // ‰ñ“]s—ñ‚ğ•Ô‚·
 Matrix& Actor::rotation() {
 	return rotation_;

@@ -42,6 +42,7 @@ public:
 	const std::string& getName() const;
 	// À•W‚ğ•Ô‚·
 	virtual Vector3& position();
+	virtual Vector3 prevPosition();
 	// ‰ñ“]s—ñ‚ğ•Ô‚·
 	Matrix& rotation();
 	// •ÏŠ·s—ñ‚ğ•Ô‚·

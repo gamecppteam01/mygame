@@ -32,6 +32,12 @@
 static const float gameTime = 5.0f;
 
 GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(){
+	//更新遷移先の設定
+	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
+	updateFuncMap_[GamePlayState::Play] = [&](float deltaTime) {update_Play(deltaTime); };
+	updateFuncMap_[GamePlayState::Pause] = [&](float deltaTime) {update_Pause(deltaTime); };
+	updateFuncMap_[GamePlayState::End] = [&](float deltaTime) {update_End(deltaTime); };
+
 }
 
 void GamePlayScene::start() {
@@ -41,7 +47,7 @@ void GamePlayScene::start() {
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
 
-	state_ = GamePlayState::Play;
+	state_ = GamePlayState::Start;
 
 	std::shared_ptr<Field> field =std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -79,6 +85,7 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
+	world_.getCamera()->setFirstPos();
 
 	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100),Vector2(1150,100));
 	world_.addUI(mapUI);
@@ -95,8 +102,8 @@ void GamePlayScene::start() {
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
+	//音リソのセット
 	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
-	world_.getCanChangedTempoManager().startMusic();
 
 	//標準ライトの設定
 	standardLight_.initialize();
@@ -107,36 +114,13 @@ void GamePlayScene::start() {
 
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
+
+	//changeState(GamePlayState::Play);
 }
 
 void GamePlayScene::update(float deltaTime) {
-	world_.update(deltaTime);
+	updateFuncMap_[state_](deltaTime);//更新
 
-	if (world_.getCanChangedTempoManager().isEnd()) {
-		if (state_ == GamePlayState::Play) {
-			UIPtr p = world_.findUI("EndUI");
-			std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
-			if (endUi->end() == true) state_ = GamePlayState::End;
-		}
-		if (state_ == GamePlayState::End) {
-			isEnd_ = true;
-			next_ = SceneType::SCENE_CLEAR;
-			return;
-		}
-	}
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A)) {
-		isEnd_ = true;
-		next_ = SceneType::SCENE_CLEAR;
-		return;
-	}
-
-	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
-		isEnd_ = true;
-		next_ = SceneType::SCENE_TITLE;
-	}
-
-	playerEffectDraw_.Update(deltaTime);
 
 }
 
@@ -153,7 +137,7 @@ void GamePlayScene::draw() const {
 	Time::GetInstance().draw_fps();
 	scoreDisplay_.Score(Vector2(0,25),5);
 
-	playerEffectDraw_.Draw();
+	if(state_!=GamePlayState::Start)playerEffectDraw_.Draw();
 
 }
 
@@ -165,4 +149,78 @@ void GamePlayScene::end() {
 
 	scoreDisplay_.finalize();
 	lightHandle_.deleteLightHandleAll();
+}
+
+void GamePlayScene::update_Start(float deltaTime)
+{
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
+		changeState(GamePlayState::Play);
+	}
+
+}
+
+void GamePlayScene::update_Play(float deltaTime)
+{
+	world_.update(deltaTime);
+
+	if (world_.getCanChangedTempoManager().isEnd()) {
+		if (state_ == GamePlayState::Play) {
+			UIPtr p = world_.findUI("EndUI");
+			std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
+			if (endUi->end() == true) state_ = GamePlayState::End;
+		}
+		if (state_ == GamePlayState::End) {
+			isEnd_ = true;
+			next_ = SceneType::SCENE_CLEAR;
+			return;
+		}
+	}
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A)) {
+		world_.getCanChangedTempoManager().pauseMusic();
+	}
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S)) {
+		world_.getCanChangedTempoManager().restartMusic();
+	}
+
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_TITLE;
+	}
+
+	playerEffectDraw_.Update(deltaTime);
+
+}
+
+void GamePlayScene::update_Pause(float deltaTime)
+{
+}
+
+void GamePlayScene::update_End(float deltaTime)
+{
+}
+
+void GamePlayScene::changeState(GamePlayState state)
+{
+	if (state_ == state)return;//既にその状態なら遷移しない
+
+	//状態を変えて
+	state_ = state;
+
+	//対応した変更時処理を行う
+	switch (state_)
+	{
+	case Start:
+		break;
+	case Play:
+		world_.getCanChangedTempoManager().startMusic();//音を再生
+
+		break;
+	case Pause:
+		break;
+	case End:
+		break;
+	default:
+		break;
+	}
 }
