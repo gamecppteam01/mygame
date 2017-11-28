@@ -13,3 +13,13 @@ std::list<ScoreData> DataManager::getData() const
 {
 	return datas_;
 }
+
+void DataManager::setStage(int stage)
+{
+	chooseStage_ = stage;
+}
+
+int DataManager::getStage() const
+{
+	return chooseStage_;
+}

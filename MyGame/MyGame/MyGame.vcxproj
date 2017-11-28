@@ -240,6 +240,8 @@
     <ClCompile Include="src\Scene\LoadingScene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
+    <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
+    <ClCompile Include="src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\ScoreManager\NumberManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
@@ -257,6 +259,7 @@
     <ClCompile Include="src\UI\MiniMap.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\StepUIManager.cpp" />
+    <ClCompile Include="src\UI\TimeUI.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UITemplate.cpp" />
@@ -381,12 +384,15 @@
     <ClInclude Include="src\Scene\GameClearScene.h" />
     <ClInclude Include="src\Scene\GameOverScene.h" />
     <ClInclude Include="src\Scene\GamePlayScene.h" />
+    <ClInclude Include="src\Scene\GamePlayState.h" />
     <ClInclude Include="src\Scene\LoadingScene.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scene\Scenes.h" />
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
+    <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
+    <ClInclude Include="src\Scene\StageSelectScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\ScoreManager\NumberManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreBase.h" />
@@ -411,6 +417,7 @@
     <ClInclude Include="src\UI\StepUI.h" />
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />
+    <ClInclude Include="src\UI\TimeUI.h" />
     <ClInclude Include="src\UI\UI.h" />
     <ClInclude Include="src\UI\UIInclude.h" />
     <ClInclude Include="src\UI\UIManager.h" />

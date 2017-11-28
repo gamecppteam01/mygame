@@ -147,6 +147,11 @@ void Sound::StopSE()
 	}
 }
 
+int Sound::GetHandle(BGM_ID id)
+{
+	return m_BGMs[id];
+}
+
 // BGM‚ª–Â‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
 bool Sound::IsPlayBGM()
 {

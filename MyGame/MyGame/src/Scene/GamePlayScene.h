@@ -32,6 +32,9 @@ private:
 	void changeState(GamePlayState state);
 
 private:
+	//現在のステージ番号
+	int stageNum_{ 1 };
+
 	World world_;
 	ScoreDisplay scoreDisplay_;
 	GamePlayState state_;

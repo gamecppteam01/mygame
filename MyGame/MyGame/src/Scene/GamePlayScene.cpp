@@ -42,6 +42,8 @@ GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw
 }
 
 void GamePlayScene::start() {
+	stageNum_ = DataManager::GetInstance().getStage();//ステージ番号受け取り
+
 	world_.Initialize();
 	//world_.setShadowMap(true);
 	FadePanel::GetInstance().SetInTime(1.0f);
@@ -107,8 +109,8 @@ void GamePlayScene::start() {
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
-	//音リソのセット
-	world_.getCanChangedTempoManager().setMusic("res/Sound/bgm/stage1a_bgm.wav", 156.0f);
+	//楽曲のセット
+	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
 
 	//標準ライトの設定
 	standardLight_.initialize();
@@ -250,7 +252,7 @@ void GamePlayScene::update_Play(float deltaTime)
 	lightHandle_.setLightAngleHandle("Spot", out_angle, in_angle);
 	lightHandle_.setLightRangeAttenHandle("Spot", range, atten0, atten1, atten2);
 
-	//playerEffectDraw_.Update(deltaTime);
+	playerEffectDraw_.Update(deltaTime);
 
 }
 

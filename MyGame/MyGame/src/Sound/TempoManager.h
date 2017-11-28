@@ -6,28 +6,22 @@
 
 class TempoManager {
 public:
-	TempoManager():fileName_("none"),bpm_(0) {
+	TempoManager():bpm_(0) {
 
 	}
 	~TempoManager() {
 
 	}
 	void initialize() {
-		fileName_ = "none";
 		bpm_ = 0;
-		DeleteSoundMem(soundHandle_);
 		actors_.clear();
 		justStepTimer_.Initialize();
 	}
 	//楽曲を設定する
-	void setMusic(const std::string& filename,float bpm,int beat=3,int musicCount=4) {
-		//前の曲を消す
-		DeleteSoundMem(soundHandle_);
+	void setMusic(BGM_ID soundId,float bpm,int beat=3,int musicCount=4) {
 
-		//一応名前を残す
-		fileName_ = filename;
 		//サウンドリソースの読み込み
-		soundHandle_=LoadSoundMem(fileName_.c_str());
+		soundHandle_=Sound::GetInstance().GetHandle(soundId);
 		ChangeVolumeSoundMem(80, soundHandle_);
 		//周波数の設定(44.1khz)固定値にする
 		sps_ = GetFrequencySoundMem(soundHandle_);
@@ -135,8 +129,6 @@ public:
 		return musicCount_;
 	}
 private:
-	//サウンドリソースのファイルパス(一応)
-	std::string fileName_;
 	//サウンドハンドル
 	int soundHandle_;
 	//bpmを指定する

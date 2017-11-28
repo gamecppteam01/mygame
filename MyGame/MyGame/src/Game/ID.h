@@ -111,6 +111,7 @@ enum SE_ID
 enum BGM_ID
 {
 	TITLE_BGM,
+	STAGE1_BGM,
 	
 	COUNT_BGM//全リソース数確認用キー(このキーにリソースを設定しないこと)
 

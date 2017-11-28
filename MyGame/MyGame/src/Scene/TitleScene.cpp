@@ -100,7 +100,7 @@ void TitleScene::draw() const
 		SetDrawBright(255, 255, 255);
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::START_SPRITE) / 2;
 		if (cursor_ != 1)SetDrawBright(100, 100, 100);
-		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
+		Sprite::GetInstance().Draw(SPRITE_ID::STAGESELECT_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
 		SetDrawBright(255, 255, 255);
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::END_SPRITE) / 2;
 		if (cursor_ != 2)SetDrawBright(100, 100, 100);

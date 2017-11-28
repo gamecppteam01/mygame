@@ -16,6 +16,12 @@ public:
 	void setData(std::list<ScoreData>& list);
 	std::list<ScoreData> getData() const;
 
+	void setStage(int stage);
+	int getStage()const;
+
 private:
 	std::list<ScoreData> datas_;
+
+	//ステージ番号
+	int chooseStage_{ 1 };
 };

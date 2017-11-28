@@ -185,6 +185,7 @@ void PlayerEffectDraw::restartSound()
 {
 	if (player_->getPlayerScoreRate() <= 1.0f)return;
 
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, seVolume_);
 	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE, DX_PLAYTYPE_BACK, FALSE);
 
 }

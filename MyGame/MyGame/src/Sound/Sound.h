@@ -62,6 +62,9 @@ public:
 	void StopSE(const SE_ID& id);
 	void StopSE();
 
+	//BGM‚Ìƒnƒ“ƒhƒ‹‚ðŽæ“¾‚·‚é
+	int GetHandle(BGM_ID id);
+
 	///<summary>
 	/// BGM‚ª–Â‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
 	///</summary>

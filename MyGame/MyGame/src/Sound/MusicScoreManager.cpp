@@ -3,6 +3,7 @@
 #include"../Graphic/Sprite.h"
 #include"../Graphic/DxlibGraphic.h"
 #include"../Math/Color.h"
+#include"../Sound/TempoManager.h"
 
 MusicScoreManager::MusicScoreManager(IWorld* world):
 	world_(world), currentBeat_(0.0f), currentMeasure_(0.0f)
