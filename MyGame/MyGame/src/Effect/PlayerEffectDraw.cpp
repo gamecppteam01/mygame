@@ -36,6 +36,7 @@ void PlayerEffectDraw::finalize(){
 	if(EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))EffekseerManager::GetInstance().StopEffect3D(beginKey_);
 	if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))EffekseerManager::GetInstance().StopEffect3D(loopKey_);
 	if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))EffekseerManager::GetInstance().StopEffect3D(endKey_);
+	if (EffekseerManager::GetInstance().isPlayEffect3D(key_))EffekseerManager::GetInstance().StopEffect3D(key_);
 
 }
 

@@ -407,7 +407,7 @@ void Player::idle_Update(float deltaTime)
 		return;
 	}
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	if (isChangeStep()) {
@@ -449,7 +449,7 @@ void Player::move_Update(float deltaTime)
 	framevelocity.z += move.y*movePower;
 
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot,0.0f,1.0f,false))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 
@@ -552,19 +552,20 @@ void Player::attack_Update(float deltaTime)
 void Player::shoot_Update(float deltaTime)
 {
 	velocity_ = Vector3::Zero;
-	shootAngle_ += 5.0f;
+	shootAngle_ += 3.5f;
 	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * spinPower;
 	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//‰ñ“]‚ðXV
-	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+	//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -2.0f*turnPower_);
 
 	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*spinPower;
 	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//‰ñ“]‚ðXV
-	*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+	//*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -2.0f*turnPower_);
 
 	if (shootAngle_ >= 360.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		//if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		if (change_State(Player_State::ShootEnd))playerUpdateFunc_[state_](deltaTime);
 		return;
 
 	}
@@ -572,7 +573,8 @@ void Player::shoot_Update(float deltaTime)
 
 void Player::shootend_Update(float deltaTime)
 {
-	if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+	if(animation_.IsAnimEnd())
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 }
 
 void Player::knockback_Update(float deltaTime)
@@ -710,7 +712,6 @@ void Player::to_ShootMode()
 
 void Player::to_ShootEndMode()
 {
-
 }
 
 void Player::to_KnockBackMode()

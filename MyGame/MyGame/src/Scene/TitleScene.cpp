@@ -28,6 +28,8 @@ void TitleScene::start()
 	isEnd_ = false;
 	titleState_ = TitleState::first;
 	cursor_ = 0;
+	brightCount_ = 0;
+	SinCount_ = 0;
 }
 
 
@@ -68,7 +70,8 @@ void TitleScene::update(float deltaTime)
 	}
 	temp = MathHelper::Sin(SinCount_);
 	//min(temp, 0.0f);
-	SinCount_+=3;
+	SinCount_ = (SinCount_ + 8) % 360;
+	brightCount_ = (brightCount_ + 2) % 360;
 }
 
 void TitleScene::draw() const
@@ -79,17 +82,30 @@ void TitleScene::draw() const
 	//はじめる
 	if (titleState_ == TitleState::first) {
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::START_SPRITE) / 2;
-		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(WINDOW_WIDTH/2, 600.0f),origin, std::abs(temp),Vector2::One);
+		
+		int bright = (int)(std::abs(MathHelper::Sin(brightCount_))*155.f) + 100;
+		SetDrawBright(bright, bright, bright);
+		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(WINDOW_WIDTH/2, 600.0f),origin, /*std::abs(MathHelper::Sin(SinCount_*0.5f))*/1.0f,Vector2::One);
+		SetDrawBright(255, 255, 255);
 	}
 	//ステージ選択か終了
 	if (titleState_ == TitleState::second) {
-		origin = Sprite::GetInstance().GetSize(SPRITE_ID::BUTTON_A) / 2;
-		Sprite::GetInstance().Draw(SPRITE_ID::BUTTON_A, cursorPoses[cursor_].first, origin, 1.0f,Vector2::One);
-	
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
+		//Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, cursorPoses[cursor_].first, origin, 1.0f, Vector2::One);
+		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f - cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, true);
+		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, false);
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_SPRITE) / 2;
+		if(cursor_!=0)SetDrawBright(100, 100, 100);
+		Sprite::GetInstance().Draw(SPRITE_ID::TUTORIAL_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[0].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
+		SetDrawBright(255, 255, 255);
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::START_SPRITE) / 2;
-		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(WINDOW_WIDTH/2,cursorPoses[0].first.y),origin, cursor_==0 ? std::abs(temp):1.0f,Vector2::One);
+		if (cursor_ != 1)SetDrawBright(100, 100, 100);
+		Sprite::GetInstance().Draw(SPRITE_ID::START_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
+		SetDrawBright(255, 255, 255);
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::END_SPRITE) / 2;
-		Sprite::GetInstance().Draw(SPRITE_ID::END_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y),origin, cursor_ == 1 ? std::abs(temp) : 1.0f,Vector2::One);
+		if (cursor_ != 2)SetDrawBright(100, 100, 100);
+		Sprite::GetInstance().Draw(SPRITE_ID::END_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[2].first.y),origin, 1.0f/*cursor_ == 1 ? std::abs(temp) : 1.0f*/,Vector2::One);
+		SetDrawBright(255, 255, 255);
 	}
 	Camera::GetInstance().Position.Set(Vector3(0, 10, 300));
 

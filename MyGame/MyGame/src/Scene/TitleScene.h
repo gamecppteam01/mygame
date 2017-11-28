@@ -39,11 +39,12 @@ private:
 	//サイン波
 	int SinCount_;
 	float temp;
-
+	int brightCount_{ 0 };
 private:
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
-		{Vector2{ 300.0f,500.f },SceneType::SCENE_GAMEPLAY},
-		{Vector2{ 300.0f,600.f },SceneType::SCENE_EXIT }//ゲーム終了(遷移先はダミー)
+		{ Vector2{ 450.0f,400.f },SceneType::SCENE_TUTORIAL },
+		{ Vector2{ 450.0f,525.f },SceneType::SCENE_GAMEPLAY },
+		{ Vector2{ 450.0f,650.f },SceneType::SCENE_EXIT }//ゲーム終了(遷移先はダミー)
 	};
 };

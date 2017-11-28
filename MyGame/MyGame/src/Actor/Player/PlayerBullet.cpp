@@ -25,6 +25,11 @@ const Player* PlayerBullet::getPlayer() const
 	return player_;
 }
 
+Vector3 & PlayerBullet::position()
+{
+	return player_->position();
+}
+
 void PlayerBullet::onMessage(EventMessage message, void * param)
 {
 }

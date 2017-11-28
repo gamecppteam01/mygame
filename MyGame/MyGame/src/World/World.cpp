@@ -43,6 +43,9 @@ void World::Initialize()
 
 	//if (ShadowMapHandle != -1) return;
 
+	EffekseerManager::GetInstance().Initialize();
+
+
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.Clear();

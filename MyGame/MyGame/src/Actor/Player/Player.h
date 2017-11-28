@@ -35,7 +35,7 @@ public:
 		Idle = 1,//待機時
 		Step_Left = 8,//左ステップ時
 		Attack = 11,//攻撃時
-		Shoot = 12,//発射時
+		Shoot = 1,//発射時
 		ShootEnd = 13,//発射終了
 		KnockBack = 14,//被弾時
 		Down = 15,//ダウン時

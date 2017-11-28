@@ -34,15 +34,24 @@ void LoadingScene::end() {
 void LoadingScene::LoadSprite()
 {
 	std::string defaultPath = "res/Sprite/";//全リソース共通パス
-	Sprite::GetInstance().Load(defaultPath + "gamestartText.bmp", SPRITE_ID::START_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "gameendText.bmp", SPRITE_ID::END_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "totitleText.bmp", SPRITE_ID::TOTITLE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "gamestartText.png", SPRITE_ID::START_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "tutorial.png", SPRITE_ID::TUTORIAL_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "gameend.png", SPRITE_ID::END_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "totitle.png", SPRITE_ID::TOTITLE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "whitescreen.png", SPRITE_ID::WHITE_SCREEN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "blackscreen.png", SPRITE_ID::BLACK_SCREEN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleStart.png", SPRITE_ID::TITLE_START);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleEnd.png", SPRITE_ID::TITLE_END);
 	Sprite::GetInstance().Load(defaultPath + "TestTitleSelect.png", SPRITE_ID::TITLE_SELECT);
 	Sprite::GetInstance().Load(defaultPath + "result.png", SPRITE_ID::RESULT);
+	Sprite::GetInstance().Load(defaultPath + "stageselect.png", SPRITE_ID::STAGESELECT_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "backgame.png", SPRITE_ID::BACKGAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "stage1.png", SPRITE_ID::STAGE1_TEXT_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "stage2.png", SPRITE_ID::STAGE2_TEXT_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "stage3.png", SPRITE_ID::STAGE3_TEXT_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "retry.png", SPRITE_ID::RETRY_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "pause.png", SPRITE_ID::PAUSE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "cursor.png", SPRITE_ID::CURSOR);
 
 	Sprite::GetInstance().Load(defaultPath + "gauge.png",   SPRITE_ID::GAUGE_UI);
 	Sprite::GetInstance().Load(defaultPath + "ButtonA.png", SPRITE_ID::BUTTON_A);

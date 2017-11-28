@@ -31,8 +31,9 @@
 //ゲームの時間
 static const float gameTime = 5.0f;
 
-GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(){
+GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(),pause_(){
 	//更新遷移先の設定
+	updateFuncMap_[GamePlayState::Reload] = [&](float deltaTime) {update_Reload(deltaTime); };
 	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
 	updateFuncMap_[GamePlayState::Play] = [&](float deltaTime) {update_Play(deltaTime); };
 	updateFuncMap_[GamePlayState::Pause] = [&](float deltaTime) {update_Pause(deltaTime); };
@@ -42,10 +43,12 @@ GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw
 
 void GamePlayScene::start() {
 	world_.Initialize();
-	world_.setShadowMap(true);
+	//world_.setShadowMap(true);
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
+
+	pause_.initialize();
 
 	state_ = GamePlayState::Start;
 
@@ -123,6 +126,7 @@ void GamePlayScene::start() {
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
 
+	timeCount_ = 3.0f;
 	//changeState(GamePlayState::Play);
 }
 
@@ -154,7 +158,11 @@ void GamePlayScene::draw() const {
 	scoreDisplay_.Score(Vector2(0,25),5);
 
 	if(state_!=GamePlayState::Start)playerEffectDraw_.Draw();
+	else {
+		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (int)std::ceilf(timeCount_), 4);
+	}
 
+	if (state_ == GamePlayState::Pause)pause_.draw();
 }
 
 void GamePlayScene::end() {
@@ -171,12 +179,20 @@ void GamePlayScene::end() {
 	Sound::GetInstance().StopSE();
 }
 
+void GamePlayScene::update_Reload(float deltaTime)
+{
+	changeState(GamePlayState::Play);
+	world_.update_end(deltaTime);
+}
+
 void GamePlayScene::update_Start(float deltaTime)
 {
-	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
+	timeCount_ -= deltaTime;
+	if (timeCount_ <= 0.0f){
 		changeState(GamePlayState::Play);
 		return;
 	}
+
 	world_.update_end(deltaTime);
 }
 
@@ -245,6 +261,15 @@ void GamePlayScene::update_Pause(float deltaTime)
 		return;
 	}
 	world_.update_end(deltaTime);
+
+	GamePlayState state;
+	int p = pause_.update(deltaTime, next_, state);
+	if (p == 1) {
+		isEnd_ = true;
+	}
+	else if (p == 2) {
+		changeState(state);
+	}
 }
 
 void GamePlayScene::update_End(float deltaTime)
@@ -266,6 +291,8 @@ void GamePlayScene::changeState(GamePlayState state)
 	//状態の終了処理を行う
 	switch (state_)
 	{
+	case Reload:
+		break;
 	case Start:
 		world_.getCanChangedTempoManager().startMusic();//音を再生
 		break;
@@ -288,14 +315,18 @@ void GamePlayScene::changeState(GamePlayState state)
 	//対応した変更時処理を行う
 	switch (state_)
 	{
+	case Reload:
+		end();
+		start();
+		break;
 	case Start:
 		break;
 	case Play:
 		break;
 	case Pause:
 		playerEffectDraw_.pauseSound();
-
 		world_.pause();
+		pause_.start();
 		break;
 	case End:
 		break;

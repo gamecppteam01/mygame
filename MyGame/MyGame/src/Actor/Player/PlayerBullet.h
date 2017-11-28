@@ -12,7 +12,7 @@ public:
 	enum class PlayerBullet_Animation {
 		Move_Forward = 0,//前移動時
 		Idle = 1,//待機時
-		Shoot = 8,//左ステップ時
+		Shoot = 1,//左ステップ時
 		ShootEnd=9,
 		Step_Left=10,
 		Turn = 11,//回転時
@@ -30,6 +30,8 @@ public:
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 	//プレイヤーを取得する
 	const Player* getPlayer()const;
+
+	virtual Vector3& position()override;
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
