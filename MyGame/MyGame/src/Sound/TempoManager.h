@@ -128,6 +128,10 @@ public:
 	int getMusicCount()const {
 		return musicCount_;
 	}
+	//サウンドハンドルの取得
+	int getSoundHandle() const {
+		return soundHandle_;
+	}
 private:
 	//サウンドハンドル
 	int soundHandle_;

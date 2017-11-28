@@ -257,6 +257,7 @@
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
+    <ClCompile Include="src\UI\Song_Title_UI.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\StepUIManager.cpp" />
     <ClCompile Include="src\UI\TimeUI.cpp" />
@@ -414,6 +415,7 @@
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
+    <ClInclude Include="src\UI\Song_Title_UI.h" />
     <ClInclude Include="src\UI\StepUI.h" />
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />

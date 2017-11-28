@@ -27,6 +27,7 @@
 #include"../Sound/TempoManager.h"
 #include"../Fade/FadePanel.h"
 #include "../UI/EndUI.h"
+#include "../UI/Song_Title_UI.h"
 
 //ゲームの時間
 static const float gameTime = 5.0f;
@@ -92,6 +93,9 @@ void GamePlayScene::start() {
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
 
+	//楽曲のセット
+	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
+
 	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100),Vector2(1150,100));
 	world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
@@ -100,6 +104,7 @@ void GamePlayScene::start() {
 	world_.addUI(endUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
 	world_.addUI(timeUI);
+	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
 	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
 	//world_.addUI(uiptr);
 
@@ -108,9 +113,6 @@ void GamePlayScene::start() {
 
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
-
-	//楽曲のセット
-	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
 
 	//標準ライトの設定
 	standardLight_.initialize();

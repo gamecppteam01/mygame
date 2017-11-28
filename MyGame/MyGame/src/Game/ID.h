@@ -47,6 +47,7 @@ enum SPRITE_ID
 	JUST_GAUGE_FRAME,
 	NUMBER,
 	REDNUMBER,
+	NOTE,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
