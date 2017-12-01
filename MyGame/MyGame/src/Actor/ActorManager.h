@@ -20,6 +20,8 @@ public:
 	void update(float deltaTime);
 	// 描画
 	void draw() const;
+	//影の描画
+	void shadowDraw() const;
 	// アクターの追加
 	void addActor(ActorGroup group, const ActorPtr& actor);
 	// アクターの検索

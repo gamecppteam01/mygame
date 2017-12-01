@@ -34,6 +34,8 @@ public:
 	void update(float deltaTime);
 	// •`‰æ
 	void draw() const;
+	//‰e‚Ì•`‰æ
+	virtual void shadowDraw() const;
 	// Õ“Ëˆ—
 	void collide(Actor& other);
 	// Õ“Ë–Œãˆ—

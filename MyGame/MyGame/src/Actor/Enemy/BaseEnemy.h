@@ -12,8 +12,11 @@ public:
 	enum class Enemy_Animation {
 		Move_Forward = 0,//前移動時
 		Idle = 0,//待機時
-		Step_Left = 2,//左ステップ時
+		Spin = 1,//スピン時
+		Quarter = 2,//クウォータ―時
 		Turn = 3,//回転時
+		Half = 4,//ハーフ時
+		Step_Left = 3,//左ステップ時
 		KnockBack = 4,//被弾時
 		Down = 5,//ダウン時
 	};
@@ -50,6 +53,8 @@ protected:
 	virtual void onUpdate(float deltaTime)override;
 	// 描画
 	virtual void onDraw() const override;
+	//影の描画
+	virtual void shadowDraw() const override;
 	// 衝突した
 	virtual void onCollide(Actor& other) override;
 	
@@ -168,9 +173,9 @@ protected:
 
 	const float attackPower{ 1.0f };
 	const std::vector<std::pair<Enemy_Animation, int>> stepAnim{
-		{Enemy_Animation::KnockBack,SCORE_QUARTER },//クォーター
+		{Enemy_Animation::Quarter,SCORE_QUARTER },//クォーター
 		{Enemy_Animation::Idle,0},//ハーフ
-		{Enemy_Animation::Step_Left,SCORE_TURN },//ターン
+		{Enemy_Animation::Turn,SCORE_TURN },//ターン
 		{Enemy_Animation::Idle,0		  }//スピン
 	};
 

@@ -81,6 +81,10 @@ void Actor::draw() const {
 	eachChildren([&](const Actor& child) { child.draw(); });
 }
 
+//‰e‚Ì•`‰æ
+void Actor::shadowDraw() const {
+}
+
 
 // Õ“Ë”»’è
 void Actor::collide(Actor& other) {

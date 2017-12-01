@@ -50,6 +50,11 @@ void ActorManager::draw() const {
 	root_.draw();
 }
 
+//‰e‚Ì•`‰æ
+void ActorManager::shadowDraw() const{
+	root_.shadowDraw();
+}
+
 // ƒAƒNƒ^[‚Ì’Ç‰Á
 void ActorManager::addActor(ActorGroup group, const ActorPtr& actor) {
 	actor->setCharacterNumber(countList_);

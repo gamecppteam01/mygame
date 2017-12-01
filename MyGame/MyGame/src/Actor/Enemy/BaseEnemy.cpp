@@ -29,7 +29,10 @@ static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Anima
 	{ BaseEnemy::Enemy_Animation::KnockBack,EnemyBullet::EnemyBullet_Animation::KnockBack },
 	{ BaseEnemy::Enemy_Animation::Move_Forward,EnemyBullet::EnemyBullet_Animation::Move_Forward },
 	{ BaseEnemy::Enemy_Animation::Step_Left,EnemyBullet::EnemyBullet_Animation::Step_Left },
+	{ BaseEnemy::Enemy_Animation::Spin,EnemyBullet::EnemyBullet_Animation::Spin },
+	{ BaseEnemy::Enemy_Animation::Quarter,EnemyBullet::EnemyBullet_Animation::Quarter },
 	{ BaseEnemy::Enemy_Animation::Turn,EnemyBullet::EnemyBullet_Animation::Turn },
+	{ BaseEnemy::Enemy_Animation::Half,EnemyBullet::EnemyBullet_Animation::Half },
 };
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
@@ -112,7 +115,14 @@ void BaseEnemy::onDraw() const
 	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
-	
+}
+
+//‰e‚Ì•`‰æ
+void BaseEnemy::shadowDraw() const{
+	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
+
 }
 
 void BaseEnemy::onCollide(Actor & other)

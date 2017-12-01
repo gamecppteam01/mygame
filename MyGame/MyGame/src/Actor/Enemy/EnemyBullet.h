@@ -10,11 +10,13 @@ public:
 	enum class EnemyBullet_Animation {
 		Move_Forward = 0,//前移動時
 		Idle = 0,//待機時
-		Step_Left = 2,//左ステップ時
+		Spin = 1,//スピン時
+		Quarter = 2,//クウォータ―時
 		Turn = 3,//回転時
+		Half = 4,//ハーフ時
+		Step_Left = 3,//左ステップ時
 		KnockBack = 4,//被弾時
 		Down = 5,//ダウン時
-	    //Jump = 17,//ジャンプ時
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事

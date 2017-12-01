@@ -48,25 +48,17 @@ void NormalEnemy::JustStep()
 
 	rhythmTimeCount_ = 0;
 
-	std::vector<int> stepAnim{
-		(int)Enemy_Animation::KnockBack,
-		(int)Enemy_Animation::Move_Forward,
-		(int)Enemy_Animation::Step_Left,
-		(int)Enemy_Animation::Turn
-	};
-
 	int r = Random::GetInstance().Range(0, 9);
 	if (r < 3) {
 		//ターン
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn);
 	}
 	else {
 		//クォーター
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
-
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter);
 	}
-	change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Move_Forward);
-
 }
 
 void NormalEnemy::updateNormal(float deltaTime)
