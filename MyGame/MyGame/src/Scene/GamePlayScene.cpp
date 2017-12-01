@@ -115,7 +115,7 @@ void GamePlayScene::start() {
 	//標準ライトの設定
 	standardLight_.initialize();
 	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
-	standardLight_.setLightEnable(false);
+	//.setLightEnable(false);
 	//ライトハンドルの設定
 	lightHandle_.setUsePixelLighting(true);
 	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1, atten2);
@@ -217,6 +217,10 @@ void GamePlayScene::update_Play(float deltaTime)
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
 		changeState(GamePlayState::Pause);
 		return;
+	}
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)) {
+		changeState(GamePlayState::End);
 	}
 
 	//スポットライトの値操作(値が定まったら消します)

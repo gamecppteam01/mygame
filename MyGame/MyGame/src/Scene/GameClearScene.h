@@ -23,5 +23,13 @@ private:
 	World world_;
 	std::list<ScoreData> datas_;
 
+	int cursor_{ 0 };
+
 	int sinCount_;
+
+	//カーソルの位置及びボタンの位置リスト
+	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
+		{ Vector2{ 450.0f,500.f },SceneType::SCENE_GAMEPLAY },
+		{ Vector2{ 450.0f,625.f },SceneType::SCENE_TITLE }
+	};
 };
