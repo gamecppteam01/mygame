@@ -2,9 +2,11 @@
 #include"../../../World/IWorld.h"
 #include"../../../ScoreManager/ScoreMap.h"
 #include"../../../ScoreManager/ScoreManager.h"
+#include"../../../Sound/TempoManager.h"
 
 Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber):
-	BaseEnemy(world,name,position,playerNumber)
+	BaseEnemy(world,name,position,playerNumber, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f),
+		MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL)
 {
 	points_.clear();
 	points_=world_->getCanChangedScoreMap().getEnemy_Round_CrawlPoint();
@@ -13,14 +15,15 @@ Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3
 
 void Enemy_Round::JustStep()
 {
-	rhythmTimeCount_++;
-	if(rhythmTimeCount_ >= 2) {
-		rhythmTimeCount_ = 0;
-		nextPosition();
-	}
-
 	//ターゲット指定のリセットはとりあえずやる
 	nonTargetResetTimer_.Action();
+
+	rhythmTimeCount_++;
+	if (rhythmTimeCount_ < 2) return;
+
+	rhythmTimeCount_ = 0;
+	nextPosition();
+
 	//ステップ出来るときだけステップする
 	if (!isCanStep())return;
 
@@ -37,9 +40,28 @@ void Enemy_Round::to_Normal()
 
 void Enemy_Round::updateNormal(float deltaTime)
 {
-	Vector3 pos = (nextPosition_ - position_).Normalize()*movePower;
-	centerPosition_ += pos;
-	if (Vector3::Distance(centerPosition_, nextPosition_) <= 10.0f) nextPosition();
+	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {
+		speedEaseTimer_ = 0.0f;
+		return;
+	}
+
+	//2拍分の時間
+	float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
+	//0.5拍を取得、ここを勢いの頂点とする
+	float quarter = maxEaseTime*0.25f;
+
+	speedEaseTimer_ += deltaTime;
+	float maxp = 2.f;
+	float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
+
+	Vector3 vel = (nextPosition_ - centerPosition_);
+	vel.y = 0.0f;
+	centerPosition_ += vel.Normalize()*movePower*answer;
+
+
+	//Vector3 pos = (nextPosition_ - position_).Normalize()*movePower;
+	//centerPosition_ += pos;
+	if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z }, Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
 }
 
 void Enemy_Round::setNearestPoint()
@@ -60,6 +82,4 @@ void Enemy_Round::nextPosition()
 {
 	nextKey_ = (nextKey_ - 1+ points_.size()) % points_.size();
 	nextPosition_ = points_[nextKey_];
-
-
 }

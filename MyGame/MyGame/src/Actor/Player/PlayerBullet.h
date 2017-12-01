@@ -13,6 +13,7 @@ public:
 		Move_Forward = 0,//前移動時
 		Idle = 1,//待機時
 		Shoot = 1,//左ステップ時
+		Quarter=2,
 		ShootEnd=9,
 		Step_Left=10,
 		Turn = 11,//回転時

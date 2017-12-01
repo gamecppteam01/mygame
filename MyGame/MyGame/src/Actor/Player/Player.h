@@ -34,6 +34,7 @@ public:
 		Move_Forward = 0,//前移動時
 		Idle = 1,//待機時
 		Step_Left = 8,//左ステップ時
+		Quarter=2,
 		Attack = 11,//攻撃時
 		Shoot = 1,//発射時
 		ShootEnd = 13,//発射終了
@@ -284,7 +285,7 @@ private:
 	const Vector3 defaultPosition_;
 
 	const std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
-		{ 1,{ Player_Animation::Down,SCORE_QUARTER } },
+		{ 1,{ Player_Animation::Quarter,SCORE_QUARTER } },
 		{ 2,{ Player_Animation::KnockBack,0 } },
 		{ 3,{ Player_Animation::Idle,SCORE_TURN } },
 		{ 4,{ Player_Animation::Turn,0 } },

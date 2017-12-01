@@ -71,17 +71,17 @@ void GamePlayScene::start() {
 		world_.addStepTimeListener(enemy);
 	}
 	playerNumber++;
-	auto enemy = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+	auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy);
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	//playerNumber++;
-	//auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy3);
+	playerNumber++;
+	auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy3);
 	world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);
-	//world_.addStepTimeListener(enemy3);
+	world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
 
@@ -131,6 +131,7 @@ void GamePlayScene::start() {
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
 
 	timeCount_ = 3.0f;
+	currentCount_ = (int)std::ceilf(timeCount_) + 1;
 	//changeState(GamePlayState::Play);
 }
 
@@ -193,8 +194,14 @@ void GamePlayScene::update_Start(float deltaTime)
 {
 	timeCount_ -= deltaTime;
 	if (timeCount_ <= 0.0f){
+		Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
 		changeState(GamePlayState::Play);
 		return;
+	}
+
+	if (currentCount_ > (int)std::ceilf(timeCount_)) {
+		currentCount_--;
+		Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
 	}
 
 	world_.update_end(deltaTime);

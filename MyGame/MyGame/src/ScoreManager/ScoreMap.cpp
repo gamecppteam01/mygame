@@ -11,6 +11,7 @@ ScoreMap::ScoreMap(IWorld * world):world_(world)
 	//とりあえずスコアポイントの周回分を入れておく
 	roundPoints_.push_back(points_.getElement(0, 0).position_);
 	roundPoints_.push_back(points_.getElement(1, 0).position_);
+	roundPoints_.push_back(Vector3{ 0.0f,10.0f,0.0f });
 	roundPoints_.push_back(points_.getElement(2, 0).position_);
 	roundPoints_.push_back(points_.getElement(3, 0).position_);
 	roundPoints_.push_back(points_.getElement(3, 1).position_);

@@ -10,7 +10,7 @@
 
 static const float attackResetDistance = 40.0f;
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
-	BaseEnemy(world, name, position, playerNumber, body) {
+	BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL) {
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
@@ -145,7 +145,7 @@ void Enemy_Rival::updateNormal(float deltaTime)
 {
 	//3”–Ú‚Í“®‚©‚È‚¢
 	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {
-		OutputDebugString("\n");
+		speedEaseTimer_ = 0.0f;
 		return;
 	}
 

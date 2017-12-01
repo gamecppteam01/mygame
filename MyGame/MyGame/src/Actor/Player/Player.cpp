@@ -49,6 +49,7 @@ static const float spinPower = 6.0f;
 static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Animation> animConvList{
 	{ Player::Player_Animation::Move_Forward,PlayerBullet::PlayerBullet_Animation::Move_Forward },
 	{ Player::Player_Animation::Idle,PlayerBullet::PlayerBullet_Animation::Idle },
+	{ Player::Player_Animation::Quarter,PlayerBullet::PlayerBullet_Animation::Quarter },
 	{ Player::Player_Animation::Attack,PlayerBullet::PlayerBullet_Animation::Attack },
 	{ Player::Player_Animation::Down,PlayerBullet::PlayerBullet_Animation::Down },
 	{ Player::Player_Animation::KnockBack,PlayerBullet::PlayerBullet_Animation::KnockBack },
@@ -665,6 +666,7 @@ void Player::to_StepSuccessMode()
 	}
 
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
+	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first));
 
 	//対応したアニメーションの終了時間を取得する
 	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
