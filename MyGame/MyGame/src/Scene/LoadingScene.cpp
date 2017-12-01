@@ -76,7 +76,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "stepgaugeframe.png", SPRITE_ID::JUST_GAUGE_FRAME);
 	Sprite::GetInstance().Load(defaultPath + "numbers.png", SPRITE_ID::NUMBER);
 	Sprite::GetInstance().Load(defaultPath + "rednumbers.png", SPRITE_ID::REDNUMBER);
-	
+	Sprite::GetInstance().Load(defaultPath + "finish.png", SPRITE_ID::FINISH);
 	Sprite::GetInstance().Load(defaultPath + "note.png", SPRITE_ID::NOTE);
 }
 

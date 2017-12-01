@@ -49,6 +49,7 @@ enum SPRITE_ID
 	NUMBER,
 	REDNUMBER,
 	NOTE,
+	FINISH,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

@@ -22,10 +22,10 @@ void UIManager::initialize()
 //XV
 void UIManager::update(float deltaTime)
 {
-	for (auto& ui : UIs_) {
-		ui->update(deltaTime);
+	int size = UIs_.size();
+	for (int i = 0; i < size;i++) {
+		UIs_.at(i)->update(deltaTime);
 	}
-
 
 	std::vector <UIPtr>::iterator iter = UIs_.begin();
 	while (iter != UIs_.end()) {
