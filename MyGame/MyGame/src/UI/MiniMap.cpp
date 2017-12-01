@@ -1,5 +1,6 @@
 #include "MiniMap.h"
 #include<list>
+#include"../Input/Keyboard.h"
 
 MiniMap::MiniMap(IWorld* world,const Vector2& position ,const Vector2& map_position)
 	:UI{ "MiniMap",position },world_(world),position_(position), map_position_(map_position){
@@ -9,6 +10,7 @@ void MiniMap::initialize(){
 }
 
 void MiniMap::update(float delta_time){
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A))isEnd_ = true;
 	//Player‚ÌÀ•W‚ðŽæ‚Á‚Ä‚­‚é
 	auto player = world_->findActor("Player");
 	player_position_ = { player->position().x,-player->position().z };

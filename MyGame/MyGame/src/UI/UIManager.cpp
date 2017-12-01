@@ -27,15 +27,10 @@ void UIManager::update(float deltaTime)
 		UIs_.at(i)->update(deltaTime);
 	}
 
-	std::vector <UIPtr>::iterator iter = UIs_.begin();
-	while (iter != UIs_.end()) {
-		if (iter->get()->isEnd()) {
-			iter = UIs_.erase(iter);
-		}
-		else {
-			++iter;
-		}
-	}
+	std::vector<UIPtr>::iterator iter = std::remove_if(UIs_.begin(), UIs_.end(), [](UIPtr ui) {return ui->isEnd(); });
+	UIs_.erase(iter, UIs_.end());
+
+
 }
 
 //•`‰æ
