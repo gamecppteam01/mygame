@@ -9,7 +9,7 @@ static const float defUpLength=100.0f;
 static const float defBackLength=100.0f;
 static const std::vector<float> zoomUpLength{
 	30.0f,
-	70.0f
+	80.0f
 };
 static const std::vector<float> zoomBackLength{
 	80.0f,

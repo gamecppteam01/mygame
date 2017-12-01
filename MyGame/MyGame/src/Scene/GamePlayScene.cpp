@@ -79,7 +79,7 @@ void GamePlayScene::start() {
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	//playerNumber++;
+	playerNumber++;
 	auto enemy3 = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
 	world_.addActor(ActorGroup::ENEMY, enemy3);
 	//world_.addStepTimeListener(enemy);
@@ -201,7 +201,7 @@ void GamePlayScene::update_Play(float deltaTime) {
 	}
 
 	//エフェクト更新
-	//playerEffectDraw_.Update(deltaTime);
+	playerEffectDraw_.Update(deltaTime);
 }
 
 //ポーズ更新
