@@ -64,24 +64,24 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	for (int i = 0; i < 0; i++) {
+	for (int i = 0; i < 1; i++) {
 		playerNumber++;
-		auto enemy = std::make_shared<Enemy_Quick>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
+		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
-	playerNumber++;
-	auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy);
+	//playerNumber++;
+	//auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy);
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	playerNumber++;
-	auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy3);
-	world_.addStepTimeListener(enemy);
+	//playerNumber++;
+	//auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy3);
+	//world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);
-	world_.addStepTimeListener(enemy3);
+	//world_.addStepTimeListener(enemy3);
 
 	world_.addStepTimeListener(player);
 
@@ -100,8 +100,6 @@ void GamePlayScene::start() {
 	world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
 	world_.addUI(warningUI);
-	std::shared_ptr<EndUI> endUI = std::make_shared<EndUI>(&world_.getCanChangedTempoManager(), Vector2(500, 500));
-	world_.addUI(endUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
 	world_.addUI(timeUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
@@ -339,8 +337,12 @@ void GamePlayScene::changeState(GamePlayState state)
 		world_.pause();
 		pause_.start();
 		break;
-	case End:
+	case End: {
+		std::shared_ptr<EndUI> endUI = std::make_shared<EndUI>(&world_.getCanChangedTempoManager(), Vector2(500, 500));
+		world_.addUI(endUI);
+
 		break;
+	}
 	default:
 		break;
 	}

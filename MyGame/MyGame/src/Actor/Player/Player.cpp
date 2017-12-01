@@ -56,7 +56,9 @@ static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Anima
 	{ Player::Player_Animation::Shoot,PlayerBullet::PlayerBullet_Animation::Shoot },
 	{ Player::Player_Animation::ShootEnd,PlayerBullet::PlayerBullet_Animation::ShootEnd },
 	{ Player::Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
+	{ Player::Player_Animation::Half,PlayerBullet::PlayerBullet_Animation::Half },
 	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn }
+
 };
 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
@@ -665,8 +667,8 @@ void Player::to_StepSuccessMode()
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);
 	}
 
-	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
-	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first));
+	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
+	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first), 0.0f, 1.0f, false);
 
 	//対応したアニメーションの終了時間を取得する
 	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);

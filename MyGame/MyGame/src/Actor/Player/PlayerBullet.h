@@ -16,7 +16,8 @@ public:
 		Quarter=2,
 		ShootEnd=9,
 		Step_Left=10,
-		Turn = 11,//‰ñ“]
+		Turn = 3,//‰ñ“]
+		Half=4,
 		Attack = 12,//UŒ‚
 		KnockBack = 14,//”í’e
 		Down = 15,//ƒ_ƒEƒ“

@@ -89,6 +89,7 @@ void World::update(float deltaTime) {
 
 void World::update_end(float deltaTime)
 {
+	uiManager_.update(deltaTime);
 	lateDrawFuncList_.clear();
 	lateDrawFuncListAfterUI_.clear();
 }

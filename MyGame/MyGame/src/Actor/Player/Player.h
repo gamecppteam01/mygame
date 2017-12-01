@@ -39,8 +39,9 @@ public:
 		Shoot = 1,//発射時
 		ShootEnd = 13,//発射終了
 		KnockBack = 14,//被弾時
-		Down = 15,//ダウン時
-		Turn = 17,//回転時
+		Down = 0,//ダウン時
+		Turn = 3,//回転時
+		Half = 4,
 	};
 
 public:
@@ -286,9 +287,9 @@ private:
 
 	const std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
 		{ 1,{ Player_Animation::Quarter,SCORE_QUARTER } },
-		{ 2,{ Player_Animation::KnockBack,0 } },
-		{ 3,{ Player_Animation::Idle,SCORE_TURN } },
-		{ 4,{ Player_Animation::Turn,0 } },
+		{ 2,{ Player_Animation::Half,0 } },
+		{ 3,{ Player_Animation::Turn,SCORE_TURN } },
+		{ 4,{ Player_Animation::Shoot,0 } },
 	};
 
 
