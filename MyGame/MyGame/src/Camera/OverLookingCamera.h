@@ -11,7 +11,7 @@ public:
 	void setFirstPos();
 
 
-	void ZoomIn();
+	void ZoomIn(int pointKey,int easeKey);
 	void ZoomOut();
 
 private:
@@ -41,7 +41,13 @@ private:
 	int zoomType_{ 0 };
 	float timeCount_{ 0.0f };
 
-	std::vector < std::function<void(float)>> zoomFuncList_;
+	std::vector<std::function<void(float)>> zoomFuncList_;
+
+	std::vector<std::function<void()>> easeFuncList_;
+
+
+	int pointKey_{ 0 };
+	int easeKey_{ 0 };
 
 	ActorPtr target_;
 

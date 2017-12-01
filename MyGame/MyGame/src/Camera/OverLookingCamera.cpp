@@ -5,15 +5,24 @@
 #include"../Input/Keyboard.h"
 #include"../Math/Easing.h"
 
-static const float defUpLength = 100.0f;
-static const float defBackLength = 100.0f;
-static const float zoomUpLength = 30.0f;
-static const float zoomBackLength = 70.0f;
+static const float defUpLength=100.0f;
+static const float defBackLength=100.0f;
+static const std::vector<float> zoomUpLength{
+	30.0f,
+	70.0f
+};
+static const std::vector<float> zoomBackLength{
+	80.0f,
+	80.0f
+};
 
-float zoomSpeed = 3.0f;
+static const float zoomSpeed = 3.0f;
 
 static const Vector3 defTargetVector{ 0.0f,-30.0f,-20.0f };
-static const Vector3 zoomTargetVector{ 0.0f,0.0f,0.0f };
+static const std::vector<Vector3> zoomTargetVector{
+	{ 0.0f,0.0f,0.0f },
+	{ 0.0f,-30.0f,-20.0f }
+};
 
 //カメラの自由補正
 static const Vector3 moveVector{ 0.0f,0.0f,0.0f };
@@ -24,6 +33,19 @@ OverLookingCamera::OverLookingCamera(IWorld * world, const std::string & name, c
 	zoomFuncList_.emplace_back([&](float deltaTime) {zoom_default(deltaTime); });
 	zoomFuncList_.emplace_back([&](float deltaTime) {zoom_in(deltaTime); });
 	zoomFuncList_.emplace_back([&](float deltaTime) {zoom_out(deltaTime); });
+
+	//通常ステップ用のカメラ移動
+	easeFuncList_.emplace_back([&]() {
+		backwardLength_ = Easing::EaseInCubic(timeCount_, defBackLength, zoomBackLength[pointKey_] - defBackLength, 1.0f);
+		upLength_ = Easing::EaseOutCubic(timeCount_, defUpLength, zoomUpLength[pointKey_] - defUpLength, 1.0f);
+		targetVector_ = Easing::EaseOutCubic(timeCount_, defTargetVector, zoomTargetVector[pointKey_] - defTargetVector, 1.0f);
+	});
+	//直線移動用のカメラ移動
+	easeFuncList_.emplace_back([&]() {
+		backwardLength_ = Easing::EaseOutCubic(timeCount_, defBackLength, zoomBackLength[pointKey_] - defBackLength, 1.0f);
+		upLength_ = Easing::EaseOutCubic(timeCount_, defUpLength, zoomUpLength[pointKey_] - defUpLength, 1.0f);
+		//targetVector_ = Easing::EaseOutCubic(timeCount_, defTargetVector, zoomTargetVector[pointKey_] - defTargetVector, 1.0f);
+	});
 
 	backwardLength_ = defBackLength;
 	upLength_ = defUpLength;
@@ -102,9 +124,11 @@ void OverLookingCamera::onCollide(Actor & other)
 {
 }
 
-void OverLookingCamera::ZoomIn()
+void OverLookingCamera::ZoomIn(int pointKey, int easeKey)
 {
 	zoomType_ = 1;
+	pointKey_ = pointKey;
+	easeKey_ = easeKey;
 }
 
 void OverLookingCamera::ZoomOut()
@@ -156,9 +180,7 @@ void OverLookingCamera::zoom_in(float deltaTime)
 {
 	timeCount_ += deltaTime*zoomSpeed;
 
-	backwardLength_ = Easing::EaseInCubic(timeCount_, defBackLength, zoomBackLength - defBackLength, 1.0f);
-	upLength_ = Easing::EaseOutCubic(timeCount_, defUpLength, zoomUpLength - defUpLength, 1.0f);
-	targetVector_ = Easing::EaseOutCubic(timeCount_, defTargetVector, zoomTargetVector - defTargetVector, 1.0f);
+	easeFuncList_[easeKey_]();
 
 	if (timeCount_ >= 1.0f) {
 		zoomType_ = 0;
@@ -169,9 +191,7 @@ void OverLookingCamera::zoom_out(float deltaTime)
 {
 	timeCount_ -= deltaTime*zoomSpeed;
 
-	backwardLength_ = Easing::EaseInCubic(timeCount_, defBackLength, zoomBackLength - defBackLength, 1.0f);
-	upLength_ = Easing::EaseOutCubic(timeCount_, defUpLength, zoomUpLength - defUpLength, 1.0f);
-	targetVector_ = Easing::EaseOutCubic(timeCount_, defTargetVector, zoomTargetVector - defTargetVector, 1.0f);
+	easeFuncList_[easeKey_]();
 
 	if (timeCount_ <= 0.0f) {
 		zoomType_ = 0;

@@ -11,3 +11,8 @@ std::string UI::getName() const
 	return name_;
 }
 
+bool UI::isEnd() const
+{
+	return isEnd_;
+}
+

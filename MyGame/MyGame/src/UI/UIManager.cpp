@@ -1,5 +1,6 @@
 #include "UIManager.h"
 #include"UI.h"
+#include<algorithm>
 
 //コンストラクタ
 UIManager::UIManager()
@@ -23,6 +24,17 @@ void UIManager::update(float deltaTime)
 {
 	for (auto& ui : UIs_) {
 		ui->update(deltaTime);
+	}
+
+
+	std::vector <UIPtr>::iterator iter = UIs_.begin();
+	while (iter != UIs_.end()) {
+		if (iter->get()->isEnd()) {
+			iter = UIs_.erase(iter);
+		}
+		else {
+			++iter;
+		}
 	}
 }
 

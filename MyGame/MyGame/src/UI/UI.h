@@ -19,10 +19,13 @@ public:
 	//–¼‘O‚ğæ“¾
 	std::string getName()const;
 
+	bool isEnd()const;
 protected:
 	//êŠ
 	Vector2 position_;
 	//–¼‘O
 	std::string name_;
+
+	bool isEnd_{ false };
 	
 };

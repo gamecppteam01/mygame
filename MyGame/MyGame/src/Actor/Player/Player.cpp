@@ -279,7 +279,7 @@ void Player::onDraw() const
 	//);
 
 
-	if (state_ == Player_State::Shoot|| state_ == Player_State::Attack)return;
+	if (state_ == Player_State::Step_Success || state_ == Player_State::Shoot || state_ == Player_State::Attack)return;
 
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
@@ -664,7 +664,7 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
-	world_->getCamera()->ZoomIn();
+	world_->getCamera()->ZoomIn(0,0);
 
 	int key=EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT,key, &position_);
@@ -693,6 +693,8 @@ void Player::to_StepSuccessMode()
 
 void Player::to_AttackMode()
 {
+	world_->getCamera()->ZoomIn(1,1);
+	
 	shootAngle_ = 0.0f;
 	
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
@@ -714,7 +716,7 @@ void Player::to_AttackMode()
 
 void Player::to_ShootMode()
 {
-	world_->getCamera()->ZoomIn();
+	world_->getCamera()->ZoomIn(0,0);
 
 	shootAngle_ = 0.0f;
 	Vector3 shootVector = *bulletPosition_ - position_;
