@@ -75,6 +75,8 @@ private:
 	std::unordered_map<SHADOW_MAP_ID, int> m_shadowmaps;// シャドウマップ達を格納
 
 public:
+	//解像度
+	static const Point RESOLUTION_512;
 	static const Point RESOLUTION_1024;
 	static const Point RESOLUTION_2048;
 	static const Point RESOLUTION_4096;

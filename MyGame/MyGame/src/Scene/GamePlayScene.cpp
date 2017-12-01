@@ -67,12 +67,12 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	for (int i = 0; i < 1; i++) {
+	/*for (int i = 0; i < 1; i++) {
 		playerNumber++;
 		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i, 0.f, 30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
-	}
+	}*/
 	//playerNumber++;
 	//auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy);
@@ -80,13 +80,13 @@ void GamePlayScene::start() {
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
 	//playerNumber++;
-	//auto enemy3 = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy3);
+	auto enemy3 = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy3);
 	//world_.addStepTimeListener(enemy);
 	//world_.addStepTimeListener(enemy2);
-	//world_.addStepTimeListener(enemy3);
+	world_.addStepTimeListener(enemy3);
 
-	world_.addStepTimeListener(player);
+	//world_.addStepTimeListener(player);
 
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(-45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
@@ -133,16 +133,6 @@ void GamePlayScene::draw() const {
 	for (int i = 1; i < world_.getScoreManager().GetCharacterCount() + 1; i++) {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
-
-	//NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
-
-	//ライトテスト変数デバック描画
-	DebugDraw::DebugDrawFormatString(300, 500, GetColor(255, 0, 255), "out_angle:%f", out_angle);
-	DebugDraw::DebugDrawFormatString(300, 530, GetColor(255, 0, 255), "in_angle:%f", in_angle);
-	DebugDraw::DebugDrawFormatString(300, 560, GetColor(255, 0, 255), "atten0:%f", atten0);
-	DebugDraw::DebugDrawFormatString(300, 590, GetColor(255, 0, 255), "atten1:%f", atten1);
-	DebugDraw::DebugDrawFormatString(300, 620, GetColor(255, 0, 255), "atten2:%f", atten2);
-	DebugDraw::DebugDrawFormatString(300, 650, GetColor(255, 0, 255), "range:%f", range);
 
 	Time::GetInstance().draw_fps();
 	scoreDisplay_.Score(Vector2(0, 25), 5);
@@ -209,50 +199,6 @@ void GamePlayScene::update_Play(float deltaTime) {
 		changeState(GamePlayState::Pause);
 		return;
 	}
-
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Z)) {
-		changeState(GamePlayState::End);
-	}
-
-	//スポットライトの値操作(値が定まったら消します)
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S)) {
-		out_angle += 0.1f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::X)) {
-		out_angle -= 0.1f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::D)) {
-		in_angle += 0.1f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::C)) {
-		in_angle -= 0.1f;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::F)) {
-		atten0 += 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::V)) {
-		atten0 -= 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::G)) {
-		atten1 += 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::B)) {
-		atten1 -= 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::Y)) {
-		atten2 += 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::N)) {
-		atten2 -= 0.001f;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::J)) {
-		range += 1.0f;
-	}
-	if (Keyboard::GetInstance().KeyStateDown(KEYCODE::M)) {
-		range -= 1.0f;
-	}
-	lightHandle_.setLightAngleHandle("Spot", out_angle, in_angle);
-	lightHandle_.setLightRangeAttenHandle("Spot", range, atten0, atten1, atten2);
 
 	//エフェクト更新
 	//playerEffectDraw_.Update(deltaTime);
@@ -347,16 +293,15 @@ void GamePlayScene::changeState(GamePlayState state) {
 void GamePlayScene::settingLight() {
 	//標準ライトの設定
 	standardLight_.initialize();
-	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
-	//standardLight_.setLightEnable(false);
+	standardLight_.changeLightTypeDir(Vector3(0.0f, -1.0f, 0.0f));
 	//ライトハンドルの設定
 	lightHandle_.setUsePixelLighting(true);
-	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1, atten2);
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), 0.7f, 0.6f, 500.0f, 0.75f, 0.003f, 0.0f);
 	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
 	lightHandle_.setLightDiffuseColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0.2f, 0.2f, 0.2f, 0.2f));
+	standardLight_.setGlobalAmbientLight(Color(0.0f, 0.2f, 0.2f, 0.2f));
 }
 
 //UI設定関数
@@ -368,7 +313,4 @@ void GamePlayScene::settingUI() {
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
 	world_.addUI(timeUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
-	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
-	//world_.addUI(uiptr);
 }
-

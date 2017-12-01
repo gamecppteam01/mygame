@@ -2,6 +2,7 @@
 #include "../conv/DXConverter.h"
 
 //‰ð‘œ“x
+const Point ShadowMap::RESOLUTION_512 = Point(512, 512);
 const Point ShadowMap::RESOLUTION_1024 = Point(1024, 1024);
 const Point ShadowMap::RESOLUTION_2048 = Point(2048, 2048);
 const Point ShadowMap::RESOLUTION_4096 = Point(4096, 4096);

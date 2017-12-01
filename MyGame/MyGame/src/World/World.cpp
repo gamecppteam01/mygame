@@ -49,8 +49,8 @@ void World::Initialize()
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.Clear();
-	shadowmap_.Set(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_4096, -Vector3::Up);
-	shadowmap_.SetRange(Vector3(-1000.0f, -1.0f, -1000.0f), Vector3(1000.0f, 1000.0f, 1000.0f));
+	shadowmap_.Set(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_512, -Vector3::Up);
+	shadowmap_.SetRange(Vector3(-300.0f, -2.5f, -150.0f), Vector3(150.0f, 15.0f, 75.0f));
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
