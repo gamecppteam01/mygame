@@ -118,11 +118,10 @@ void BaseEnemy::onDraw() const
 }
 
 //‰e‚Ì•`‰æ
-void BaseEnemy::shadowDraw() const{
+void BaseEnemy::onShadowDraw() const{
 	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
-
 }
 
 void BaseEnemy::onCollide(Actor & other)

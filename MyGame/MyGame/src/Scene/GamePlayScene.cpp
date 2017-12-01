@@ -32,7 +32,8 @@
 //ゲームの時間
 static const float gameTime = 5.0f;
 
-GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw_(nullptr),standardLight_(),lightHandle_(),pause_(){
+//コンストラクタ
+GamePlayScene::GamePlayScene() :world_(), scoreDisplay_(nullptr), playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_() {
 	//更新遷移先の設定
 	updateFuncMap_[GamePlayState::Reload] = [&](float deltaTime) {update_Reload(deltaTime); };
 	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
@@ -42,11 +43,13 @@ GamePlayScene::GamePlayScene():world_(), scoreDisplay_(nullptr),playerEffectDraw
 
 }
 
+//開始
 void GamePlayScene::start() {
 	stageNum_ = DataManager::GetInstance().getStage();//ステージ番号受け取り
-
+													  //ワールド初期化
 	world_.Initialize();
-	//world_.setShadowMap(true);
+	//シャドウマップがいるか？
+	world_.setShadowMap(true);
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });
@@ -55,18 +58,18 @@ void GamePlayScene::start() {
 
 	state_ = GamePlayState::Start;
 
-	std::shared_ptr<Field> field =std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
+	std::shared_ptr<Field> field = std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
 	std::shared_ptr<OverLookingCamera> camera = std::make_shared<OverLookingCamera>(&world_, "Camera", Vector3::Zero);
 	world_.addCamera(camera);
 
 	//選手番号
 	int playerNumber = 1;
-	std::shared_ptr<Player> player= std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
+	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
 	for (int i = 0; i < 1; i++) {
 		playerNumber++;
-		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i,0.f,30.f), playerNumber);
+		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i, 0.f, 30.f), playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
@@ -85,7 +88,7 @@ void GamePlayScene::start() {
 
 	world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, 60.0f),Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(-45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
@@ -96,59 +99,43 @@ void GamePlayScene::start() {
 	//楽曲のセット
 	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
 
-	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100),Vector2(1150,100));
-	world_.addUI(mapUI);
-	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
-	world_.addUI(warningUI);
-	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
-	world_.addUI(timeUI);
-	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
-	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
-	//world_.addUI(uiptr);
+	//UIの設定
+	settingUI();
 
+	//スコア表示設定
 	scoreDisplay_.initialize();
 	scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
 
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
-	//標準ライトの設定
-	standardLight_.initialize();
-	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
-	//.setLightEnable(false);
-	//ライトハンドルの設定
-	lightHandle_.setUsePixelLighting(true);
-	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1, atten2);
-	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
-	lightHandle_.setLightDiffuseColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
-	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
-	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0, 0, 0, 0));
-
+	//ライトの設定
+	settingLight();
+	//エフェクトの設定
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
 
 	timeCount_ = 3.0f;
 	currentCount_ = (int)std::ceilf(timeCount_) + 1;
-	//changeState(GamePlayState::Play);
 }
 
+//更新
 void GamePlayScene::update(float deltaTime) {
-	updateFuncMap_[state_](deltaTime);//更新
-
-
+	//状態更新
+	updateFuncMap_[state_](deltaTime);
 }
 
+//描画
 void GamePlayScene::draw() const {
-	
+
 	world_.draw();
-	
-	for (int i = 1; i < world_.getScoreManager().GetCharacterCount()+1; i++) {
+
+	for (int i = 1; i < world_.getScoreManager().GetCharacterCount() + 1; i++) {
 		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
 	}
-	
+
 	//NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, 0.f), (int)world_.getTempoManager().getRemainTime());
-	
+
 	//ライトテスト変数デバック描画
 	DebugDraw::DebugDrawFormatString(300, 500, GetColor(255, 0, 255), "out_angle:%f", out_angle);
 	DebugDraw::DebugDrawFormatString(300, 530, GetColor(255, 0, 255), "in_angle:%f", in_angle);
@@ -158,9 +145,9 @@ void GamePlayScene::draw() const {
 	DebugDraw::DebugDrawFormatString(300, 650, GetColor(255, 0, 255), "range:%f", range);
 
 	Time::GetInstance().draw_fps();
-	scoreDisplay_.Score(Vector2(0,25),5);
+	scoreDisplay_.Score(Vector2(0, 25), 5);
 
-	if(state_!=GamePlayState::Start)playerEffectDraw_.Draw();
+	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
 	else {
 		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (int)std::ceilf(timeCount_), 4);
 	}
@@ -168,30 +155,34 @@ void GamePlayScene::draw() const {
 	if (state_ == GamePlayState::Pause)pause_.draw();
 }
 
+//終了
 void GamePlayScene::end() {
 	world_.Initialize();
+	//スコアデータをデータマネージャーに渡す
 	std::list<ScoreData> list;
 	world_.getScoreManager().getScoreDataList(list);
 	DataManager::GetInstance().setData(list);
 
 	scoreDisplay_.finalize();
+	//ライトハンドルの全削除
 	lightHandle_.deleteLightHandleAll();
+	//エフェクトの終了処理
 	playerEffectDraw_.finalize();
 
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().StopSE();
 }
 
-void GamePlayScene::update_Reload(float deltaTime)
-{
+//リトライ更新
+void GamePlayScene::update_Reload(float deltaTime) {
 	changeState(GamePlayState::Play);
 	world_.update_end(deltaTime);
 }
 
-void GamePlayScene::update_Start(float deltaTime)
-{
+//開始更新
+void GamePlayScene::update_Start(float deltaTime) {
 	timeCount_ -= deltaTime;
-	if (timeCount_ <= 0.0f){
+	if (timeCount_ <= 0.0f) {
 		Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
 		changeState(GamePlayState::Play);
 		return;
@@ -205,8 +196,8 @@ void GamePlayScene::update_Start(float deltaTime)
 	world_.update_end(deltaTime);
 }
 
-void GamePlayScene::update_Play(float deltaTime)
-{
+//実行更新
+void GamePlayScene::update_Play(float deltaTime) {
 	world_.update(deltaTime);
 
 	if (world_.getCanChangedTempoManager().isEnd()) {
@@ -263,12 +254,12 @@ void GamePlayScene::update_Play(float deltaTime)
 	lightHandle_.setLightAngleHandle("Spot", out_angle, in_angle);
 	lightHandle_.setLightRangeAttenHandle("Spot", range, atten0, atten1, atten2);
 
-	playerEffectDraw_.Update(deltaTime);
-
+	//エフェクト更新
+	//playerEffectDraw_.Update(deltaTime);
 }
 
-void GamePlayScene::update_Pause(float deltaTime)
-{
+//ポーズ更新
+void GamePlayScene::update_Pause(float deltaTime) {
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
 		changeState(GamePlayState::Play);
 		return;
@@ -285,8 +276,8 @@ void GamePlayScene::update_Pause(float deltaTime)
 	}
 }
 
-void GamePlayScene::update_End(float deltaTime)
-{
+//終了更新
+void GamePlayScene::update_End(float deltaTime) {
 	UIPtr p = world_.findUI("EndUI");
 	std::shared_ptr<EndUI> endUi = std::static_pointer_cast<EndUI>(p);
 	if (endUi->end()) {
@@ -297,11 +288,11 @@ void GamePlayScene::update_End(float deltaTime)
 
 }
 
-void GamePlayScene::changeState(GamePlayState state)
-{
+//状態遷移
+void GamePlayScene::changeState(GamePlayState state) {
 	if (state_ == state)return;//既にその状態なら遷移しない
 
-	//状態の終了処理を行う
+							   //状態の終了処理を行う
 	switch (state_)
 	{
 	case Reload:
@@ -351,3 +342,33 @@ void GamePlayScene::changeState(GamePlayState state)
 		break;
 	}
 }
+
+//ライトの設定関数
+void GamePlayScene::settingLight() {
+	//標準ライトの設定
+	standardLight_.initialize();
+	standardLight_.changeLightTypeDir(Vector3(1.0f, -1.0f, 0.0f));
+	//standardLight_.setLightEnable(false);
+	//ライトハンドルの設定
+	lightHandle_.setUsePixelLighting(true);
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1, atten2);
+	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
+	lightHandle_.setLightDiffuseColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	//グローバルアンビエントの設定
+	standardLight_.setGlobalAmbientLight(Color(0.2f, 0.2f, 0.2f, 0.2f));
+}
+
+//UI設定関数
+void GamePlayScene::settingUI() {
+	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100), Vector2(1150, 100));
+	world_.addUI(mapUI);
+	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
+	world_.addUI(warningUI);
+	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 0.0f));
+	world_.addUI(timeUI);
+	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
+	//std::shared_ptr<UITemplate> uiptr = std::make_shared<UITemplate>(Vector2(200, 200));
+	//world_.addUI(uiptr);
+}
+

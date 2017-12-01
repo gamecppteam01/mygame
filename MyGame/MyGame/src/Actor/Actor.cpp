@@ -83,6 +83,8 @@ void Actor::draw() const {
 
 //‰e‚Ì•`‰æ
 void Actor::shadowDraw() const {
+	onShadowDraw();
+	eachChildren([&](const Actor& child) {child.shadowDraw(); });
 }
 
 
@@ -422,6 +424,8 @@ void Actor::onUpdate(float) {}
 void Actor::onDraw() const {
 	body_->transform(getPose())->draw();
 }
+//‰e‚Ì•`‰æ
+void Actor::onShadowDraw() const{}
 
 // Õ“Ë‚µ‚½
 void Actor::onCollide(Actor&) {}

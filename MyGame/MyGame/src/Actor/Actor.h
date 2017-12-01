@@ -35,7 +35,7 @@ public:
 	// •`‰æ
 	void draw() const;
 	//‰e‚Ì•`‰æ
-	virtual void shadowDraw() const;
+	void shadowDraw() const;
 	// Õ“Ëˆ—
 	void collide(Actor& other);
 	// Õ“Ë–Œãˆ—
@@ -122,6 +122,8 @@ private:
 	virtual void onUpdate(float deltaTime);
 	// •`‰æ
 	virtual void onDraw() const;
+	//‰e‚Ì•`‰æ
+	virtual void onShadowDraw() const;
 	// Õ“Ë‚µ‚½
 	virtual void onCollide(Actor& other);
 	// Õ“Ë‚µ‚½Œã

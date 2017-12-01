@@ -54,7 +54,7 @@ protected:
 	// •`‰æ
 	virtual void onDraw() const override;
 	//‰e‚Ì•`‰æ
-	virtual void shadowDraw() const override;
+	virtual void onShadowDraw() const override;
 	// Õ“Ë‚µ‚½
 	virtual void onCollide(Actor& other) override;
 	

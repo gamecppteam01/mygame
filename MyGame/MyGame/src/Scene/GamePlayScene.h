@@ -31,6 +31,11 @@ private:
 
 	void changeState(GamePlayState state);
 
+	//ライトの設定関数
+	void settingLight();
+	//UI設定関数
+	void settingUI();
+
 private:
 	//現在のステージ番号
 	int stageNum_{ 1 };
