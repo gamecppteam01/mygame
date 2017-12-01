@@ -256,12 +256,12 @@ void World::shadowdraw() const {
 	//シャドウマップに描画
 	shadowmap_.Begin(SHADOW_MAP_ID::SHADOW_MAP_01);
 	// アクターの描画処理
-	actors_.draw();
+	actors_.shadowDraw();
 	shadowmap_.End();
 
+	camera_->draw();
 	//使用したいシャドウマップを設定して描画
 	shadowmap_.Enable(SHADOW_MAP_ID::SHADOW_MAP_01, 0);
-	camera_->draw();
 	field_->draw();
 	// アクターの描画処理
 	actors_.draw();
