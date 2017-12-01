@@ -7,6 +7,7 @@
 #include"../Graphic/Model.h"
 #include"../Graphic/EffekseerManager.h"
 #include "../Math/Easing.h"
+#include "../Sound/Sound.h"
 
 TitleScene::TitleScene()
 {
@@ -15,7 +16,7 @@ TitleScene::TitleScene()
 
 	titleState_ = TitleState::first;
 	SinCount_ = 0;
-
+	
 }
 
 TitleScene::~TitleScene()
@@ -43,6 +44,7 @@ void TitleScene::update(float deltaTime)
 			Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
 			InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 			titleState_ = TitleState::second;
+			Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
 			return;
 		}
 	}
@@ -52,11 +54,13 @@ void TitleScene::update(float deltaTime)
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
 			InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 			cursor_=(cursor_-1+ cursorPoses.size())% cursorPoses.size();
+			Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 		}
 		else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
 			InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180)
 		{
 			cursor_=(cursor_+1)%cursorPoses.size();
+			Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 		}
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
@@ -64,6 +68,7 @@ void TitleScene::update(float deltaTime)
 			//ÉVÅ[ÉìëJà⁄
 			isEnd_ = true;
 			auto next = cursorPoses[cursor_].second;
+			Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
 			if (next == SceneType::SCENE_EXIT)exit(0);
 			else next_ = next;
 		}

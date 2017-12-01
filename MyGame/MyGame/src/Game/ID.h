@@ -106,6 +106,8 @@ enum SE_ID
 	COUNT_FINISH_SE,//カウントダウン終了
 	HALF_SE,//ハーフ成功時
 	STEP_SUCCESS_SE,//ステップ成立時
+	SELECT_SE,//選択
+	CURSOL_SE,//決定
 	COUNT_CHECK//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

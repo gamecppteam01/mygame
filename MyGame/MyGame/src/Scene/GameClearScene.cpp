@@ -3,6 +3,7 @@
 #include "../ScoreManager/ScoreDisplay.h"
 #include "../Input/InputChecker.h"
 #include "../DataManager/DataManager.h"
+#include "../Sound/Sound.h"
 
 GameClearScene::GameClearScene():sinCount_(0)
 {
@@ -28,11 +29,13 @@ void GameClearScene::update(float deltaTime)
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
 		InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		cursor_ = (cursor_ - 1 + cursorPoses.size()) % cursorPoses.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
 		InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180)
 	{
 		cursor_ = (cursor_ + 1) % cursorPoses.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
@@ -40,6 +43,7 @@ void GameClearScene::update(float deltaTime)
 		int next = DataManager::GetInstance().getStage() + 1;
 		if (next > 3)next = 1;
 		DataManager::GetInstance().setStage(next);
+		Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
 		next_ = cursorPoses[cursor_].second;
 	}
 	sinCount_ = (sinCount_ + 3) % 360;

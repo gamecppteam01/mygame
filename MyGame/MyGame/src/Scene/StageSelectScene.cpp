@@ -3,6 +3,7 @@
 #include"../Graphic/Sprite.h"
 #include"../Define.h"
 #include"../DataManager/DataManager.h"
+#include "../Sound/Sound.h"
 
 StageSelectScene::StageSelectScene()
 {
@@ -24,24 +25,29 @@ void StageSelectScene::update(float deltaTime)
 {
 	if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 270) {
 		cursor_ = (cursor_ - 1 + ButtonList.size()) % ButtonList.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 90) {
 		cursor_ = (cursor_ + 1) % ButtonList.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 180) {
 		if (cursor_ != 3) {
 			prevCursor_ = cursor_;
 			cursor_ = 3;
 		}
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		if (cursor_ == 3) {
 			cursor_ = (prevCursor_ == 3) ? (cursor_ - 1 + ButtonList.size()) % ButtonList.size() : prevCursor_;
 		}
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 		//シーン遷移
 		next_ = ButtonList[cursor_].first;
+		Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
 		DataManager::GetInstance().setStage(ButtonList[cursor_].second);//ステージ番号受け渡し
 		isEnd_ = true;
 	}
