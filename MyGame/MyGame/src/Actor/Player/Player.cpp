@@ -277,6 +277,10 @@ void Player::onDraw() const
 	//	*/
 	//}
 	//);
+
+
+	if (state_ == Player_State::Shoot|| state_ == Player_State::Attack)return;
+
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
@@ -660,6 +664,8 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
+	world_->getCamera()->ZoomIn();
+
 	int key=EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT,key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
@@ -708,6 +714,8 @@ void Player::to_AttackMode()
 
 void Player::to_ShootMode()
 {
+	world_->getCamera()->ZoomIn();
+
 	shootAngle_ = 0.0f;
 	Vector3 shootVector = *bulletPosition_ - position_;
 	shootVector = shootVector.Normalize();
@@ -752,14 +760,20 @@ void Player::end_StepMode()
 
 void Player::end_StepSuccessMode()
 {
+	world_->getCamera()->ZoomOut();
+
 }
 
 void Player::end_AttackMode()
 {
+	world_->getCamera()->ZoomOut();
+
 }
 
 void Player::end_ShootMode()
 {
+	world_->getCamera()->ZoomOut();
+
 }
 
 void Player::end_ShootEndMode()
