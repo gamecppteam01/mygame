@@ -1,5 +1,6 @@
 #pragma once
 #include "../Math/Math.h"
+#include "../game/ID.h"
 
 class NumberManager {
 private:
@@ -9,18 +10,27 @@ public:
 		static NumberManager n;
 		return n;
 	}
-	//数値描画フォント(ポジション、数値)
+	///<summary>
+	/// 数値描画フォント(座標、数値)
+	///</summary>
 	void DrawNumber(const Vector2& position,const int number);
-	//数値描画フォント(ポジション、数値、色)(1:白,2:赤,3:緑,4:青)
+	///<summary>
+	/// 数値描画フォント(座標、数値、色)(1:白,2:赤,3:緑,4:青)
+	///</summary>
 	void DrawNumber(const Vector2& position, const int number,int colornumebr);
-	//数値描画テクスチャ(テクスチャID、ポジション、数値、画像サイズ、表示サイズ)
-	void DrawNumberTexture( const Vector2& position, int number, const Vector2& size, const Vector2& scale);
-	//数値描画テクスチャ(テクスチャID、ポジション、数値、画像サイズ、表示サイズ)
-	//赤色の数字(後からＩＤで変えれるように変更します)
-	void DrawNumberTexture2(const Vector2& position, int number, const Vector2& size, const Vector2& scale);
-
-
-	void drawT(const Vector2& position, int number, int digit);
+	///<summary>
+	/// 数値描画テクスチャ(スプライトID、座標、数値、数字一つのサイズ、表示サイズ)
+	///</summary>
+	void DrawNumberTexture(const SPRITE_ID &id, const Vector2& position, int number, const Vector2& size, const Vector2& scale);
+	///<summary>
+	/// 数値描画テクスチャ(スプライトID、座標、数値、数字一つのサイズ、表示サイズ)
+	/// 9以下で真ん中に表示されるようになります
+	///</summary>
+	void DrawNumberTexture2(const SPRITE_ID &id, const Vector2& position, int number, const Vector2& size, const Vector2& scale);
+	///<summary>
+	/// 数値描画フォント(座標、数値、最大桁数)
+	///</summary>
+	void DrawNumber_digit(const Vector2& position,  int number, int digit);
 private:
 	int C{ 0 };
 };

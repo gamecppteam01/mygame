@@ -40,7 +40,7 @@ void ScoreDisplay::Score(const Vector2& position, int digit)const
 	int a = 1;
 	for(auto i: scores){
 		FontManager::GetInstance().DrawTextApplyFont(position.x, position.y + a * 40, GetColor(255, 255, 255), FONT_ID::DEFAULT_FONT, "PLAYER%d:", i.playerNumber_);
-		NumberManager::GetInstance().drawT(Vector2(position.x + 30 + 22.5 * digit, position.y + a * 40), i.score_ , digit);
+		NumberManager::GetInstance().DrawNumber_digit(Vector2(position.x + 30 + 22.5 * digit, position.y + a * 40), i.score_ , digit);
 		a++;
 	}
 }
@@ -57,7 +57,7 @@ void ScoreDisplay::Score(const std::list<ScoreData>& score,const Vector2& positi
 	int a = 1;
 	for (auto i : scores) {
 		FontManager::GetInstance().DrawTextApplyFont(position.x, position.y + a * 35, GetColor(255, 255, 255), FONT_ID::DEFAULT_FONT, "PLAYER%d:", i.playerNumber_);
-		NumberManager::GetInstance().drawT(Vector2(position.x + 30 + 22.5 * digit, position.y + a * 35), i.score_, digit);
+		NumberManager::GetInstance().DrawNumber_digit(Vector2(position.x + 30 + 22.5 * digit, position.y + a * 35), i.score_, digit);
 		a++;
 	}
 

@@ -32,29 +32,31 @@ void NumberManager::DrawNumber(const Vector2 & position, const int number, const
 	}
 }
 
-void NumberManager::DrawNumberTexture(const Vector2 & position, int number, const Vector2& size, const Vector2& scale){
+void NumberManager::DrawNumberTexture(const SPRITE_ID & id, const Vector2 & position, int number, const Vector2 & size, const Vector2 & scale){
 	std::string string_numebr = std::to_string(number);
 	for (int i = 0; i < (int)string_numebr.size(); ++i) {
 		if (string_numebr[i] == ' ')continue;
 		const int n = string_numebr[i] - '0';
 		const RECT rect{ (float)n * size.x ,0.0f,(float)(n * size.x) + size.x,(float)size.y };
 		const Vector2  pos{ position.x + i * size.x * scale.x,position.y };
-		Sprite::GetInstance().Draw(SPRITE_ID::NUMBER, pos, rect, Vector2(0.0f, 0.0f), 1.0f, scale, 0.0f, true, false);
+		Sprite::GetInstance().Draw(id, pos, rect, Vector2(size.x, size.y) / 2, 1.0f, scale, 0.0f, true, false);
 	}
 }
 
-void NumberManager::DrawNumberTexture2(const Vector2 & position, int number, const Vector2 & size, const Vector2 & scale){
+void NumberManager::DrawNumberTexture2(const SPRITE_ID &id, const Vector2 & position, int number, const Vector2 & size, const Vector2 & scale){
 	std::string string_numebr = std::to_string(number);
+	int move = 0;
+	if (number < 10) move = size.x / 2;
 	for (int i = 0; i < (int)string_numebr.size(); ++i) {
 		if (string_numebr[i] == ' ')continue;
 		const int n = string_numebr[i] - '0';
 		const RECT rect{ (float)n * size.x ,0.0f,(float)(n * size.x) + size.x,(float)size.y };
-		const Vector2  pos{ position.x + i * size.x * scale.x ,position.y };
-		Sprite::GetInstance().Draw(SPRITE_ID::REDNUMBER, pos, rect, Vector2(0.0f, 0.0f), 1.0f, scale, 0.0f, true, false);
+		const Vector2  pos{ position.x + i * size.x * scale.x + move,position.y };
+		Sprite::GetInstance().Draw(id, pos, rect, Vector2(size.x, size.y) / 2, 1.0f, scale, 0.0f, true, false);
 	}
 }
 
-void NumberManager::drawT(const Vector2 & position, int number, int digit){
+void NumberManager::DrawNumber_digit(const Vector2 & position, int number, int digit){
 	int maxscore = MathHelper::Pow(10, digit) - 1;
 	number = min(number, maxscore);
 	std::vector<int> drawscore = SligeDigit(number);
