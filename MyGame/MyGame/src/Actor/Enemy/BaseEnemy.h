@@ -93,11 +93,11 @@ protected:
 	void addVelocity_NextPosition(float deltaTime);
 
 	//アニメーションの変更
-	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true,float blend = 1.0f);
+	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true);
 	//状態の更新
 	bool change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim);
 	//状態変更とアニメーション変更を同時に行う
-	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop = true, float blend = 1.0f);
+	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop = true);
 
 	virtual void to_Normal();
 	virtual void to_Step(Enemy_Animation anim);

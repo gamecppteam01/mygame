@@ -355,10 +355,10 @@ void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
 }
 
-void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop, float blend)
+void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
 {
-	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop,blend);
-	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop,blend);
+	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop);
+	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop);
 	
 }
 
@@ -414,10 +414,10 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 	return true;
 }
 
-bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop,float blend)
+bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop)
 {
 	if (!change_State(state,animID))return false;
-	changeAnimation(animID,0.0f,1.0f,isLoop,blend);
+	changeAnimation(animID,0.0f,1.0f,isLoop);
 
 	return true;
 }
@@ -527,7 +527,7 @@ void BaseEnemy::updateDown(float deltaTime)
 	downTime_ += deltaTime;
 
 	if (downTime_ >= downTime) {
-		if (change_State_and_Anim(Enemy_State::WakeUp, Enemy_Animation::WakeUp,false,1.0f))updateDown(deltaTime);
+		if (change_State_and_Anim(Enemy_State::WakeUp, Enemy_Animation::WakeUp,false))updateDown(deltaTime);
 	}
 
 }
@@ -535,7 +535,7 @@ void BaseEnemy::updateWakeUp(float deltaTime){
 	wakwUpTime_ += deltaTime;
 
 	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
-		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward,true, 0.4f);
+		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward,true);
 }
 
 bool BaseEnemy::isCanStep() const
