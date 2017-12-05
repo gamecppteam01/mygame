@@ -50,7 +50,7 @@ void AnimationDx::Draw(const Matrix& rotation) const
 	Model::GetInstance().Draw(modelHandle_, rotation);
 }
 
-void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed, bool isLoop)
+void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed, bool isLoop,float blend)
 {
 	// 現在と同じモーションの場合は何もしない
 	if (motion_ == motion) return;
@@ -59,7 +59,7 @@ void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed
 	motion_		= motion;
 	prevAnimTimer_ = animTimer_;
 	animTimer_	= frame;
-	rate_		= 0.0f;
+	rate_		= 1.0f - blend;
 
 	// 前アニメーションをデタッチ
 	MV1DetachAnim(modelHandle_, anim_);

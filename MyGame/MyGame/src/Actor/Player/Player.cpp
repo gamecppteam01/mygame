@@ -36,7 +36,7 @@ static const float defaultTurnPower = 1.0f;
 //無視するコントローラの傾き範囲
 static const float ignoreSlope = 0.1f;
 static const float boundPower = 15.0f;
-static const float downTime = 7.0f;
+static const float downTime = 2.0f;
 //移動速度
 static const float movePower = 0.5f;
 //ステップ回数によるよろけのチェック周期
@@ -57,7 +57,8 @@ static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Anima
 	{ Player::Player_Animation::ShootEnd,PlayerBullet::PlayerBullet_Animation::ShootEnd },
 	{ Player::Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
 	{ Player::Player_Animation::Half,PlayerBullet::PlayerBullet_Animation::Half },
-	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn }
+	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn },
+	{ Player::Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal }
 
 };
 
@@ -86,6 +87,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerUpdateFunc_[Player_State::KnockBack] = [this](float deltaTime) {knockback_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Down] = [this](float deltaTime) {down_Update(deltaTime); };
 	playerUpdateFunc_[Player_State::Stumble] = [this](float deltaTime) {stumble_Update(deltaTime); };
+	playerUpdateFunc_[Player_State::Reversal] = [this](float deltaTime) {reversal_Update(deltaTime); };
 
 	//各種状態変更関数を設定する
 	playerToNextModeFunc_[Player_State::Idle] = [this]() {to_IdleMode(); };
@@ -98,6 +100,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerToNextModeFunc_[Player_State::KnockBack] = [this]() {to_KnockBackMode(); };
 	playerToNextModeFunc_[Player_State::Down] = [this]() {to_DownMode(); };
 	playerToNextModeFunc_[Player_State::Stumble] = [this]() {to_StumbleMode(); };
+	playerToNextModeFunc_[Player_State::Reversal] = [this]() {to_ReversalMode(); };
 
 	playerEndModeFunc_[Player_State::Idle] = [this]() {		end_IdleMode(); };
 	playerEndModeFunc_[Player_State::Move] = [this]() {		end_MoveMode(); };
@@ -109,6 +112,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	playerEndModeFunc_[Player_State::KnockBack] = [this]() {end_KnockBackMode(); };
 	playerEndModeFunc_[Player_State::Down] = [this]() {		end_DownMode(); };
 	playerEndModeFunc_[Player_State::Stumble] = [this]() {		end_StumbleMode(); };
+	playerEndModeFunc_[Player_State::Reversal] = [this]() {		end_ReversalMode(); };
 
 	musicScore_.SetWorld(world);
 	musicScore_.SetSize(Vector2{ 250.0f,20.0f });
@@ -379,12 +383,12 @@ void Player::correctPosition()
 
 }
 
-bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame,float animSpeed,bool isLoop)
+bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame,float animSpeed,bool isLoop, float blend)
 {
 	if (state_ == state)return false;
 
-	changeAnimation(animID, animFrame, animSpeed, isLoop);
-	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop);
+	changeAnimation(animID, animFrame, animSpeed, isLoop, blend);
+	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop, blend);
 	change_State(state);
 
 	return true;
@@ -430,7 +434,7 @@ void Player::idle_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 
 		}
 		return;
@@ -473,7 +477,7 @@ void Player::move_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Down))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 
 		}
 		return;
@@ -593,7 +597,7 @@ void Player::down_Update(float deltaTime)
 	timeCount_ += deltaTime;
 
 	if (timeCount_ >= downTime_) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Reversal, Player_Animation::Reversal,0.0f,1.0f,false,0.0f))playerUpdateFunc_[state_](deltaTime);
 	}
 }
 
@@ -612,7 +616,7 @@ void Player::stumble_Update(float deltaTime)
 	if (timeCount_ >= fallTime) {
 		//転倒処理を書く
 		downTime_ = downTime;//ダウン時間設定
-		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false,0.0f))playerUpdateFunc_[state_](deltaTime);
 
 	}
 
@@ -640,6 +644,16 @@ void Player::stumble_Update(float deltaTime)
 	velocity_ += framevelocity;
 
 	gravityUpdate(deltaTime);
+
+}
+
+void Player::reversal_Update(float deltaTime)
+{
+	timeCount_ -= deltaTime;
+
+	if (timeCount_ <= 0.0f) {
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true,0.0f))playerUpdateFunc_[state_](deltaTime);
+	}
 
 }
 
@@ -748,6 +762,12 @@ void Player::to_StumbleMode()
 	stumbleRegistTimer_ = 0.0f;
 }
 
+void Player::to_ReversalMode()
+{
+	timeCount_ = animation_.GetAnimMaxTime((int)Player_Animation::Reversal);
+
+}
+
 void Player::end_IdleMode()
 {
 }
@@ -798,13 +818,17 @@ void Player::end_StumbleMode()
 {
 }
 
+void Player::end_ReversalMode()
+{
+}
+
 void Player::stepAttack(float deltaTime)
 {
 	centerPosition_ += (attackTarget_->position() - centerPosition_).Normalize() *2.f;
 }
 
-void Player::changeAnimation(Player_Animation animID,float animFrame, float animSpeed,bool isLoop) {
-	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop);
+void Player::changeAnimation(Player_Animation animID,float animFrame, float animSpeed,bool isLoop, float blend) {
+	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop,blend);
 }
 
 bool Player::isChangeStep() const

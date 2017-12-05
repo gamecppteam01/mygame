@@ -68,8 +68,8 @@ Matrix * PlayerBullet::getRotationPtr()
 	return &rotation_;
 }
 
-void PlayerBullet::changeAnimation(PlayerBullet_Animation animID, float animFrame, float animSpeed, bool isLoop)
+void PlayerBullet::changeAnimation(PlayerBullet_Animation animID, float animFrame, float animSpeed, bool isLoop,float blend)
 {
-	animation_.ChangeAnim((int)animID,animFrame,animSpeed,isLoop);
+	animation_.ChangeAnim((int)animID,animFrame,animSpeed,isLoop,blend);
 
 }

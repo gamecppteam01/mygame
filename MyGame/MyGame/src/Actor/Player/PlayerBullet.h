@@ -19,8 +19,9 @@ public:
 		Turn = 3,//回転時
 		Half=4,
 		Attack = 12,//攻撃時
-		KnockBack = 14,//被弾時
-		Down = 15,//ダウン時
+		KnockBack = 0,//被弾時
+		Down = 5,//ダウン時
+		Reversal=6,//起き上がり時
 		//Jump = 17,//ジャンプ時
 	};
 
@@ -49,7 +50,7 @@ private:
 	Vector3* getPositionPtr();
 	Matrix* getRotationPtr();
 	//アニメーションの変更
-	void changeAnimation(PlayerBullet_Animation animID, float animFrame = 0.0f, float animeSpeed = 1.0f, bool isLoop = true);
+	void changeAnimation(PlayerBullet_Animation animID, float animFrame = 0.0f, float animeSpeed = 1.0f, bool isLoop = true,float blend=1.0f);
 	Player* player_;
 private:
 

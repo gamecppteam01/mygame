@@ -14,7 +14,7 @@ public:
 	// 描画
 	void Draw(const Matrix& rotation) const;
 	// アニメーション切り替え
-	void ChangeAnim(const int motion, const float frame = 0.0f, float animSpeed = 1.0f,bool isLoop=true);
+	void ChangeAnim(const int motion, const float frame = 0.0f, float animSpeed = 1.0f,bool isLoop=true,float blend=1.0f);
 	// モデルハンドル登録(受け取ったハンドルを基にモデルをコピーするため、受取時のハンドルをそのまま使う事は出来ない)
 	void SetHandle(const int& handle);
 	// アニメーションエンドフラグ

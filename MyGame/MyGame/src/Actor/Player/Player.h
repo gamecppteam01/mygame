@@ -26,6 +26,7 @@ public:
 		ShootEnd,//発射終了
 		KnockBack,//被弾
 		Down,//ダウン時
+		Reversal,//起き上がり
 		Turn,//回転
 		State_Count//ステート数を数えるための列挙値(Countを状態として利用しないこと)
 	};
@@ -39,7 +40,8 @@ public:
 		Shoot = 1,//発射時
 		ShootEnd = 13,//発射終了
 		KnockBack = 14,//被弾時
-		Down = 0,//ダウン時
+		Down = 5,//ダウン時
+		Reversal=6,//起き上がり
 		Turn = 3,//回転時
 		Half = 4,
 	};
@@ -102,7 +104,7 @@ private:
 //状態関係
 private:
 	//状態変更とアニメーション変更を同時に行う
-	bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true);
+	bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
 
 	//状態の更新
 	bool change_State(Player_State state);
@@ -131,6 +133,8 @@ private:
 	void turn_Update(float deltaTime);
 	//よろけ時更新
 	void stumble_Update(float deltaTime);
+	//起き上がり更新
+	void reversal_Update(float deltaTime);
 
 	//待機状態への移行処理
 	void to_IdleMode();
@@ -155,6 +159,8 @@ private:
 	void to_TurnMode();
 	//よろけ状態への移行処理
 	void to_StumbleMode();
+	//起き上がり状態への移行処理
+	void to_ReversalMode();
 
 	//待機状態の終了処理
 	void end_IdleMode();
@@ -179,6 +185,8 @@ private:
 	void end_TurnMode();
 	//よろけの終了処理
 	void end_StumbleMode();
+	//起き上がりの終了処理
+	void end_ReversalMode();
 
 private:
 		//攻撃ステップ
@@ -186,7 +194,7 @@ private:
 
 private:
 	//アニメーションの変更
-	void changeAnimation(Player_Animation animID, float animFrame = 0.0f,float animeSpeed=1.0f,bool isLoop=true);
+	void changeAnimation(Player_Animation animID, float animFrame = 0.0f,float animeSpeed=1.0f,bool isLoop=true,float blend=1.0f);
 
 private:
 	//ステップに変更する状態か
@@ -227,7 +235,7 @@ private:
 	//汎用タイマー
 	float timeCount_;
 	//ダウンする時間
-	float downTime_{ 7.0f };
+	float downTime_{ 2.0f };
 	//2体の中心
 	Vector3 centerPosition_{ Vector3::Zero };
 	//よろけ関連
