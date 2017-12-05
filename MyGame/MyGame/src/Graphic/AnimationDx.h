@@ -62,6 +62,8 @@ private:
 	int		prevAnim_;
 	//ループするか
 	bool isLoop_{ true };
+	//前のアニメーションがループしていたか
+	bool prevLoop_{ true };
 	//アニメーションの再生速度
 	float animSpeed_{ 1.0f };
 };

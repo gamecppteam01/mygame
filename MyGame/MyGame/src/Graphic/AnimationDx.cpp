@@ -30,9 +30,13 @@ void AnimationDx::Update(const float frameTime)
 	prevAnim_ = MV1AttachAnim(modelHandle_, prevMotion_);
 	// 前アニメーション更新
 	float prevMaxAnimTime = MV1GetAttachAnimTotalTime(modelHandle_, prevAnim_);
-	prevAnimTimer_ += frameTime*animSpeed_;
-	prevAnimTimer_ = fmodf(prevAnimTimer_, prevMaxAnimTime);
-
+	if (prevLoop_) {
+		prevAnimTimer_ += frameTime*animSpeed_;
+		prevAnimTimer_ = fmodf(prevAnimTimer_, prevMaxAnimTime);
+	}
+	else {
+		prevAnimTimer_ = prevMaxAnimTime;
+	}
 	// ブレンド率の更新
 	rate_ += RATE_TIME;
 	rate_ = MathHelper::Clamp(rate_, 0.0f, 1.0f);
@@ -72,6 +76,8 @@ void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed
 
 	maxAnimTime_ = MV1GetAttachAnimTotalTime(modelHandle_, anim_);
 
+	//ループ情報を保存して次のループを設定する
+	prevLoop_ = isLoop_;
 	isLoop_ = isLoop;
 	animSpeed_ = animSpeed;
 }

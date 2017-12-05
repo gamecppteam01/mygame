@@ -532,7 +532,7 @@ void Player::stepSuccess_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 }
@@ -597,7 +597,7 @@ void Player::down_Update(float deltaTime)
 	timeCount_ += deltaTime;
 
 	if (timeCount_ >= downTime_) {
-		if (change_State_and_Anim(Player_State::Reversal, Player_Animation::Reversal,0.0f,1.0f,false,0.0f))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Reversal, Player_Animation::Reversal,0.0f,1.0f,false))playerUpdateFunc_[state_](deltaTime);
 	}
 }
 
@@ -616,7 +616,7 @@ void Player::stumble_Update(float deltaTime)
 	if (timeCount_ >= fallTime) {
 		//転倒処理を書く
 		downTime_ = downTime;//ダウン時間設定
-		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false,0.0f))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false))playerUpdateFunc_[state_](deltaTime);
 
 	}
 
@@ -652,7 +652,7 @@ void Player::reversal_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true,0.0f))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true))playerUpdateFunc_[state_](deltaTime);
 	}
 
 }
