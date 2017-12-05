@@ -243,6 +243,7 @@
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
     <ClCompile Include="src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
+    <ClCompile Include="src\Scene\TutorialScene.cpp" />
     <ClCompile Include="src\ScoreManager\NumberManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreBase.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreDisplay.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
     <ClInclude Include="src\Scene\StageSelectScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
+    <ClInclude Include="src\Scene\TutorialScene.h" />
     <ClInclude Include="src\ScoreManager\NumberManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreBase.h" />
     <ClInclude Include="src\ScoreManager\ScoreData.h" />

@@ -7,4 +7,5 @@
 #include "GameClearScene.h"
 #include "GameOverScene.h"
 #include "CreditScene.h"
+#include "TutorialScene.h"
 #include "SceneType.h"
