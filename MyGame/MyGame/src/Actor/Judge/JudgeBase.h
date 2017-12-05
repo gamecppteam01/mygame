@@ -4,7 +4,7 @@
 class JudgeBase : public Actor {
 public:
 	//コンストラクタ
-	JudgeBase(IWorld* world, const std::string& name, const Vector3& position, const IBodyPtr& body);
+	JudgeBase(IWorld* world, const std::string& name, const Vector3& position);
 	//初期化
 	virtual void initialize()override;
 	// メッセージ処理
@@ -24,6 +24,6 @@ protected:
 	bool is_Scorp_Angle(ActorPtr& target, float angle = 45.0f) const;
 	bool is_Scorp_Angle(const Vector3& target, float angle = 45.0f) const;
 	//一定距離内にいるか？
-	bool is_In_Distans(ActorPtr& target, float distance = 50.0f) const;
+	bool is_In_Distans(ActorPtr& target, float distance = 28.0f) const;
 
 };

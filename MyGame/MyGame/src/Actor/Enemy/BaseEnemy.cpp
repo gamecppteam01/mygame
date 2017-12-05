@@ -24,15 +24,16 @@ static const int defDownCount = 1;
 
 //男->女でアニメーションを変換
 static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Animation> animConvList{
-	{ BaseEnemy::Enemy_Animation::Idle, EnemyBullet::EnemyBullet_Animation::Idle },
-	{ BaseEnemy::Enemy_Animation::Down,EnemyBullet::EnemyBullet_Animation::Down },
-	{ BaseEnemy::Enemy_Animation::KnockBack,EnemyBullet::EnemyBullet_Animation::KnockBack },
 	{ BaseEnemy::Enemy_Animation::Move_Forward,EnemyBullet::EnemyBullet_Animation::Move_Forward },
-	{ BaseEnemy::Enemy_Animation::Step_Left,EnemyBullet::EnemyBullet_Animation::Step_Left },
+	{ BaseEnemy::Enemy_Animation::Idle, EnemyBullet::EnemyBullet_Animation::Idle },
 	{ BaseEnemy::Enemy_Animation::Spin,EnemyBullet::EnemyBullet_Animation::Spin },
 	{ BaseEnemy::Enemy_Animation::Quarter,EnemyBullet::EnemyBullet_Animation::Quarter },
 	{ BaseEnemy::Enemy_Animation::Turn,EnemyBullet::EnemyBullet_Animation::Turn },
 	{ BaseEnemy::Enemy_Animation::Half,EnemyBullet::EnemyBullet_Animation::Half },
+	{ BaseEnemy::Enemy_Animation::Down,EnemyBullet::EnemyBullet_Animation::Down },
+	{ BaseEnemy::Enemy_Animation::WakeUp,EnemyBullet::EnemyBullet_Animation::WakeUp },
+	{ BaseEnemy::Enemy_Animation::KnockBack,EnemyBullet::EnemyBullet_Animation::KnockBack },
+	{ BaseEnemy::Enemy_Animation::Step_Left,EnemyBullet::EnemyBullet_Animation::Step_Left },
 };
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
@@ -88,6 +89,10 @@ void BaseEnemy::onUpdate(float deltaTime){
 	}
 	case BaseEnemy::Enemy_State::Down: {
 		updateDown(deltaTime);
+		break;
+	}
+	case BaseEnemy::Enemy_State::WakeUp: {
+		updateWakeUp(deltaTime);
 		break;
 	}
 	default:
@@ -217,7 +222,7 @@ void BaseEnemy::onCollideResult()
 	downTimer_.Action();
 	//ダウン値が溜まったら
 	if (downCount_ <= 0) {
-		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down);
+		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down,false);
 	}
 }
 
@@ -350,10 +355,10 @@ void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
 }
 
-void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
+void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop, float blend)
 {
-	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop);
-	bullet_->changeAnimation(animConvList.at(animID));
+	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop,blend);
+	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop,blend);
 	
 }
 
@@ -398,6 +403,10 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 		to_Down();
 		break;
 	}
+	case BaseEnemy::Enemy_State::WakeUp: {
+		to_WakeUp();
+		break;
+	}
 	default:
 		break;
 	}
@@ -405,10 +414,10 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 	return true;
 }
 
-bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID)
+bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop,float blend)
 {
 	if (!change_State(state,animID))return false;
-	changeAnimation(animID);
+	changeAnimation(animID,0.0f,1.0f,isLoop,blend);
 
 	return true;
 }
@@ -448,6 +457,10 @@ void BaseEnemy::to_Down()
 	//ダウン値を元に戻して
 	downCount_ = defDownCount;
 	downTime_ = 0.0f;
+}
+
+void BaseEnemy::to_WakeUp(){
+	wakwUpTime_ = 0.0f;
 }
 
 void BaseEnemy::updateNormal(float deltaTime)
@@ -514,10 +527,17 @@ void BaseEnemy::updateDown(float deltaTime)
 	downTime_ += deltaTime;
 
 	if (downTime_ >= downTime) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateDown(deltaTime);
+		if (change_State_and_Anim(Enemy_State::WakeUp, Enemy_Animation::WakeUp,false,1.0f))updateDown(deltaTime);
 	}
 
 }
+void BaseEnemy::updateWakeUp(float deltaTime){
+	wakwUpTime_ += deltaTime;
+
+	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
+		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward,true, 0.4f);
+}
+
 bool BaseEnemy::isCanStep() const
 {
 	return state_ == Enemy_State::Normal;

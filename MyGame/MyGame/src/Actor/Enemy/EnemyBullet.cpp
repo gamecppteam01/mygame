@@ -135,8 +135,8 @@ Matrix * EnemyBullet::getRotationPtr()
 	return &rotation_;
 }
 
-void EnemyBullet::changeAnimation(EnemyBullet_Animation animID)
+void EnemyBullet::changeAnimation(EnemyBullet_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend)
 {
-	animation_.ChangeAnim((int)animID);
+	animation_.ChangeAnim((int)animID, animFrame, animSpeed,isLoop,blend);
 
 }

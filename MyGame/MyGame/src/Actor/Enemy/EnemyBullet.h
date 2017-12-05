@@ -14,9 +14,10 @@ public:
 		Quarter = 2,//クウォータ―時
 		Turn = 3,//回転時
 		Half = 4,//ハーフ時
+		Down = 5,//ダウン時
+		WakeUp = 6,//起き上がり時
 		Step_Left = 3,//左ステップ時
 		KnockBack = 4,//被弾時
-		Down = 5,//ダウン時
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
@@ -41,7 +42,7 @@ private:
 	Vector3* getPositionPtr();
 	Matrix* getRotationPtr();
 	//アニメーションの変更
-	void changeAnimation(EnemyBullet_Animation animID);
+	void changeAnimation(EnemyBullet_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f,bool isLoop  = true,float blend = 1.0f);
 
 private:
 	//アニメーション

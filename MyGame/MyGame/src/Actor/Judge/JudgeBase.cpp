@@ -6,11 +6,12 @@
 #include"../../Math/Math.h"
 #include"../../Graphic/DebugDraw.h"
 #include"../../Define.h"
+#include"../Body/Base/DummyBody.h"
 #include<list>
 
 //コンストラクタ
-JudgeBase::JudgeBase(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr& body)
-:Actor(world, name, position, body) {
+JudgeBase::JudgeBase(IWorld * world, const std::string & name, const Vector3 & position)
+:Actor(world, name, position, std::make_shared<DummyBody>()) {
 }
 
 //初期化

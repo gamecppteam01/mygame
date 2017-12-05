@@ -16,9 +16,10 @@ public:
 		Quarter = 2,//クウォータ―時
 		Turn = 3,//回転時
 		Half = 4,//ハーフ時
+		Down = 5,//ダウン時
+		WakeUp = 6,//起き上がり時
 		Step_Left = 3,//左ステップ時
 		KnockBack = 4,//被弾時
-		Down = 5,//ダウン時
 	};
 	enum class Enemy_State {
 		Normal,//通常時更新
@@ -26,6 +27,7 @@ public:
 		Track,//追跡中
 		Attack,//攻撃
 		Down,//転倒
+		WakeUp,//起き上がり
 
 	};
 public:
@@ -91,23 +93,25 @@ protected:
 	void addVelocity_NextPosition(float deltaTime);
 
 	//アニメーションの変更
-	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true);
+	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true,float blend = 1.0f);
 	//状態の更新
 	bool change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim);
 	//状態変更とアニメーション変更を同時に行う
-	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID);
+	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop = true, float blend = 1.0f);
 
 	virtual void to_Normal();
 	virtual void to_Step(Enemy_Animation anim);
 	virtual void to_Track();
 	virtual void to_Attack(Enemy_Animation anim);
 	virtual void to_Down();
+	virtual void to_WakeUp();
 
 	virtual void updateNormal(float deltaTime);
 	virtual void updateStep(float deltaTime);
 	virtual void updateTrack(float deltaTime);
 	virtual void updateAttack(float deltaTime);
 	virtual void updateDown(float deltaTime);
+	virtual void updateWakeUp(float deltaTime);
 
 	//ステップ可能か
 	bool isCanStep()const;
@@ -147,6 +151,8 @@ protected:
 	MethodTimer nonTargetResetTimer_;
 	//ダウンしている時間
 	float downTime_;
+	//起き上がっている時間
+	float wakwUpTime_;
 
 	//攻撃対象
 	std::weak_ptr<Actor> attackTarget_;
@@ -168,6 +174,8 @@ protected:
 	const float movePower{ 0.7f };
 	//ダウンする時間
 	const float downTime{ 3.0f };
+	//起き上がる時間
+	const float wakeUpTime{ 0.933f };
 	//男と女の距離
 	const Vector3 bulletDistance{ 0.0f,0.0f,4.0f };
 
