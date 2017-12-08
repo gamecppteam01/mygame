@@ -250,6 +250,7 @@
     <ClCompile Include="src\ScoreManager\ScoreManager.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreMap.cpp" />
     <ClCompile Include="src\ScoreManager\ScoreRateManager.cpp" />
+    <ClCompile Include="src\ShadowMap\ShadowMap.cpp" />
     <ClCompile Include="src\Sound\MusicScoreManager.cpp" />
     <ClCompile Include="src\Sound\Sound.cpp" />
     <ClCompile Include="src\Tween\TweenManager.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="src\ScoreManager\ScoreManager.h" />
     <ClInclude Include="src\ScoreManager\ScoreMap.h" />
     <ClInclude Include="src\ScoreManager\ScoreRateManager.h" />
+    <ClInclude Include="src\ShadowMap\ShadowMap.h" />
     <ClInclude Include="src\Sound\MusicScoreManager.h" />
     <ClInclude Include="src\Sound\Sound.h" />
     <ClInclude Include="src\Sound\TempoManager.h" />
