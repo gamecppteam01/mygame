@@ -90,9 +90,6 @@
     <ClCompile Include="src\Graphic\Movie.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphic\ShadowMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphic\Sprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -297,9 +294,6 @@
     <ClCompile Include="src\UI\StepUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\UI\StepUIManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\UI\EndUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -468,9 +462,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphic\Movie.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphic\ShadowMap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphic\Sprite.h">
@@ -837,6 +828,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\ShadowMap\ShadowMap.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShadowMap\ShadowMap_Data.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

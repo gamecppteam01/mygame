@@ -12,6 +12,7 @@
 #include"../ScoreManager/ScoreMap.h"
 #include"../Sound/TempoManager.h"
 #include"../ShadowMap/ShadowMap.h"
+#include"../ShadowMap/ShadowMap_Data.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -68,7 +69,7 @@ public:
 	void end();
 	
 	virtual void setLateDraw(std::function<void()> draw, bool isBeforeUI = true) override;
-	void setShadowMap(const bool flag);
+	void setShadowMap(const bool flag,const MODEL_ID& id = MODEL_ID::DUMMY_MODEL);
 
 	// コピー禁止
 	World(const World& other) = delete;
@@ -97,6 +98,8 @@ private:
 	std::function<void(EventMessage, void*)> listener_;
 	//シャドウマップ
 	ShadowMap shadowmap_;
+	//シャドウマップのデータ
+	ShadowMap_Data shadow_data;
 	int ShadowMapHandle;
 	bool shadowflag_{ false };
 };

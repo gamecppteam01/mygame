@@ -1,10 +1,13 @@
 #pragma once
 #include<list>
+#include<map>
 #include"../ScoreManager/ScoreData.h"
+#include"../ShadowMap/ShadowMap_Data.h"
+#include"../Game/ID.h"
 
 class DataManager {
 private:
-	DataManager() = default;
+	DataManager();
 	~DataManager();
 
 public:
@@ -19,8 +22,12 @@ public:
 	void setStage(int stage);
 	int getStage()const;
 
+	void setShadowData(const MODEL_ID& id,ShadowMap_Data& data);
+	ShadowMap_Data getShadowData(const MODEL_ID& id);
+
 private:
 	std::list<ScoreData> datas_;
+	std::map<MODEL_ID, ShadowMap_Data> shdowData_;
 
 	//ステージ番号
 	int chooseStage_{ 1 };

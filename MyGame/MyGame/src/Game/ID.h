@@ -135,7 +135,9 @@ enum FONT_ID {
 };
 
 enum SHADOW_MAP_ID {
+	SHADOW_MAP_DAMY,
 	SHADOW_MAP_01,
+	SHADOW_MAP_02,
 
 	COUNT_SHADOW_MAP//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

@@ -2,6 +2,7 @@
 #include"../Field/Field.h"
 #include"../Camera/OverLookingCamera.h"
 #include"../Graphic/EffekseerManager.h"
+#include"../DataManager/DataManager.h"
 
 // コンストラクタ
 World::World() :
@@ -46,8 +47,6 @@ void World::Initialize()
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.initialize();
-	shadowmap_.makeShadowMap(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_512, -Vector3::Up);
-	shadowmap_.AllSetRange(Vector3(-300.0f, -2.5f, -150.0f), Vector3(150.0f, 15.0f, 75.0f));
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -238,8 +237,12 @@ void World::setLateDraw(std::function<void()> draw, bool isBeforeUI)
 	else lateDrawFuncListAfterUI_.emplace_back(draw);
 }
 
-void World::setShadowMap(const bool flag) {
+void World::setShadowMap(const bool flag, const MODEL_ID& id) {
 	shadowflag_ = flag;
+
+	shadow_data = DataManager::GetInstance().getShadowData(id);
+	shadowmap_.makeShadowMap(shadow_data.Id, shadow_data.Size, shadow_data.Direction);
+	shadowmap_.AllSetRange(shadow_data.MinPos, shadow_data.MaxPos);
 }
 
 void World::normaldraw() const {
@@ -251,16 +254,18 @@ void World::normaldraw() const {
 
 void World::shadowdraw() const {
 	//シャドウマップに描画
-	shadowmap_.SetUp_ShadowMapDraw(SHADOW_MAP_ID::SHADOW_MAP_01);
+	shadowmap_.SetUp_ShadowMapDraw(shadow_data.Id);
 	// アクターの描画処理
 	actors_.shadowDraw();
 	shadowmap_.DrawEnd_ShadowMap();
 
 	camera_->draw();
 	//使用したいシャドウマップを設定して描画
-	shadowmap_.SetUse_ShadowMap(SHADOW_MAP_ID::SHADOW_MAP_01, 0);
+	shadowmap_.SetUse_ShadowMap(shadow_data.Id, shadow_data.Slot);
 	field_->draw();
 	// アクターの描画処理
 	actors_.draw();
-	shadowmap_.ReleaseShadowMap(0);
+	shadowmap_.ReleaseShadowMap(shadow_data.Slot);
+
+	//shadowmap_.Draw_Test(SHADOW_MAP_ID::SHADOW_MAP_01, Vector2(0, 0), Vector2(1280, 720));
 }

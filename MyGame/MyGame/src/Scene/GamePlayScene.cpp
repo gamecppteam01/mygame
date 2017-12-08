@@ -49,7 +49,7 @@ void GamePlayScene::start() {
 													  //ワールド初期化
 	world_.Initialize();
 	//シャドウマップがいるか？
-	world_.setShadowMap(true);
+	world_.setShadowMap(true, MODEL_ID::STAGE_MODEL);
 	FadePanel::GetInstance().SetInTime(1.0f);
 	FadePanel::GetInstance().FadeIn();
 	FadePanel::GetInstance().AddCollBack([&] {FadePanel::GetInstance().IsClearScreen() == true; });

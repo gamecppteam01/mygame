@@ -1,6 +1,8 @@
 #include "LoadingScene.h"
 #include"../Resource/LoadingList.h"
 #include"../Graphic/EffekseerManager.h"
+#include"../DataManager/DataManager.h"
+#include"../ShadowMap/ShadowMap_Data.h"
 
 LoadingScene::LoadingScene() {
 	next_ = SceneType::SCENE_TITLE;
@@ -15,6 +17,7 @@ void LoadingScene::start() {
 	LoadBGM();
 	LoadSE();
 	LoadEtcetera();
+	LoadShadowMap();
 
 	isEnd_ = true;
 }
@@ -150,6 +153,23 @@ void LoadingScene::LoadSE()
 	Sound::GetInstance().LoadSE(defaultPath + "cursol.mp3", SE_ID::CURSOL_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "systemse.mp3", SE_ID::SELECT_SE);
 	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
+}
+
+//シャドウマップの読み込み
+void LoadingScene::LoadShadowMap()
+{
+	DataManager::GetInstance().setShadowData(MODEL_ID::STAGE_MODEL,
+											ShadowMap_Data(SHADOW_MAP_ID::SHADOW_MAP_01, 
+											Point(512, 512), 
+											-Vector3::Up, 
+											Vector3(-150.0f, -2.5f, -75.0f),
+											Vector3(150.0f, 15.0f, 75.0f), 0));
+	DataManager::GetInstance().setShadowData(MODEL_ID::STAGE_MODEL,
+											ShadowMap_Data(SHADOW_MAP_ID::SHADOW_MAP_02,
+											Point(512, 512),
+											-Vector3::Up,
+											Vector3(-120.0f, -2.5f, -60.0f),
+											Vector3(120.0f, 15.0f, 60.0f), 0));
 }
 
 void LoadingScene::LoadEtcetera()
