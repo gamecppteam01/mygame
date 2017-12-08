@@ -31,6 +31,11 @@
 
 //ゲームの時間
 static const float gameTime = 5.0f;
+static const std::vector<std::tuple<BGM_ID, float, int>> songList{
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3),
+	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3),
+	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2)
+};
 
 //コンストラクタ
 GamePlayScene::GamePlayScene() :world_(), scoreDisplay_(nullptr), playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_() {
@@ -97,7 +102,7 @@ void GamePlayScene::start() {
 	world_.getCamera()->setFirstPos();
 
 	//楽曲のセット
-	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
+	world_.getCanChangedTempoManager().setMusic(std::get<0>(songList[stageNum_-1]), std::get<1>(songList[stageNum_ - 1]), std::get<2>(songList[stageNum_ - 1]));
 
 	//UIの設定
 	settingUI();

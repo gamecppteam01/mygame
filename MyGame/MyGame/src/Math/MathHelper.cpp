@@ -95,6 +95,12 @@ float MathHelper::Lerp(float value1, float value2, float amount)
 	return (value1 * (1.0f - amount)) + (value2 * amount);
 }
 
+float MathHelper::Smoothstep(float edge0, float edge1, float x)
+{
+	float t = MathHelper::Clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+	return t * t * (3 - 2 * t);
+}
+
 // ラジアンを度に変換します。
 float MathHelper::ToDegrees(float radians)
 {

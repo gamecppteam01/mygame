@@ -1,5 +1,6 @@
 #pragma once
 #include"../JudgeBase.h"
+#include"../../../Graphic/AnimationDx.h"
 
 enum class Judge_State {
 	Search,
@@ -46,4 +47,6 @@ private:
 	float m_Count;
 	//タイマー
 	float m_Timer;
+
+	AnimationDx animation_;
 };

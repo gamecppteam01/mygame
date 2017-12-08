@@ -38,6 +38,8 @@ public:
 	static float Clamp(float value, float min, float max);
 	// 2つの値の間を線形補間します
 	static float Lerp(float value1, float value2, float amount);
+	//2つの値を基準にして、0.0～1.0の間をS字カーブ型に補間します
+	static float Smoothstep(float edge0, float edge1, float x);
 
 	// ラジアンを度に変換します。
 	static float ToDegrees(float radians);

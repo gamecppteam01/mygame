@@ -44,6 +44,7 @@ public:
 		Reversal=6,//‹N‚«ã‚ª‚è
 		Turn = 3,//‰ñ“]
 		Half = 4,
+		Stumble = 0,
 	};
 
 public:

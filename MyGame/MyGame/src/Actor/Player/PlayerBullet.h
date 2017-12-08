@@ -22,6 +22,7 @@ public:
 		KnockBack = 0,//被弾時
 		Down = 5,//ダウン時
 		Reversal=6,//起き上がり時
+		Stumble=0,
 		//Jump = 17,//ジャンプ時
 	};
 

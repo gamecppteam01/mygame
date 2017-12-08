@@ -20,7 +20,9 @@ void Judge_NPC::initialize() {
 	m_Angle = 45.0f;
 	m_Count = 0.0f;
 	yaw = 1;
-	modelHandle_ = MODEL_ID::PLAYER_MODEL;
+	modelHandle_ = MODEL_ID::JUDGE_MODEL;
+	animation_.SetHandle(Model::GetInstance().GetHandle(modelHandle_));
+	animation_.ChangeAnim(0);
 	m_State = Judge_State::Search;
 	m_Timer = 0.0f;
 }
@@ -31,6 +33,7 @@ void Judge_NPC::onMessage(EventMessage message, void * param) {
 
 //更新
 void Judge_NPC::onUpdate(float deltaTime) {
+	animation_.Update(1.0f);
 	StateUpdate(deltaTime);
 }
 
@@ -38,8 +41,8 @@ void Judge_NPC::onUpdate(float deltaTime) {
 void Judge_NPC::onDraw() const {
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
-	Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
-
+	//Model::GetInstance().Draw(modelHandle_, Matrix(rotation_).Translation(drawPosition));
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 }
 
 //衝突処理

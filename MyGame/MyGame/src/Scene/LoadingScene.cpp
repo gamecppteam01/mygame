@@ -95,6 +95,7 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_men/balanceEnemy_men.pmx", MODEL_ID::BALANCEENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_women/balanceEnemy_women.pmd", MODEL_ID::BALANCEENEMY_BULLET_MODEL);
+	Model::GetInstance().Load(defaultPath + "judge/judgemodel.mv1", MODEL_ID::JUDGE_MODEL);
 	
 	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);
 }
@@ -137,7 +138,9 @@ void LoadingScene::LoadBGM()
 {
 	std::string defaultPath = "res/Sound/bgm/";//全リソース共通パス
 	Sound::GetInstance().LoadBGM(defaultPath + "title.mp3", BGM_ID::TITLE_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage1a_bgm.wav", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.wav", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.mp3", BGM_ID::STAGE3_BGM);
 }
 
 void LoadingScene::LoadSE()
@@ -176,6 +179,11 @@ void LoadingScene::LoadEtcetera()
 {
 	std::string defaultPath = "res/";//全リソース共通パス
 	Model::GetInstance().Load(defaultPath + "Skybox/skydome.mv1", MODEL_ID::SKYBOX_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/field.mv1", MODEL_ID::STAGE_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/field.mv1", MODEL_ID::STAGE_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/field_Side.mv1", MODEL_ID::STAGE_RIGHTLEFT_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/field_Updown.mv1", MODEL_ID::STAGE_UPDOWN_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/wall_corner.mv1", MODEL_ID::STAGE_WALL_CORNER_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/wall_side.mv1", MODEL_ID::STAGE_WALL_SIDE_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/wall_up.mv1", MODEL_ID::STAGE_WALL_UP_MODEL);
 
 }

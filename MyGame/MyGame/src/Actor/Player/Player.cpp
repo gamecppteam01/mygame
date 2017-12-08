@@ -58,7 +58,9 @@ static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Anima
 	{ Player::Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
 	{ Player::Player_Animation::Half,PlayerBullet::PlayerBullet_Animation::Half },
 	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn },
-	{ Player::Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal }
+	{ Player::Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal },
+	{ Player::Player_Animation::Stumble,PlayerBullet::PlayerBullet_Animation::Stumble }
+
 
 };
 
@@ -137,7 +139,7 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
 	//stumbleDirection_ = -velocity;
 	stumbleResurrectTime_ = 0.5f;
-	change_State_and_Anim(Player_State::Stumble, Player_Animation::KnockBack);
+	change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);
 }
 
 float Player::getPlayerScoreRate() const
@@ -240,11 +242,8 @@ void Player::onDraw() const
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
-	DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
+	//DrawFormatStringToHandle(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, GetColor(255, 255, 255), FontManager::GetInstance().GetFontHandle(FONT_ID::JAPANESE_FONT), std::to_string(nextStep_).c_str());
 
-	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
-		DebugDraw::DebugDrawFormatString(300, 300, GetColor(255, 255, 255), "ƒXƒRƒA‚‚¢");
-	}
 
 
 	//world_->setLateDraw([this] {
@@ -434,7 +433,7 @@ void Player::idle_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
 		}
 		return;
@@ -477,7 +476,7 @@ void Player::move_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
 		}
 		return;

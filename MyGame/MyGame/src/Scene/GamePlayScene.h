@@ -8,6 +8,8 @@
 #include"../Light/LightHandle.h"
 #include"Screen/PauseScreen.h"
 #include"GamePlayState.h"
+#include"../Graphic/TextScreen.h"
+
 
 
 //リソース読み込み専用シーン

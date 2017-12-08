@@ -104,8 +104,8 @@ public:
 		return getBeatCount() / beat_;
 	}
 	void draw()const {
-		if(getBeatCount() % beat_ == 0)return;
-		DebugDraw::DebugDrawCircle(400, 400, 30, GetColor(255, 255, 255));
+		//if(getBeatCount() % beat_ == 0)return;
+		//DebugDraw::DebugDrawCircle(400, 400, 30, GetColor(255, 255, 255));
 	}
 	//Ä¶‚ªI—¹‚µ‚½‚©
 	bool isEnd()const {
