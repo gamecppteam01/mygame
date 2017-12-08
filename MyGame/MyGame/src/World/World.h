@@ -11,7 +11,7 @@
 #include"../ScoreManager/ScoreManager.h"
 #include"../ScoreManager/ScoreMap.h"
 #include"../Sound/TempoManager.h"
-#include"../Graphic/ShadowMap.h"
+#include"../ShadowMap/ShadowMap.h"
 
 // ワールドクラス
 class World : public IWorld {

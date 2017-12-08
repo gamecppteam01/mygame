@@ -41,16 +41,13 @@ void World::Initialize()
 	lateDrawFuncList_.clear();
 	lateDrawFuncListAfterUI_.clear();
 
-	//if (ShadowMapHandle != -1) return;
-
 	EffekseerManager::GetInstance().Initialize();
-
 
 	//シャドウマップの設定
 	shadowflag_ = false;
-	shadowmap_.Clear();
-	shadowmap_.Set(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_512, -Vector3::Up);
-	shadowmap_.SetRange(Vector3(-300.0f, -2.5f, -150.0f), Vector3(150.0f, 15.0f, 75.0f));
+	shadowmap_.initialize();
+	shadowmap_.makeShadowMap(SHADOW_MAP_ID::SHADOW_MAP_01, shadowmap_.RESOLUTION_512, -Vector3::Up);
+	shadowmap_.AllSetRange(Vector3(-300.0f, -2.5f, -150.0f), Vector3(150.0f, 15.0f, 75.0f));
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -232,7 +229,7 @@ void World::end()
 	field_ = nullptr;
 	actors_.initialize();
 	listener_ = nullptr;
-	shadowmap_.Clear();
+	shadowmap_.AllDeletionShadowMap();
 }
 
 void World::setLateDraw(std::function<void()> draw, bool isBeforeUI)
@@ -254,16 +251,16 @@ void World::normaldraw() const {
 
 void World::shadowdraw() const {
 	//シャドウマップに描画
-	shadowmap_.Begin(SHADOW_MAP_ID::SHADOW_MAP_01);
+	shadowmap_.SetUp_ShadowMapDraw(SHADOW_MAP_ID::SHADOW_MAP_01);
 	// アクターの描画処理
 	actors_.shadowDraw();
-	shadowmap_.End();
+	shadowmap_.DrawEnd_ShadowMap();
 
 	camera_->draw();
 	//使用したいシャドウマップを設定して描画
-	shadowmap_.Enable(SHADOW_MAP_ID::SHADOW_MAP_01, 0);
+	shadowmap_.SetUse_ShadowMap(SHADOW_MAP_ID::SHADOW_MAP_01, 0);
 	field_->draw();
 	// アクターの描画処理
 	actors_.draw();
-	shadowmap_.Disable(0);
+	shadowmap_.ReleaseShadowMap(0);
 }
