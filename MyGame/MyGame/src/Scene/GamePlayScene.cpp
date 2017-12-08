@@ -310,7 +310,9 @@ void GamePlayScene::settingUI() {
 	world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
 	world_.addUI(warningUI);
-	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 - 50.0f, 50.0f));
+	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 , 50.0f));
 	world_.addUI(timeUI);
+	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
+	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
 }

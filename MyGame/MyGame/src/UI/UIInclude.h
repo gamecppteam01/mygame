@@ -4,7 +4,7 @@
 #include"ButtonUI.h"
 #include"MiniMap.h"
 #include"WarningManager.h"
-#include"StepUIManager.h"
+#include"StepUI.h"
 #include"EndUI.h"
 #include"TimeUI.h"
 
