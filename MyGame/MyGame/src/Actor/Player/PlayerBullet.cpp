@@ -25,6 +25,11 @@ const Player* PlayerBullet::getPlayer() const
 	return player_;
 }
 
+Player* PlayerBullet::getCCPlayer()
+{
+	return player_;
+}
+
 Vector3 & PlayerBullet::position()
 {
 	return player_->position();

@@ -24,6 +24,7 @@ public:
 	void Draw() const;
 	void End();
 
+	bool isEnd()const;
 private:
 	int CheckInsertPoinst(const std::string& checkText,int& point1, int& point2,int& point3);
 
@@ -39,5 +40,6 @@ private:
 
 	int targetText_;//表示画面数
 
+	bool isEnd_;
 	std::array<int,4> insertPoints_;//insertする数,地点1,地点2
 };

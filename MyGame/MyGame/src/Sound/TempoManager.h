@@ -18,11 +18,11 @@ public:
 		justStepTimer_.Initialize();
 	}
 	//楽曲を設定する
-	void setMusic(BGM_ID soundId,float bpm,int beat=3,int musicCount=4) {
+	void setMusic(BGM_ID soundId,float bpm,int beat=3,int musicCount=4,int volume=255) {
 
 		//サウンドリソースの読み込み
 		soundHandle_=Sound::GetInstance().GetHandle(soundId);
-		ChangeVolumeSoundMem(80, soundHandle_);
+		ChangeVolumeSoundMem(volume, soundHandle_);
 		//周波数の設定(44.1khz)固定値にする
 		sps_ = GetFrequencySoundMem(soundHandle_);
 		//SetFrequencySoundMem(44100, soundHandle_);

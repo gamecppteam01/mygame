@@ -15,7 +15,8 @@ void ActorManager::initialize() {
 	actors_[ActorGroup::ENEMY_BULLET] = std::make_shared<Actor>();
 	actors_[ActorGroup::EFFECT] = std::make_shared<Actor>();
 	actors_[ActorGroup::DUMMYACTOR] = std::make_shared<Actor>();
-	root_.clearChildren();
+	actors_[ActorGroup::TUTORIAL] = std::make_shared<Actor>();
+	root_.clearChildren(); 
 	root_.addChild(actors_[ActorGroup::NPC]);
 	root_.addChild(actors_[ActorGroup::PLAYER]);
 	root_.addChild(actors_[ActorGroup::PLAYER_BULLET]);
@@ -23,6 +24,7 @@ void ActorManager::initialize() {
 	root_.addChild(actors_[ActorGroup::ENEMY_BULLET]);
 	root_.addChild(actors_[ActorGroup::EFFECT]);
 	root_.addChild(actors_[ActorGroup::DUMMYACTOR]);
+	root_.addChild(actors_[ActorGroup::TUTORIAL]);
 
 	countList_ = 0;
 }
@@ -97,6 +99,8 @@ void ActorManager::collide() {
 	actors_[ActorGroup::ENEMY]->collideChildren(*actors_[ActorGroup::ENEMY]);
 	actors_[ActorGroup::ENEMY]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
 	actors_[ActorGroup::ENEMY_BULLET]->collideChildren(*actors_[ActorGroup::ENEMY_BULLET]);
+	actors_[ActorGroup::TUTORIAL]->collideChildren(*actors_[ActorGroup::PLAYER]);
+	actors_[ActorGroup::TUTORIAL]->collideChildren(*actors_[ActorGroup::PLAYER_BULLET]);
 
 
 }

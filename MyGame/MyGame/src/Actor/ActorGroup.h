@@ -3,6 +3,7 @@ enum class ActorGroup {
 	NPC,   //ノンプレイヤー
 	PLAYER,//プレイヤー
 	PLAYER_BULLET,//パートナー
+	TUTORIAL,//チュートリアル用
 	ENEMY,//敵
 	ENEMY_BULLET,//敵
 	EFFECT,//エフェクト

@@ -182,8 +182,10 @@
     <ClCompile Include="src\Actor\Judge\JudgeBase.cpp" />
     <ClCompile Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.cpp" />
     <ClCompile Include="src\Actor\Judge\Judge_NPC\Judge_NPC.cpp" />
+    <ClCompile Include="src\Actor\Other\TutorialPoint.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
+    <ClCompile Include="src\Actor\Player\TutorialPlayer.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Camera\CameraActor.cpp" />
     <ClCompile Include="src\Camera\OverLookingCamera.cpp" />
@@ -211,6 +213,7 @@
     <ClCompile Include="src\Graphic\Movie.cpp" />
     <ClCompile Include="src\Graphic\Sprite.cpp" />
     <ClCompile Include="src\Graphic\TextDraw.cpp" />
+    <ClCompile Include="src\Graphic\TextScreen.cpp" />
     <ClCompile Include="src\Input\DualShock4Input.cpp" />
     <ClCompile Include="src\Input\DualShock4Manager.cpp" />
     <ClCompile Include="src\Input\GamePad.cpp" />
@@ -302,10 +305,12 @@
     <ClInclude Include="src\Actor\Judge\Judgement_SpotLight\Judgement_SpotLight.h" />
     <ClInclude Include="src\Actor\Judge\Judge_NPC\Judge_NPC.h" />
     <ClInclude Include="src\Actor\Judge_NPC\Judge_NPC.h" />
+    <ClInclude Include="src\Actor\Other\TutorialPoint.h" />
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />
     <ClInclude Include="src\Actor\Player\Step_Type.h" />
+    <ClInclude Include="src\Actor\Player\TutorialPlayer.h" />
     <ClInclude Include="src\Actor\ScoreJudge\Judge.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\CameraActor.h" />
@@ -345,6 +350,7 @@
     <ClInclude Include="src\Graphic\Movie.h" />
     <ClInclude Include="src\Graphic\Sprite.h" />
     <ClInclude Include="src\Graphic\TextDraw.h" />
+    <ClInclude Include="src\Graphic\TextScreen.h" />
     <ClInclude Include="src\Input\DualShock4Input.h" />
     <ClInclude Include="src\Input\DualShock4Manager.h" />
     <ClInclude Include="src\Input\DualShock4Reader.h" />

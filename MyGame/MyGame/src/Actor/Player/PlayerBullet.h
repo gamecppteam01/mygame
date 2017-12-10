@@ -22,7 +22,7 @@ public:
 		KnockBack = 0,//被弾時
 		Down = 5,//ダウン時
 		Reversal=6,//起き上がり時
-		Stumble=0,
+		Stumble=7,
 		//Jump = 17,//ジャンプ時
 	};
 
@@ -34,6 +34,7 @@ public:
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 	//プレイヤーを取得する
 	const Player* getPlayer()const;
+	Player* getCCPlayer();
 
 	virtual Vector3& position()override;
 private:

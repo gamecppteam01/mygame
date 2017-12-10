@@ -44,12 +44,12 @@ public:
 		Reversal=6,//起き上がり
 		Turn = 3,//回転時
 		Half = 4,
-		Stumble = 0,
+		Stumble = 7,
 	};
 
 public:
 	Player(IWorld* world,const std::string& name,const Vector3& position,int playerNumber);
-
+	virtual ~Player(){}
 //外部公開関数
 public:
 	void addVelocity(const Vector3& velocity);
@@ -69,7 +69,7 @@ public:
 	float getPlayerScoreRate()const;
 	//汎用のタイマーを渡す
 	float getTimer()const { return timeCount_; }
-private:
+protected:
 	void createBullet();
 	virtual void initialize()override;
 	virtual void onPause()override;
@@ -86,7 +86,7 @@ private:
 	virtual void onCollideResult()override;
 
 //通知処理関連
-private:
+protected:
 	//ステップ通知時の処理
 	virtual void JustStep()override;
 	//エフェクト生成通知の処理
@@ -96,108 +96,105 @@ private:
 	virtual bool field(Vector3& result = Vector3()) override;
 
 //プレイヤーの移動関係
-private:
+protected:
 	//重力及びジャンプを更新する
 	void gravityUpdate(float deltaTime);
 	//フィールドとの当たり判定を行い、位置を補正する
 	void correctPosition();
 
 //状態関係
-private:
+protected:
 	//状態変更とアニメーション変更を同時に行う
-	bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
+	virtual bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
 
 	//状態の更新
 	bool change_State(Player_State state);
 
 	//待機時更新
-	void idle_Update(float deltaTime);
+	virtual void idle_Update(float deltaTime);
 	//移動時更新
-	void move_Update(float deltaTime);
+	virtual void move_Update(float deltaTime);
 	//ジャンプ時更新
 	//void jump_Update(float deltaTime);
 	//技時更新
-	void step_Update(float deltaTime);
+	virtual void step_Update(float deltaTime);
 	//技成立時更新
-	void stepSuccess_Update(float deltaTime);
+	virtual void stepSuccess_Update(float deltaTime);
 	//攻撃時更新
-	void attack_Update(float deltaTime);
+	virtual void attack_Update(float deltaTime);
 	//発射時更新
-	void shoot_Update(float deltaTime);
+	virtual void shoot_Update(float deltaTime);
 	//発射終了時更新
-	void shootend_Update(float deltaTime);
+	virtual void shootend_Update(float deltaTime);
 	//被弾時更新
-	void knockback_Update(float deltaTime);
+	virtual void knockback_Update(float deltaTime);
 	//被弾時更新
-	void down_Update(float deltaTime);
+	virtual void down_Update(float deltaTime);
 	//回転時更新
-	void turn_Update(float deltaTime);
+	virtual void turn_Update(float deltaTime);
 	//よろけ時更新
-	void stumble_Update(float deltaTime);
+	virtual void stumble_Update(float deltaTime);
 	//起き上がり更新
-	void reversal_Update(float deltaTime);
+	virtual void reversal_Update(float deltaTime);
 
 	//待機状態への移行処理
-	void to_IdleMode();
+	virtual void to_IdleMode();
 	//移動状態への移行処理
-	void to_MoveMode();
+	virtual void to_MoveMode();
 	//void to_JumpMode();
 	//技状態への移行処理
-	void to_StepMode();
+	virtual void to_StepMode();
 	//技完成状態への移行処理
-	void to_StepSuccessMode();
+	virtual void to_StepSuccessMode();
 	//攻撃状態への移行処理
-	void to_AttackMode();
+	virtual void to_AttackMode();
 	//発射状態への移行処理
-	void to_ShootMode();
+	virtual void to_ShootMode();
 	//発射終了状態への移行処理
-	void to_ShootEndMode();
+	virtual void to_ShootEndMode();
 	//被弾状態への移行処理
-	void to_KnockBackMode();
+	virtual void to_KnockBackMode();
 	//被弾状態への移行処理
-	void to_DownMode();
+	virtual void to_DownMode();
 	//回転状態への移行処理
-	void to_TurnMode();
+	virtual void to_TurnMode();
 	//よろけ状態への移行処理
-	void to_StumbleMode();
+	virtual void to_StumbleMode();
 	//起き上がり状態への移行処理
-	void to_ReversalMode();
+	virtual void to_ReversalMode();
 
 	//待機状態の終了処理
-	void end_IdleMode();
+	virtual void end_IdleMode();
 	//移動状態の終了処理
-	void end_MoveMode();
+	virtual void end_MoveMode();
 	//void to_JumpMode();
 	//技状態の終了処理
-	void end_StepMode();
+	virtual void end_StepMode();
 	//ステップ成功の終了処理
-	void end_StepSuccessMode();
+	virtual void end_StepSuccessMode();
 	//攻撃状態の終了処理
-	void end_AttackMode();
+	virtual void end_AttackMode();
 	//発射状態の終了処理
-	void end_ShootMode();
+	virtual void end_ShootMode();
 	//発射終了状態の終了処理
-	void end_ShootEndMode();
+	virtual void end_ShootEndMode();
 	//被弾状態の終了処理
-	void end_KnockBackMode();
+	virtual void end_KnockBackMode();
 	//被弾状態の終了処理
-	void end_DownMode();
+	virtual void end_DownMode();
 	//回転状態の終了処理
-	void end_TurnMode();
+	virtual void end_TurnMode();
 	//よろけの終了処理
-	void end_StumbleMode();
+	virtual void end_StumbleMode();
 	//起き上がりの終了処理
-	void end_ReversalMode();
+	virtual void end_ReversalMode();
 
-private:
-		//攻撃ステップ
-		void stepAttack(float deltaTime);
+	//攻撃ステップ
+	void stepAttack(float deltaTime);
 
-private:
 	//アニメーションの変更
 	void changeAnimation(Player_Animation animID, float animFrame = 0.0f,float animeSpeed=1.0f,bool isLoop=true,float blend=1.0f);
 
-private:
 	//ステップに変更する状態か
 	bool isChangeStep() const;
 
@@ -209,20 +206,21 @@ private:
 	//姿勢チェックをするかどうか
 	bool isRequiredCheckPosture()const;
 //弾(女)関係
-private:
+protected:
 	//女がプレイヤーに追従するかどうか
 	bool isCanTracking() const;
 	void bulletUpdate(float deltaTime);
 	//円エフェクトを生成する
 	void createCircleEffect();
-private:
+protected:
 	//スティックのベクトルを右手座標系に変換
 	Vector2 getSticktoMove();
 
 	Vector2 mathStumbleDirection(const Vector2& stumbleDirection);
 
 	bool isJustTiming()const;
-private:
+
+protected:
 	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン,4横回転)
 	int successStep_;
 	//次のステップ
@@ -291,7 +289,7 @@ private:
 
 	std::list<SE_ID> restartSEList_;
 
-private:
+protected:
 	const Vector3 defaultPosition_;
 
 	const std::map<int, std::pair<Player_Animation, int>> stepAnimScoreList_{
@@ -301,5 +299,7 @@ private:
 		{ 4,{ Player_Animation::Shoot,0 } },
 	};
 
+	//無視するコントローラの傾き範囲
+	const float ignoreSlope{ 0.1f };
 
 };

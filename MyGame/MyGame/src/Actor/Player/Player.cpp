@@ -33,8 +33,6 @@ static const int inputCheckCount = 4;
 static const Vector3 bulletDistance{ 0.0f,0.0f,4.0f };
 //回転力の基本係数
 static const float defaultTurnPower = 1.0f;
-//無視するコントローラの傾き範囲
-static const float ignoreSlope = 0.1f;
 static const float boundPower = 15.0f;
 static const float downTime = 2.0f;
 //移動速度
@@ -413,7 +411,7 @@ void Player::idle_Update(float deltaTime)
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	//Vector2 move = getSticktoMove();
 	if (std::abs(move.x) > ignoreSlope || std::abs(move.y) > ignoreSlope) {
-		if (change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
+		/*if (*/change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward);//)playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
@@ -422,7 +420,7 @@ void Player::idle_Update(float deltaTime)
 	}
 	if (isChangeStep()) {
 		if (isJustTiming()) {
-			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
+			change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left);//)playerUpdateFunc_[state_](deltaTime);
 		}
 		else {
 			std::vector<Vector2> stumbleList{
@@ -433,7 +431,7 @@ void Player::idle_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
+			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
 
 		}
 		return;
@@ -706,10 +704,10 @@ void Player::to_StepSuccessMode()
 
 void Player::to_AttackMode()
 {
-	world_->getCamera()->ZoomIn(1,1);
-	
+	world_->getCamera()->ZoomIn(1, 1);
+
 	shootAngle_ = 0.0f;
-	
+
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first);
 
 	//対応したアニメーションの終了時間を取得する
@@ -718,6 +716,10 @@ void Player::to_AttackMode()
 	std::list<ActorPtr> enemys;
 	world_->findActors("Enemy", enemys);
 
+	if (enemys.empty()) {
+		attackTarget_ = shared_from_this();
+		return;
+	}
 	attackTarget_ = enemys.front();
 	for (auto& e : enemys) {
 		if (Vector3::Distance(centerPosition_, attackTarget_->position()) > Vector3::Distance(centerPosition_, e->position())) {

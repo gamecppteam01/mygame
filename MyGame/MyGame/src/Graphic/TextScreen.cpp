@@ -13,6 +13,7 @@ TextScreen::TextScreen()
 
 void TextScreen::Init(const std::string& filename, int windowTextSize)
 {
+	isEnd_ = false;
 	textSize_ = windowTextSize;//1表示分の量を決める
 
 	//データを初期化
@@ -88,6 +89,7 @@ void TextScreen::Check()
 
 	//範囲を超えていたら終わり
 	if (textList_.size()-1<=targetText_) {
+		isEnd_ = true;
 		return;
 	}
 
@@ -120,6 +122,11 @@ void TextScreen::Draw() const
 
 void TextScreen::End()
 {
+}
+
+bool TextScreen::isEnd() const
+{
+	return isEnd_;
 }
 
 

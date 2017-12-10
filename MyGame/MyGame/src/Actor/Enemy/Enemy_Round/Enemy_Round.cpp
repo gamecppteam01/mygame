@@ -3,6 +3,7 @@
 #include"../../../ScoreManager/ScoreMap.h"
 #include"../../../ScoreManager/ScoreManager.h"
 #include"../../../Sound/TempoManager.h"
+#include"../../../Math/Random.h"
 
 Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber):
 	BaseEnemy(world,name,position,playerNumber, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f),
@@ -18,7 +19,9 @@ void Enemy_Round::JustStep()
 	//ターゲット指定のリセットはとりあえずやる
 	nonTargetResetTimer_.Action();
 
-	rhythmTimeCount_++;
+	if (Random::GetInstance().Range(1, 10) > 3) {
+		rhythmTimeCount_++;
+	}
 	if (rhythmTimeCount_ < 2) return;
 
 	rhythmTimeCount_ = 0;
@@ -27,8 +30,9 @@ void Enemy_Round::JustStep()
 	//ステップ出来るときだけステップする
 	if (!isCanStep())return;
 
-	change_State_and_Anim(Enemy_State::Step, stepAnim[0].first);
-	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[0].second);
+	int nextStep = Random::GetInstance().Randomize(std::vector<int>{ 0,2 });
+	change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first);
+	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[nextStep].second);
 
 
 }

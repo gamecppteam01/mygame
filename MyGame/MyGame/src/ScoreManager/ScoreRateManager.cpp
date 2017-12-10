@@ -28,7 +28,8 @@ void ScoreRataManager::Judge_Collect(){
 		m_JudgeAll_Not.push_back(judge);
 	}
 	//スポットライトの追加
-	m_JudgeAll.push_back(std::static_pointer_cast<JudgeBase>(m_World->findActor("SpotLight")));
+	auto lightPtr = m_World->findActor("SpotLight");
+	if(lightPtr!=nullptr)m_JudgeAll.push_back(std::static_pointer_cast<JudgeBase>(lightPtr));
 }
 
 //審査員を巡回する

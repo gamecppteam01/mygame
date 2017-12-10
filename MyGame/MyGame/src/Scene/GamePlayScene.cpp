@@ -31,10 +31,10 @@
 
 //ゲームの時間
 static const float gameTime = 5.0f;
-static const std::vector<std::tuple<BGM_ID, float, int>> songList{
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3),
-	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3),
-	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2)
+static const std::vector<std::tuple<BGM_ID, float, int,int,bool,int>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,2,false,80),
+	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,3,false,255),
+	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,2,true,255)
 };
 
 //コンストラクタ
@@ -72,24 +72,28 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	/*for (int i = 0; i < 1; i++) {
+	Vector3 pos{ -80.0f,15.0f,-40.0f };
+	for (int i = 0; i < std::get<3>(stageList[stageNum_-1]); i++) {
 		playerNumber++;
-		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.0f*i, 0.f, 30.f), playerNumber);
+		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", pos, playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
-	}*/
-	//playerNumber++;
-	//auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy);
+		pos += Vector3{ 70.0f,0.0f,30.0f };
+	}
+	if (std::get<4>(stageList[stageNum_-1])) {
+		playerNumber++;
+		auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+		world_.addActor(ActorGroup::ENEMY, enemy);
+		world_.addStepTimeListener(enemy);
+	}
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
-	playerNumber++;
-	auto enemy3 = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy3);
-	//world_.addStepTimeListener(enemy);
+	//playerNumber++;
+	//auto enemy3 = std::make_shared<NormalEnemy>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(40.f, 0.f, -20.f), playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy3);
 	//world_.addStepTimeListener(enemy2);
-	world_.addStepTimeListener(enemy3);
+	//world_.addStepTimeListener(enemy3);
 
 	//world_.addStepTimeListener(player);
 
@@ -102,7 +106,7 @@ void GamePlayScene::start() {
 	world_.getCamera()->setFirstPos();
 
 	//楽曲のセット
-	world_.getCanChangedTempoManager().setMusic(std::get<0>(songList[stageNum_-1]), std::get<1>(songList[stageNum_ - 1]), std::get<2>(songList[stageNum_ - 1]));
+	world_.getCanChangedTempoManager().setMusic(std::get<0>(stageList[stageNum_-1]), std::get<1>(stageList[stageNum_ - 1]), std::get<2>(stageList[stageNum_ - 1]),4, std::get<5>(stageList[stageNum_ - 1]));
 
 	//UIの設定
 	settingUI();
