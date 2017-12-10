@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 #include"Scenes.h"
+#include"../Fade/FadePanel.h"
 
 //ローディングシーンから開始
 SceneManager::SceneManager() :currentScene_(SceneType::SCENE_LOADING) {
@@ -23,6 +24,7 @@ void SceneManager::start() {
 }
 
 void SceneManager::update(float deltaTime) {
+	if (FadePanel::GetInstance().IsAction())return;
 	scenes_[currentScene_]->update(deltaTime);
 }
 
@@ -40,15 +42,23 @@ void SceneManager::checkIsEnd() {
 //次のシーンへ遷移する
 
 void SceneManager::next() {
+	if (FadePanel::GetInstance().IsAction())return;
+
 	//音声を終了して
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().StopSE();
 
-	//シーンを終了して
-	scenes_[currentScene_]->end();
-	SceneType nextScene = scenes_[currentScene_]->nextScene();
-	currentScene_ = nextScene;
-	//次のシーンを開始する
-	scenes_[currentScene_]->baseInit();
-	scenes_[currentScene_]->start();
+	FadePanel::GetInstance().AddCollBack([&] {
+		//シーンを終了して
+		scenes_[currentScene_]->end();
+		SceneType nextScene = scenes_[currentScene_]->nextScene();
+		currentScene_ = nextScene;
+		//次のシーンを開始する
+		scenes_[currentScene_]->baseInit();
+		scenes_[currentScene_]->start();
+		
+		FadePanel::GetInstance().FadeIn();
+
+	});
+	FadePanel::GetInstance().FadeOut();
 }

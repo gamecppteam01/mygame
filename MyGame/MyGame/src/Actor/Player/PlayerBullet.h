@@ -15,7 +15,7 @@ public:
 		Shoot = 1,//左ステップ時
 		Quarter=2,
 		ShootEnd=9,
-		Step_Left=10,
+		Step_Left=8,
 		Turn = 3,//回転時
 		Half=4,
 		Attack = 12,//攻撃時
