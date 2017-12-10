@@ -50,6 +50,8 @@ GamePlayScene::GamePlayScene() :world_(), scoreDisplay_(nullptr), playerEffectDr
 
 //開始
 void GamePlayScene::start() {
+	Sound::GetInstance().StopBGM();
+	
 	stageNum_ = DataManager::GetInstance().getStage();//ステージ番号受け取り
 													  //ワールド初期化
 	world_.Initialize();

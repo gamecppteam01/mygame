@@ -5,6 +5,7 @@
 #include"../Define.h"
 #include<memory>
 #include<vector>
+#include<list>
 
 class IWorld;
 class JudgeBase;
@@ -43,7 +44,7 @@ public:
 private:
 	//倍率検索
 	void mathScoreRate();
-	void mathScoreRate(ScorePoint& point);
+	float mathScoreRate(ScorePoint& point);
 private:
 	IWorld* world_;
 	//スコアレート計算タイマー
@@ -64,4 +65,5 @@ private:
 	std::vector<std::weak_ptr<JudgeBase>> judges_;
 	std::shared_ptr<Judgement_SpotLight> spotLight_;
 
+	std::list<std::pair<int, int>> resetList_;
 };

@@ -527,7 +527,7 @@ void BaseEnemy::updateDown(float deltaTime)
 	downTime_ += deltaTime;
 
 	if (downTime_ >= downTime) {
-		if (change_State_and_Anim(Enemy_State::WakeUp, Enemy_Animation::WakeUp,false))updateDown(deltaTime);
+		change_State_and_Anim(Enemy_State::WakeUp, Enemy_Animation::WakeUp, false);
 	}
 
 }

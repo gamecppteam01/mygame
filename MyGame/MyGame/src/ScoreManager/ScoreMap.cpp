@@ -39,6 +39,7 @@ void ScoreMap::initialize()
 	for (auto& j : judges) {
 		judges_.push_back(std::static_pointer_cast<JudgeBase>(j));
 	}
+	resetList_.clear();
 }
 
 void ScoreMap::update(float deltaTime)
@@ -47,14 +48,14 @@ void ScoreMap::update(float deltaTime)
 	//mathScoreRateTimer_.Initialize();
 	//mathScoreRateTimer_.Add([this] {mathScoreRate(); });
 
-	points_.loopElement([](ScorePoint& s) {
-		s.alreadyChecked_ = false;
+	for (auto i : resetList_) {
+		points_.getElement(i.first, i.second).alreadyChecked_ = false;
 	}
-	);
 }
 
 void ScoreMap::mathScoreRate()
 {
+	return;
 	points_.loopElement([this](ScorePoint& s) {
 		float nextRate = 1.0f;
 		for (auto& j : judges_) {
@@ -67,14 +68,15 @@ void ScoreMap::mathScoreRate()
 	);
 }
 
-void ScoreMap::mathScoreRate(ScorePoint & point)
+float ScoreMap::mathScoreRate(ScorePoint & point)
 {
 	//今回のフレームで計算が終了していたら戻る
-	if (point.alreadyChecked_)return;
+	if (point.alreadyChecked_)return point.rate_;
 	
-	point.rate_ = world_->getScoreManager().mathScoreRata_All_Not(point.position_);
+	point.rate_ = world_->getScoreManager().mathScoreRata_All(point.position_);
 	point.alreadyChecked_ = true;
 
+	return point.rate_;
 }
 
 Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
@@ -82,83 +84,184 @@ Vector3 ScoreMap::getNextPoint(const Vector3 & point, float* resultRate)
 	//スコアレートの計算
 	//mathScoreRateTimer_.Action();
 
-	//次の行き先はとりあえず左上
-	Vector3 next = points_.getElement(0, 0).position_;
-
 	float nearest = Vector3::Distance(point, points_.getElement(0, 0).position_)+1.f;
+	std::list<std::pair<int, int>> pointList;
+	if (point.x > 0.0f) {
+		//右上
+		if (point.z > 0.0f) {
+			pointList.push_back(std::make_pair(2, 2));
+			pointList.push_back(std::make_pair(2, 3));
+			pointList.push_back(std::make_pair(3, 2));
+			pointList.push_back(std::make_pair(3, 3));
+		}
+		//右下
+		else {
+			pointList.push_back(std::make_pair(0, 2));
+			pointList.push_back(std::make_pair(0, 3));
+			pointList.push_back(std::make_pair(1, 2));
+			pointList.push_back(std::make_pair(1, 3));
+		}
+	}
+	else {
+		//左上
+		if (point.z > 0.0f) {
+			pointList.push_back(std::make_pair(2, 0));
+			pointList.push_back(std::make_pair(2, 1));
+			pointList.push_back(std::make_pair(3, 0));
+			pointList.push_back(std::make_pair(3, 1));
+		}
+		//左下
+		else {
+			pointList.push_back(std::make_pair(0, 1));
+			pointList.push_back(std::make_pair(0, 2));
+			pointList.push_back(std::make_pair(1, 1));
+			pointList.push_back(std::make_pair(1, 2));
+		}
+	}
 	//自身の位置に一番近いポイントを検索
-	auto targetKey = points_.getTargetKey([this, point,&nearest](ScorePoint& s1, ScorePoint& s2) {
-		float dist = Vector3::Distance(point, s2.position_);
+	std::pair<int, int> targetKey{ 0,0 };
+	for (auto& pl : pointList) {
+		float dist = Vector3::Distance(point, points_.getElement(pl.first,pl.second).position_);
 		if (nearest > dist) {
 			nearest = dist;
-			return true;
+			targetKey = pl;
 		}
-		else return false;
-		}); 
-	//ポイントの周囲のスコアをまとめて
-	std::vector<ScorePoint> points{
-		points_.getElement(targetKey.first,targetKey.second),//中心
-		points_.getElement(targetKey.first,max(targetKey.second - 1,0)),//上
-		points_.getElement(max(targetKey.first - 1,0),targetKey.second),//左
-		points_.getElement(min(targetKey.first + 1,points_.getXSize() - 1),targetKey.second),//右
-		points_.getElement(targetKey.first,min(targetKey.second + 1,points_.getYSize() - 1)),//下
-	};
-	//スコアを検索
-	for (auto& p : points) {
-		mathScoreRate(p);
+
 	}
+	//自身の位置に一番近いポイントを検索
+//	auto targetKey = points_.getTargetKey([this, point,&nearest](ScorePoint& s1, ScorePoint& s2) {
+//		float dist = Vector3::Distance(point, s2.position_);
+//		if (nearest > dist) {
+//			nearest = dist;
+//			return true;
+//		}
+//		else return false;
+//		}); 
+//ポイントの周囲のスコアをまとめて
+std::vector<ScorePoint> points{
+	points_.getElement(targetKey.first,targetKey.second),//中心
+	points_.getElement(targetKey.first,max(targetKey.second - 1,0)),//上
+	points_.getElement(max(targetKey.first - 1,0),targetKey.second),//左
+	points_.getElement(min(targetKey.first + 1,points_.getXSize() - 1),targetKey.second),//右
+	points_.getElement(targetKey.first,min(targetKey.second + 1,points_.getYSize() - 1)),//下
+};
 
-	float rate = 0.0f;
-	std::vector<Vector3> nextList{ next };
+float maxrate = 0.0f;
+Vector3 next = points.front().position_;
 
-	//スコアが高いところを探して
-	for (auto& i : points) {
-		if (i.rate_ > rate) {
-			nextList.clear();
-			rate = i.rate_;
-			nextList.push_back(i.position_);
-		}
-		else if (i.rate_ == rate) {
-			nextList.push_back(i.position_);
-		}
+//スコアを検索
+for (auto& p : points) {
+	float rate = mathScoreRate(p);
+	if (rate > maxrate) {
+		maxrate = rate;
+		next = p.position_;
 	}
+	else if (rate == maxrate) {
+		if (Random::GetInstance().Range(0, 1) == 0)continue;
 
-	//スコア倍率と次のポイントを返す
-	*resultRate = rate;
-	next = nextList[Random::GetInstance().Range(0, nextList.size() - 1)];
+		maxrate = rate;
+		next = p.position_;
 
-	//points_.loopElement([this, &next,point](ScorePoint& s) {
-	//	//対象ポイントが現在の次の行き先より近かったらそっちを適用
-	//	if (Vector3::Distance(point, s.position_) < Vector3::Distance(point, next.position_)) {
-	//		next = s;
-	//	}
-	//}
-	//);
+	}
+}
+resetList_.push_back(targetKey);
+resetList_.push_back(std::make_pair(targetKey.first, max(targetKey.second - 1, 0)));
+resetList_.push_back(std::make_pair(max(targetKey.first - 1, 0), targetKey.second));
+resetList_.push_back(std::make_pair(min(targetKey.first + 1, points_.getXSize() - 1), targetKey.second));
+resetList_.push_back(std::make_pair(targetKey.first, min(targetKey.second + 1, points_.getYSize() - 1)));
 
-	return next;
+//float rate = 0.0f;
+//std::vector<Vector3> nextList{ next };
+
+////スコアが高いところを探して
+//for (auto& i : points) {
+//	if (i.rate_ > rate) {
+//		nextList.clear();
+//		rate = i.rate_;
+//		nextList.push_back(i.position_);
+//	}
+//	else if (i.rate_ == rate) {
+//		nextList.push_back(i.position_);
+//	}
+//}
+
+//スコア倍率と次のポイントを返す
+*resultRate = maxrate;
+
+//points_.loopElement([this, &next,point](ScorePoint& s) {
+//	//対象ポイントが現在の次の行き先より近かったらそっちを適用
+//	if (Vector3::Distance(point, s.position_) < Vector3::Distance(point, next.position_)) {
+//		next = s;
+//	}
+//}
+//);
+
+return next;
 }
 
 Vector3 ScoreMap::getNearestBonusPoint(const Vector3 & point)
 {
-	float rate = 0.f;
-	std::vector<std::pair<int, int>> points;
-	int x = points_.getXSize();
-	int i = 0;
-	for (auto& dp : points_.getAllDataPtr()) {
-		if (dp->rate_ > rate) {
-			rate = dp->rate_;
-			points.clear();
-			points.push_back({ i%x,i / x });
+	std::list<std::pair<int, int>> pointList;
+	if (point.x > 0.0f) {
+		//右上
+		if (point.z > 0.0f) {
+			pointList.push_back(std::make_pair(2, 2));
+			pointList.push_back(std::make_pair(2, 3));
+			pointList.push_back(std::make_pair(3, 2));
+			pointList.push_back(std::make_pair(3, 3));
 		}
-		else if(dp->rate_==rate){
-			points.push_back({ i%x,i / x });
+		//右下
+		else {
+			pointList.push_back(std::make_pair(0, 2));
+			pointList.push_back(std::make_pair(0, 3));
+			pointList.push_back(std::make_pair(1, 2));
+			pointList.push_back(std::make_pair(1, 3));
 		}
-		i++;
 	}
-	int key = Random::GetInstance().Range(0, points.size() - 1);
+	else {
+		//左上
+		if (point.z > 0.0f) {
+			pointList.push_back(std::make_pair(2, 0));
+			pointList.push_back(std::make_pair(2, 1));
+			pointList.push_back(std::make_pair(3, 0));
+			pointList.push_back(std::make_pair(3, 1));
+		}
+		//左下
+		else {
+			pointList.push_back(std::make_pair(0, 1));
+			pointList.push_back(std::make_pair(0, 2));
+			pointList.push_back(std::make_pair(1, 1));
+			pointList.push_back(std::make_pair(1, 2));
+		}
+	}
+	float rate = 0.0f;
+	Vector3 next = points_.getElement(pointList.front().first, pointList.front().second).position_;
+	for (auto& p : pointList) {
+		if (points_.getElement(p.first, p.second).rate_ > rate) {
+			rate = points_.getElement(p.first, p.second).rate_;
+			next = points_.getElement(p.first, p.second).position_;
+		}
+	}
+	return next;
+	//float rate = 0.f;
+	//std::vector<std::pair<int, int>> points;
+	//int x = points_.getXSize();
+	//int i = 0;
+	//for (auto& dp : points_.getAllDataPtr()) {
+	//	if (dp->rate_ > rate) {
+	//		rate = dp->rate_;
+	//		points.clear();
+	//		points.push_back({ i%x,i / x });
+	//	}
+	//	else if(dp->rate_==rate){
+	//		points.push_back({ i%x,i / x });
+	//	}
+	//	i++;
+	//}
+	//int key = Random::GetInstance().Range(0, points.size() - 1);
 
 
-	return points_.getElement(points[key].first, points[key].second).position_;
+	//return points_.getElement(points[key].first, points[key].second).position_;
 }
 
 std::vector<Vector3> ScoreMap::getRoundPoint()

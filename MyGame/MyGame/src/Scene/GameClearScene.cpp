@@ -17,14 +17,18 @@ GameClearScene::~GameClearScene()
 void GameClearScene::start()
 
 {
-	world_.Initialize();
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().PlayBGM(BGM_ID::CLEAR_BGM, DX_PLAYTYPE_LOOP);
+
 	sinCount_ = 0;
 	cursor_ = 0;
+
+	score_.init();
 }
 
 void GameClearScene::update(float deltaTime)
 {
-	world_.update(deltaTime);
+	score_.update(deltaTime);
 
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
 		InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
@@ -51,15 +55,14 @@ void GameClearScene::update(float deltaTime)
 
 void GameClearScene::draw() const
 {
-	world_.draw();
 
 	int col = 180;
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
 	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f - cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(MathHelper::Sin(sinCount_)), Vector2::One, true, true);
 	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(MathHelper::Sin(sinCount_)), Vector2::One, true, false);
 
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::CLEAR_SPRITE) / 2;
-	Sprite::GetInstance().Draw(SPRITE_ID::CLEAR_SPRITE, Vector2{ WINDOW_WIDTH*0.5f,120.0f }, origin, 1.0f, Vector2::One*2.0f);
+	origin = Sprite::GetInstance().GetSize(SPRITE_ID::RESULT) / 2;
+	Sprite::GetInstance().Draw(SPRITE_ID::CLEAR_SPRITE, Vector2{ WINDOW_WIDTH*0.3f,120.0f }, origin, 1.0f, Vector2::One*2.0f);
 
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::NEXTSTAGE_SPRITE) / 2;
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
@@ -70,13 +73,13 @@ void GameClearScene::draw() const
 	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ WINDOW_WIDTH*0.5f,cursorPoses[1].first.y }, origin, 1.0f, Vector2::One);
 	SetDrawBright(255,255,255);
 
-
+	score_.draw();
 
 	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::RESULT) / 2;
 	//Sprite::GetInstance().Draw(SPRITE_ID::RESULT, Vector2(WINDOW_WIDTH/2,200.f),origin, 1.0f,Vector2::One);
 	//int i = 0;
 	//リストから値を取り出して順番に表示する
-	ScoreDisplay::Score(DataManager::GetInstance().getData(),Vector2(WINDOW_WIDTH/2-150,WINDOW_HEIGHT/2-120),5);
+	//ScoreDisplay::Score(DataManager::GetInstance().getData(),Vector2(WINDOW_WIDTH/2-150,WINDOW_HEIGHT/2-120),5);
 
 	//origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
 	//Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2(WINDOW_WIDTH / 2, 600.0f), origin, std::abs(MathHelper::Sin((float)sinCount_)), Vector2::One);
@@ -85,5 +88,4 @@ void GameClearScene::draw() const
 
 void GameClearScene::end()
 {
-	world_.end();
 }

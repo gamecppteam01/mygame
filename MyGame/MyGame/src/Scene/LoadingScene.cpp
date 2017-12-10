@@ -57,6 +57,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "cursor.png", SPRITE_ID::CURSOR);
 	Sprite::GetInstance().Load(defaultPath + "nextstage.png", SPRITE_ID::NEXTSTAGE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "clear.png", SPRITE_ID::CLEAR_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "sceneMove.png", SPRITE_ID::FADE_SPRITE);
 	
 	Sprite::GetInstance().Load(defaultPath + "gauge.png",   SPRITE_ID::GAUGE_UI);
 	Sprite::GetInstance().Load(defaultPath + "ButtonA.png", SPRITE_ID::BUTTON_A);
@@ -142,6 +143,7 @@ void LoadingScene::LoadBGM()
 	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.wav", BGM_ID::STAGE1_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.mp3", BGM_ID::STAGE3_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "clear.mp3", BGM_ID::CLEAR_BGM);
 }
 
 void LoadingScene::LoadSE()

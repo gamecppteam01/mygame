@@ -200,6 +200,7 @@
     <ClCompile Include="src\Effect\PlayerEffectDraw.cpp" />
     <ClCompile Include="src\Effect\StepEffect.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
+    <ClCompile Include="src\Fade\FadeSprite.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
     <ClCompile Include="src\Game\Time.cpp" />
     <ClCompile Include="src\Game\WorkFolder.cpp" />
@@ -243,6 +244,7 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
+    <ClCompile Include="src\Scene\Screen\ResultScoreDraw.cpp" />
     <ClCompile Include="src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\Scene\TutorialScene.cpp" />
@@ -330,6 +332,7 @@
     <ClInclude Include="src\Effect\PlayerEffectDraw.h" />
     <ClInclude Include="src\Effect\StepEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
+    <ClInclude Include="src\Fade\FadeSprite.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
     <ClInclude Include="src\Game\Game.h" />
@@ -398,6 +401,7 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
+    <ClInclude Include="src\Scene\Screen\ResultScoreDraw.h" />
     <ClInclude Include="src\Scene\StageSelectScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\Scene\TutorialScene.h" />

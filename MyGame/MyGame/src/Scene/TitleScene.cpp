@@ -26,11 +26,13 @@ TitleScene::~TitleScene()
 
 void TitleScene::start()
 {
+	Sound::GetInstance().StopBGM();
 	isEnd_ = false;
 	titleState_ = TitleState::first;
 	cursor_ = 0;
 	brightCount_ = 0;
 	SinCount_ = 0;
+	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
 }
 
 

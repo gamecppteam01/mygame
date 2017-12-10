@@ -2,6 +2,7 @@
 #include"../../Input/InputChecker.h"
 #include"../../Graphic/Sprite.h"
 #include"../../Define.h"
+#include"../../Sound/Sound.h"
 
 PauseScreen::PauseScreen()
 {
@@ -28,11 +29,14 @@ int PauseScreen::update(float deltaTime, SceneType & type, GamePlayState& state)
 	//キー毎の遷移
 	if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		cursor_ = (cursor_ - 1 + cursorPoses.size()) % cursorPoses.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE);
 	}
 	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 180) {
 		cursor_ = (cursor_ + 1) % cursorPoses.size();
+		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE);
 	}
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
+		Sound::GetInstance().PlaySE(SE_ID::SELECT_SE);
 		//シーン遷移を行わないパターンの場合
 		if (std::get<1>(cursorPoses[cursor_]) == SceneType::SCENE_EXIT) {
 			state = std::get<2>(cursorPoses[cursor_]);

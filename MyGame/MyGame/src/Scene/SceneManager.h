@@ -2,6 +2,8 @@
 #include<map>
 #include<memory>
 #include"SceneType.h"
+#include"../Fade/FadeSprite.h"
+
 class Scene;
 
 //シーンの管理を行う、Game及びその派生クラスで利用する
@@ -23,4 +25,6 @@ private:
 	std::map<SceneType, std::shared_ptr<Scene>> scenes_;
 	//現在のシーン
 	SceneType currentScene_;
+
+	FadeSprite fadesp_;
 };

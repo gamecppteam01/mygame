@@ -23,7 +23,7 @@ public:
 
 	}
 	//データの取得
-	T getElement(int x, int y) {
+	T& getElement(int x, int y) {
 		return dataList_[y][x];
 	}
 	//データの設定

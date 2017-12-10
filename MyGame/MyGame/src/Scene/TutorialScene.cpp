@@ -35,6 +35,8 @@ TutorialScene::~TutorialScene()
 
 void TutorialScene::start()
 {
+	Sound::GetInstance().StopBGM();
+
 	world_.Initialize();
 	tutorialNumber_ = 0;
 	isEnd_ = false;

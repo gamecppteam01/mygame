@@ -18,6 +18,7 @@ enum SPRITE_ID
 	RETRY_SPRITE,
 	PAUSE_SPRITE,
 	CLEAR_SPRITE,
+	FADE_SPRITE,
 
 	CURSOR,
 	NEXTSTAGE_SPRITE,
@@ -132,7 +133,8 @@ enum BGM_ID
 	STAGE1_BGM,
 	STAGE2_BGM,
 	STAGE3_BGM,
-	
+	CLEAR_BGM,
+
 	COUNT_BGM//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

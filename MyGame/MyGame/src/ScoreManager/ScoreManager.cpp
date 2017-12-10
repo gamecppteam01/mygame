@@ -44,11 +44,11 @@ void ScoreManager::initialize(){
 //更新
 void ScoreManager::updata(float deltaTime) {
 
-	//timeCount_++;
+	timeCount_++;
 	//20フレームに1回スコア計算を行う
-	//if (timeCount_ < 20)return;
+	if (timeCount_ < 20)return;
 
-	//timeCount_ = 0;
+	timeCount_ = 0;
 
 	for (auto n : m_NumberList) {
 		//審査員の判定の巡回
