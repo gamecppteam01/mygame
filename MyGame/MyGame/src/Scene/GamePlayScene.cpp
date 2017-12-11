@@ -148,7 +148,7 @@ void GamePlayScene::draw() const {
 
 	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
 	else {
-		SetDrawBright(244, 203, 66);
+		SetDrawBright(255, 155, 0);
 		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2-45, WINDOW_HEIGHT / 2-70), (int)std::ceilf(timeCount_), 1,FONT_ID::BIG_FONT);
 		SetDrawBright(255, 255, 255);
 	}
