@@ -87,6 +87,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "step_half.png", SPRITE_ID::STEP_HALF);
 	Sprite::GetInstance().Load(defaultPath + "step_spin.png", SPRITE_ID::STEP_SPIN);
 	Sprite::GetInstance().Load(defaultPath + "step_turn.png", SPRITE_ID::STEP_TURN);
+	Sprite::GetInstance().Load(defaultPath + "back_UI.png", SPRITE_ID::BACK_UI);
 }
 
 void LoadingScene::LoadModel()

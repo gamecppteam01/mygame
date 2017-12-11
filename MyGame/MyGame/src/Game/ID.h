@@ -58,6 +58,7 @@ enum SPRITE_ID
 	STEP_HALF,
 	STEP_SPIN,
 	STEP_TURN,
+	BACK_UI,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

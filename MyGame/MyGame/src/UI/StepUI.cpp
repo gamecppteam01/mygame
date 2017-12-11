@@ -4,100 +4,164 @@
 #include"../Graphic/Sprite.h"
 
 StepUI::StepUI(IWorld* world)
-	:UI{ "StepUI",position_ },world_(world){
+	:UI{ "StepUI",position_ }, world_(world){
 }
 
-void StepUI::initialize(){
+void StepUI::initialize() {
 	auto p = world_->findActor("Player");
 	player_ = std::static_pointer_cast<Player>(p);
-	position_ = Vector2::Zero;
-	alpha_ = 1.0f;
-	scale_ = Vector2::One;
 
-	time_ = 0.0f;
+	position_ = Vector2::Zero;
+	scale_ = Vector2::One;
+	alpha_ = 1.0f;
+
+	another_position_ = Vector2::Zero;
+	another_scale_ = Vector2::One;
+	another_alpha_ = 1.0f;
 
 	start_position_ = Vector2::Zero;
 	end_position_ = Vector2::Zero;
 
 	count = 0.0f;
 	another_count = 0.0f;
+	max_count = 1.0f;
 
-	ui_State_ = 0;
+	time_ = 0.0f;
+	t = 0.0f;
+
+	state_ = UI_State::Initialize;
 	ui_Play_ = false;
 }
 
-void StepUI::update(float deltaTime){
-	switch (ui_State_){
-		case 0: {
-			//position_ = Vector2(SCREEN_SIZE.x, SCREEN_SIZE.y / 2) + Vector2(256, 128);
-			position_ = Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y / 2);
-			scale_ = Vector2::One;
+void StepUI::update(float deltaTime) {
+	switch (state_) {
+	case UI_State::Initialize: {
+		position_ = Vector2::Zero;
+		scale_ = Vector2::One;
+		alpha_ = 0.0f;
+
+		another_position_ = Vector2::Zero;
+		another_scale_ = Vector2::One;
+		another_alpha_ = 0.0f;
+
+		t = 0.0f;
+
+		count = 0.0f;
+		another_count = 0.0f;
+
+		ui_Play_ = false;
+		if (is_StepSuccess()) {
+			state_ = UI_State::Start;
+		}
+		break;
+	}
+	case UI_State::Start: {
+		ui_Play_ = true;
+
+//
+		alpha_ = MathHelper::Lerp(0.0f, 1.0f, count);
+
+		position_ = Vector2::Lerp(Vector2(SCREEN_SIZE.x + 640, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), count);
+		another_position_ = Vector2::Lerp(Vector2(-640, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), count);
+//
+
+//
+		//another_scale_ = Vector2::Lerp(Vector2(1.0f, 0.0f), Vector2(1.0f, 1.0f), count);
+
+		//if (count >= 1.0f) {
+		//	position_ = Vector2::Lerp(Vector2(-640, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), count);
+		//}
+//
+
+		if (count >= 1.0f) {
+			state_ = UI_State::Before_End;
 			alpha_ = 1.0f;
-			time_ = 0.0f;
-			count = 0.0f;
-			another_count = 0.0f;
-			ui_Play_ = false;
-			if (is_StepSuccess()) {
-				ui_State_++;
-			}
-			break;
+			count = 0;
 		}
-		case 1: {
-			ui_Play_ = true;
-			count += 1.0f * deltaTime;
-			start_position_ = Vector2(SCREEN_SIZE.x, SCREEN_SIZE.y / 2) + Vector2(256, 0);
-			end_position_ = Vector2(SCREEN_SIZE.x / 2 , SCREEN_SIZE.y / 2);
-			position_ = Vector2::Lerp(start_position_, end_position_,count);
-			if (position_.x <= end_position_.x) {
-				ui_State_++;
-				count = 0;
-			}
-			break;
+
+		count = count + deltaTime * 3.0;
+		count = min(count, 1.0f);
+		//if (count >= 1.0f) {
+		//	another_count = another_count + deltaTime * 1.0;
+		//	another_count = min(another_count, 1.0f);
+		//}
+		break;
+	}
+	case UI_State::Staging: {
+//
+		//position_ = Vector2::Lerp(Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x * 3 / 4, SCREEN_SIZE.y * 3 / 4), count);
+
+		if ( another_count >= 1.0f) {
+			state_ = UI_State::Before_End;
 		}
-		case 2: {
-			another_count += deltaTime;
-			if (another_count >= 1.0f) count += 1.0f * deltaTime;
-			start_position_ = Vector2(SCREEN_SIZE.x / 2 , SCREEN_SIZE.y / 2);
-			end_position_ = Vector2( -128 , SCREEN_SIZE.y / 2);
-			position_ = Vector2::Lerp(start_position_, end_position_, count);
-			if (position_.x <= end_position_.x) {
-				ui_State_++; 
-			}
-			break;
+//
+		another_count += deltaTime;
+
+		//count = count + deltaTime * 1.0;
+		//count = min(count, 1.0f);
+	}
+	case UI_State::Before_End: {
+//
+		alpha_ = MathHelper::Lerp(1.0f, 0.0f, count);
+
+		position_ = Vector2::Lerp(Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), Vector2(-640, SCREEN_SIZE.y * 3 / 4), count);
+		another_position_ = Vector2::Lerp(Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x + 640, SCREEN_SIZE.y * 3 / 4), count);
+//
+		//position_ = Vector2::Lerp(Vector2(SCREEN_SIZE.x * 3 / 4, SCREEN_SIZE.y * 3 / 4), Vector2(SCREEN_SIZE.x + 640, SCREEN_SIZE.y * 3 / 4), count);
+		//if (count >= 1.0f) {
+		//	another_scale_ = Vector2::Lerp(Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f), count);
+		//}
+//
+		if (alpha_ <= 0.0f&& !is_StepSuccess()) {
+			state_ = UI_State::End;
 		}
-		case 3: {
-				ui_State_ = 0;
-				ui_Play_ = false; 
-			break;
-		}
+
+		another_count += deltaTime;
+		if (another_count >= 1.0f)
+			count = count + deltaTime * 3.0;
+		count = min(count, 1.0f);
+		//if (count >= 1.0f) {
+		//	another_count = another_count + deltaTime * 3.0;
+		//	another_count = min(another_count, 1.0f);
+		//}
+		break;
+	}
+	case UI_State::End: {
+		state_ = UI_State::Initialize;
+		ui_Play_ = false;
+		break;
+	}
 	}
 }
 
-void StepUI::draw() const{
+void StepUI::draw() const {
 	if (ui_Play_) {
 		switch (player_.lock()->getStep())
 		{
 		case 1:
-			Sprite::GetInstance().Draw(SPRITE_ID::STEP_QUARTER, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_QUARTER) / 2, alpha_, scale_); break;
+			Sprite::GetInstance().Draw(SPRITE_ID::BACK_UI, Vector2(SCREEN_SIZE.x / 2, SCREEN_SIZE.y * 3 / 4), Sprite::GetInstance().GetSize(SPRITE_ID::BACK_UI) / 2, alpha_, another_scale_);
+			Sprite::GetInstance().Draw(SPRITE_ID::STEP_QUARTER, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_QUARTER) / 2, alpha_, scale_);
+			break;
 		case 2:
-			Sprite::GetInstance().Draw(SPRITE_ID::STEP_HALF, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_HALF) / 2, alpha_, scale_); break;
+			Sprite::GetInstance().Draw(SPRITE_ID::STEP_HALF, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_HALF) / 2, alpha_, scale_);
+			Sprite::GetInstance().Draw(SPRITE_ID::STEP_HALF, another_position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_HALF) / 2, alpha_, scale_);
+			break;
 		case 3:
-			Sprite::GetInstance().Draw(SPRITE_ID::STEP_TURN, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_TURN) / 2, alpha_, scale_); break;
+			Sprite::GetInstance().Draw(SPRITE_ID::STEP_TURN, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_TURN) / 2, alpha_, scale_); 
+			break;
 		case 4:
-			Sprite::GetInstance().Draw(SPRITE_ID::STEP_SPIN, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_SPIN) / 2, alpha_, scale_); break;
+			Sprite::GetInstance().Draw(SPRITE_ID::STEP_SPIN, position_, Sprite::GetInstance().GetSize(SPRITE_ID::STEP_SPIN) / 2, alpha_, scale_); 
+			break;
 		}
 	}
 }
 
-bool StepUI::End_time(float deltaTime){
-	time_ += deltaTime;
-	if (time_ > 3) {
-		return true;
-	}
-	return false;
+float StepUI::time(float deltaTime) {
+	time_ -= deltaTime;
+	return time_;
 }
 
-bool StepUI::is_StepSuccess() const{
+bool StepUI::is_StepSuccess() const {
 	if (player_.lock()->getState() == Player::Player_State::Step_Success ||
 		player_.lock()->getState() == Player::Player_State::Attack ||
 		player_.lock()->getState() == Player::Player_State::Shoot) return true;

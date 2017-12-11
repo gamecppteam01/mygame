@@ -4,12 +4,20 @@
 #include"../World/World.h"
 
 class StepUI : public UI {
+	enum class UI_State {
+		Initialize,
+		Start,
+		Staging,
+		Before_End,
+		End,
+
+	};
 public:
 	StepUI(IWorld* world);
 	void initialize() override;
 	void update(float deltaTime) override;
 	void draw() const override;
-	bool End_time(float deltaTime);
+	float time(float deltaTime);
 	bool is_StepSuccess() const;
 
 private:
@@ -21,6 +29,11 @@ private:
 	Vector2 scale_;
 	float alpha_;
 
+	//汎用UIの座標、拡大率、透明度
+	Vector2 another_position_;
+	Vector2 another_scale_;
+	float another_alpha_;
+
 	//移動演出の座標
 	//開始座標
 	Vector2 start_position_;
@@ -31,9 +44,14 @@ private:
 	float count{ 0.0f };
 	//汎用第二カウント
 	float another_count{ 0.0f };
-
-
-	int ui_State_{ 0 };
+	//最大カウント
+	float max_count;
+	//UIのステート
+	UI_State state_;
+	//UIが表示されるか？
 	bool ui_Play_{ false };
-	float time_;
+	//時間
+	float time_; 
+
+	float t;
 };
