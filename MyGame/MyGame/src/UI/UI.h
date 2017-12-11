@@ -8,7 +8,10 @@ public:
 	UI(const std::string& name, const Vector2& position );
 	//デストラクタ
 	virtual ~UI(){}
-
+	//一時停止
+	virtual void pause() {};
+	//再開
+	virtual void restart() {};
 	//初期化
 	virtual void initialize()=0;
 	//更新

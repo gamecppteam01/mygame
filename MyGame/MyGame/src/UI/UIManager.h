@@ -9,6 +9,8 @@ public:
 	//コンストラクタ
 	UIManager();
 	~UIManager();
+	void pause();
+	void restart();
 	//初期化
 	void initialize();
 	//更新

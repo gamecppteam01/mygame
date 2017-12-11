@@ -57,12 +57,14 @@ void World::pause()
 {
 	actors_.pause();
 	tempo_.pauseMusic();
+	uiManager_.pause();
 }
 
 void World::restart()
 {
 	actors_.restart();
 	tempo_.restartMusic();
+	uiManager_.restart();
 }
 
 // XV

@@ -13,6 +13,20 @@ UIManager::~UIManager()
 	UIs_.clear();
 }
 
+void UIManager::pause()
+{
+	for (auto& u : UIs_) {
+		u->pause();
+	}
+}
+
+void UIManager::restart()
+{
+	for (auto& u : UIs_) {
+		u->restart();
+	}
+}
+
 //‰Šú‰»
 void UIManager::initialize()
 {
