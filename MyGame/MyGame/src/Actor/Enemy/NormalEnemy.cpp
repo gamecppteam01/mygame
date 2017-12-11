@@ -52,12 +52,12 @@ void NormalEnemy::JustStep()
 	if (r < 3) {
 		//ターン
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn);
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn,false);
 	}
 	else {
 		//クォーター
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
-		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter);
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter,false);
 	}
 }
 
@@ -69,7 +69,7 @@ void NormalEnemy::updateNormal(float deltaTime)
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 	
 	if (Vector3::Distance(centerPosition_, player_.lock()->position()) <= 30.0f&&world_->getScoreManager().GetCharacterScoreRate(player_.lock()->getPlayerNumber()) >= 1.05f) {
-		if (change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn))updateAttack(deltaTime);
+		if (change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Turn,false))updateAttack(deltaTime);
 		return;
 	}
 

@@ -18,7 +18,7 @@ public:
 		Half = 4,//ハーフ時
 		Down = 5,//ダウン時
 		WakeUp = 6,//起き上がり時
-		Step_Left = 3,//左ステップ時
+		Stan = 7, //ふらつき時
 		KnockBack = 4,//被弾時
 	};
 	enum class Enemy_State {

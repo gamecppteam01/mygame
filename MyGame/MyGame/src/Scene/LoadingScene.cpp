@@ -98,6 +98,8 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_men/balanceEnemy_men.pmx", MODEL_ID::BALANCEENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_women/balanceEnemy_women.pmd", MODEL_ID::BALANCEENEMY_BULLET_MODEL);
+	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_men/rivalEnemy_men.pmx", MODEL_ID::RIVALENEMY_MODEL);
+	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_women/rivalEnemy_women.pmx", MODEL_ID::RIVALENEMY_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "judge/judgemodel.mv1", MODEL_ID::JUDGE_MODEL);
 	
 	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);

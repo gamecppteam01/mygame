@@ -33,7 +33,7 @@ static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Anima
 	{ BaseEnemy::Enemy_Animation::Down,EnemyBullet::EnemyBullet_Animation::Down },
 	{ BaseEnemy::Enemy_Animation::WakeUp,EnemyBullet::EnemyBullet_Animation::WakeUp },
 	{ BaseEnemy::Enemy_Animation::KnockBack,EnemyBullet::EnemyBullet_Animation::KnockBack },
-	{ BaseEnemy::Enemy_Animation::Step_Left,EnemyBullet::EnemyBullet_Animation::Step_Left },
+	{ BaseEnemy::Enemy_Animation::Stan,EnemyBullet::EnemyBullet_Animation::Stan },
 };
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):

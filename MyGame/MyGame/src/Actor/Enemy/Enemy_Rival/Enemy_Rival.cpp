@@ -10,7 +10,7 @@
 
 static const float attackResetDistance = 40.0f;
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
-	BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL) {
+	BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::RIVALENEMY_MODEL, MODEL_ID::RIVALENEMY_BULLET_MODEL) {
 
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
