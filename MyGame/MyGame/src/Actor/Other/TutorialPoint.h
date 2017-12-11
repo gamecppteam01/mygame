@@ -8,4 +8,7 @@ public:
 
 	void onDraw()const override;
 	void onCollide(Actor& other)override;
+
+private:
+	int id_;
 };

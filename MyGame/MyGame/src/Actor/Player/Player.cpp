@@ -436,6 +436,19 @@ void Player::idle_Update(float deltaTime)
 		}
 		return;
 	}
+	else if (
+		(
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::A) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::B) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::X) ||
+		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Y)
+		)||
+		InputChecker::GetInstance().GetPovAngle() != -1
+		) {
+		if (!EffekseerManager::GetInstance().isPlayEffect3D(effectID_)) {
+			effectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_STANDBY_INPUT1_EFFECT, centerPosition_);
+		}
+	}
 	upVelocity_ -= upVelocity_*0.5f;
 
 	gravityUpdate(deltaTime);
@@ -665,6 +678,10 @@ void Player::to_MoveMode()
 }
 void Player::to_StepMode()
 {
+	EffekseerManager::GetInstance().StopEffect3D(effectID_);
+
+	effectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_STANDBY_INPUT2_EFFECT, centerPosition_);
+	
 	//ジャスト判定タイミングならスコア加算フラグを有効にする
 	isJustStep_ = isJustTiming();
 
@@ -779,6 +796,8 @@ void Player::end_MoveMode()
 
 void Player::end_StepMode()
 {
+	EffekseerManager::GetInstance().StopEffect3D(effectID_);
+
 }
 
 void Player::end_StepSuccessMode()

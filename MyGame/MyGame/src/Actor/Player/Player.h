@@ -289,6 +289,7 @@ protected:
 
 	std::list<SE_ID> restartSEList_;
 
+	int effectID_{ -1 };
 protected:
 	const Vector3 defaultPosition_;
 

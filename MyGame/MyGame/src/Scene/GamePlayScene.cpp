@@ -32,7 +32,7 @@
 //ゲームの時間
 static const float gameTime = 5.0f;
 static const std::vector<std::tuple<BGM_ID, float, int,int,bool,int>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,2,false,80),
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,2,false,100),
 	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,3,false,255),
 	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,2,true,255)
 };
@@ -122,7 +122,7 @@ void GamePlayScene::start() {
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
 
-	timeCount_ = 3.0f;
+	timeCount_ = 4.0f;
 	currentCount_ = (int)std::ceilf(timeCount_) + 1;
 }
 
@@ -180,14 +180,15 @@ void GamePlayScene::update_Reload(float deltaTime) {
 void GamePlayScene::update_Start(float deltaTime) {
 	timeCount_ -= deltaTime;
 	if (timeCount_ <= 0.0f) {
-		Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
 		changeState(GamePlayState::Play);
 		return;
 	}
 
 	if (currentCount_ > (int)std::ceilf(timeCount_)) {
 		currentCount_--;
-		Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
+		if(currentCount_>1)Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
+		else Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
+		
 	}
 
 	world_.update_end(deltaTime);
@@ -313,8 +314,8 @@ void GamePlayScene::settingLight() {
 
 //UI設定関数
 void GamePlayScene::settingUI() {
-	std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100), Vector2(1150, 100));
-	world_.addUI(mapUI);
+	//std::shared_ptr<MiniMap> mapUI = std::make_shared<MiniMap>(&world_, Vector2(1020, -100), Vector2(1150, 100));
+	//world_.addUI(mapUI);
 	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
 	world_.addUI(warningUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2 , 50.0f));

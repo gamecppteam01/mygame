@@ -7,7 +7,7 @@
 
 
 static const float defTime = 0.2f;
-
+static const float sizeRate = 0.7f;
 PlayerEffectDraw::PlayerEffectDraw(Player * player):player_(player),key_(-1){
 }
 
@@ -66,7 +66,7 @@ void PlayerEffectDraw::Update(float deltatime){
 			PointRight_position = Vector2(SCREEN_SIZE) + Vector2(150, 150);
 
 			playState_++;
-			beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(beginKey_, Vector3{ 0.0f,10.0f,0.0f });
 			break;
 		}
@@ -79,7 +79,7 @@ void PlayerEffectDraw::Update(float deltatime){
 			if (time_ < defTime)return;
 			//if (EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))return;
 			playState_++;
-			if (!EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))loopKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_LOOP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			if (!EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))loopKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_LOOP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(loopKey_, Vector3{ 0.0f,10.0f,0.0f });
 			break;
 		}
@@ -90,7 +90,7 @@ void PlayerEffectDraw::Update(float deltatime){
 			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
 			
 			if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
-			key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+			key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
 			EffekseerManager::GetInstance().SetPosPlayEffect3D(key_, Vector3{ 0.0f,10.0f,0.0f });
 			break;
 		}
@@ -121,7 +121,7 @@ void PlayerEffectDraw::Update(float deltatime){
 				if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
 				endtime = 0.0f;
 				playState_++;
-				endKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_END_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One);
+				endKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_END_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
 				EffekseerManager::GetInstance().SetPosPlayEffect3D(endKey_, Vector3{ 0.0f,10.0f,0.0f });
 				break;
 			}

@@ -51,8 +51,8 @@ private:
 	//ライトハンドルクラス
 	LightHandle lightHandle_;
 
-	float timeCount_{ 3.0f };//スタート時のタイマー
-	int currentCount_{ 4 };//スタートで到達したカウント
+	float timeCount_{ 4.0f };//スタート時のタイマー
+	int currentCount_{ 5 };//スタートで到達したカウント
 	PauseScreen pause_;
 	//状態毎更新map
 	std::map<GamePlayState, std::function<void(float)>> updateFuncMap_;

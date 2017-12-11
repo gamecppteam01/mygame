@@ -128,6 +128,10 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::RING_EFFECT, defaultPath + "ringeffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HIT_EFFECT, defaultPath + "hiteffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::ACTION_EFFECT, defaultPath + "actioneffect.efk");
+	
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::TUTORIALPOINT_EFFECT, defaultPath + "tutorialPoint.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT1_EFFECT, defaultPath + "stepStandby1.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT2_EFFECT, defaultPath + "stepStandby2.efk");
 }
 
 void LoadingScene::LoadFont()
