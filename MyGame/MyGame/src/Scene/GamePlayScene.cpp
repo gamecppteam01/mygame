@@ -50,6 +50,8 @@ GamePlayScene::GamePlayScene() :world_(), scoreDisplay_(nullptr), playerEffectDr
 
 //開始
 void GamePlayScene::start() {
+	isStart_ = false;
+
 	Sound::GetInstance().StopBGM();
 	
 	stageNum_ = DataManager::GetInstance().getStage();//ステージ番号受け取り
@@ -122,7 +124,7 @@ void GamePlayScene::start() {
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
 
-	timeCount_ = 4.0f;
+	timeCount_ = 3.0f;
 	currentCount_ = (int)std::ceilf(timeCount_) + 1;
 }
 
@@ -146,7 +148,9 @@ void GamePlayScene::draw() const {
 
 	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
 	else {
-		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (int)std::ceilf(timeCount_), 4);
+		SetDrawBright(40, 200, 200);
+		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (int)std::ceilf(timeCount_), 1);
+		SetDrawBright(255, 255, 255);
 	}
 
 	if (state_ == GamePlayState::Pause)pause_.draw();
@@ -180,14 +184,21 @@ void GamePlayScene::update_Reload(float deltaTime) {
 void GamePlayScene::update_Start(float deltaTime) {
 	timeCount_ -= deltaTime;
 	if (timeCount_ <= 0.0f) {
-		changeState(GamePlayState::Play);
+		if (isStart_) {
+			if (timeCount_<=-0.2f) {
+				changeState(GamePlayState::Play);
+			}
+			return;
+		}
+		Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
+		isStart_ = true;
 		return;
 	}
 
 	if (currentCount_ > (int)std::ceilf(timeCount_)) {
 		currentCount_--;
-		if(currentCount_>1)Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
-		else Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
+		currentCount_ = max(currentCount_, 0);
+		Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
 		
 	}
 
