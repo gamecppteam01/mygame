@@ -57,6 +57,8 @@ void StageSelectScene::draw() const
 {
 
 	float cutSize = WINDOW_WIDTH / 6.0f;//ボタン軸のカット毎サイズ
+	Sprite::GetInstance().Draw(SPRITE_ID::SELECT_BACK, Vector2::Zero);
+
 	//ステージ1～3
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);

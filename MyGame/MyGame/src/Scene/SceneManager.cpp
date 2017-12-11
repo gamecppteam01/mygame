@@ -52,7 +52,8 @@ void SceneManager::next() {
 	//Sound::GetInstance().StopBGM();
 	//Sound::GetInstance().StopSE();
 	
-	if (scenes_[currentScene_]->nextScene() == SceneType::SCENE_GAMEPLAY) {
+	if (scenes_[currentScene_]->nextScene() == SceneType::SCENE_GAMEPLAY||
+		scenes_[currentScene_]->nextScene() == SceneType::SCENE_CLEAR) {
 		fadesp_.addCallBack([&] {		
 			//ƒV[ƒ“‚ğI—¹‚µ‚Ä
 			scenes_[currentScene_]->end();
