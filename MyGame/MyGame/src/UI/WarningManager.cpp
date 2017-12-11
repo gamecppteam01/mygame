@@ -44,7 +44,16 @@ void WarningManager::initialize()
 	//‹ó
 	parameters_.emplace(std::piecewise_construct, std::forward_as_tuple(warningState::None),
 		std::forward_as_tuple(Vector2::Zero, Vector2::Zero, 0.0f, origin));
+	pause_ = false;
 
+}
+
+void WarningManager::pause(){
+	pause_ = true;
+}
+
+void WarningManager::restart(){
+	pause_ = false;
 }
 
 void WarningManager::update(float deltaTime)
@@ -54,9 +63,10 @@ void WarningManager::update(float deltaTime)
 	//Œü‚«‚ðŒˆ’è
 	Vector2 target = player_.lock()->getStumbleDirection();
 	stateChange(target);
-
-	sincount += 8;
-	sincount = std::fmodf(sincount, 360);
+	if (!pause_) {
+		sincount += 8;
+		sincount = std::fmodf(sincount, 360);
+	}
 	switch (state_)
 	{
 	case warningState::UP:

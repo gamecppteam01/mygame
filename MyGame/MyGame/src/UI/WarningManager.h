@@ -22,6 +22,8 @@ public:
 	WarningManager(IWorld* world);
 	//‰Šú‰»
 	virtual void initialize() override;
+	virtual void pause() override;
+	virtual void restart() override;
 	//XV
 	virtual void update(float deltaTime) override;
 	//•`‰æ
@@ -41,7 +43,7 @@ private:
 	float sincount;
 	int count;
 	IWorld* world_;
-
-	
 	std::weak_ptr<Player> player_;
+
+	bool pause_;
 };

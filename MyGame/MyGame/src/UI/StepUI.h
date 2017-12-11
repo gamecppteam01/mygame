@@ -14,10 +14,11 @@ class StepUI : public UI {
 	};
 public:
 	StepUI(IWorld* world);
-	void initialize() override;
-	void update(float deltaTime) override;
-	void draw() const override;
-	float time(float deltaTime);
+	virtual void initialize() override;
+	virtual void pause() override;
+	virtual void restart() override;
+	virtual void update(float deltaTime) override;
+	virtual void draw() const override;
 	bool is_StepSuccess() const;
 
 private:
@@ -51,7 +52,7 @@ private:
 	//UIÇ™ï\é¶Ç≥ÇÍÇÈÇ©ÅH
 	bool ui_Play_{ false };
 	//éûä‘
-	float time_; 
+	float timer_; 
 
-	float t;
+	bool pause_;
 };
