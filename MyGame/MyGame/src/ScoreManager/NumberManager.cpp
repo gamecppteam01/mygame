@@ -16,7 +16,7 @@ void NumberManager::DrawNumber(const Vector2 & position,const int number){
 	}
 }
 
-void NumberManager::DrawNumber(const Vector2 & position, const int number, const int colornumebr){
+void NumberManager::DrawNumber(const Vector2 & position, const int number, const int colornumebr,FONT_ID id) {
 	std::string string_numebr = std::to_string(number);
 	switch (colornumebr) {
 	case 1: C = GetColor(255, 255, 255); break;
@@ -28,7 +28,7 @@ void NumberManager::DrawNumber(const Vector2 & position, const int number, const
 	for (int i = 0; i < (int)string_numebr.size(); ++i) {
 		if (string_numebr[i] == ' ')continue;
 		const int n = string_numebr[i] - '0';
-		FontManager::GetInstance().DrawTextApplyFont(position.x + i * 25, position.y, C, FONT_ID::DEFAULT_FONT, "%d", n);
+		FontManager::GetInstance().DrawTextApplyFont(position.x + i * 25, position.y, C, id, "%d", n);
 	}
 }
 

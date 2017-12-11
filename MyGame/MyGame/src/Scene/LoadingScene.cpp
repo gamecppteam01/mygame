@@ -141,6 +141,7 @@ void LoadingScene::LoadFont()
 	std::string defaultPath = "res/Font/";//全リソース共通パス
 	FontManager::GetInstance().AddFont(FONT_ID::JAPANESE_FONT, defaultPath + "HGRGY.TTC", "HG行書体", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::DEFAULT_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 50);
+	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
 }
 
 void LoadingScene::LoadBGM()

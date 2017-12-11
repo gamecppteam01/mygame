@@ -17,7 +17,7 @@ public:
 	///<summary>
 	/// 数値描画フォント(座標、数値、色)(1:白,2:赤,3:緑,4:青)
 	///</summary>
-	void DrawNumber(const Vector2& position, const int number,int colornumebr);
+	void DrawNumber(const Vector2& position, const int number,int colornumebr, FONT_ID id=FONT_ID::DEFAULT_FONT);
 	///<summary>
 	/// 数値描画テクスチャ(スプライトID、座標、数値、数字一つのサイズ、表示サイズ)
 	///</summary>
