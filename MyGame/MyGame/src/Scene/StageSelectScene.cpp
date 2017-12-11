@@ -69,7 +69,7 @@ void StageSelectScene::draw() const
 	//タイトルへの遷移
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
 	if (cursor_ != 3)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ basePos.x,basePos.y + padding * 3 }, origin, 1.0f, Vector2::One*0.7f);
+	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ basePos.x+60.0f,basePos.y + padding * 3 }, origin, 1.0f, Vector2::One*0.55f);
 	SetDrawBright(255, 255, 255);
 
 //	//タイトルへの遷移
