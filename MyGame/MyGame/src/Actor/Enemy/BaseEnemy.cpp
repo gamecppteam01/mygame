@@ -302,7 +302,7 @@ void BaseEnemy::JustStep()
 	int key = Random::GetInstance().Range(0, 1);
 	if (key == 1)key++;
 
-	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first);
+	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first,false);
 	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[key].second);
 }
 

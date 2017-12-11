@@ -11,6 +11,11 @@
 /* すべてのスコアをソートして降順に画面に表示する */
 
 class GameClearScene : public Scene {
+private:
+	enum State {
+		Start,
+		Normal
+	};
 public:
 	GameClearScene();
 	~GameClearScene() override;
@@ -22,6 +27,7 @@ public:
 private:
 	std::list<ScoreData> datas_;
 
+	State state_;
 	int cursor_{ 0 };
 
 	int sinCount_;

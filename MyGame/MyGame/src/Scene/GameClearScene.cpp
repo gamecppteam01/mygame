@@ -17,19 +17,23 @@ GameClearScene::~GameClearScene()
 void GameClearScene::start()
 
 {
-	Sound::GetInstance().StopBGM();
-	Sound::GetInstance().PlayBGM(BGM_ID::CLEAR_BGM, DX_PLAYTYPE_LOOP);
-
 	sinCount_ = 0;
 	cursor_ = 0;
 
 	score_.init();
+
+	state_ = State::Start;
 }
 
 void GameClearScene::update(float deltaTime)
 {
 	score_.update(deltaTime);
-
+	if (state_ == GameClearScene::Start) {
+		Sound::GetInstance().StopBGM();
+		Sound::GetInstance().PlayBGM(BGM_ID::CLEAR_BGM, DX_PLAYTYPE_LOOP);
+		state_ = Normal;
+		return;
+	}
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
 		InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		cursor_ = (cursor_ - 1 + cursorPoses.size()) % cursorPoses.size();

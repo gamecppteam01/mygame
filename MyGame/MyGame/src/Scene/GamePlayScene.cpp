@@ -32,7 +32,7 @@
 //ゲームの時間
 static const float gameTime = 5.0f;
 static const std::vector<std::tuple<BGM_ID, float, int,int,bool,int>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,100),
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150),
 	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255),
 	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255)
 };

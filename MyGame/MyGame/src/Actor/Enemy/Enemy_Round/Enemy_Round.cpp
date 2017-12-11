@@ -31,7 +31,7 @@ void Enemy_Round::JustStep()
 	if (!isCanStep())return;
 
 	int nextStep = Random::GetInstance().Randomize(std::vector<int>{ 0,2 });
-	change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first);
+	change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first,false);
 	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[nextStep].second);
 
 

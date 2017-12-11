@@ -61,16 +61,18 @@ void StageSelectScene::draw() const
 
 	//ステージ1～3
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
+
+	float yPos = 400.0f;
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE1_TEXT_SPRITE, Vector2{ cutSize*1.0f,origin.y }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE1_TEXT_SPRITE, Vector2{ cutSize*1.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE2_TEXT_SPRITE) / 2;
 	if (cursor_ != 1)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE2_TEXT_SPRITE, Vector2{ cutSize*3.0f,origin.y }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE2_TEXT_SPRITE, Vector2{ cutSize*3.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE3_TEXT_SPRITE) / 2;
 	if (cursor_ != 2)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE3_TEXT_SPRITE, Vector2{ cutSize*5.0f,origin.y }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE3_TEXT_SPRITE, Vector2{ cutSize*5.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
 	SetDrawBright(255, 255, 255);
 
 	//タイトルへの遷移
