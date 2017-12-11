@@ -23,25 +23,15 @@ void StageSelectScene::start()
 
 void StageSelectScene::update(float deltaTime)
 {
-	if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 270) {
+
+	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) ||
+		InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		cursor_ = (cursor_ - 1 + ButtonList.size()) % ButtonList.size();
 		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
-	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 90) {
+	else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
+		InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180){
 		cursor_ = (cursor_ + 1) % ButtonList.size();
-		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
-	}
-	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 180) {
-		if (cursor_ != 3) {
-			prevCursor_ = cursor_;
-			cursor_ = 3;
-		}
-		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
-	}
-	else if (InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
-		if (cursor_ == 3) {
-			cursor_ = (prevCursor_ == 3) ? (cursor_ - 1 + ButtonList.size()) % ButtonList.size() : prevCursor_;
-		}
 		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
 	}
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
@@ -62,24 +52,31 @@ void StageSelectScene::draw() const
 	//ステージ1～3
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
 
-	float yPos = 400.0f;
+	Vector2 basePos{ cutSize*4.0f,150.0f };//1番目の位置
+	float padding = 150.0f;//要素ごとの隙間
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE1_TEXT_SPRITE, Vector2{ cutSize*1.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE1_TEXT_SPRITE, basePos, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE2_TEXT_SPRITE) / 2;
 	if (cursor_ != 1)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE2_TEXT_SPRITE, Vector2{ cutSize*3.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE2_TEXT_SPRITE, Vector2{ basePos.x,basePos.y+padding }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE3_TEXT_SPRITE) / 2;
 	if (cursor_ != 2)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE3_TEXT_SPRITE, Vector2{ cutSize*5.0f,yPos }, origin, 1.0f, Vector2::One*0.5f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE3_TEXT_SPRITE, Vector2{ basePos.x,basePos.y + padding*2 }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 
 	//タイトルへの遷移
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
 	if (cursor_ != 3)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ WINDOW_WIDTH*0.5f,600.0f }, origin, 1.0f, Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ basePos.x,basePos.y + padding * 3 }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
+
+//	//タイトルへの遷移
+//	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
+//	if (cursor_ != 3)SetDrawBright(100, 100, 100);
+//	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ WINDOW_WIDTH*0.5f,600.0f }, origin, 1.0f, Vector2::One);
+//	SetDrawBright(255, 255, 255);
 }
 
 void StageSelectScene::end()
