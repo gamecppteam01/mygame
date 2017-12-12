@@ -313,6 +313,10 @@ void GamePlayScene::settingLight() {
 	//標準ライトの設定
 	standardLight_.initialize();
 	standardLight_.changeLightTypeDir(Vector3(0.0f, -1.0f, 0.0f));
+	standardLight_.setLightAmbientColor(Color(0.1f, 0.1f, 0.1f, 0.1f));
+	standardLight_.setLghtSpecurColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	standardLight_.setLightDiffuseColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
+
 	//ライトハンドルの設定
 	lightHandle_.setUsePixelLighting(true);
 	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), 0.7f, 0.6f, 500.0f, 0.75f, 0.003f, 0.0f);
