@@ -322,7 +322,7 @@ void GamePlayScene::settingLight() {
 	lightHandle_.setUsePixelLighting(true);
 	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), 0.7f, 0.6f, 500.0f, 0.75f, 0.003f, 0.0f);
 	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
-	lightHandle_.setLightDiffuseColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	//グローバルアンビエントの設定
 	standardLight_.setGlobalAmbientLight(Color(0.0f, 0.2f, 0.2f, 0.2f));
