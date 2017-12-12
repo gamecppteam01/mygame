@@ -46,9 +46,12 @@ public:
 	void Draw()const;
 	void End();
 
+	void Stop();
 private:
+	int check_;
 	std::map<EFFECT_ID, int> effectList_;
 	std::list<std::tuple<EFFECT_ID,int,Vector3*>> trackEffectList_;
 	bool IsStopFlg_;
-	int handle_;
+	std::list<int> effects_;
+	
 };

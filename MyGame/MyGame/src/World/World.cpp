@@ -42,8 +42,6 @@ void World::Initialize()
 	lateDrawFuncList_.clear();
 	lateDrawFuncListAfterUI_.clear();
 
-	EffekseerManager::GetInstance().Initialize();
-
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.initialize();

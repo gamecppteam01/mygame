@@ -29,7 +29,7 @@ void Song_Title_UI::draw() const
 
 void Song_Title_UI::createSongList()
 {
-	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE1_BGM)] = "stage1";
-	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE2_BGM)] = "stage2";
-	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE3_BGM)] = "stage3";
+	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE1_BGM)] = "ハロウィンパレード";
+	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE2_BGM)] = "曇空のワルツ";
+	songMap_[Sound::GetInstance().GetHandle(BGM_ID::STAGE3_BGM)] = "フォークタンゴ";
 }

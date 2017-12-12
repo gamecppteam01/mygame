@@ -28,6 +28,7 @@
 #include"../Fade/FadePanel.h"
 #include "../UI/EndUI.h"
 #include "../UI/Song_Title_UI.h"
+#include"../Graphic/EffekseerManager.h"
 
 //ゲームの時間
 static const float gameTime = 5.0f;
@@ -97,10 +98,10 @@ void GamePlayScene::start() {
 
 	//world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(-45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 10.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 0.0f, 60.0f), Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f)));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
@@ -139,11 +140,11 @@ void GamePlayScene::draw() const {
 
 	world_.draw();
 
-	for (int i = 1; i < world_.getScoreManager().GetCharacterCount() + 1; i++) {
-		DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
-	}
+	//for (int i = 1; i < world_.getScoreManager().GetCharacterCount() + 1; i++) {
+	//	DebugDraw::DebugDrawFormatString(200, 500 + i * 30, GetColor(255, 255, 255), "%iscore:%i", i, world_.getScoreManager().GetCharacterScore(i));
+	//}
 
-	Time::GetInstance().draw_fps();
+	//Time::GetInstance().draw_fps();
 	scoreDisplay_.Score(Vector2(0, 25), 5);
 
 	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
@@ -158,7 +159,7 @@ void GamePlayScene::draw() const {
 
 //終了
 void GamePlayScene::end() {
-	world_.Initialize();
+	world_.end();
 	//スコアデータをデータマネージャーに渡す
 	std::list<ScoreData> list;
 	world_.getScoreManager().getScoreDataList(list);
@@ -169,7 +170,7 @@ void GamePlayScene::end() {
 	lightHandle_.deleteLightHandleAll();
 	//エフェクトの終了処理
 	playerEffectDraw_.finalize();
-
+	EffekseerManager::GetInstance().Stop();
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().StopSE();
 }

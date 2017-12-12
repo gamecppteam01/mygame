@@ -37,6 +37,8 @@ public:
 
 		// キーが押されるまでループします
 		while (isRunning()) {
+			ClearDrawScreen();
+		
 			etceteraUpdate();
 
 			update();

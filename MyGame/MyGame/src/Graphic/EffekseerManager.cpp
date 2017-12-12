@@ -2,9 +2,8 @@
 #include "EffekseerManager.h"
 #include "EffekseerManager.h"
 
-EffekseerManager::EffekseerManager()
+EffekseerManager::EffekseerManager():check_(-1)
 {
-	Initialize();
 }
 
 EffekseerManager::~EffekseerManager()
@@ -14,8 +13,14 @@ EffekseerManager::~EffekseerManager()
 
 void EffekseerManager::Initialize()
 {
-	if (Effkseer_Init(2000) == -1)return;
-	handle_ = 0;
+	if (check_ != -1) {
+		Effkseer_End();
+	}
+	check_ = Effkseer_Init(2000);
+
+	if (check_ == -1)return;
+	effects_.clear();
+	trackEffectList_.clear();
 
 	// Zバッファを有効にする。
 	// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
@@ -41,7 +46,7 @@ void EffekseerManager::LoadEffect(EFFECT_ID id, const std::string & fileName)
 
 int EffekseerManager::PlayEffect2D(EFFECT_ID id, Vector3 position, Vector3 rotation, Vector3 scale)
 {
-	handle_ = PlayEffekseer2DEffect(effectList_[id]);
+	int handle_ = PlayEffekseer2DEffect(effectList_[id]);
 	SetScalePlayEffect2D(handle_, scale);
 	SetRotateEffect2D(handle_, scale);
 	SetPosPlayEffect2D(handle_, scale);
@@ -50,10 +55,12 @@ int EffekseerManager::PlayEffect2D(EFFECT_ID id, Vector3 position, Vector3 rotat
 
 int EffekseerManager::PlayEffect3D(EFFECT_ID id, Vector3 position, Vector3 rotation, Vector3 scale)
 {
-	handle_ = PlayEffekseer3DEffect(effectList_[id]);
+	int handle_ = PlayEffekseer3DEffect(effectList_[id]);
 	SetScalePlayEffect3D(handle_, scale);
 	SetRotateEffect3D(handle_, rotation);
 	SetPosPlayEffect3D(handle_, position);
+
+	effects_.push_back(handle_);
 	return handle_;
 }
 
@@ -133,5 +140,19 @@ void EffekseerManager::End()
 {
 	effectList_.clear();
 	Effkseer_End();
+}
+
+void EffekseerManager::Stop()
+{
+	for (auto i : effects_) {
+		//if (!isPlayEffect3D(i))continue;
+		StopEffekseer3DEffect(i);
+	}
+	effects_.clear();
+
+	// DXライブラリのカメラとEffekseerのカメラを同期する。
+	Effekseer_Sync3DSetting();
+	// Effekseerにより再生中のエフェクトを更新する。
+	UpdateEffekseer3D();
 }
 

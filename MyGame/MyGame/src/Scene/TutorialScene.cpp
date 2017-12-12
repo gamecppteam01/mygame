@@ -20,6 +20,7 @@
 #include"../Fade/FadePanel.h"
 #include"../Actor/Other/TutorialPoint.h"
 #include"../Actor/Player/TutorialPlayer.h"
+#include"../Graphic/EffekseerManager.h"
 
 TutorialScene::TutorialScene()
 {
@@ -89,7 +90,9 @@ void TutorialScene::end()
 {
 	Sound::GetInstance().StopBGM();
 	Sound::GetInstance().StopSE();
-
+	world_.end();
+	EffekseerManager::GetInstance().Stop();
+	text_.End();
 }
 
 void TutorialScene::changeState(State state) {
