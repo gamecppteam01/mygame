@@ -5,7 +5,7 @@ EnemyTemplate::EnemyTemplate(IWorld * world, const std::string & name, const Vec
 	Enemy(world,name,position,body)
 {
 	//キャラクターによって使いたいモデルのIDを指定する事
-	modelHandle_ = MODEL_ID::ENEMY_MODEL;
+	modelHandle_ = MODEL_ID::BALANCEENEMY_MODEL;
 }
 
 void EnemyTemplate::onMessage(EventMessage message, void * param)

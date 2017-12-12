@@ -59,17 +59,12 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "clear.png", SPRITE_ID::CLEAR_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "sceneMove.png", SPRITE_ID::FADE_SPRITE);
 	
-	Sprite::GetInstance().Load(defaultPath + "gauge.png",   SPRITE_ID::GAUGE_UI);
-	Sprite::GetInstance().Load(defaultPath + "ButtonA.png", SPRITE_ID::BUTTON_A);
-	Sprite::GetInstance().Load(defaultPath + "ButtonB.png", SPRITE_ID::BUTTON_B);
-	Sprite::GetInstance().Load(defaultPath + "ButtonC.png", SPRITE_ID::BUTTON_C);
-	Sprite::GetInstance().Load(defaultPath + "ButtonD.png", SPRITE_ID::BUTTON_D);
+
 	Sprite::GetInstance().Load(defaultPath + "Enemy.png",   SPRITE_ID::ENEMY);
 	Sprite::GetInstance().Load(defaultPath + "Player.png",  SPRITE_ID::PLAYER);
 	Sprite::GetInstance().Load(defaultPath + "MiniMapScreen.png", SPRITE_ID::MINIMAP);
 	Sprite::GetInstance().Load(defaultPath + "Judge.png", SPRITE_ID::JUDGE);
 	Sprite::GetInstance().Load(defaultPath + "Judge_Vision.png", SPRITE_ID::JUDGE_VISION);
-	Sprite::GetInstance().Load(defaultPath + "SpotLight.png", SPRITE_ID::SPOTLIGHT);
 	Sprite::GetInstance().Load(defaultPath + "arrow.png", SPRITE_ID::WARNING);
 	Sprite::GetInstance().Load(defaultPath + "arrow2.png", SPRITE_ID::WARNING2);
 	Sprite::GetInstance().Load(defaultPath + "titlescreen.png", SPRITE_ID::TITLE_SCREEN);
@@ -96,15 +91,12 @@ void LoadingScene::LoadModel()
 	std::string defaultPath = "res/Model/";//全リソース共通パス
 	Model::GetInstance().Load(defaultPath + "player/player_men/player_men.mv1", MODEL_ID::PLAYER_MODEL);
 	Model::GetInstance().Load(defaultPath + "player/player_women/player_women.mv1", MODEL_ID::PLAYER_BULLET_MODEL);
-	Model::GetInstance().Load(defaultPath + "ghoul.mv1", MODEL_ID::ENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_men/balanceEnemy_men.mv1", MODEL_ID::BALANCEENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/balanceEnemy_women/balanceEnemy_women.mv1", MODEL_ID::BALANCEENEMY_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_men/rivalEnemy_men.mv1", MODEL_ID::RIVALENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_women/rivalEnemy_women.mv1", MODEL_ID::RIVALENEMY_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "judge/judgemodel.mv1", MODEL_ID::JUDGE_MODEL);
-	
-	Model::GetInstance().Load(defaultPath + "lightPanel.mv1", MODEL_ID::EFFECT_LIGHT_MODEL);
-}
+	}
 
 void LoadingScene::LoadEffect()
 {

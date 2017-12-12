@@ -12,7 +12,7 @@
 Enemy::Enemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Actor(world, name, position, body), gravity_(0.0f), animation_()
 {
-	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::ENEMY_MODEL));
+	animation_.SetHandle(Model::GetInstance().GetHandle(MODEL_ID::BALANCEENEMY_MODEL));
 }
 
 void Enemy::onMessage(EventMessage message, void * param)

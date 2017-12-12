@@ -32,7 +32,7 @@ public:
 	};
 public:
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
-	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f), MODEL_ID id = MODEL_ID::ENEMY_MODEL, MODEL_ID bulletid = MODEL_ID::ENEMY_MODEL);
+	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f), MODEL_ID id = MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID bulletid = MODEL_ID::BALANCEENEMY_MODEL);
 	virtual ~BaseEnemy(){}
 	void hitOther(const Vector3& velocity);
 
