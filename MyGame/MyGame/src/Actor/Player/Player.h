@@ -10,6 +10,7 @@
 #include"../../Define.h"
 #include"../../Sound/MusicScoreManager.h"
 #include"Player_Animation.h"
+#include"../../Effect/EffekseerEffect/StepStanbyEffect.h"
 
 class PlayerBullet;
 
@@ -288,4 +289,5 @@ protected:
 	//–³‹‚·‚éƒRƒ“ƒgƒ[ƒ‰‚ÌŒX‚«”ÍˆÍ
 	const float ignoreSlope{ 0.1f };
 
+	StepStanbyEffect stepEffect_;
 };

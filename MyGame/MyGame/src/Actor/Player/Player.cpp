@@ -67,7 +67,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_(), musicScore_()
+	gyroCheck_(), musicScore_(),stepEffect_(world)
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -695,6 +695,8 @@ void Player::to_StepMode()
 	gyroCheck_.initialize();
 	successStep_ = 0;
 	nextStep_ = 0;
+
+	stepEffect_.start();
 }
 
 void Player::to_StepSuccessMode()
@@ -804,7 +806,7 @@ void Player::end_MoveMode()
 void Player::end_StepMode()
 {
 	EffekseerManager::GetInstance().StopEffect3D(effectID_);
-
+	stepEffect_.end();
 }
 
 void Player::end_StepSuccessMode()
