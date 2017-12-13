@@ -24,12 +24,20 @@ public:
 		// 描画倍率
 		SetWindowSizeExtendRate(mRate);
 		// ウインドウモードにするかどうか
+#ifdef _DEBUG
 		ChangeWindowMode(mWindow);
-		SetUseDirect3DVersion(DX_DIRECT3D_9);
+#endif
+		SetUseDirect3DVersion(DX_DIRECT3D_11);
 		//DXLib初期化処理
 		if (DxLib_Init() == -1)return -1;//エラーが起きたら終了
 		SetDrawScreen(DX_SCREEN_BACK);
 		SetUseBackCulling(TRUE);
+
+#ifdef NDEBUG
+		HWND TempHh = GetMainWindowHandle();								//最前面処理
+		SetWindowPos(TempHh, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+#endif
+
 		EffekseerManager::GetInstance().Initialize();
 		FadePanel::GetInstance().Initialize();
 
@@ -37,7 +45,7 @@ public:
 
 		// キーが押されるまでループします
 		while (isRunning()) {
-			ClearDrawScreen();
+			//ClearDrawScreen();
 		
 			etceteraUpdate();
 

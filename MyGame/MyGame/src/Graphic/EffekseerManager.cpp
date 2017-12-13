@@ -139,7 +139,8 @@ void EffekseerManager::Draw() const
 void EffekseerManager::End()
 {
 	effectList_.clear();
-	Effkseer_End();
+	trackEffectList_.clear();
+	if(check_!=-1)Effkseer_End();
 }
 
 void EffekseerManager::Stop()

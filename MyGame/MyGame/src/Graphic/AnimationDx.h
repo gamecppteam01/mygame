@@ -8,7 +8,7 @@ public:
 	// コンストラクタ
 	explicit AnimationDx() = default;
 	// デストラクタ
-	~AnimationDx() = default;
+	~AnimationDx();
 	// 更新
 	void Update(const float frameTime);
 	// 描画
@@ -32,6 +32,7 @@ public:
 	//アニメーションの再生速度を設定する
 	void setAnimSpeed(float animSpeed) { animSpeed_ = animSpeed; }
 private:
+	void clearModel();
 	// コピーコンストラクタ
 	AnimationDx(const AnimationDx& other) = delete;
 	// 代入演算子
@@ -41,7 +42,7 @@ private:
 	// ブレンドレートタイム
 	const float RATE_TIME = 0.1f;
 	// モデルハンドル
-	int		modelHandle_;
+	int		modelHandle_{ -1 };
 	// 今モーション
 	int		motion_;
 	// 前モーション

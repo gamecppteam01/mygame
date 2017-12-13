@@ -22,6 +22,7 @@ private:
 
 	//ステップ通知時の処理
 	virtual void JustStep()override;
+	virtual void onShadowDraw() const override;
 
 	virtual void updateNormal(float deltaTime)override;
 	virtual void updateTrack(float deltaTime)override;

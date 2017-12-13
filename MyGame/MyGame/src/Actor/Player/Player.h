@@ -9,11 +9,12 @@
 #include"GyroRotateChecker.h"
 #include"../../Define.h"
 #include"../../Sound/MusicScoreManager.h"
+#include"Player_Animation.h"
+
 class PlayerBullet;
 
 class Player :public Actor {
 public:
-
 	enum class Player_State {
 		Idle,//待機
 		Move,//移動
@@ -30,23 +31,6 @@ public:
 		Turn,//回転
 		State_Count//ステート数を数えるための列挙値(Countを状態として利用しないこと)
 	};
-	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
-	enum class Player_Animation {
-		Move_Forward = 0,//前移動時
-		Idle = 1,//待機時
-		Step_Left = 8,//左ステップ時
-		Quarter=2,
-		Attack = 11,//攻撃時
-		Shoot = 1,//発射時
-		ShootEnd = 13,//発射終了
-		KnockBack = 14,//被弾時
-		Down = 5,//ダウン時
-		Reversal=6,//起き上がり
-		Turn = 3,//回転時
-		Half = 4,
-		Stumble = 7,
-	};
-
 public:
 	Player(IWorld* world,const std::string& name,const Vector3& position,int playerNumber);
 	virtual ~Player(){}
@@ -80,6 +64,7 @@ protected:
 	virtual void onUpdate(float deltaTime);
 	// 描画
 	virtual void onDraw() const;
+	virtual void onShadowDraw() const override;
 	// 衝突した
 	virtual void onCollide(Actor& other);
 

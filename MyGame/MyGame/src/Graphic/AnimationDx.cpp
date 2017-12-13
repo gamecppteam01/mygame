@@ -6,6 +6,11 @@
 #include <math.h>
 #include <algorithm>
 
+AnimationDx::~AnimationDx()
+{
+	clearModel();
+}
+
 void AnimationDx::Update(const float frameTime)
 {
 	// ÉtÉâÉOèâä˙âª
@@ -84,6 +89,7 @@ void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed
 
 void AnimationDx::SetHandle(const int & handle)
 {
+	if (modelHandle_ != -1)clearModel();
 	modelHandle_ = MV1DuplicateModel(handle);
 }
 
@@ -110,6 +116,11 @@ float AnimationDx::GetAnimMaxTime() const
 float AnimationDx::GetAnimMaxTime(int index) const
 {
 	return MV1GetAnimTotalTime(modelHandle_, index) / 60.0f;
+}
+
+void AnimationDx::clearModel()
+{
+	MV1DeleteModel(modelHandle_);
 }
 
 

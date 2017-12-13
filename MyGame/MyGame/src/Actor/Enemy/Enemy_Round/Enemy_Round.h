@@ -10,7 +10,7 @@ public:
 	virtual void to_Normal() override;
 
 	virtual void updateNormal(float deltaTime) override;
-
+	virtual void onShadowDraw()const override;
 	void setNearestPoint();
 	void nextPosition();
 private:

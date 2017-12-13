@@ -68,6 +68,13 @@ void Enemy_Round::updateNormal(float deltaTime)
 	if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z }, Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
 }
 
+void Enemy_Round::onShadowDraw() const
+{
+	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
+}
+
 void Enemy_Round::setNearestPoint()
 {
 	nextPosition_ = points_.front();

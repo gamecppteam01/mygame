@@ -44,20 +44,20 @@ static const int defStepCount = 3;
 static const float spinPower = 6.0f;
 
 //男->女でアニメーションを変換
-static const std::map<Player::Player_Animation, PlayerBullet::PlayerBullet_Animation> animConvList{
-	{ Player::Player_Animation::Move_Forward,PlayerBullet::PlayerBullet_Animation::Move_Forward },
-	{ Player::Player_Animation::Idle,PlayerBullet::PlayerBullet_Animation::Idle },
-	{ Player::Player_Animation::Quarter,PlayerBullet::PlayerBullet_Animation::Quarter },
-	{ Player::Player_Animation::Attack,PlayerBullet::PlayerBullet_Animation::Attack },
-	{ Player::Player_Animation::Down,PlayerBullet::PlayerBullet_Animation::Down },
-	{ Player::Player_Animation::KnockBack,PlayerBullet::PlayerBullet_Animation::KnockBack },
-	{ Player::Player_Animation::Shoot,PlayerBullet::PlayerBullet_Animation::Shoot },
-	{ Player::Player_Animation::ShootEnd,PlayerBullet::PlayerBullet_Animation::ShootEnd },
-	{ Player::Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
-	{ Player::Player_Animation::Half,PlayerBullet::PlayerBullet_Animation::Half },
-	{ Player::Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn },
-	{ Player::Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal },
-	{ Player::Player_Animation::Stumble,PlayerBullet::PlayerBullet_Animation::Stumble }
+static const std::map<Player_Animation, PlayerBullet::PlayerBullet_Animation> animConvList{
+	{ Player_Animation::Move_Forward,PlayerBullet::PlayerBullet_Animation::Move_Forward },
+	{ Player_Animation::Idle,PlayerBullet::PlayerBullet_Animation::Idle },
+	{ Player_Animation::Quarter,PlayerBullet::PlayerBullet_Animation::Quarter },
+	{ Player_Animation::Attack,PlayerBullet::PlayerBullet_Animation::Attack },
+	{ Player_Animation::Down,PlayerBullet::PlayerBullet_Animation::Down },
+	{ Player_Animation::KnockBack,PlayerBullet::PlayerBullet_Animation::KnockBack },
+	{ Player_Animation::Shoot,PlayerBullet::PlayerBullet_Animation::Shoot },
+	{ Player_Animation::ShootEnd,PlayerBullet::PlayerBullet_Animation::ShootEnd },
+	{ Player_Animation::Step_Left,PlayerBullet::PlayerBullet_Animation::Step_Left },
+	{ Player_Animation::Half,PlayerBullet::PlayerBullet_Animation::Half },
+	{ Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn },
+	{ Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal },
+	{ Player_Animation::Stumble,PlayerBullet::PlayerBullet_Animation::Stumble }
 
 
 };
@@ -287,6 +287,13 @@ void Player::onDraw() const
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
 	}
 	, false);
+
+}
+
+void Player::onShadowDraw() const
+{
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 
 }
 
@@ -700,7 +707,7 @@ void Player::to_StepSuccessMode()
 	if (isJustStep_) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);
 	}
-
+	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
 	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first), 0.0f, 1.0f, false);
 

@@ -28,34 +28,34 @@ Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3
 void Enemy_Rival::onDraw() const
 {
 	BaseEnemy::onDraw();
-	world_->setLateDraw([this] {
-		switch (chooseAttackTargetMode_)
-		{
-		case Enemy_Rival::chooseAttackTargetMode::NotAttack:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "NotAttack");
-			break;
-		case Enemy_Rival::chooseAttackTargetMode::AttackMove:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "AttackMove");
-			break;
-		case Enemy_Rival::chooseAttackTargetMode::Attack:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Attack");
-			break;
-		case Enemy_Rival::chooseAttackTargetMode::Return:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Return");
-			break;
-		case Enemy_Rival::chooseAttackTargetMode::Step:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Step");
-			break;
-		case Enemy_Rival::chooseAttackTargetMode::StepMove:
-			DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "StepMove");
-			break;
-		default:
-			break;
-		}
-		DebugDraw::DebugDrawFormatString(350, 300, GetColor(255, 255, 255), "%d", rhythmTimeCount_);
-		
-		DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", centerPosition_.x, centerPosition_.y, centerPosition_.z);
-	});
+	//world_->setLateDraw([this] {
+	//	switch (chooseAttackTargetMode_)
+	//	{
+	//	case Enemy_Rival::chooseAttackTargetMode::NotAttack:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "NotAttack");
+	//		break;
+	//	case Enemy_Rival::chooseAttackTargetMode::AttackMove:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "AttackMove");
+	//		break;
+	//	case Enemy_Rival::chooseAttackTargetMode::Attack:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Attack");
+	//		break;
+	//	case Enemy_Rival::chooseAttackTargetMode::Return:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Return");
+	//		break;
+	//	case Enemy_Rival::chooseAttackTargetMode::Step:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Step");
+	//		break;
+	//	case Enemy_Rival::chooseAttackTargetMode::StepMove:
+	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "StepMove");
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//	DebugDraw::DebugDrawFormatString(350, 300, GetColor(255, 255, 255), "%d", rhythmTimeCount_);
+	//	
+	//	DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", centerPosition_.x, centerPosition_.y, centerPosition_.z);
+	//});
 }
 
 void Enemy_Rival::JustStep() {
@@ -138,6 +138,13 @@ void Enemy_Rival::JustStep() {
 	//}
 	//change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Move_Forward);
 
+}
+
+void Enemy_Rival::onShadowDraw() const
+{
+	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
 }
 
 
