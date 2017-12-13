@@ -127,6 +127,7 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::TUTORIALPOINT_EFFECT, defaultPath + "tutorialPoint.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT1_EFFECT, defaultPath + "stepStandby1.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT2_EFFECT, defaultPath + "stepStandby2.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::TURN_EFFECT, defaultPath + "turnEffect.efk");
 }
 
 void LoadingScene::LoadFont()

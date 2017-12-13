@@ -5,7 +5,6 @@
 #include"../Camera/Camera.h"
 #include"../Input/DualShock4Manager.h"
 #include"../Graphic/Model.h"
-#include"../Graphic/EffekseerManager.h"
 #include "../Math/Easing.h"
 #include "../Sound/Sound.h"
 
@@ -63,7 +62,6 @@ void TitleScene::update(float deltaTime)
 		{
 			cursor_=(cursor_+1)%cursorPoses.size();
 			Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
-			EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT);
 		}
 
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::F) ||
@@ -76,7 +74,6 @@ void TitleScene::update(float deltaTime)
 			else next_ = next;
 		}
 	}
-	EffekseerManager::GetInstance().Update();
 	temp = MathHelper::Sin(SinCount_);
 	//min(temp, 0.0f);
 	SinCount_ = (SinCount_ + 8) % 360;
@@ -125,7 +122,6 @@ void TitleScene::draw() const
 	
 	Camera::GetInstance().Update();
 
-	EffekseerManager::GetInstance().Draw();
 }
 
 void TitleScene::end()

@@ -11,6 +11,7 @@
 #include"../../Sound/MusicScoreManager.h"
 #include"Player_Animation.h"
 #include"../../Effect/EffekseerEffect/StepStanbyEffect.h"
+#include"../../Effect/EffekseerEffect/TurnEffect.h"
 
 class PlayerBullet;
 
@@ -290,4 +291,5 @@ protected:
 	const float ignoreSlope{ 0.1f };
 
 	StepStanbyEffect stepEffect_;
+	TurnEffect turnEffect_;
 };

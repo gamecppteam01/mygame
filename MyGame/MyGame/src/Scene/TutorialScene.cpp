@@ -53,11 +53,11 @@ void TutorialScene::start()
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
 
-	std::shared_ptr<TutorialPoint> point1 = std::make_shared<TutorialPoint>(Vector3{ -50.0f,15.0f,60.0f });
+	std::shared_ptr<TutorialPoint> point1 = std::make_shared<TutorialPoint>(Vector3{ -50.0f,3.0f,60.0f });
 	world_.addActor(ActorGroup::TUTORIAL, point1);
-	std::shared_ptr<TutorialPoint> point2 = std::make_shared<TutorialPoint>(Vector3{ 60.0f,15.0f,60.0f });
+	std::shared_ptr<TutorialPoint> point2 = std::make_shared<TutorialPoint>(Vector3{ 60.0f,3.0f,60.0f });
 	world_.addActor(ActorGroup::TUTORIAL, point2);
-	std::shared_ptr<TutorialPoint> point3 = std::make_shared<TutorialPoint>(Vector3{ 0.0f,15.0f,-50.0f });
+	std::shared_ptr<TutorialPoint> point3 = std::make_shared<TutorialPoint>(Vector3{ 0.0f,3.0f,-50.0f });
 	world_.addActor(ActorGroup::TUTORIAL, point3);
 
 	

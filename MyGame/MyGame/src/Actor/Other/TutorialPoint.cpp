@@ -7,7 +7,7 @@
 TutorialPoint::TutorialPoint(const Vector3 & position):
 	Actor(nullptr,"TutorialPoint",position,std::make_shared<BoundingSphere>(0.0f,5.0f))
 {
-	id_=EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::TUTORIALPOINT_EFFECT, position);
+	id_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::TUTORIALPOINT_EFFECT, position, Vector3::Zero, Vector3(3.0f, 3.0f, 3.0f));
 }
 
 TutorialPoint::~TutorialPoint()

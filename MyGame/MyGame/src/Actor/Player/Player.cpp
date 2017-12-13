@@ -67,7 +67,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_(), musicScore_(),stepEffect_(world)
+	gyroCheck_(), musicScore_(),stepEffect_(world),turnEffect_(world)
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -721,6 +721,9 @@ void Player::to_StepSuccessMode()
 		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
 		return;
 	}
+	if (nextStep_ == 3) {
+		turnEffect_.start();
+	}
 	if (nextStep_ == 4) {
 		change_State_and_Anim(Player_State::Shoot, stepAnimScoreList_.at(nextStep_).first);
 		return;
@@ -812,7 +815,7 @@ void Player::end_StepMode()
 void Player::end_StepSuccessMode()
 {
 	world_->getCamera()->ZoomOut();
-
+	turnEffect_.end();
 }
 
 void Player::end_AttackMode()
