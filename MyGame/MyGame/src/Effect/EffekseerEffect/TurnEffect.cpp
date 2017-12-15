@@ -1,5 +1,6 @@
 #include "TurnEffect.h"
 #include "../../Actor/Player/Player.h"
+#include "../../Sound/Sound.h"
 
 class Player;
 
@@ -14,6 +15,7 @@ void TurnEffect::start()
 	auto target = std::static_pointer_cast<Player>(world_->findActor("Player"));
 	effect_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::TURN_EFFECT);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::TURN_EFFECT, effect_, &target->position());
+	Sound::GetInstance().PlaySE(SE_ID::TURN_SE, 1, 1);
 }
 
 void TurnEffect::update(float deltaTime)

@@ -5,13 +5,14 @@
 class SpinEffect {
 public:
 	SpinEffect(IWorld * world);
-	~SpinEffect(){}
-	void initialize();
+	~SpinEffect() { world_ = nullptr; }
+	void start();
 	void update(float deltaTime);
 	void draw() const;
 	void end();
 
 private:
-	IWorld* world;
+	IWorld* world_;
 	Vector3 position_;
+	int effect_;
 };

@@ -110,7 +110,6 @@ void LoadingScene::LoadEffect()
 	defaultPath = "res/Effekseer/";
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SAMPLE_EFFECT, defaultPath+"laser.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::EFFECT_TEST, defaultPath + "testeffect.efk");
-	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_EFFECT, defaultPath + "Spin.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_SUCCESS_EFFECT, defaultPath + "stepSuccess.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_EFFECT, defaultPath + "pueffect/pointUp_blow.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::POINT_UP_BEGIN_EFFECT, defaultPath + "pueffect/pointUp_fadeIn.efk");
@@ -128,6 +127,9 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT1_EFFECT, defaultPath + "stepStandby1.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::STEP_STANDBY_INPUT2_EFFECT, defaultPath + "stepStandby2.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::TURN_EFFECT, defaultPath + "turnEffect.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::QUARTER_EFFECT, defaultPath + "quaterEffect.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HALF_EFFECT, defaultPath + "halfEffect.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_EFFECT, defaultPath + "Spin.efk");
 }
 
 void LoadingScene::LoadFont()
@@ -156,10 +158,13 @@ void LoadingScene::LoadSE()
 	Sound::GetInstance().LoadSE(defaultPath + "hit_se.mp3", SE_ID::HIT_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "count_se.mp3", SE_ID::COUNT_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "countFinish_se.mp3", SE_ID::COUNT_FINISH_SE);
-	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "stepSuccess_se.mp3", SE_ID::STEP_SUCCESS_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "cursol.mp3", SE_ID::CURSOL_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "systemse.mp3", SE_ID::SELECT_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "spin_se.wav", SE_ID::SPIN_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "turn_se.mp3", SE_ID::TURN_SE);
 	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
 }
 

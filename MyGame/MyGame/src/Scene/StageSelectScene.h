@@ -26,6 +26,10 @@ private:
 	int cursor_{ 0 };//カーソル位置
 
 	int prevCursor_{ 0 };
+
+	int sinCount_{ 0 };
+	float t;
+	float Ypos;
 private:
 	//遷移先リスト
 	const std::vector<std::pair<SceneType,int>> ButtonList{
