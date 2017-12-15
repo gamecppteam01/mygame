@@ -45,6 +45,15 @@ void TutorialPlayer::textEnd(int lessonNum)
 
 bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend)
 {
+	switch (tutorial_->getTutorialNum())
+	{
+	case 1: {
+		if (state == Player_State::Step)return false;
+		break;
+	}
+	default:
+		break;
+	}
 	if (state == Player_State::Stumble)return false;
 	return Player::change_State_and_Anim(state, animID, animFrame, animSpeed, isLoop, blend);
 }
