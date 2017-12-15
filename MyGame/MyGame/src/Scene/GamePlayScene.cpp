@@ -73,13 +73,14 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
-	player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
-	player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
-	player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
-
-	player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
-	player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
-	player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
+	
+	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
+	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
+	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
+	//
+	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
+	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
+	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 
 	Vector3 pos{ -80.0f,10.0f,-40.0f };
 	for (int i = 0; i < std::get<3>(stageList[stageNum_-1]); i++) {

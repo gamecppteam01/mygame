@@ -138,6 +138,8 @@ void Player::addVelocity(const Vector3 & velocity)
 
 void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
+	if (!isCanStumble()&&!isAttack())return;
+
 	bound_ += velocity;
 
 	//çUåÇèÛë‘Ç»ÇÁÇ–ÇÈÇ‹Ç»Ç¢
@@ -450,6 +452,7 @@ void Player::idle_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
+			
 			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -881,10 +884,10 @@ bool Player::isChangeStep() const
 		InputChecker::GetInstance().GetPovAngle() != -1
 	};
 }
-bool Player::isCanStamble() const
+bool Player::isCanStumble() const
 {
 	if (state_ == Player_State::Idle || state_ == Player_State::Move || state_ == Player_State::Step)return true;
-	if (state_ == Player_State::Step_Success && (nextStep_ != 2 && nextStep_ != 4))return true;
+	//if (state_ == Player_State::Step_Success && (nextStep_ != 2 && nextStep_ != 4))return true;
 	return false;
 }
 

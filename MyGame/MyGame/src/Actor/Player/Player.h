@@ -193,7 +193,7 @@ protected:
 	bool isChangeStep() const;
 
 	//‚æ‚ë‚¯‚ª”­¶‰Â”\‚Èó‘Ô‚©
-	bool isCanStamble()const;
+	bool isCanStumble()const;
 
 	//UŒ‚ó‘Ô‚©‚Ç‚¤‚©
 	bool isAttack();
