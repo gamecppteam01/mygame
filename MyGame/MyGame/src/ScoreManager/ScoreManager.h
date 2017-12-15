@@ -43,6 +43,8 @@ public:
 	float getRata(const int number) const;
 	//list<ScoreData>Œ^‚ÌƒŠƒXƒg‚ğ“n‚·
 	void getScoreDataList(std::list<ScoreData>& list);
+	//
+	void getScoreDataMap(std::map<int, ScoreData>& map);
 	//1ˆÊ‚©‚ç‡‚É“ü‚Á‚½ScoreDataŒ^‚ÌƒŠƒXƒg‚ğ•Ô‚·
 	void getRankingList(std::list<ScoreData>& list);
 

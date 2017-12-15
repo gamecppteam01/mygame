@@ -154,7 +154,7 @@ bool StepUI::is_StepSuccess() const {
 }
 
 void StepUI::player_MissStep(){
-	if (!pause) {
+	if (!pause_) {
 		switch (miss_state_){
 		case Miss_State::Start: {
 			ui_Play_ = true;

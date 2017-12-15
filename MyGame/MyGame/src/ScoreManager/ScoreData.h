@@ -11,6 +11,8 @@ struct ScoreData {
 		playerNumber_ = playerNumber;
 		scoreRate_ = rate;
 		rank_ = rank;
+		time_ = 0.0f;
+		notice_ = false;
 		target_ = target;
 	}
 	//スコア倍率
@@ -21,6 +23,10 @@ struct ScoreData {
 	int playerNumber_;
 	//ランク
 	int rank_;
+	//時間
+	float time_;
+	//注目フラグ
+	bool notice_;
 	//対象
 	std::weak_ptr<Actor> target_;
 };

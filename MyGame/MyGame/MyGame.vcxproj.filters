@@ -884,5 +884,8 @@
     <ClInclude Include="src\Effect\EffekseerEffect\TurnEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Light\LightHandle_Data.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

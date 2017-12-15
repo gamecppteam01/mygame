@@ -133,6 +133,10 @@ void ScoreManager::getScoreDataList(std::list<ScoreData>& list) {
 	}
 }
 
+void ScoreManager::getScoreDataMap(std::map<int, ScoreData>& map){
+	map = m_ScoreDataList;
+}
+
 //1ˆÊ‚©‚ç‡‚É“ü‚Á‚½ScoreDataŒ^‚ÌƒŠƒXƒg‚ğ•Ô‚·
 void ScoreManager::getRankingList(std::list<ScoreData>& list) {
 	int maxScore = 0;

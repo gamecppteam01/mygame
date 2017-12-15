@@ -372,6 +372,7 @@
     <ClInclude Include="src\Judge\JudgeFunction.h" />
     <ClInclude Include="src\Judge\StepTimer.h" />
     <ClInclude Include="src\Light\LightHandle.h" />
+    <ClInclude Include="src\Light\LightHandle_Data.h" />
     <ClInclude Include="src\Light\StandardLight.h" />
     <ClInclude Include="src\Light\LightType.h" />
     <ClInclude Include="src\Math\Collision\Collision.h" />

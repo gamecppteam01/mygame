@@ -62,6 +62,9 @@ void GamePlayScene::start() {
 	world_.setShadowMap(true, MODEL_ID::STAGE_MODEL);
 	pause_.initialize();
 
+	//ライトの設定
+	settingLight();
+
 	state_ = GamePlayState::Start;
 
 	std::shared_ptr<Field> field = std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
@@ -111,7 +114,7 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f),lightHandle_));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
 
@@ -128,8 +131,6 @@ void GamePlayScene::start() {
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
 
-	//ライトの設定
-	settingLight();
 	//エフェクトの設定
 	playerEffectDraw_.Initialize();
 	playerEffectDraw_.setPlayerEffectDraw(player.get());
@@ -334,7 +335,7 @@ void GamePlayScene::settingLight() {
 	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0.0f, 0.2f, 0.2f, 0.2f));
+	standardLight_.setGlobalAmbientLight(Color(0.5f, 0.5f, 0.5f, 0.5f));
 }
 
 //UI設定関数
