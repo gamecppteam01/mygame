@@ -89,9 +89,9 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	float percent = currentMeasure_/(world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
 	Color c{ 0,130,200,255 };
 	if (percent >= 75.0f)c=Color(200, 130, 0,255);//4è¨êﬂñàÇ…îªíË
-	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE));
+	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE),-90.0f);
 
-	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME));
+	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME),-90.0f);
 		
 	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
 	//DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);

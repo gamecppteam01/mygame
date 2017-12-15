@@ -32,6 +32,7 @@ TutorialScene::TutorialScene()
 
 TutorialScene::~TutorialScene()
 {
+	player_.reset();
 }
 
 void TutorialScene::start()
@@ -48,8 +49,8 @@ void TutorialScene::start()
 	std::shared_ptr<OverLookingCamera> camera = std::make_shared<OverLookingCamera>(&world_, "Camera", Vector3::Zero);
 	world_.addCamera(camera);
 	int playerNumber = 1;
-	std::shared_ptr<TutorialPlayer> player = std::make_shared<TutorialPlayer>(&world_, "Player", Vector3::Up*15.0f, this);
-	world_.addActor(ActorGroup::PLAYER, player);
+	player_ = std::make_shared<TutorialPlayer>(&world_, "Player", Vector3::Up*15.0f, this);
+	world_.addActor(ActorGroup::PLAYER, player_);
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
 
@@ -60,7 +61,7 @@ void TutorialScene::start()
 	std::shared_ptr<TutorialPoint> point3 = std::make_shared<TutorialPoint>(Vector3{ 0.0f,3.0f,-50.0f });
 	world_.addActor(ActorGroup::TUTORIAL, point3);
 
-	
+
 
 	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
 	changeState(State::TextDraw);
@@ -93,6 +94,7 @@ void TutorialScene::end()
 	world_.end();
 	EffekseerManager::GetInstance().Stop();
 	text_.End();
+	player_ = nullptr;
 }
 
 void TutorialScene::changeState(State state) {
@@ -103,7 +105,8 @@ void TutorialScene::changeState(State state) {
 	switch (state_)
 	{
 	case TextDraw:
-		world_.getCanChangedTempoManager().startMusic();//âπÇçƒê∂
+		world_.getCanChangedTempoManager().restartMusic();//âπÇçƒê∂
+		player_->textEnd(tutorialNumber_);
 		break;
 	case Play:
 		break;
@@ -132,11 +135,12 @@ void TutorialScene::changeState(State state) {
 			next_ = SceneType::SCENE_TITLE;
 			return;
 		}
-		text_.Init("Lesson" + std::to_string(tutorialNumber_)+".txt", 51);
+		text_.Init("Lesson" + std::to_string(tutorialNumber_) + ".txt", 51);
 
 		world_.getCanChangedTempoManager().pauseMusic();//âπÇçƒê∂
 		break;
 	case Play:
+
 		break;
 	case Pause:
 		world_.pause();
@@ -184,7 +188,7 @@ void TutorialScene::update_Pause(float deltaTime)
 		isEnd_ = true;
 	}
 	else if (p == 2) {
-		if(state==GamePlayState::Reload)changeState(Reload);
+		if (state == GamePlayState::Reload)changeState(Reload);
 		else changeState(Play);
 	}
 
@@ -197,7 +201,7 @@ int TutorialScene::getTutorialNum() const
 
 void TutorialScene::nextLesson()
 {
-	if(state_==Play)
+	if (state_ == Play)
 		changeState(TextDraw);
 
 }

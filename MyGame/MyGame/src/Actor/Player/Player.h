@@ -1,3 +1,4 @@
+
 #pragma once
 #include"../Actor.h"
 #include"../../Graphic/AnimationDx.h"
@@ -11,6 +12,7 @@
 #include"../../Sound/MusicScoreManager.h"
 #include"Player_Animation.h"
 #include"../../Effect/EffekseerEffect/StepStanbyEffect.h"
+#include"CheckStepTask.h"
 #include"../../Effect/EffekseerEffect/TurnEffect.h"
 
 class PlayerBullet;
@@ -20,24 +22,29 @@ public:
 	enum class Player_State {
 		Idle,//待機
 		Move,//移動
-		//Jump,//ジャンプ
-		Step,//技
-		Step_Success,//技成功
-		Stumble,//よろけモード
-		Attack,//攻撃
-		Shoot,//発射
-		ShootEnd,//発射終了
-		KnockBack,//被弾
-		Down,//ダウン時
-		Reversal,//起き上がり
-		Turn,//回転
-		State_Count//ステート数を数えるための列挙値(Countを状態として利用しないこと)
+			 //Jump,//ジャンプ
+			 Step,//技
+			 Step_Success,//技成功
+			 Stumble,//よろけモード
+			 Attack,//攻撃
+			 Shoot,//発射
+			 ShootEnd,//発射終了
+			 KnockBack,//被弾
+			 Down,//ダウン時
+			 Reversal,//起き上がり
+			 Turn,//回転
+			 State_Count//ステート数を数えるための列挙値(Countを状態として利用しないこと)
 	};
 public:
-	Player(IWorld* world,const std::string& name,const Vector3& position,int playerNumber);
-	virtual ~Player(){}
-//外部公開関数
+	Player(IWorld* world, const std::string& name, const Vector3& position, int playerNumber);
+	virtual ~Player() {}
+	//外部公開関数
 public:
+	//入力制限を追加する
+	void setCheckStepTask(std::list<Player_Animation> checkstep);
+	//解除条件を追加する
+	void setIncrementStepTask(std::list<Player_Animation> checkstep);
+
 	void addVelocity(const Vector3& velocity);
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 	//選手番号を取得する
@@ -72,24 +79,24 @@ protected:
 
 	virtual void onCollideResult()override;
 
-//通知処理関連
+	//通知処理関連
 protected:
 	//ステップ通知時の処理
 	virtual void JustStep()override;
 	//エフェクト生成通知の処理
 	virtual void CreateJustEffect()override;
-	
+
 	// フィールドとの衝突判定(足場と当たった場合はtrueを返す)
 	virtual bool field(Vector3& result = Vector3()) override;
 
-//プレイヤーの移動関係
+	//プレイヤーの移動関係
 protected:
 	//重力及びジャンプを更新する
 	void gravityUpdate(float deltaTime);
 	//フィールドとの当たり判定を行い、位置を補正する
 	void correctPosition();
 
-//状態関係
+	//状態関係
 protected:
 	//状態変更とアニメーション変更を同時に行う
 	virtual bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
@@ -180,19 +187,19 @@ protected:
 	void stepAttack(float deltaTime);
 
 	//アニメーションの変更
-	void changeAnimation(Player_Animation animID, float animFrame = 0.0f,float animeSpeed=1.0f,bool isLoop=true,float blend=1.0f);
+	void changeAnimation(Player_Animation animID, float animFrame = 0.0f, float animeSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
 
 	//ステップに変更する状態か
 	bool isChangeStep() const;
 
 	//よろけが発生可能な状態か
 	bool isCanStamble()const;
-	
+
 	//攻撃状態かどうか
 	bool isAttack();
 	//姿勢チェックをするかどうか
 	bool isRequiredCheckPosture()const;
-//弾(女)関係
+	//弾(女)関係
 protected:
 	//女がプレイヤーに追従するかどうか
 	bool isCanTracking() const;
@@ -264,7 +271,7 @@ protected:
 	//回転力
 	float turnPower_;
 	//エフェクトのサイズ
-	std::array<float,3> effectSize_{ 0.0f,0.0f,0.0f };
+	std::array<float, 3> effectSize_{ 0.0f,0.0f,0.0f };
 	//ジャイロの回転チェッククラス
 	GyroRotateChecker gyroCheck_;
 	//譜面管理クラス
@@ -277,6 +284,12 @@ protected:
 	std::list<SE_ID> restartSEList_;
 
 	int effectID_{ -1 };
+
+	StepStanbyEffect stepEffect_;
+
+	CheckStepTask checkstep_;
+	TurnEffect turnEffect_;
+
 protected:
 	const Vector3 defaultPosition_;
 
@@ -289,7 +302,4 @@ protected:
 
 	//無視するコントローラの傾き範囲
 	const float ignoreSlope{ 0.1f };
-
-	StepStanbyEffect stepEffect_;
-	TurnEffect turnEffect_;
 };

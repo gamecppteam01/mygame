@@ -5,7 +5,7 @@
 #include"../Math/Vector3.h"
 #include"../Math/Matrix.h"
 
-static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigned char R, unsigned char G, unsigned char B, unsigned char A,float size, float percent, const int handle= DX_NONE_GRAPH) {
+static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigned char R, unsigned char G, unsigned char B, unsigned char A,float size, float percent, const int handle= DX_NONE_GRAPH,float startangle=0.0f) {
 	//100%‚ğ0`4‚Ì”ÍˆÍ‚É•ÏŠ·‚·‚é
 	float useparam = fabs(percent) / 25.0f;
 
@@ -24,6 +24,7 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 		VERTEX_3D vec[3];
 
 		Vector3 rotVector = Vector3::Cross(upVector, Vector3::Left)*size;
+		rotVector = rotVector*Matrix::CreateFromAxisAngle(upVector, startangle);
 		//90‹–ˆ‚Ì‰ñ“]s—ñ‚ğì¬
 		Matrix rotMatrix = Matrix::CreateFromAxisAngle(upVector, ang*90.0f + 90.0f*i);
 		//ˆÊ’u‚ğw’è
@@ -65,13 +66,13 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 		if (useparam <= 0.0f)break;
 	}
 }
-void DrawSprite3D(const Vector3& position,float size,int handle) {
+void DrawSprite3D(const Vector3& position,float size,int handle, float startangle = 0.0f) {
 	//ƒQ[ƒW˜g‚Ì•`‰æî•ñ‚ğ“ü—Í
 	VERTEX_3D vec[4];
-	vec[0].pos = position + Vector3{ -size,0.0f,size };
-	vec[1].pos = position + Vector3{ size,0.0f,size };
-	vec[2].pos = position + Vector3{ -size,0.0f,-size };
-	vec[3].pos = position + Vector3{ size,0.0f,-size };
+	vec[0].pos = position + Vector3{ -size,0.0f,size }*Matrix::CreateRotationY(startangle);
+	vec[1].pos = position + Vector3{ size,0.0f,size }*Matrix::CreateRotationY(startangle);
+	vec[2].pos = position + Vector3{ -size,0.0f,-size }*Matrix::CreateRotationY(startangle);
+	vec[3].pos = position + Vector3{ size,0.0f,-size }*Matrix::CreateRotationY(startangle);
 	vec[0].r = 255;
 	vec[1].r = 255;
 	vec[2].r = 255;

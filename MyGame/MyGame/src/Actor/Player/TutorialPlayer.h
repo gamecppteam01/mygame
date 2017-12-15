@@ -11,9 +11,12 @@ public:
 	void onUpdate(float deltaTime)override;
 
 	void hitPoint();
+	//テキスト描画が終了したら呼ばれる
+	void textEnd(int lessonNum);
 private:
 	virtual bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
 
+	virtual void idle_Update(float deltaTime)override;
 	virtual void to_MoveMode()override;
 	virtual void end_StepSuccessMode()override;
 private:

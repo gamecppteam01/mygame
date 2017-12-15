@@ -62,12 +62,12 @@ static const std::map<Player_Animation, PlayerBullet::PlayerBullet_Animation> an
 
 };
 
-Player::Player(IWorld* world, const std::string& name, const Vector3& position,int playerNumber) :
+Player::Player(IWorld* world, const std::string& name, const Vector3& position, int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
-	Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f),velocity_(Vector3::Zero), gravity_(0.0f),animation_(),
+		Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f), velocity_(Vector3::Zero), gravity_(0.0f), animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_(), musicScore_(),stepEffect_(world),turnEffect_(world)
+	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world)
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -120,6 +120,17 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position,i
 
 }
 
+void Player::setCheckStepTask(std::list<Player_Animation> checkstep)
+{
+	checkstep_.setInputLimit(checkstep);
+}
+
+void Player::setIncrementStepTask(std::list<Player_Animation> checkstep)
+{
+	checkstep_.setInputRelease(checkstep);
+
+}
+
 void Player::addVelocity(const Vector3 & velocity)
 {
 	velocity_ += velocity;
@@ -131,10 +142,10 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 
 	//攻撃状態ならひるまない
 	if (isAttack()) {
-		if(state_==Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward);
+		if (state_ == Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward);
 		return;
 	}
-	stumbleDirection_= mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
+	stumbleDirection_ = mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
 	//stumbleDirection_ = -velocity;
 	stumbleResurrectTime_ = 0.5f;
 	change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);
@@ -160,7 +171,7 @@ void Player::initialize()
 
 	turnPower_ = 1.0f;
 	bullet_->initialize();
-
+	checkstep_.initialize();
 	//女の移動と回転の操作権を得る
 	bulletPosition_ = bullet_->getPositionPtr();
 	bulletRotation_ = bullet_->getRotationPtr();
@@ -211,7 +222,7 @@ void Player::onUpdate(float deltaTime)
 	//今フレームの更新を適用
 	centerPosition_ += velocity_;
 
-	if (state_ != Player_State::Shoot&&state_!=Player_State::Attack) {
+	if (state_ != Player_State::Shoot&&state_ != Player_State::Attack) {
 		position_ = bulletDistance*rotation_ + centerPosition_;
 		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
 	}
@@ -219,7 +230,7 @@ void Player::onUpdate(float deltaTime)
 	correctPosition();
 
 	//女を更新する
-	if(isCanTracking())bulletUpdate(deltaTime);
+	if (isCanTracking())bulletUpdate(deltaTime);
 
 	//float tempo = std::abs(world_->getCanChangedTempoManager().getTempoCount() - 0.5f);
 	//float pow = 2.0f;
@@ -228,7 +239,7 @@ void Player::onUpdate(float deltaTime)
 
 	float tempo = world_->getCanChangedTempoManager().getTempoCount();
 	float beat = (world_->getCanChangedTempoManager().getBeatCount() % 3);
-	effectSize_[0] = 3.0f - (tempo+beat);
+	effectSize_[0] = 3.0f - (tempo + beat);
 	effectSize_[0] = effectSize_[0] / 3.f;
 
 	musicScore_.Update(deltaTime);
@@ -357,7 +368,7 @@ bool Player::field(Vector3 & result)
 	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
 	{
 		//本体と弾の中心を返す
-		result = (hit1+hit2)*0.5f + ((body_->points(0)));
+		result = (hit1 + hit2)*0.5f + ((body_->points(0)));
 
 		return true;
 	}
@@ -387,9 +398,10 @@ void Player::correctPosition()
 
 }
 
-bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame,float animSpeed,bool isLoop, float blend)
+bool Player::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend)
 {
 	if (state_ == state)return false;
+	if (!checkstep_(animID))return false;
 
 	changeAnimation(animID, animFrame, animSpeed, isLoop, blend);
 	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop, blend);
@@ -443,19 +455,6 @@ void Player::idle_Update(float deltaTime)
 		}
 		return;
 	}
-	//else if (
-	//	(
-	//	InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::A) ||
-	//	InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::B) ||
-	//	InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::X) ||
-	//	InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Y)
-	//	)||
-	//	InputChecker::GetInstance().GetPovAngle() != -1
-	//	) {
-	//	if (!EffekseerManager::GetInstance().isPlayEffect3D(effectID_)) {
-	//		effectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_STANDBY_INPUT1_EFFECT, centerPosition_);
-	//	}
-	//}
 	upVelocity_ -= upVelocity_*0.5f;
 
 	gravityUpdate(deltaTime);
@@ -477,7 +476,7 @@ void Player::move_Update(float deltaTime)
 	framevelocity.z += move.y*movePower;
 
 	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot,0.0f,1.0f,false))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 
@@ -549,7 +548,7 @@ void Player::stepSuccess_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true))playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
 }
@@ -586,7 +585,7 @@ void Player::shoot_Update(float deltaTime)
 	//回転を更新
 	//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -2.0f*turnPower_);
 
-	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1-(MathHelper::Abs(180.f - shootAngle_) / 180.0f))*spinPower;
+	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f))*spinPower;
 	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
 	//回転を更新
 	//*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -2.0f*turnPower_);
@@ -601,7 +600,7 @@ void Player::shoot_Update(float deltaTime)
 
 void Player::shootend_Update(float deltaTime)
 {
-	if(animation_.IsAnimEnd())
+	if (animation_.IsAnimEnd())
 		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 }
 
@@ -614,7 +613,7 @@ void Player::down_Update(float deltaTime)
 	timeCount_ += deltaTime;
 
 	if (timeCount_ >= downTime_) {
-		if (change_State_and_Anim(Player_State::Reversal, Player_Animation::Reversal,0.0f,1.0f,false))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Reversal, Player_Animation::Reversal, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
 	}
 }
 
@@ -633,7 +632,7 @@ void Player::stumble_Update(float deltaTime)
 	if (timeCount_ >= fallTime) {
 		//転倒処理を書く
 		downTime_ = downTime;//ダウン時間設定
-		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down,0.f,1.f,false))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.f, 1.f, false))playerUpdateFunc_[state_](deltaTime);
 
 	}
 
@@ -643,7 +642,7 @@ void Player::stumble_Update(float deltaTime)
 	Vector2 move = DualShock4Manager::GetInstance().GetAngle();
 	//Vector2 move = getSticktoMove();
 	//よろけ修正方向を向いたら
-	if (Vector3::Angle(Vector3(stumbleDirection_.x,0.0f,stumbleDirection_.y),Vector3(move.x,0.0f,move.y))<=20.0f&&move.Length()>=0.2f) {
+	if (Vector3::Angle(Vector3(stumbleDirection_.x, 0.0f, stumbleDirection_.y), Vector3(move.x, 0.0f, move.y)) <= 20.0f&&move.Length() >= 0.2f) {
 		stumbleRegistTimer_ += deltaTime;
 		if (stumbleRegistTimer_ >= stumbleResurrectTime_) {
 			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
@@ -669,7 +668,7 @@ void Player::reversal_Update(float deltaTime)
 	timeCount_ -= deltaTime;
 
 	if (timeCount_ <= 0.0f) {
-		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward,0.0f,1.0f,true))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true))playerUpdateFunc_[state_](deltaTime);
 	}
 
 }
@@ -688,7 +687,7 @@ void Player::to_StepMode()
 	//EffekseerManager::GetInstance().StopEffect3D(effectID_);
 
 	//effectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_STANDBY_INPUT2_EFFECT, centerPosition_);
-	
+
 	//ジャスト判定タイミングならスコア加算フラグを有効にする
 	isJustStep_ = isJustTiming();
 
@@ -701,10 +700,14 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
-	world_->getCamera()->ZoomIn(0,0);
+	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
+		change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
+		return;
+	}
+	world_->getCamera()->ZoomIn(0, 0);
 
-	int key=EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
-	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT,key, &position_);
+	int key = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
+	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT, key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	if (isJustStep_) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);
@@ -760,7 +763,7 @@ void Player::to_AttackMode()
 
 void Player::to_ShootMode()
 {
-	world_->getCamera()->ZoomIn(0,0);
+	world_->getCamera()->ZoomIn(0, 0);
 
 	shootAngle_ = 0.0f;
 	Vector3 shootVector = *bulletPosition_ - position_;
@@ -814,7 +817,9 @@ void Player::end_StepMode()
 
 void Player::end_StepSuccessMode()
 {
+	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
 	world_->getCamera()->ZoomOut();
+
 	turnEffect_.end();
 }
 
@@ -859,19 +864,19 @@ void Player::stepAttack(float deltaTime)
 	centerPosition_ += (attackTarget_->position() - centerPosition_).Normalize() *2.f;
 }
 
-void Player::changeAnimation(Player_Animation animID,float animFrame, float animSpeed,bool isLoop, float blend) {
-	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop,blend);
+void Player::changeAnimation(Player_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend) {
+	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop, blend);
 }
 
 bool Player::isChangeStep() const
 {
 	return  {
 		(
-		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::A) ||
-		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::B) ||
-		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::X) ||
-		InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Y)
-		)
+			InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::A) ||
+			InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::B) ||
+			InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::X) ||
+			InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Y)
+			)
 		&&
 		InputChecker::GetInstance().GetPovAngle() != -1
 	};
@@ -885,25 +890,25 @@ bool Player::isCanStamble() const
 
 bool Player::isAttack()
 {
-	return state_==Player_State::Attack || state_==Player_State::Shoot;
+	return state_ == Player_State::Attack || state_ == Player_State::Shoot;
 }
 
 bool Player::isRequiredCheckPosture() const
 {
-	return state_==Player_State::Idle||state_==Player_State::Move;
+	return state_ == Player_State::Idle || state_ == Player_State::Move;
 }
 
 bool Player::isCanTracking() const
 {
 	//発射時以外は追従する
-	return state_!=Player_State::Shoot;
+	return state_ != Player_State::Shoot;
 }
 
 void Player::bulletUpdate(float deltaTime)
 {
 	*bulletPosition_ = centerPosition_ + (-bulletDistance*rotation_);
-	
-	*bulletRotation_ = rotation_*Matrix::CreateFromAxisAngle(rotation_.Up(),180.0f);
+
+	*bulletRotation_ = rotation_*Matrix::CreateFromAxisAngle(rotation_.Up(), 180.0f);
 	//*bulletRotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
 
 }
@@ -911,7 +916,7 @@ void Player::bulletUpdate(float deltaTime)
 void Player::createCircleEffect()
 {
 	std::shared_ptr<CircleEffect> circleEffect = std::make_shared<CircleEffect>(40.0f, justEffectStartTime);
-	world_->addActor(ActorGroup::EFFECT, std::make_shared<TrackingEffectActor>(world_,"CircleEffect", centerPosition_, circleEffect,shared_from_this()));
+	world_->addActor(ActorGroup::EFFECT, std::make_shared<TrackingEffectActor>(world_, "CircleEffect", centerPosition_, circleEffect, shared_from_this()));
 }
 
 Vector2 Player::getSticktoMove()
@@ -924,7 +929,7 @@ Vector2 Player::getSticktoMove()
 
 Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 {
-	
+
 	Vector2 result = Vector2::Zero;
 
 	Vector2 base = Vector2::One;
@@ -936,7 +941,7 @@ Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 	float cross = Vector2::Cross(base, target);
 	float dot = Vector2::Dot(base, target);
 	dot = MathHelper::ACos(dot);
-	
+
 
 	//右が+
 	if (cross >= 0) {
@@ -960,5 +965,5 @@ Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 bool Player::isJustTiming() const
 {
 	//return world_->getCanChangedTempoManager().getBeatCount() % 3 == 0;
-	return (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount()-1;
+	return (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1;
 }

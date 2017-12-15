@@ -5,6 +5,7 @@
 #include"GamePlayState.h"
 #include"../Graphic/TextScreen.h"
 
+class TutorialPlayer;
 class TutorialScene :public Scene {
 private:
 	enum State {
@@ -42,7 +43,7 @@ private:
 	PauseScreen pause_;
 	TextScreen text_;
 	State state_;
-
+	std::shared_ptr<TutorialPlayer> player_;
 	std::map<State, std::function<void(float)>> updateFuncMap_;
 
 };
