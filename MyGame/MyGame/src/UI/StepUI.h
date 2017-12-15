@@ -10,7 +10,11 @@ class StepUI : public UI {
 		Staging,
 		Before_End,
 		End,
-
+	};
+	enum class Miss_State {
+		Start,
+		Staging,
+		End,
 	};
 public:
 	StepUI(IWorld* world);
@@ -20,6 +24,7 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() const override;
 	bool is_StepSuccess() const;
+	void player_MissStep();
 
 private:
 	IWorld* world_;
@@ -45,10 +50,9 @@ private:
 	float count{ 0.0f };
 	//汎用第二カウント
 	float another_count{ 0.0f };
-	//最大カウント
-	float max_count;
 	//UIのステート
 	UI_State state_;
+	Miss_State miss_state_;
 	//UIが表示されるか？
 	bool ui_Play_{ false };
 	//時間
