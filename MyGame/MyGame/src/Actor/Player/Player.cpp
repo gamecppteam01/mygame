@@ -138,13 +138,16 @@ void Player::addVelocity(const Vector3 & velocity)
 
 void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
-	if (!isCanStumble()&&!isAttack())return;
+	if (!isCanStumble()&&!isAttack()&&state_!=Player_State::Down&&state_ != Player_State::Reversal)return;
 
 	bound_ += velocity;
 
 	//çUåÇèÛë‘Ç»ÇÁÇ–ÇÈÇ‹Ç»Ç¢
 	if (isAttack()) {
 		if (state_ == Player_State::Attack)change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward);
+		return;
+	}
+	else if (state_ == Player_State::Down|| state_ == Player_State::Reversal) {
 		return;
 	}
 	stumbleDirection_ = mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
@@ -886,7 +889,7 @@ bool Player::isChangeStep() const
 }
 bool Player::isCanStumble() const
 {
-	if (state_ == Player_State::Idle || state_ == Player_State::Move || state_ == Player_State::Step)return true;
+	if (state_ == Player_State::Idle || state_ == Player_State::Move || state_ == Player_State::Step||state_==Player_State::Stumble)return true;
 	//if (state_ == Player_State::Step_Success && (nextStep_ != 2 && nextStep_ != 4))return true;
 	return false;
 }
