@@ -9,11 +9,13 @@ CheckStepTask::CheckStepTask():currentCheckKey_(0)
 CheckStepTask::~CheckStepTask()
 {
 	lockList_.clear();
+	releaseList_.clear();
 }
 
 void CheckStepTask::initialize()
 {
 	lockList_.clear();
+	releaseList_.clear();
 	currentCheckKey_ = 0;
 }
 
