@@ -19,7 +19,7 @@ public:
 	}
 	//楽曲を設定する
 	void setMusic(BGM_ID soundId,float bpm,int beat=3,int musicCount=4,int volume=255) {
-
+		pause_ = true;
 		//サウンドリソースの読み込み
 		soundHandle_=Sound::GetInstance().GetHandle(soundId);
 		ChangeVolumeSoundMem(volume, soundHandle_);
@@ -114,6 +114,7 @@ public:
 	}
 	//残り再生時間
 	int getRemainTime()const {
+		if (isEnd())return 0;
 		return (soundSize_ - sample_) / sps_;
 	}
 	//1拍ごとの時間を返す

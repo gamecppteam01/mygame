@@ -85,6 +85,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "step_miss.png", SPRITE_ID::STEP_MISS);
 	Sprite::GetInstance().Load(defaultPath + "back_UI.png", SPRITE_ID::BACK_UI);
 	Sprite::GetInstance().Load(defaultPath + "selectback.png", SPRITE_ID::SELECT_BACK);
+	Sprite::GetInstance().Load(defaultPath + "face.png", SPRITE_ID::FACE_SPRITE);
+	
 }
 
 void LoadingScene::LoadModel()
@@ -119,6 +121,7 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::COL_EFFECT, defaultPath + "collision.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_START_EFFECT, defaultPath + "charge_Start.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::CHARGE_EFFECT, defaultPath + "charge.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::FIRE_EFFECT, defaultPath + "fire.efk");
 	//仮エフェクト
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::RING_EFFECT, defaultPath + "ringeffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HIT_EFFECT, defaultPath + "hiteffect.efk");

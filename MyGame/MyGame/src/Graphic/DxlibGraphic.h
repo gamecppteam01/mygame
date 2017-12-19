@@ -66,29 +66,29 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 		if (useparam <= 0.0f)break;
 	}
 }
-void DrawSprite3D(const Vector3& position,float size,int handle, float startangle = 0.0f) {
+void DrawSprite3D(const Vector3& position,float size,int handle,int r=255,int g=255,int b=255,int a=255, float startangle = 0.0f) {
 	//ƒQ[ƒW˜g‚Ì•`‰æî•ñ‚ð“ü—Í
 	VERTEX_3D vec[4];
 	vec[0].pos = position + Vector3{ -size,0.0f,size }*Matrix::CreateRotationY(startangle);
 	vec[1].pos = position + Vector3{ size,0.0f,size }*Matrix::CreateRotationY(startangle);
 	vec[2].pos = position + Vector3{ -size,0.0f,-size }*Matrix::CreateRotationY(startangle);
 	vec[3].pos = position + Vector3{ size,0.0f,-size }*Matrix::CreateRotationY(startangle);
-	vec[0].r = 255;
-	vec[1].r = 255;
-	vec[2].r = 255;
-	vec[3].r = 255;
-	vec[0].g = 255;
-	vec[1].g = 255;
-	vec[2].g = 255;
-	vec[3].g = 255;
-	vec[0].b = 255;
-	vec[1].b = 255;
-	vec[2].b = 255;
-	vec[3].b = 255;
-	vec[0].a = 255;
-	vec[1].a = 255;
-	vec[2].a = 255;
-	vec[3].a = 255;
+	vec[0].r = r;
+	vec[1].r = r;
+	vec[2].r = r;
+	vec[3].r = r;
+	vec[0].g = g;
+	vec[1].g = g;
+	vec[2].g = g;
+	vec[3].g = g;
+	vec[0].b = b;
+	vec[1].b = b;
+	vec[2].b = b;
+	vec[3].b = b;
+	vec[0].a = a;
+	vec[1].a = a;
+	vec[2].a = a;
+	vec[3].a = a;
 	vec[0].u = 0.0f;
 	vec[0].v = 0.0f;
 	vec[1].u = 1.0f;

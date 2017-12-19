@@ -37,6 +37,7 @@ public:
 	float GetCharacterScoreRate(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
+	ScoreData getScoreData(int num)const;
 	//一位の選手のスコアデータを返す
 	ScoreData getFirst();
 	//指定の倍率を返す

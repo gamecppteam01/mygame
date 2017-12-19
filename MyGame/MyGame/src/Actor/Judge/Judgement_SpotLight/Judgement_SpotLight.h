@@ -38,6 +38,9 @@ public:
 	virtual bool Judgement(ActorPtr& target) override;
 	virtual bool Judgement(const Vector3& target) override;
 
+	//ƒXƒRƒA‚Ìæ“¾
+	bool getIsNotice(int num)const;
+
 private:
 	void SetUp(float deltaTime);
 	void ReadyUpdate(float deltaTime);

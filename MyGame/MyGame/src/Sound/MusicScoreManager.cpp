@@ -4,9 +4,11 @@
 #include"../Graphic/DxlibGraphic.h"
 #include"../Math/Color.h"
 #include"../Sound/TempoManager.h"
+#include"../Math/Easing.h"
+#include"../Graphic/EffekseerManager.h"
 
 MusicScoreManager::MusicScoreManager(IWorld* world):
-	world_(world), currentBeat_(0.0f), currentMeasure_(0.0f)
+	world_(world), currentBeat_(0.0f), currentMeasure_(0.0f), isNotice_(false)
 {
 }
 
@@ -30,21 +32,29 @@ void MusicScoreManager::SetMeasure(const float size)
 
 void MusicScoreManager::Initialize()
 {
+	isNotice_ = false;
 }
 
 void MusicScoreManager::Update(float deltaTime)
 {
-	currentMeasure_ = std::fmodf(world_->getCanChangedTempoManager().getMeasureCount(),world_->getCanChangedTempoManager().getMusicCount())*world_->getCanChangedTempoManager().getBeat();//何小節目か
-	currentMeasure_ += std::fmodf(world_->getCanChangedTempoManager().getBeatCount(),world_->getCanChangedTempoManager().getBeat());//拍数
+	currentMeasure_ = std::fmodf(world_->getCanChangedTempoManager().getMeasureCount(), world_->getCanChangedTempoManager().getMusicCount())*world_->getCanChangedTempoManager().getBeat();//何小節目か
+	currentMeasure_ += std::fmodf(world_->getCanChangedTempoManager().getBeatCount(), world_->getCanChangedTempoManager().getBeat());//拍数
 	currentMeasure_ += world_->getCanChangedTempoManager().getTempoCount();//1拍内での今の位置
 
-	/*
 	//currentBeatには何拍目のどのあたりにいるかが入る
-	currentMeasure_ = world_->getCanChangedTempoManager().getBeatCount();//何拍目か
-	currentBeat_ = currentMeasure_;
-	currentMeasure_ += world_->getCanChangedTempoManager().getTempoCount();//1拍内での今の位置
-	*/
+	//currentMeasure_ = world_->getCanChangedTempoManager().getBeatCount();//何拍目か
+	//currentBeat_ = currentMeasure_;
+	currentBeat_ = world_->getCanChangedTempoManager().getTempoCount();//1拍内での今の位置
 	
+
+	if (!isNotice_) {
+		scaleTimer_ -= deltaTime;
+		scaleTimer_ = max(scaleTimer_, 0.0f);
+		return;
+	}
+	scaleTimer_ += deltaTime;
+	scaleTimer_ = std::fmodf(scaleTimer_, 1.0f);
+
 }
 
 void MusicScoreManager::Draw(const Vector2& position) const
@@ -87,12 +97,26 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	Vector3 pos = ConvWorldPosToScreenPos(position);
 
 	float percent = currentMeasure_/(world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
-	Color c{ 0,130,200,255 };
-	if (percent >= 75.0f)c=Color(200, 130, 0,255);//4小節毎に判定
-	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE),-90.0f);
+	Color c{ 0,130,200,255 };//ゲージ色
+	Color fc{ 0,0,0,255 };//枠色
 
-	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME),-90.0f);
-		
+	if (percent >= 75.0f)c=Color(200, 130, 0,255);//4小節毎に判定
+
+	//ライトに入ってる時限定の処理
+	if (isNotice_) {
+		c = { 0,180,180,255 };
+		fc = { 200,130,0,255 };
+		percent = 100.0f;
+		float sinPos = 0.25f + MathHelper::Smoothstep(0.0f,1.0f,currentBeat_)*0.5f;//最大サイズからスタートするために0.25fズラす
+
+		size *= 1.0f + 0.3f-std::abs(MathHelper::Sin(sinPos*360.0f)*0.3f);
+		SetDrawBlendMode(DX_BLENDMODE_SUB, 255);
+	}
+	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE),-90.0f);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), fc.r, fc.g, fc.b, fc.a, -90.0f);
+
 	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
 	//DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
 
@@ -138,4 +162,21 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	//}
 	////DrawModiBillboard3D(position, x1, y1, x2, y2, x3, y3, x4, y4, handle, TRUE);
 	//DrawModiBillboard3D(position, x1, y1, x2, y2, x3, y3, x4, y4, handle, TRUE);
+}
+
+bool MusicScoreManager::getNotice() const
+{
+	return isNotice_;
+}
+
+void MusicScoreManager::setNotice(bool notice)
+{
+	if (notice && !isNotice_) {
+		handle_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::FIRE_EFFECT);
+		EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::FIRE_EFFECT, handle_, &world_->findActor("Player")->position());
+	}
+	if (!notice&&isNotice_) {
+		EffekseerManager::GetInstance().StopEffect3D(handle_);
+	}
+	isNotice_ = notice;
 }

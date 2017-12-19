@@ -135,7 +135,7 @@ void TutorialScene::changeState(State state) {
 			next_ = SceneType::SCENE_TITLE;
 			return;
 		}
-		text_.Init("Lesson" + std::to_string(tutorialNumber_) + ".txt", 51);
+		text_.Init("Lesson" + std::to_string(tutorialNumber_) + ".txt", 22);
 
 		world_.getCanChangedTempoManager().pauseMusic();//‰¹‚ğÄ¶
 		break;

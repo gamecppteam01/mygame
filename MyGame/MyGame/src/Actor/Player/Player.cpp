@@ -25,6 +25,7 @@
 #include"../../Sound/TempoManager.h"
 #include"../../Graphic/EffekseerManager.h"
 #include"../../Math/Random.h"
+#include"../Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 
 
 //moveからidleに移行する際のinput確認数カウント
@@ -184,6 +185,7 @@ void Player::initialize()
 	*bulletPosition_ = centerPosition_ - bulletDistance;
 
 	gyroCheck_.initialize();
+	musicScore_.Initialize();
 }
 
 void Player::onPause()
@@ -221,6 +223,10 @@ void Player::onMessage(EventMessage message, void * param)
 
 void Player::onUpdate(float deltaTime)
 {
+	auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
+	if (ptr!=nullptr) {
+		musicScore_.setNotice(ptr->getIsNotice(playerNumber_));
+	}
 	playerUpdateFunc_[state_](deltaTime);
 	animation_.Update(MathHelper::Sign(deltaTime));
 
@@ -971,5 +977,6 @@ Vector2 Player::mathStumbleDirection(const Vector2 & stumbleDirection)
 bool Player::isJustTiming() const
 {
 	//return world_->getCanChangedTempoManager().getBeatCount() % 3 == 0;
+	if (musicScore_.getNotice())return true;
 	return (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1;
 }

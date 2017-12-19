@@ -15,11 +15,18 @@ public:
 	void Update(float deltaTime);
 	void Draw(const Vector2& position)const;
 	void Draw(const Vector3& position, const Vector3& upVector)const;
+
+	bool getNotice()const;
+	void setNotice(bool notice);
 private:
 	Vector2 scoreSize_{ Vector2::Zero };
 	IWorld* world_{ nullptr };
 	float currentBeat_{ 0.0f };
-	float currentMeasure_{ 0.0f };
+	float currentMeasure_{ 0.0f };//数小節間での現在の位置
 
+	int handle_;//エフェクトハンドル
+	float scaleTimer_;
+
+	bool isNotice_;
 	float measureSize_{ 1.0f };
 };

@@ -70,6 +70,12 @@ bool Judgement_SpotLight::Judgement(const Vector3 & target) {
 	return false;
 }
 
+bool Judgement_SpotLight::getIsNotice(int num) const
+{
+	if (m_DataList.count(num) == 0)return false;
+	return m_DataList.at(num).notice_;
+}
+
 void Judgement_SpotLight::SetUp(float deltaTime) {
 	position_ = Vector3::Up * 2.0f;
 	m_LightHandle.setLightPositionHandle("Spot", Vector3(0.0f, 100.0f, 0.0f));
@@ -80,6 +86,7 @@ void Judgement_SpotLight::SetUp(float deltaTime) {
 
 	for (auto& d : m_DataList) {
 		d.second.time_ = 0.0f;
+		d.second.notice_ = false;
 	}
 
 	if (m_Timer <= 0.0f) {
@@ -168,6 +175,9 @@ void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 	if (m_Timer <= 0.0f) {
 		m_NowTimer = 0.0f;
 		m_State = State::Failure;
+		for (auto& d : m_DataList) {
+			d.second.notice_ = false;
+		}
 	}
 	m_Timer -= deltaTime;
 }
@@ -186,14 +196,19 @@ void Judgement_SpotLight::TimeCount(float deltaTime) {
 }
 
 void Judgement_SpotLight::TimeJudge(ScoreData& data) {
+	//対象の時間数が3秒を超えていたらカウントを追加
 	if (data.time_ >= 3.0f) {
 		m_Count++;
-	}
+		data.notice_ = true;
 
-	if (m_Count >= 2) {
-		m_Target = m_DataList[1].target_;
-	}
-	else {
-		m_Target = data.target_;
+		//カウントが2以上で強制的に1番をターゲットにする
+		if (m_Count >= 2) {
+			m_Target = m_DataList[1].target_;
+			m_DataList[1].notice_ = true;
+		}
+		else {
+			m_Target = data.target_;
+		}
+
 	}
 }

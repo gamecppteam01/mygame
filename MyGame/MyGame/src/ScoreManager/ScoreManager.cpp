@@ -110,6 +110,11 @@ int ScoreManager::getMaxScore() const{
 	return maxScore;
 }
 
+ScoreData ScoreManager::getScoreData(int num) const
+{
+	return m_ScoreDataList.at(num);
+}
+
 //一位の選手のスコアデータを返す
 ScoreData ScoreManager::getFirst() {
 	ScoreData data;
