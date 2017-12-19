@@ -83,6 +83,10 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "step_spin.png", SPRITE_ID::STEP_SPIN);
 	Sprite::GetInstance().Load(defaultPath + "step_turn.png", SPRITE_ID::STEP_TURN);
 	Sprite::GetInstance().Load(defaultPath + "step_miss.png", SPRITE_ID::STEP_MISS);
+	Sprite::GetInstance().Load(defaultPath + "step_quarter2.png", SPRITE_ID::APPEAR_STEP_QUARTER);
+	Sprite::GetInstance().Load(defaultPath + "step_half2.png", SPRITE_ID::APPEAR_STEP_HALF);
+	Sprite::GetInstance().Load(defaultPath + "step_spin2.png", SPRITE_ID::APPEAR_STEP_SPIN);
+	Sprite::GetInstance().Load(defaultPath + "step_turn2.png", SPRITE_ID::APPEAR_STEP_TURN);
 	Sprite::GetInstance().Load(defaultPath + "back_UI.png", SPRITE_ID::BACK_UI);
 	Sprite::GetInstance().Load(defaultPath + "selectback.png", SPRITE_ID::SELECT_BACK);
 	Sprite::GetInstance().Load(defaultPath + "face.png", SPRITE_ID::FACE_SPRITE);

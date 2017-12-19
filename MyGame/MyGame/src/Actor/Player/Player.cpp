@@ -68,7 +68,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 		Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f), velocity_(Vector3::Zero), gravity_(0.0f), animation_(),
 	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world)
+	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this)
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -119,6 +119,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 	musicScore_.SetSize(Vector2{ 250.0f,20.0f });
 	musicScore_.SetMeasure(3.f);
 
+	appear_stepUI_.SetWorld(world);
 }
 
 void Player::setCheckStepTask(std::list<Player_Animation> checkstep)
@@ -186,6 +187,7 @@ void Player::initialize()
 
 	gyroCheck_.initialize();
 	musicScore_.Initialize();
+	appear_stepUI_.Initialize();
 }
 
 void Player::onPause()
@@ -310,6 +312,7 @@ void Player::onDraw() const
 	}
 	, false);
 
+	appear_stepUI_.Draw(centerPosition_ + Vector3{ 0.0f,25.0f,0.0f });
 }
 
 void Player::onShadowDraw() const

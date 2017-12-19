@@ -14,6 +14,7 @@
 #include"../../Effect/EffekseerEffect/StepStanbyEffect.h"
 #include"CheckStepTask.h"
 #include"../../Effect/EffekseerEffect/TurnEffect.h"
+#include"../../UI/Appear_StepUI.h"
 
 class PlayerBullet;
 
@@ -276,6 +277,8 @@ protected:
 	GyroRotateChecker gyroCheck_;
 	//•ˆ–ÊŠÇ—ƒNƒ‰ƒX
 	MusicScoreManager musicScore_;
+	//‰½‚ÌStep‚ªo‚é‚©‚ÌUI
+	Appear_StepUI appear_stepUI_;
 
 	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
 	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
