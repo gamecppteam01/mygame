@@ -14,20 +14,20 @@ public:
 	void pauseSound();
 	void restartSound();
 
-	int getBeginKey()const { return beginKey_; }
-	int getLoopKey()const { return loopKey_; }
-	int getEndKey()const { return endKey_; }
+	//int getBeginKey()const { return beginKey_; }
+	//int getLoopKey()const { return loopKey_; }
+	//int getEndKey()const { return endKey_; }
 private:
 	Player* player_;
-	int key_;//ÇÌÇ¡Ç©
+	//int key_;//ÇÌÇ¡Ç©
 
 	float seVolume_{ 0.1f };//SEâπó 
 
 	float time_{ 0.0f };
 
-	int beginKey_{ -1 };//Ç≈ÇÕÇ∂Çﬂ
-	int loopKey_{ -1 };//ÇÈÅ[Ç’
-	int endKey_{ -1 };//Ç®ÇÌÇË
+	//int beginKey_{ -1 };//Ç≈ÇÕÇ∂Çﬂ
+	//int loopKey_{ -1 };//ÇÈÅ[Ç’
+	//int endKey_{ -1 };//Ç®ÇÌÇË
 
 	int playState_{ 0 };
 

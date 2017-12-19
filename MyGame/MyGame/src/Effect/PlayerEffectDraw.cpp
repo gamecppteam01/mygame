@@ -1,5 +1,4 @@
 #include "PlayerEffectDraw.h"
-#include "../Graphic/EffekseerManager.h"
 #include "../Graphic/Sprite.h"
 #include"../Graphic/DebugDraw.h"
 #include"../Define.h"
@@ -9,7 +8,7 @@
 static const float defTime = 0.2f;
 static const float sizeRate = 0.7f;
 static const float posy = 0.0f;
-PlayerEffectDraw::PlayerEffectDraw(Player * player):player_(player),key_(-1){
+PlayerEffectDraw::PlayerEffectDraw(Player * player):player_(player){
 }
 
 PlayerEffectDraw::~PlayerEffectDraw(){
@@ -34,10 +33,10 @@ void PlayerEffectDraw::setPlayerEffectDraw(Player * player){
 
 void PlayerEffectDraw::finalize(){
 	player_ = nullptr;
-	if(EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))EffekseerManager::GetInstance().StopEffect3D(beginKey_);
-	if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))EffekseerManager::GetInstance().StopEffect3D(loopKey_);
-	if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))EffekseerManager::GetInstance().StopEffect3D(endKey_);
-	if (EffekseerManager::GetInstance().isPlayEffect3D(key_))EffekseerManager::GetInstance().StopEffect3D(key_);
+	//if(EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))EffekseerManager::GetInstance().StopEffect3D(beginKey_);
+	//if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))EffekseerManager::GetInstance().StopEffect3D(loopKey_);
+	//if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))EffekseerManager::GetInstance().StopEffect3D(endKey_);
+	//if (EffekseerManager::GetInstance().isPlayEffect3D(key_))EffekseerManager::GetInstance().StopEffect3D(key_);
 
 }
 
@@ -58,7 +57,7 @@ void PlayerEffectDraw::Update(float deltatime){
 		switch (playState_)
 		{
 		case 0: {
-			if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
+			//if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
 			sincount = 0.0f;
 			PointLight_alpha = 0.0f;
 			PointRight_alpha = 1.0f;
@@ -67,8 +66,8 @@ void PlayerEffectDraw::Update(float deltatime){
 			PointRight_position = Vector2(SCREEN_SIZE) + Vector2(150, 150);
 
 			playState_++;
-			beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
-			EffekseerManager::GetInstance().SetPosPlayEffect3D(beginKey_, Vector3{ 0.0f,posy,0.0f });
+			//beginKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_BEGIN_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
+			//EffekseerManager::GetInstance().SetPosPlayEffect3D(beginKey_, Vector3{ 0.0f,posy,0.0f });
 			break;
 		}
 		case 1: {
@@ -80,8 +79,8 @@ void PlayerEffectDraw::Update(float deltatime){
 			if (time_ < defTime)return;
 			//if (EffekseerManager::GetInstance().isPlayEffect3D(beginKey_))return;
 			playState_++;
-			if (!EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))loopKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_LOOP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
-			EffekseerManager::GetInstance().SetPosPlayEffect3D(loopKey_, Vector3{ 0.0f,posy,0.0f });
+			//if (!EffekseerManager::GetInstance().isPlayEffect3D(loopKey_))loopKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_LOOP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
+			//EffekseerManager::GetInstance().SetPosPlayEffect3D(loopKey_, Vector3{ 0.0f,posy,0.0f });
 			break;
 		}
 		case 2: {
@@ -90,16 +89,16 @@ void PlayerEffectDraw::Update(float deltatime){
 			PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(150, -150), std::abs(MathHelper::Sin(sincount)));
 			PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
 			
-			if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
-			key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
-			EffekseerManager::GetInstance().SetPosPlayEffect3D(key_, Vector3{ 0.0f,posy,0.0f });
+			//if (EffekseerManager::GetInstance().isPlayEffect3D(key_))return;
+			//key_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
+			//EffekseerManager::GetInstance().SetPosPlayEffect3D(key_, Vector3{ 0.0f,posy,0.0f });
 			break;
 		}
 		case 3: {
-			if (!EffekseerManager::GetInstance().isPlayEffect3D(endKey_)) {
+			//if (!EffekseerManager::GetInstance().isPlayEffect3D(endKey_)) {
 				time_ = 0.0f;
 				playState_ = 0;
-			}
+			//}
 		}
 
 		default:
@@ -117,13 +116,13 @@ void PlayerEffectDraw::Update(float deltatime){
 		if (playState_ != 0) {
 			switch (playState_) {
 			case 1:
-				EffekseerManager::GetInstance().StopEffect3D(beginKey_);
+				//EffekseerManager::GetInstance().StopEffect3D(beginKey_);
 			case 2: {
-				if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
+				//if (EffekseerManager::GetInstance().isPlayEffect3D(endKey_))return;
 				endtime = 0.0f;
 				playState_++;
-				endKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_END_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
-				EffekseerManager::GetInstance().SetPosPlayEffect3D(endKey_, Vector3{ 0.0f,posy,0.0f });
+				//endKey_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_END_EFFECT, Vector3::Zero, Vector3::Zero, Vector3::One*sizeRate);
+				//EffekseerManager::GetInstance().SetPosPlayEffect3D(endKey_, Vector3{ 0.0f,posy,0.0f });
 				break;
 			}
 			case 3: {
@@ -138,19 +137,19 @@ void PlayerEffectDraw::Update(float deltatime){
 				PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) - Vector2(150, 150), std::abs(MathHelper::Sin(sincount)));
 				//PointLeft_position = Vector2::Lerp(Vector2(0, SCREEN_SIZE.y), Vector2(0, SCREEN_SIZE.y) + Vector2(-150, 150), endtime * 5);
 				//PointRight_position = Vector2::Lerp(Vector2(SCREEN_SIZE), Vector2(SCREEN_SIZE) + Vector2(150, 150), endtime * 5);
-				if (!EffekseerManager::GetInstance().isPlayEffect3D(endKey_)) {
+				//if (!EffekseerManager::GetInstance().isPlayEffect3D(endKey_)) {
 					time_ = 0.0f;
 					playState_ = 0;
-				}
+				//}
 			}
 			default:
 				break;
 			}
 
 		}
-		if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_)) {
-			EffekseerManager::GetInstance().StopEffect3D(loopKey_);
-		}
+		//if (EffekseerManager::GetInstance().isPlayEffect3D(loopKey_)) {
+		//	EffekseerManager::GetInstance().StopEffect3D(loopKey_);
+		//}
 		
 	}
 

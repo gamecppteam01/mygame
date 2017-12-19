@@ -13,7 +13,7 @@ public:
 	// コンストラクタ
 	TextScreen();
 
-	void Init(const std::string& filename,int windowTextSize);
+	void Init(const std::string& filename,int lineTextSize);
 
 	void Update();
 
@@ -21,14 +21,13 @@ public:
 	void Check();
 
 	// 描画
-	void Draw() const;
+	void Draw(const Vector2& position) const;
 	void End();
 
 	bool isEnd()const;
 private:
-	int CheckInsertPoinst(const std::string& checkText,int& point1, int& point2,int& point3);
 
-	int currentText()const;
+	//int currentText()const;
 
 private:
 	const int textLine{ 3 };//行数
@@ -41,5 +40,4 @@ private:
 	int targetText_;//表示画面数
 
 	bool isEnd_;
-	std::array<int,4> insertPoints_;//insertする数,地点1,地点2
 };

@@ -2,6 +2,7 @@
 #include"../Graphic/Sprite.h"
 #include"../Graphic/FontManager.h"
 #include"../Define.h"
+#include"../Function/Split.h"
 
 static const int textSpeed = 3;
 
@@ -11,14 +12,13 @@ TextScreen::TextScreen()
 
 }
 
-void TextScreen::Init(const std::string& filename, int windowTextSize)
+void TextScreen::Init(const std::string& filename, int lineTextSize)
 {
 	isEnd_ = false;
-	textSize_ = windowTextSize;//1表示分の量を決める
+	textSize_ = lineTextSize;//1行分の量を決める
 
 	//データを初期化
 	textList_.clear();
-	textList_.push_back("");
 
 	//ファイルを読んでくる
 	std::ifstream readText_("res/Text/" + filename);
@@ -30,43 +30,71 @@ void TextScreen::Init(const std::string& filename, int windowTextSize)
 
 	auto itr = std::remove_if(charbuf.begin(), charbuf.end(), [](char c) {return c == '\0'; });
 	if(itr!=charbuf.end())charbuf.erase(itr);
+	
+	std::string strbuf;
+	strbuf.assign(charbuf.begin(), charbuf.end());
+
+	//改行毎に分割
+	std::string br = "\n";
+	auto pos = strbuf.find(br);
+	while (pos != std::string::npos) {
+		textList_.emplace_back();
+		textList_.back().assign(strbuf.begin(), strbuf.begin() + pos);
+		strbuf.erase(0, pos + br.size());
+		pos = strbuf.find(br);
+	}
+	if (!strbuf.empty()) {
+		textList_.emplace_back();
+		textList_.back().assign(strbuf.begin(), strbuf.end());
+	}
+	std::vector<std::string> textVect;
 
 	int count = 0;
-	for (int i = 0; i < charbuf.size(); i++) {
-
-		char chartex = charbuf[i];
-		
-		//区切り文字なら次へ
-		if (chartex == '\n') {
-			textList_.push_back("");
+	for (auto& s : textList_) {
+		if (count%textLine == 0) {
+			textVect.emplace_back();
 			count = 0;
-			continue;
 		}
-
+		textVect.back() += s + '\n';
 		count++;
-		//2バイト文字なら2文字列分の追加
-		if (_mbclen((BYTE*)&chartex) == 2) {
-			textList_.back() += chartex;
-			i++;
-			textList_.back() += charbuf[i];
-
-		}
-		//1バイト文字なら1文字分の追加
-		else textList_.back() += chartex;
-
-
-		if (i == charbuf.size()-1)break;
-
-		if (count >= textSize_) {
-			textList_.push_back("");
-			count = 0;
-		}
 	}
+
+	textList_.clear();
+	textList_.assign(textVect.begin(), textVect.end());
+
+	//int lineCount;
+	//for (auto& s : textVect) {
+	//	count = 0;
+	//	lineCount = 0;
+	//	textList_.emplace_back();
+	//	for (int i = 0; i < s.size(); i++) {
+	//		char chartex = s[i];
+
+	//		textList_.back() += chartex;
+	//		if (chartex == '\n') {
+	//			if (lineCount == 2) {
+	//				textList_.emplace_back();
+	//				count = 0;
+	//				lineCount = 0;
+	//			}
+	//			else {
+	//				lineCount++;
+	//				count = 0;
+	//			}
+	//			continue;
+	//		}
+	//		//2バイト文字なら2文字列分の追加
+	//		if (_mbclen((BYTE*)&chartex) == 2) {
+	//			i++;
+	//			textList_.back() += s[i];
+	//		}
+	//		count++;
+	//	}
+	//}
 	textCount_ = 0;
 	targetText_ = 0;
 	timeCount_ = 0;
 
-	insertPoints_[0] = CheckInsertPoinst(textList_[targetText_], insertPoints_[1], insertPoints_[2], insertPoints_[3]);
 }
 
 
@@ -96,27 +124,18 @@ void TextScreen::Check()
 	targetText_++;//次のテキストへ
 	textCount_ = 0;//表示を最初へ
 
-	insertPoints_[0] = CheckInsertPoinst(textList_[targetText_], insertPoints_[1], insertPoints_[2], insertPoints_[3]);
-
 }
 
-void TextScreen::Draw() const
+void TextScreen::Draw(const Vector2& position) const
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (128));
-	DrawBox(100, 100, WINDOW_WIDTH - 100, 350, GetColor(128, 128, 128), TRUE);
+	DrawBox(position.x-50, position.y-20, position.x+textSize_* 42.5f+50, position.y+ textLine*70+20, GetColor(128, 128, 128), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	int splitCount = textSize_ / textLine;
-	splitCount += textSize_%textLine == 0 ? 0 : 1;//割り切れて無かったら値追加
 
 	if (textList_.empty())return;
 
-	int length = textCount_;
-
 	std::string drawText = textList_.at(targetText_).substr(0, textCount_);
-	if (currentText()>splitCount)drawText.insert(drawText.begin() + insertPoints_[1], '\n');
-	if (currentText()>splitCount*2)drawText.insert(drawText.begin() + insertPoints_[2], '\n');
-	FontManager::GetInstance().DrawTextApplyFont(200, 150, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT, drawText);
+	FontManager::GetInstance().DrawTextApplyFont(position.x, position.y, GetColor(255, 255, 255), FONT_ID::TUTORIAL_FONT, drawText);
 
 }
 
@@ -129,39 +148,13 @@ bool TextScreen::isEnd() const
 	return isEnd_;
 }
 
-
-int TextScreen::CheckInsertPoinst(const std::string& checkText, int & point1, int & point2, int& point3)
-{
-	int result = 0;
-	int splitCount = textSize_ / textLine;
-	splitCount += textSize_%textLine == 0 ? 0 : 1;//割り切れて無かったら値追加
-
-	int count = 0;
-	for (int i = 0; i < checkText.size(); i++) {
-		count++;
-		int size = _mbclen((BYTE*)&checkText[i]);
-		if (size == 2)i++;
-		if (count == splitCount) {
-			result++;
-			point1 = i + 1;
-		}
-		if (count == splitCount * 2) {
-			result++;
-			point2 = i + 2;
-		}
-	}
-	point3 = count;
-	return result;
-}
-
-
-int TextScreen::currentText()const
-{
-	int result = 0;
-	for (int i = 0; i < textCount_; i++) {
-		result++;
-		int size = _mbclen((BYTE*)&textList_.at(targetText_)[i]);
-		if (size == 2)i++;
-	}
-	return result;
-}
+//int TextScreen::currentText()const
+//{
+//	int result = 0;
+//	for (int i = 0; i < textCount_; i++) {
+//		result++;
+//		int size = _mbclen((BYTE*)&textList_.at(targetText_)[i]);
+//		if (size == 2)i++;
+//	}
+//	return result;
+//}

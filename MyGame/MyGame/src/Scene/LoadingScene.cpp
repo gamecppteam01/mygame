@@ -139,6 +139,8 @@ void LoadingScene::LoadFont()
 	FontManager::GetInstance().AddFont(FONT_ID::JAPANESE_FONT, defaultPath + "HGRGY.TTC", "HG行書体", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::DEFAULT_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
+	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
+	FontManager::GetInstance().AddFont(FONT_ID::TUTORIAL_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 70);
 }
 
 void LoadingScene::LoadBGM()

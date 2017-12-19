@@ -195,6 +195,8 @@
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
     <ClCompile Include="src\Effect\Effect.cpp" />
     <ClCompile Include="src\Effect\EffekseerEffect\ColEffect.cpp" />
+    <ClCompile Include="src\Effect\EffekseerEffect\HalfEffect.cpp" />
+    <ClCompile Include="src\Effect\EffekseerEffect\QuarterEffect.cpp" />
     <ClCompile Include="src\Effect\EffekseerEffect\SpinEffect.cpp" />
     <ClCompile Include="src\Effect\EffekseerEffect\StepStanbyEffect.cpp" />
     <ClCompile Include="src\Effect\EffekseerEffect\Step_NowEffect.cpp" />
@@ -330,6 +332,8 @@
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\ColEffect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\HalfEffect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\QuarterEffect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\SpinEffect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\StepStanbyEffect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\Step_NowEffect.h" />
@@ -342,6 +346,7 @@
     <ClInclude Include="src\Fade\FadeSprite.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
+    <ClInclude Include="src\Function\Split.h" />
     <ClInclude Include="src\Game\Game.h" />
     <ClInclude Include="src\Game\ID.h" />
     <ClInclude Include="src\Game\MyGame.h" />
