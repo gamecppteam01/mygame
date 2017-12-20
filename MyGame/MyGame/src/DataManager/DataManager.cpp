@@ -9,9 +9,12 @@ DataManager::~DataManager(){
 	datas_.clear();
 }
 
-void DataManager::setData(std::list<ScoreData>& list){
+void DataManager::setData(std::list<ScoreData*> list){
 	datas_.clear();
-	datas_ = list;
+	for (auto& d:list)
+	{
+		datas_.push_back(*d);
+	}
 }
 
 std::list<ScoreData> DataManager::getData() const

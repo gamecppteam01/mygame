@@ -16,7 +16,7 @@ public:
 		return d;
 	}
 
-	void setData(std::list<ScoreData>& list);
+	void setData(std::list<ScoreData*> list);
 	std::list<ScoreData> getData() const;
 
 	void setStage(int stage);

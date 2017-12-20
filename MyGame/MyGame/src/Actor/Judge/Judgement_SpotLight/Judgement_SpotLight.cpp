@@ -19,7 +19,7 @@ Judgement_SpotLight::Judgement_SpotLight(IWorld * world, const Vector3 & positio
 
 //初期化
 void Judgement_SpotLight::initialize() {
-	m_State = State::Ready;
+	m_State = State::SetUp;
 	m_LightHandle.setLightEnableHandle("Spot", false);
 	m_StateUpdateFunc[State::SetUp] = [this](float deltaTime) {SetUp(deltaTime); };
 	m_StateUpdateFunc[State::Ready] = [this](float deltaTime) {ReadyUpdate(deltaTime); };
@@ -73,7 +73,7 @@ bool Judgement_SpotLight::Judgement(const Vector3 & target) {
 bool Judgement_SpotLight::getIsNotice(int num) const
 {
 	if (m_DataList.count(num) == 0)return false;
-	return m_DataList.at(num).notice_;
+	return m_DataList.at(num)->notice_;
 }
 
 void Judgement_SpotLight::SetUp(float deltaTime) {
@@ -85,12 +85,13 @@ void Judgement_SpotLight::SetUp(float deltaTime) {
 	m_NowTimer = 0.0f;
 
 	for (auto& d : m_DataList) {
-		d.second.time_ = 0.0f;
-		d.second.notice_ = false;
+		d.second->time_ = 0.0f;
+		d.second->notice_ = false;
 	}
 
 	if (m_Timer <= 0.0f) {
 		m_Timer = 2.0f;
+		world_->sendMessage(EventMessage::Lighting, (void*)&position_);
 		m_State = State::Ready;
 		return;
 	}
@@ -100,7 +101,8 @@ void Judgement_SpotLight::SetUp(float deltaTime) {
 void Judgement_SpotLight::ReadyUpdate(float deltaTime) {
 	//データの取得
 	//データリストが0なら実行
-	if (m_DataList.size() == 0)world_->getScoreManager().getScoreDataMap(m_DataList);
+	if (m_DataList.size() == 0) { 
+		world_->getScoreManager().getScoreDataMap(m_DataList); }
 
 	if (m_Timer <= 0.0f) {
 		EffekseerManager::GetInstance().StopEffect3D(effectHandole);
@@ -154,7 +156,10 @@ void Judgement_SpotLight::SetUpSpotLighting(float deltaTime) {
 	m_LightHandle.setLightRangeAttenHandle("Spot", 500.0f, atten0, atten1, 0.0f);
 
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);
-	if (m_NowTimer >= m_MaxTimer)m_State = State::SpotLighting;
+	if (m_NowTimer >= m_MaxTimer) {
+		m_State = State::SpotLighting; 
+		world_->sendMessage(EventMessage::Extinction);
+	}
 }
 
 void Judgement_SpotLight::FailureUpdate(float deltaTime) {
@@ -176,7 +181,7 @@ void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 		m_NowTimer = 0.0f;
 		m_State = State::Failure;
 		for (auto& d : m_DataList) {
-			d.second.notice_ = false;
+			d.second->notice_ = false;
 		}
 	}
 	m_Timer -= deltaTime;
@@ -184,30 +189,30 @@ void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 
 void Judgement_SpotLight::TimeCount(float deltaTime) {
 	for (auto& d : m_DataList) {
-		if (is_In_Distans(d.second.target_.lock())) {
+		if (is_In_Distans(d.second->target_.lock())) {
 			//3秒経っているか
 			TimeJudge(d.second);
-			d.second.time_ += deltaTime;
+			d.second->time_ += deltaTime;
 		}
 		else {
-			d.second.time_ = 0.0f;
+			d.second->time_ = 0.0f;
 		}
 	}
 }
 
-void Judgement_SpotLight::TimeJudge(ScoreData& data) {
+void Judgement_SpotLight::TimeJudge(ScoreData* data) {
 	//対象の時間数が3秒を超えていたらカウントを追加
-	if (data.time_ >= 3.0f) {
+	if (data->time_ >= 3.0f) {
 		m_Count++;
-		data.notice_ = true;
+		data->notice_ = true;
 
 		//カウントが2以上で強制的に1番をターゲットにする
 		if (m_Count >= 2) {
-			m_Target = m_DataList[1].target_;
-			m_DataList[1].notice_ = true;
+			m_Target = m_DataList[1]->target_;
+			m_DataList[1]->notice_ = true;
 		}
 		else {
-			m_Target = data.target_;
+			m_Target = data->target_;
 		}
 
 	}

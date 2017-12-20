@@ -110,9 +110,9 @@ int ScoreManager::getMaxScore() const{
 	return maxScore;
 }
 
-ScoreData ScoreManager::getScoreData(int num) const
+ScoreData* ScoreManager::getScoreData(int num)
 {
-	return m_ScoreDataList.at(num);
+	return &m_ScoreDataList.at(num);
 }
 
 //一位の選手のスコアデータを返す
@@ -132,14 +132,14 @@ float ScoreManager::getRata(const int number) const {
 }
 
 //list<ScoreData>型のリストを渡す
-void ScoreManager::getScoreDataList(std::list<ScoreData>& list) {
+void ScoreManager::getScoreDataList(std::list<ScoreData*> list) {
 	for (auto n : m_NumberList) {
-		list.push_back(m_ScoreDataList[n]);
+		list.push_back(&m_ScoreDataList[n]);
 	}
 }
 
-void ScoreManager::getScoreDataMap(std::map<int, ScoreData>& map){
-	map = m_ScoreDataList;
+void ScoreManager::getScoreDataMap(std::map<int, ScoreData*> &map){
+	std::for_each(m_ScoreDataList.begin(), m_ScoreDataList.end(), [&map](std::pair<int, ScoreData*> data) {map[data.first] = data.second; });
 }
 
 //1位から順に入ったScoreData型のリストを返す

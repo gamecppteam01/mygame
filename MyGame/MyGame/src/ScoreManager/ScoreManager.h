@@ -37,15 +37,15 @@ public:
 	float GetCharacterScoreRate(int number);
 	//最大スコアを返す
 	int getMaxScore() const;
-	ScoreData getScoreData(int num)const;
+	ScoreData* getScoreData(int num);
 	//一位の選手のスコアデータを返す
 	ScoreData getFirst();
 	//指定の倍率を返す
 	float getRata(const int number) const;
 	//list<ScoreData>型のリストを渡す
-	void getScoreDataList(std::list<ScoreData>& list);
+	void getScoreDataList(std::list<ScoreData*> list);
 	//
-	void getScoreDataMap(std::map<int, ScoreData>& map);
+	void getScoreDataMap(std::map<int, ScoreData*> &map);
 	//1位から順に入ったScoreData型のリストを返す
 	void getRankingList(std::list<ScoreData>& list);
 

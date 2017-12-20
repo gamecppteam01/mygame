@@ -49,7 +49,7 @@ private:
 	void FailureUpdate(float deltaTime);
 	void SpotLightingUpdate(float deltaTime);
 	void TimeCount(float deltaTime);
-	void TimeJudge(ScoreData& data);
+	void TimeJudge(ScoreData* data);
 
 private:
 	float m_Distance;
@@ -63,7 +63,7 @@ private:
 	int effectHandole{ -1 };
 	//選手データ
 	std::list<ScoreData> m_Data;
-	std::map<int, ScoreData> m_DataList;
+	std::map<int, ScoreData*> m_DataList;
 	//ターゲット
 	std::weak_ptr<Actor> m_Target;
 	//ライトデータ

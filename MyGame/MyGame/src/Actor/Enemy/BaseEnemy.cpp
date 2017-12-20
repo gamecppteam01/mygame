@@ -95,6 +95,10 @@ void BaseEnemy::onUpdate(float deltaTime){
 		updateWakeUp(deltaTime);
 		break;
 	}
+	case BaseEnemy::Enemy_State::Fever: {
+		updateFever(deltaTime);
+		break;
+	}
 	default:
 		break;
 	}	
@@ -407,6 +411,9 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 		to_WakeUp();
 		break;
 	}
+	case BaseEnemy::Enemy_State::Fever:
+		to_Fever();
+		break;
 	default:
 		break;
 	}
@@ -461,6 +468,9 @@ void BaseEnemy::to_Down()
 
 void BaseEnemy::to_WakeUp(){
 	wakwUpTime_ = 0.0f;
+}
+
+void BaseEnemy::to_Fever(){
 }
 
 void BaseEnemy::updateNormal(float deltaTime)
@@ -536,6 +546,9 @@ void BaseEnemy::updateWakeUp(float deltaTime){
 
 	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
 		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward,true);
+}
+
+void BaseEnemy::updateFever(float deltaTime){
 }
 
 bool BaseEnemy::isCanStep() const

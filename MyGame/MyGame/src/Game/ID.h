@@ -178,7 +178,8 @@ enum SHADOW_MAP_ID {
 
 
 enum class EventMessage {
-
+	Lighting,
+	Extinction,
 };
 
 

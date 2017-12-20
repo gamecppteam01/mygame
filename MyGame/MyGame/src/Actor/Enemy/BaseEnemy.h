@@ -28,6 +28,7 @@ public:
 		Attack,//攻撃
 		Down,//転倒
 		WakeUp,//起き上がり
+		Fever,//スポットライト獲得中
 
 	};
 public:
@@ -105,6 +106,7 @@ protected:
 	virtual void to_Attack(Enemy_Animation anim);
 	virtual void to_Down();
 	virtual void to_WakeUp();
+	virtual void to_Fever();
 
 	virtual void updateNormal(float deltaTime);
 	virtual void updateStep(float deltaTime);
@@ -112,6 +114,7 @@ protected:
 	virtual void updateAttack(float deltaTime);
 	virtual void updateDown(float deltaTime);
 	virtual void updateWakeUp(float deltaTime);
+	virtual void updateFever(float deltaTime);
 
 	//ステップ可能か
 	bool isCanStep()const;
