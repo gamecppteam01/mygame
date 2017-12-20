@@ -102,7 +102,7 @@ void Judgement_SpotLight::ReadyUpdate(float deltaTime) {
 	//データの取得
 	//データリストが0なら実行
 	if (m_DataList.size() == 0) { 
-		world_->getScoreManager().getScoreDataMap(m_DataList); }
+		world_->getCanChangedScoreManager().getScoreDataMap(m_DataList); }
 
 	if (m_Timer <= 0.0f) {
 		EffekseerManager::GetInstance().StopEffect3D(effectHandole);

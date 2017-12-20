@@ -265,6 +265,7 @@
     <ClCompile Include="src\Sound\Sound.cpp" />
     <ClCompile Include="src\Tween\TweenManager.cpp" />
     <ClCompile Include="src\Tween\TweenObject.cpp" />
+    <ClCompile Include="src\UI\Appear_StepUI.cpp" />
     <ClCompile Include="src\UI\ButtonUI.cpp" />
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
@@ -436,6 +437,7 @@
     <ClInclude Include="src\test.h" />
     <ClInclude Include="src\Tween\TweenManager.h" />
     <ClInclude Include="src\Tween\TweenObject.h" />
+    <ClInclude Include="src\UI\Appear_StepUI.h" />
     <ClInclude Include="src\UI\ButtonUI.h" />
     <ClInclude Include="src\UI\ButtonUIPtr.h" />
     <ClInclude Include="src\UI\ComboGaugeUI.h" />

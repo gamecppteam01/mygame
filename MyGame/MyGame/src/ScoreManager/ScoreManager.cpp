@@ -132,14 +132,14 @@ float ScoreManager::getRata(const int number) const {
 }
 
 //list<ScoreData>Œ^‚ÌƒŠƒXƒg‚ğ“n‚·
-void ScoreManager::getScoreDataList(std::list<ScoreData*> list) {
+void ScoreManager::getScoreDataList(std::list<ScoreData*>& list) {
 	for (auto n : m_NumberList) {
 		list.push_back(&m_ScoreDataList[n]);
 	}
 }
 
 void ScoreManager::getScoreDataMap(std::map<int, ScoreData*> &map){
-	std::for_each(m_ScoreDataList.begin(), m_ScoreDataList.end(), [&map](std::pair<int, ScoreData*> data) {map[data.first] = data.second; });
+	std::for_each(m_ScoreDataList.begin(), m_ScoreDataList.end(), [&map](auto& data) {map[data.first] = &data.second; });
 }
 
 //1ˆÊ‚©‚ç‡‚É“ü‚Á‚½ScoreDataŒ^‚ÌƒŠƒXƒg‚ğ•Ô‚·

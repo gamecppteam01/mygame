@@ -177,7 +177,7 @@ void GamePlayScene::end() {
 	world_.end();
 	//スコアデータをデータマネージャーに渡す
 	std::list<ScoreData*> list;
-	world_.getScoreManager().getScoreDataList(list);
+	world_.getCanChangedScoreManager().getScoreDataList(list);
 	DataManager::GetInstance().setData(list);
 
 	scoreDisplay_.finalize();

@@ -74,6 +74,8 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 	//3”–Ú‚Í“®‚©‚È‚¢
 	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2)return;
 
+	data_ = world_->getCanChangedScoreManager().getScoreData(playerNumber_);
+
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
@@ -123,9 +125,6 @@ void Enemy_Notice::to_Normal() {
 	nextPoint_ = getNearestPoint(centerPosition_);
 	nextPosition_ = roundPoint_[nextPoint_];
 	isGoBonus_ = false;
-
-	if (data_->playerNumber_ != playerNumber_)
-		data_ = world_->getCanChangedScoreManager().getScoreData(playerNumber_);
 }
 
 void Enemy_Notice::to_Fever() {
