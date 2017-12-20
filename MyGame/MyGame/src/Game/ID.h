@@ -176,12 +176,15 @@ enum SHADOW_MAP_ID {
 	COUNT_SHADOW_MAP//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 
+enum class MOVIE_ID {
+
+};
+
 
 enum class EventMessage {
 	Lighting,
 	Extinction,
 };
-
 
 /*記述ルール
 ・Call_を必ず頭につける事

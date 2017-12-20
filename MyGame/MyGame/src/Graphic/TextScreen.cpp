@@ -129,11 +129,16 @@ void TextScreen::Check()
 void TextScreen::Draw(const Vector2& position) const
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (128));
-	DrawBox(position.x-50, position.y-20, position.x+textSize_* 42.5f+50, position.y+ textLine*70+20, GetColor(128, 128, 128), TRUE);
+	DrawBox(position.x - 50, position.y - 20, position.x + textSize_* 39.5f + 50, position.y + textLine * 70 + 20, GetColor(128, 128, 128), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	//Vector2 size=Sprite::GetInstance().D
-	//DrawBox(0,position.y,)
-	Sprite::GetInstance().Draw(SPRITE_ID::FACE_SPRITE, Vector2{ 0.0f,position.y }, Vector2::Zero, Vector2::One*0.4f);
+	
+	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::FACE_SPRITE);
+	size *= 0.5f;
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	DrawBox(0, position.y, size.x, size.y, GetColor(200, 200, 200), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	Sprite::GetInstance().Draw(SPRITE_ID::FACE_SPRITE, Vector2{ 0.0f,position.y }, Vector2::Zero, Vector2::One);
+	
 	if (textList_.empty())return;
 
 	std::string drawText = textList_.at(targetText_).substr(0, textCount_);
