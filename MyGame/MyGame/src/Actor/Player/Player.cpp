@@ -26,7 +26,7 @@
 #include"../../Graphic/EffekseerManager.h"
 #include"../../Math/Random.h"
 #include"../Judge/Judgement_SpotLight/Judgement_SpotLight.h"
-
+#include"ShootCollider.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
@@ -780,6 +780,7 @@ void Player::to_ShootMode()
 {
 	world_->getCamera()->ZoomIn(0, 0);
 
+	world_->addActor(ActorGroup::PLAYER, std::make_shared<ShootCollider>(this));
 	shootAngle_ = 0.0f;
 	Vector3 shootVector = *bulletPosition_ - position_;
 	shootVector = shootVector.Normalize();
@@ -847,7 +848,8 @@ void Player::end_AttackMode()
 void Player::end_ShootMode()
 {
 	world_->getCamera()->ZoomOut();
-
+	auto sc=world_->findActor("ShootCenter"); 
+	if (sc != nullptr)sc->dead();
 }
 
 void Player::end_ShootEndMode()

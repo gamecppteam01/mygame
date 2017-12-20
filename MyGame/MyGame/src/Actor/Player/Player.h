@@ -63,6 +63,8 @@ public:
 	float getPlayerScoreRate()const;
 	//汎用のタイマーを渡す
 	float getTimer()const { return timeCount_; }
+
+	float getShootAngle()const { return shootAngle_; }
 protected:
 	void createBullet();
 	virtual void initialize()override;

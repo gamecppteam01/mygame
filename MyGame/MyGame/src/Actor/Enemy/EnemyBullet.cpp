@@ -73,6 +73,13 @@ void EnemyBullet::onCollide(Actor & other)
 		}
 		enemy_->setCountDown();
 	}
+	else if (other.getName() == "ShootCenter") {
+		Vector3 bound = mathBound(other);
+		enemy_->setBoundPower(4);
+		//©g‚à’µ‚Ë•Ô‚é
+		hitOther(-bound);
+		enemy_->setCountDown();
+	}
 	else if (other.getName() == "Enemy") {
 		//©•ª©g‚È‚ç”»’è‚µ‚È‚¢
 		if (static_cast<BaseEnemy*>(&other)->getPlayerNumber() == enemy_->playerNumber_) return;

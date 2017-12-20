@@ -161,18 +161,25 @@ void BaseEnemy::onCollide(Actor & other)
 		//相手を跳ね返す
 		auto pl = static_cast<PlayerBullet*>(&other);
 		pl->hitEnemy(name_, bound);
-		if(pl->getPlayer()->getState()==Player::Player_State::Shoot)setBoundPower(4);
+		if (pl->getPlayer()->getState() == Player::Player_State::Shoot)setBoundPower(4);
 		else setBoundPower(3);
 		//自身も跳ね返る
 		hitOther(-bound);
 		//プレイヤーとプレイヤー弾は必ず連番であるため、プレイヤー弾-1はプレイヤー
 		int keysub;
 		if (attackTarget_.expired())keysub = 2;
-		else keysub=other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
-		if (state_ == Enemy_State::Attack&&(keysub==0||keysub==1)) {
+		else keysub = other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack && (keysub == 0 || keysub == 1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
+		setCountDown();
+	}
+	else if (other.getName() == "ShootCenter") {
+		Vector3 bound = mathBound(other);
+		setBoundPower(4);
+		//自身も跳ね返る
+		hitOther(-bound);
 		setCountDown();
 	}
 	else if (other.getName() == "Enemy") {
