@@ -129,20 +129,23 @@ void TextScreen::Check()
 void TextScreen::Draw(const Vector2& position) const
 {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (128));
-	DrawBox(position.x - 50, position.y - 20, position.x + textSize_* 39.5f + 50, position.y + textLine * 70 + 20, GetColor(128, 128, 128), TRUE);
+	Vector2 size=Sprite::GetInstance().GetSize(SPRITE_ID::TEXTFRAME_SPRITE);
+	DrawBox(position.x, position.y, position.x +size.x, position.y + size.y, GetColor(128, 128, 128), TRUE);
+	Sprite::GetInstance().Draw(SPRITE_ID::TEXTFRAME_SPRITE, Vector2{ position.x,position.y });
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	
-	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::FACE_SPRITE);
-	size *= 0.5f;
+	size = Sprite::GetInstance().GetSize(SPRITE_ID::FACEFRAME_SPRITE);
+	float correct = 50;
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
-	DrawBox(0, position.y, size.x, size.y, GetColor(200, 200, 200), TRUE);
+	DrawBox(0, position.y+ correct, size.x-1, position.y + size.y+ correct, GetColor(200, 200, 200), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	Sprite::GetInstance().Draw(SPRITE_ID::FACE_SPRITE, Vector2{ 0.0f,position.y }, Vector2::Zero, Vector2::One);
-	
+	Sprite::GetInstance().Draw(SPRITE_ID::FACE_SPRITE, Vector2{ 0.0f,position.y+ correct }+Vector2{ 16.f,17.f }, Vector2::Zero, Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::FACEFRAME_SPRITE, Vector2{ 0.0f,position.y+ correct });
+
 	if (textList_.empty())return;
 
 	std::string drawText = textList_.at(targetText_).substr(0, textCount_);
-	FontManager::GetInstance().DrawTextApplyFont(position.x, position.y, GetColor(255, 255, 255), FONT_ID::TUTORIAL_FONT, drawText);
+	FontManager::GetInstance().DrawTextApplyFont(position.x+80.0f, position.y+60.0f, GetColor(255, 255, 255), FONT_ID::TUTORIAL_FONT, drawText);
 
 }
 

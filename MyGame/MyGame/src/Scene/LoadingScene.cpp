@@ -90,6 +90,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "back_UI.png", SPRITE_ID::BACK_UI);
 	Sprite::GetInstance().Load(defaultPath + "selectback.png", SPRITE_ID::SELECT_BACK);
 	Sprite::GetInstance().Load(defaultPath + "face.png", SPRITE_ID::FACE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "teacherFrame.png", SPRITE_ID::FACEFRAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "messageFrame.png", SPRITE_ID::TEXTFRAME_SPRITE);
 	
 }
 

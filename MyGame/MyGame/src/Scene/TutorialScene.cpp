@@ -82,7 +82,7 @@ void TutorialScene::update(float deltaTime)
 void TutorialScene::draw() const
 {
 	world_.draw();
-	text_.Draw({ 250,50 });
+	text_.Draw({ 190,0 });
 	if (state_ == Pause)pause_.draw();
 
 }
