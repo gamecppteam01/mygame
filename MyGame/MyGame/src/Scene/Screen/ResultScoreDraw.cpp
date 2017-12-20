@@ -63,10 +63,10 @@ void ResultScoreDraw::draw() const
 	int score = dataList_.at(pos).score_;
 	if (score >= 100000)score = 99999;
 	else if (score >= 10000)space = "";
-	if (score >= 1000)space = "";
-	else if (score >= 100)space = " ";
-	else if (score >= 10)space = "  ";
-	else space = "   ";
+	if (score >= 1000)space = " ";
+	else if (score >= 100)space = "  ";
+	else if (score >= 10)space = "   ";
+	else space = "    ";
 	if (dataList_.at(pos).playerNumber_ == 1)SetDrawBright(255, 255, 0);
 	FontManager::GetInstance().DrawTextApplyFont(Position.x, Position.y, GetColor(255, 255, 255), FONT_ID::JAPANESE_FONT,
 		"No" + std::to_string(dataList_.size() - pos) + "    " + std::to_string(dataList_.at(pos).playerNumber_) + "”Ô" + "           " + space + std::to_string(score));

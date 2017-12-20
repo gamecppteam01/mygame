@@ -69,6 +69,7 @@ void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed
 	prevAnimTimer_ = animTimer_;
 	animTimer_	= frame;
 	rate_		= 1.0f - blend;
+	isAnimEnd_ = false;
 
 	// 前アニメーションをデタッチ
 	MV1DetachAnim(modelHandle_, anim_);
