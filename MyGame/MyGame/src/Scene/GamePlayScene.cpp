@@ -115,10 +115,10 @@ void GamePlayScene::start() {
 
 	//world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 0.0f, 60.0f), Matrix::CreateRotationY(-45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, 60.0f), Matrix::CreateRotationY(45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-110.0f, 0.0f, -60.0f), Matrix::CreateRotationY(-135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(150.0f, 0.0f, -75.0f), Matrix::CreateRotationY(135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-150.0f, 0.0f, -75.0f), Matrix::CreateRotationY(-135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();

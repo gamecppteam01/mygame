@@ -120,10 +120,10 @@ Vector3 Field::CorrectPosition(const Vector3 & position)
 
 float Field::getXWidth() const
 {
-	return 230.0f*FIELD_SCALE;
+	return 280.0f*FIELD_SCALE;
 }
 
 float Field::getZWidth() const
 {
-	return 110.0f*FIELD_SCALE;
+	return 130.0f*FIELD_SCALE;
 }
