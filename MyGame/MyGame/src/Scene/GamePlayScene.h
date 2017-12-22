@@ -43,7 +43,7 @@ private:
 	int stageNum_{ 1 };
 
 	World world_;
-	ScoreDisplay scoreDisplay_;
+	//ScoreDisplay scoreDisplay_;
 	GamePlayState state_;
 	PlayerEffectDraw playerEffectDraw_;
 	//標準ライトクラス

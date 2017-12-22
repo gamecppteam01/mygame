@@ -21,6 +21,7 @@
 #include"../Actor/Other/TutorialPoint.h"
 #include"../Actor/Player/TutorialPlayer.h"
 #include"../Graphic/EffekseerManager.h"
+#include"Screen\TutorialCutIn.h"
 
 TutorialScene::TutorialScene()
 {
@@ -64,7 +65,9 @@ void TutorialScene::start()
 
 
 	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
-	changeState(State::TextDraw);
+
+	cutInID_ = SPRITE_ID::CUTIN_INTRODUCT_SPRITE;
+	changeState(State::CutIn);
 
 	world_.FindInitialize();
 
@@ -85,6 +88,7 @@ void TutorialScene::draw() const
 	text_.Draw({ 190,0 });
 	if (state_ == Pause)pause_.draw();
 
+	if (state_ == CutIn)TutorialCutIn::draw(SPRITE_ID::STAGE1_TEXT_SPRITE, WINDOW_HEIGHT*0.5f, cutInTimer_, CutInTime);
 }
 
 void TutorialScene::end()
@@ -194,6 +198,14 @@ void TutorialScene::update_Pause(float deltaTime)
 
 }
 
+void TutorialScene::update_CutIn(float deltaTime)
+{
+	cutInTimer_ += deltaTime;
+	if (cutInTimer_ >= CutInTime) {
+		changeState(TextDraw);
+	}
+}
+
 int TutorialScene::getTutorialNum() const
 {
 	return tutorialNumber_;
@@ -202,6 +214,6 @@ int TutorialScene::getTutorialNum() const
 void TutorialScene::nextLesson()
 {
 	if (state_ == Play)
-		changeState(TextDraw);
+		changeState(CutIn);
 
 }

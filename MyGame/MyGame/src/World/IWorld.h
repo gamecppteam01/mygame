@@ -44,4 +44,5 @@ public:
 	virtual void addStepTimeListener(const ActorPtr& actor) = 0;
 	virtual TempoManager& getCanChangedTempoManager() = 0;
 	virtual TempoManager getTempoManager()const = 0;
+	virtual UIPtr findUI(const std::string& name) = 0;
 };

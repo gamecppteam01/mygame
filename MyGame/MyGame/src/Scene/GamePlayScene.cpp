@@ -40,7 +40,7 @@ static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int>> stageLi
 };
 
 //コンストラクタ
-GamePlayScene::GamePlayScene() :world_(), scoreDisplay_(nullptr), playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_() {
+GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_() {
 	//更新遷移先の設定
 	updateFuncMap_[GamePlayState::Reload] = [&](float deltaTime) {update_Reload(deltaTime); };
 	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
@@ -87,23 +87,23 @@ void GamePlayScene::start() {
 	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 
 	Vector3 pos{ -80.0f,10.0f,-40.0f };
-	playerNumber++;
-	auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
-	world_.addActor(ActorGroup::ENEMY, enemy);
-	world_.addStepTimeListener(enemy);
-	//for (int i = 0; i < std::get<3>(stageList[stageNum_-1]); i++) {
-	//	playerNumber++;
-	//	auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", pos, playerNumber);
-	//	world_.addActor(ActorGroup::ENEMY, enemy);
-	//	world_.addStepTimeListener(enemy);
-	//	pos += Vector3{ 70.0f,0.0f,30.0f };
-	//}
-	//if (std::get<4>(stageList[stageNum_-1])) {
-	//	playerNumber++;
-	//	auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
-	//	world_.addActor(ActorGroup::ENEMY, enemy);
-	//	world_.addStepTimeListener(enemy);
-	//}
+	//playerNumber++;
+	//auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
+	//world_.addActor(ActorGroup::ENEMY, enemy);
+	//world_.addStepTimeListener(enemy);
+	for (int i = 0; i < std::get<3>(stageList[stageNum_-1]); i++) {
+		playerNumber++;
+		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", pos, playerNumber);
+		world_.addActor(ActorGroup::ENEMY, enemy);
+		world_.addStepTimeListener(enemy);
+		pos += Vector3{ 70.0f,0.0f,30.0f };
+	}
+	if (std::get<4>(stageList[stageNum_-1])) {
+		playerNumber++;
+		auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
+		world_.addActor(ActorGroup::ENEMY, enemy);
+		world_.addStepTimeListener(enemy);
+	}
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
@@ -130,8 +130,8 @@ void GamePlayScene::start() {
 	settingUI();
 
 	//スコア表示設定
-	scoreDisplay_.initialize();
-	scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
+	//scoreDisplay_.initialize();
+	//scoreDisplay_.setScoreManager(&world_.getCanChangedScoreManager());
 
 	//アクター検索を掛けるクラス群の初期化
 	world_.FindInitialize();
@@ -160,7 +160,7 @@ void GamePlayScene::draw() const {
 	//}
 
 	//Time::GetInstance().draw_fps();
-	scoreDisplay_.Score(Vector2(0, 25), 5);
+	//scoreDisplay_.Score(Vector2(0, 25), 5);
 
 	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
 	else {
@@ -180,7 +180,7 @@ void GamePlayScene::end() {
 	world_.getCanChangedScoreManager().getScoreDataList(list);
 	DataManager::GetInstance().setData(list);
 
-	scoreDisplay_.finalize();
+	//scoreDisplay_.finalize();
 	//ライトハンドルの全削除
 	lightHandle_.deleteLightHandleAll();
 	//エフェクトの終了処理

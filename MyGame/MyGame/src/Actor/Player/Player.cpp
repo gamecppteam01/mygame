@@ -27,6 +27,7 @@
 #include"../../Math/Random.h"
 #include"../Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 #include"ShootCollider.h"
+#include"../../UI/UI.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
@@ -66,7 +67,7 @@ static const std::map<Player_Animation, PlayerBullet::PlayerBullet_Animation> an
 Player::Player(IWorld* world, const std::string& name, const Vector3& position, int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 		Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f), velocity_(Vector3::Zero), gravity_(0.0f), animation_(),
-	state_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
+	state_(Player_State::Idle), prevState_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this)
 {
@@ -173,6 +174,7 @@ void Player::initialize()
 	position_ = centerPosition_ + bulletDistance;
 	gravity_ = 0.0f;
 	state_ = Player_State::Idle;
+	prevState_ = state_;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Move_Forward);
 
@@ -432,6 +434,7 @@ bool Player::change_State(Player_State state)
 	//状態の終了処理を行う
 	playerEndModeFunc_[state_]();
 	//状態を更新
+	prevState_ = state_;
 	state_ = state;
 	//状態変更を行う
 	playerToNextModeFunc_[state_]();
@@ -463,8 +466,10 @@ void Player::idle_Update(float deltaTime)
 				Vector2::Down
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
-
 			
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			stepUI->Notify(Notification::Call_StepFailed);
 			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -508,6 +513,9 @@ void Player::move_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			stepUI->Notify(Notification::Call_StepFailed);
 			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -531,6 +539,10 @@ void Player::step_Update(float deltaTime)
 			return;
 		}
 		else {
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			stepUI->Notify(Notification::Call_StepFailed);
+			
 			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 			return;
 		}
@@ -734,6 +746,10 @@ void Player::to_StepSuccessMode()
 	//対応したアニメーションの終了時間を取得する
 	timeCount_ = animation_.GetAnimMaxTime((int)stepAnimScoreList_.at(nextStep_).first);
 
+	//成功通知
+	auto stepUI = world_->findUI("StepUI");
+	stepUI->Notify(Notification::Call_StepSuccess, (void*)&nextStep_);
+
 	if (nextStep_ == 2) {
 		Sound::GetInstance().PlaySE(SE_ID::HALF_SE);
 		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
@@ -807,6 +823,12 @@ void Player::to_TurnMode()
 
 void Player::to_StumbleMode()
 {
+	if (prevState_ == Player_State::Step) {
+		//成功通知
+		auto stepUI = world_->findUI("StepUI");
+		stepUI->Notify(Notification::Call_StepFailed);
+
+	}
 	timeCount_ = 0.0f;
 	stumbleRegistTimer_ = 0.0f;
 }

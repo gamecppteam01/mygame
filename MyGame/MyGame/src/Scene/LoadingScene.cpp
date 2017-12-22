@@ -96,6 +96,11 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "turn_sprite.png", SPRITE_ID::TURN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "spin_sprite.png", SPRITE_ID::SPIN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "half_sprite.png", SPRITE_ID::HALF_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "half_sprite.png", SPRITE_ID::HALF_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Introduction_Cutin.png", SPRITE_ID::CUTIN_INTRODUCT_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Lesson1_Cutin.png", SPRITE_ID::CUTIN_LESSON1_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Lesson2_Cutin.png", SPRITE_ID::CUTIN_LESSON2_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Lesson3_Cutin.png", SPRITE_ID::CUTIN_LESSON3_SPRITE);
 	
 }
 

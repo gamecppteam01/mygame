@@ -26,6 +26,7 @@ public:
 	bool is_StepSuccess() const;
 	void player_MissStep();
 
+	virtual void Notify(Notification type, void* param) override;
 private:
 	IWorld* world_;
 	std::weak_ptr<Player> player_;

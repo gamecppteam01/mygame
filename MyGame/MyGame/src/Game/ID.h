@@ -68,6 +68,11 @@ enum SPRITE_ID
 	APPEAR_STEP_TURN,
 	BACK_UI,
 	SELECT_BACK,
+	
+	CUTIN_INTRODUCT_SPRITE,
+	CUTIN_LESSON1_SPRITE,
+	CUTIN_LESSON2_SPRITE,
+	CUTIN_LESSON3_SPRITE,
 
 	HALF_SPRITE,
     TURN_SPRITE,
@@ -200,4 +205,8 @@ enum class EventMessage {
 enum class Notification {
 	Call_CreateJustEffect,//ジャストエフェクトの生成通知
 	Call_JustStep,//ジャストエフェクトの生成通知
+
+	Call_StepSuccess,//ステップ成功時
+	Call_StepFailed,//ステップ失敗時
+
 };

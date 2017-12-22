@@ -11,6 +11,7 @@ private:
 	enum State {
 		Reload,
 		TextDraw,
+		CutIn,
 		Play,
 		Pause
 	};
@@ -33,11 +34,16 @@ public:
 	void update_textDraw(float deltaTime);
 	void update_Play(float deltaTime);
 	void update_Pause(float deltaTime);
+	void update_CutIn(float deltaTime);
 
 	int getTutorialNum()const;
 
 	void nextLesson();//状態遷移
 private:
+	const float CutInTime{ 2.0f };//カットインの再生時間
+	float cutInTimer_{ 0.0f };//カットインの現再生時間
+	State cutInNextState_;//カットイン再生後の状態
+	SPRITE_ID cutInID_;//カットインのID
 	int tutorialNumber_;
 	World world_;
 	PauseScreen pause_;

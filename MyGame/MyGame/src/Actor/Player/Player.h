@@ -251,6 +251,8 @@ protected:
 	AnimationDx animation_;
 	//状態
 	Player_State state_;
+	//前の状態
+	Player_State prevState_;
 	//エフェクト生成クラスを呼び出す
 	MethodTimer effectCreator_;
 	//スコア加算の成否

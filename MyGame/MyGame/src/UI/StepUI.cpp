@@ -191,3 +191,22 @@ void StepUI::player_MissStep(){
 	//‹Z‚ğo‚·‘O‚É‚Ô‚Â‚©‚ç‚ê‚é
 
 }
+
+void StepUI::Notify(Notification type, void* param)
+{
+	switch (type)
+	{
+	case Notification::Call_StepSuccess: {
+		int i = *(int*)param;
+		OutputDebugString(std::to_string(i).c_str());
+		//¬Œ÷ˆ—
+		break;
+	}
+	case Notification::Call_StepFailed: {
+		//¸”sˆ—
+		break;
+	}
+	default:
+		break;
+	}
+}

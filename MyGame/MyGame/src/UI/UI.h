@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "../Math/Vector2.h"
+#include"../Game/ID.h"
 
 class UI {
 public:
@@ -23,6 +24,8 @@ public:
 	std::string getName()const;
 
 	bool isEnd()const;
+
+	virtual void Notify(Notification type, void* param=nullptr){}//’Ê’m‚ğó‚¯æ‚é
 protected:
 	//êŠ
 	Vector2 position_;
