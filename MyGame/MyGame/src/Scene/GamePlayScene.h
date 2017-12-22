@@ -50,7 +50,8 @@ private:
 	StandardLight standardLight_;
 	//ライトハンドルクラス
 	LightHandle lightHandle_;
-
+	//フレームカウンター
+	float freamCounter_{ 0.0f };
 	bool isStart_;
 
 	float timeCount_{ 3.0f };//スタート時のタイマー

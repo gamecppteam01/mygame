@@ -35,6 +35,8 @@ public:
 	// メッセージ処理
 	void handleMessage(EventMessage message, void* param);
 	
+	//1フレームだけアクター更新
+	void init_update();
 	// フィールドの追加
 	void addField(const FieldPtr& field);
 	//カメラの追加

@@ -142,6 +142,10 @@ void GamePlayScene::start() {
 
 	timeCount_ = 3.0f;
 	currentCount_ = (int)std::ceilf(timeCount_) + 1;
+	freamCounter_ = 0;
+
+	//Tスタンス解消関数
+	world_.init_update();
 }
 
 //更新
@@ -192,6 +196,7 @@ void GamePlayScene::end() {
 
 //リトライ更新
 void GamePlayScene::update_Reload(float deltaTime) {
+	freamCounter_ = 0;
 	changeState(GamePlayState::Play);
 	world_.update_end(deltaTime);
 }

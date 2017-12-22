@@ -123,6 +123,12 @@ void World::handleMessage(EventMessage message, void* param) {
 	actors_.handleMessage(message, param);
 }
 
+void World::init_update(){
+	// アクターの更新処理
+	actors_.update(1.0f/60.0f);
+	camera_->update(1.0f / 60.0f);
+}
+
 void World::addField(const FieldPtr & field)
 {
 	field_ = field;
