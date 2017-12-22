@@ -15,6 +15,7 @@ void SpinEffect::start()
 	effect_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::SPIN_EFFECT);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::SPIN_EFFECT, effect_, &target->position());
 	Sound::GetInstance().PlaySE(SE_ID::SPIN_SE, 1, 1);
+	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE, 1, 1);
 }
 
 void SpinEffect::update(float deltaTime)
@@ -30,4 +31,5 @@ void SpinEffect::draw() const
 void SpinEffect::end()
 {
 	EffekseerManager::GetInstance().StopEffect3D(effect_);
+	if (Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE) == true) Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
 }

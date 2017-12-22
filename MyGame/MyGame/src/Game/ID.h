@@ -142,6 +142,7 @@ enum SE_ID
 	HALF_SE,//ハーフ成功時
 	SPIN_SE,//スピン成功時
 	TURN_SE,//ターン成功時
+	QUATER_SE,//クオーター成功時
 	STEP_SUCCESS_SE,//ステップ成立時
 	SELECT_SE,//選択
 	CURSOL_SE,//決定

@@ -179,7 +179,7 @@ void LoadingScene::LoadSE()
 	Sound::GetInstance().LoadSE(defaultPath + "systemse.mp3", SE_ID::SELECT_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "spin_se.wav", SE_ID::SPIN_SE);
-	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "quater_se.mp3", SE_ID::QUATER_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "turn_se.mp3", SE_ID::TURN_SE);
 	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
 }
