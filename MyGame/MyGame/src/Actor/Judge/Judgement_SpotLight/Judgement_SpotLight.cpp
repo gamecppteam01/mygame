@@ -158,7 +158,6 @@ void Judgement_SpotLight::SetUpSpotLighting(float deltaTime) {
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);
 	if (m_NowTimer >= m_MaxTimer) {
 		m_State = State::SpotLighting; 
-		world_->sendMessage(EventMessage::Extinction);
 	}
 }
 
@@ -168,9 +167,12 @@ void Judgement_SpotLight::FailureUpdate(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
 	Color color = Color::Lerp(Color(0.1f, 0.1f, 0.1f, 0.1f), Color(0.5f, 0.5f, 0.5f, 0.5f), t);
 	m_LightHandle.setGlobalAmbientLight(color);
-	m_Timer = 10.0f;
+	m_Timer = 30.0f;
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);
-	if (m_NowTimer >= m_MaxTimer)m_State = State::SetUp;
+	if (m_NowTimer >= m_MaxTimer){
+		m_State = State::SetUp;
+		world_->sendMessage(EventMessage::Extinction);
+	}
 }
 
 void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {

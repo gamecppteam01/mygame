@@ -382,8 +382,12 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 	switch (state_)
 	{
 	case BaseEnemy::Enemy_State::Normal:
+		prevState_ = state_;//‘O‚Ìó‘Ô‚ð•Û‘¶
 		break;
 	case BaseEnemy::Enemy_State::Step:
+		break;
+	case BaseEnemy::Enemy_State::Fever:
+		prevState_ = state_;//‘O‚Ìó‘Ô‚ð•Û‘¶
 		break;
 	default:
 		break;
@@ -552,7 +556,7 @@ void BaseEnemy::updateWakeUp(float deltaTime){
 	wakwUpTime_ += deltaTime;
 
 	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
-		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward,true);
+		change_State_and_Anim(prevState_, Enemy_Animation::Move_Forward,false);
 }
 
 void BaseEnemy::updateFever(float deltaTime){

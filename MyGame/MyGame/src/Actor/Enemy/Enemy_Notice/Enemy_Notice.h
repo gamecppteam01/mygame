@@ -43,7 +43,11 @@ private:
 	int probability_{ 4 };
 	//自分のデータ
 	ScoreData* data_;
-
 	//ステージ周回ポイント配列
 	std::vector<Vector3> roundPoint_;
+	//ステップフラグ
+	bool stepFlag_{ false };
+	//チェンジフラグ
+	bool changeFlag_{ false };
+
 };

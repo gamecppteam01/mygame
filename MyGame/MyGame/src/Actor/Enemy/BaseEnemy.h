@@ -161,6 +161,7 @@ protected:
 	std::weak_ptr<Actor> attackTarget_;
 
 	Enemy_State state_{ Enemy_State::Normal };
+	Enemy_State prevState_{ Enemy_State::Normal };
 
 	//‘O‚É“–‚½‚Á‚½‘Šè‚Ì”Ô†
 	int prevHitActorNumber_{ 0 };

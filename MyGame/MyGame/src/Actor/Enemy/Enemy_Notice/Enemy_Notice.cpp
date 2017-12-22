@@ -20,10 +20,12 @@ void Enemy_Notice::onMessage(EventMessage message, void * param) {
 	case EventMessage::Lighting:
 		state_ = Notice_State::Steal;
 		nextPosition_ = (Vector3&)param;
+		lightPosition_ = nextPosition_;
+		changeFlag_ = false;
 		break;
 	case EventMessage::Extinction:
 		state_ = Notice_State::Normal;
-		setNextPosition();
+		changeFlag_ = true;
 		break;
 	}
 }
@@ -99,36 +101,61 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 		break;
 	case Enemy_Notice::Steal:
 		if (data_->notice_ == true) {
-			change_State(Enemy_State::Fever, Enemy_Animation::Idle);
+			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+			change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Turn, false);
 		}
 		break;
 	}
 }
 
 void Enemy_Notice::updateFever(float deltaTime) {
-	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
 	int r = Random::GetInstance().Range(0, 9);
-	if (r < probability_) {
-		//ターン
-		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-		changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
+	if (animation_.IsAnimEnd() == true) {
+		if (r < probability_ && stepFlag_ == false) {
+			//ターン
+			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+			changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
+			stepFlag_ = true;
+			OutputDebugString("TURN\n");
+		}
+		else if(stepFlag_ == false){
+			//クォーター
+			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
+			changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
+			stepFlag_ = true;
+			OutputDebugString("QUARTER\n");
+		}
 	}
-	else {
-		//クォーター
-		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
-		changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
+	if (animation_.IsAnimEnd() == true && stepFlag_ == true && changeFlag_ == false) {
+		changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
+		OutputDebugString("IDLE\n");
+		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
+		stepFlag_ = false;
+	}
+	if (animation_.IsAnimEnd() == true && changeFlag_ == true) {
+		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle, true);
+		setNextPosition();
 	}
 }
 
 void Enemy_Notice::to_Normal() {
-	nextPoint_ = getNearestPoint(centerPosition_);
-	nextPosition_ = roundPoint_[nextPoint_];
-	isGoBonus_ = false;
+	switch (state_)
+	{
+	case Enemy_Notice::Normal:
+		nextPoint_ = getNearestPoint(centerPosition_);
+		nextPosition_ = roundPoint_[nextPoint_];
+		isGoBonus_ = false;
+		probability_ = 3;
+		break;
+	case Enemy_Notice::Steal:
+		nextPosition_ = lightPosition_;
+		break;
+	}
 }
 
 void Enemy_Notice::to_Fever() {
-
+	probability_ = 3;
 }
 
 int Enemy_Notice::getNearestPoint(const Vector3 & position) {
@@ -155,5 +182,4 @@ void Enemy_Notice::setNextPosition() {
 		return;
 	}
 	nextPosition_ = roundPoint_[nextPoint_];
-
 }
