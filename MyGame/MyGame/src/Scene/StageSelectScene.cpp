@@ -64,9 +64,9 @@ void StageSelectScene::draw() const
 	
 	//カーソル
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
-	if (Ypos != 450)Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 * 0.5f)  + Vector2(0.0f, Ypos)) , origin, t, Vector2::One,true,true);
-	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 * -0.5f) + Vector2(0.0f, Ypos)), origin, t, Vector2::One,true,false);
-	if(Ypos == 450)Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 - 440.0f) + Vector2(0.0f, Ypos)), origin, t, Vector2::One, true, true);
+	if (Ypos != 450)Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 * 0.5f)  + Vector2(0.0f, Ypos)) , origin, std::abs(t), Vector2::One,true,true);
+	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 * -0.5f) + Vector2(0.0f, Ypos)), origin, std::abs(t), Vector2::One,true,false);
+	if(Ypos == 450)Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 - 440.0f) + Vector2(0.0f, Ypos)), origin, std::abs(t), Vector2::One, true, true);
 	//ステージ1～3
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
 
