@@ -40,7 +40,9 @@ public:
 
 	void nextLesson();//状態遷移
 private:
-	const float CutInTime{ 2.0f };//カットインの再生時間
+	const float StopTime{ 3.0f };//停止時間
+	const float InTime{ 0.5f };//カットインの再生時間
+	const float OutTime{ 0.5f };//カットインの再生時間
 	float cutInTimer_{ 0.0f };//カットインの現再生時間
 	State cutInNextState_;//カットイン再生後の状態
 	SPRITE_ID cutInID_;//カットインのID

@@ -21,7 +21,13 @@
 #include"../Actor/Other/TutorialPoint.h"
 #include"../Actor/Player/TutorialPlayer.h"
 #include"../Graphic/EffekseerManager.h"
-#include"Screen\TutorialCutIn.h"
+#include"Screen/TutorialCutIn.h"
+
+std::map<int,SPRITE_ID> cutinList{
+	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
+	{ 2,SPRITE_ID::CUTIN_LESSON2_SPRITE },
+	{ 3,SPRITE_ID::CUTIN_LESSON3_SPRITE }
+};
 
 TutorialScene::TutorialScene()
 {
@@ -29,6 +35,7 @@ TutorialScene::TutorialScene()
 	updateFuncMap_[State::TextDraw] = [&](float deltaTime) {update_textDraw(deltaTime); };
 	updateFuncMap_[State::Play] = [&](float deltaTime) {update_Play(deltaTime); };
 	updateFuncMap_[State::Pause] = [&](float deltaTime) {update_Pause(deltaTime); };
+	updateFuncMap_[State::CutIn] = [&](float deltaTime) {update_CutIn(deltaTime); };
 }
 
 TutorialScene::~TutorialScene()
@@ -71,6 +78,7 @@ void TutorialScene::start()
 
 	world_.FindInitialize();
 
+	text_.Reset();
 }
 
 void TutorialScene::update(float deltaTime)
@@ -88,7 +96,7 @@ void TutorialScene::draw() const
 	text_.Draw({ 190,0 });
 	if (state_ == Pause)pause_.draw();
 
-	if (state_ == CutIn)TutorialCutIn::draw(SPRITE_ID::STAGE1_TEXT_SPRITE, WINDOW_HEIGHT*0.5f, cutInTimer_, CutInTime);
+	if (state_ == CutIn)TutorialCutIn::draw(cutInID_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
 }
 
 void TutorialScene::end()
@@ -130,6 +138,10 @@ void TutorialScene::changeState(State state) {
 	case Reload: {
 		end();
 		start();
+		break;
+	}
+	case CutIn: {
+		cutInTimer_ = 0.0f;
 		break;
 	}
 	case TextDraw:
@@ -201,7 +213,7 @@ void TutorialScene::update_Pause(float deltaTime)
 void TutorialScene::update_CutIn(float deltaTime)
 {
 	cutInTimer_ += deltaTime;
-	if (cutInTimer_ >= CutInTime) {
+	if (cutInTimer_ >= StopTime+ InTime+ OutTime) {
 		changeState(TextDraw);
 	}
 }
@@ -215,5 +227,5 @@ void TutorialScene::nextLesson()
 {
 	if (state_ == Play)
 		changeState(CutIn);
-
+	cutInID_ = cutinList[tutorialNumber_];
 }

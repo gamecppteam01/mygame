@@ -14,7 +14,7 @@ public:
 	TextScreen();
 
 	void Init(const std::string& filename,int lineTextSize);
-
+	void Reset();
 	void Update();
 
 

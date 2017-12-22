@@ -97,6 +97,13 @@ void TextScreen::Init(const std::string& filename, int lineTextSize)
 
 }
 
+void TextScreen::Reset()
+{
+	textCount_ = 0;
+	targetText_ = 0;
+	timeCount_ = 0;
+}
+
 
 void TextScreen::Update()
 {

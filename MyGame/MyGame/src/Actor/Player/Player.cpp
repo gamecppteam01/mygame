@@ -469,7 +469,7 @@ void Player::idle_Update(float deltaTime)
 			
 			//成功通知
 			auto stepUI = world_->findUI("StepUI");
-			stepUI->Notify(Notification::Call_StepFailed);
+			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
 			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -515,7 +515,7 @@ void Player::move_Update(float deltaTime)
 
 			//成功通知
 			auto stepUI = world_->findUI("StepUI");
-			stepUI->Notify(Notification::Call_StepFailed);
+			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
 			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -541,7 +541,7 @@ void Player::step_Update(float deltaTime)
 		else {
 			//成功通知
 			auto stepUI = world_->findUI("StepUI");
-			stepUI->Notify(Notification::Call_StepFailed);
+			if(stepUI!=nullptr)stepUI->Notify(Notification::Call_StepFailed);
 			
 			if (change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward))playerUpdateFunc_[state_](deltaTime);
 			return;
@@ -748,7 +748,7 @@ void Player::to_StepSuccessMode()
 
 	//成功通知
 	auto stepUI = world_->findUI("StepUI");
-	stepUI->Notify(Notification::Call_StepSuccess, (void*)&nextStep_);
+	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepSuccess, (void*)&nextStep_);
 
 	if (nextStep_ == 2) {
 		Sound::GetInstance().PlaySE(SE_ID::HALF_SE);
@@ -826,7 +826,7 @@ void Player::to_StumbleMode()
 	if (prevState_ == Player_State::Step) {
 		//成功通知
 		auto stepUI = world_->findUI("StepUI");
-		stepUI->Notify(Notification::Call_StepFailed);
+		if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
 
 	}
 	timeCount_ = 0.0f;
