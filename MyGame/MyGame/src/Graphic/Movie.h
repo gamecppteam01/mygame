@@ -54,6 +54,6 @@ public:
 private:
 
 	int GetHandle(const MOVIE_ID& moveID);
-	std::unordered_map<const MOVIE_ID, int> m_movies;
+	std::unordered_map<MOVIE_ID, int> m_movies;
 
 };
