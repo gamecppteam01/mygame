@@ -2,6 +2,13 @@
 #include"../Actor/Player/Player.h"
 
 class PlayerEffectDraw {
+private:
+	enum class State {
+		In,
+		Stay,
+		End,
+		None
+	};
 public:
 	PlayerEffectDraw(Player* player);
 	~PlayerEffectDraw();
@@ -14,22 +21,19 @@ public:
 	void pauseSound();
 	void restartSound();
 
-	//int getBeginKey()const { return beginKey_; }
-	//int getLoopKey()const { return loopKey_; }
-	//int getEndKey()const { return endKey_; }
+	void in(float deltaTime);
+	void stay(float deltaTime);
+	void out(float deltaTime);
+	void none(float deltaTime);
+	void changeState(State s);
 private:
 	Player* player_;
-	//int key_;//ÇÌÇ¡Ç©
 
 	float seVolume_{ 0.1f };//SEâπó 
 
 	float time_{ 0.0f };
 
-	//int beginKey_{ -1 };//Ç≈ÇÕÇ∂Çﬂ
-	//int loopKey_{ -1 };//ÇÈÅ[Ç’
-	//int endKey_{ -1 };//Ç®ÇÌÇË
-
-	int playState_{ 0 };
+	State state_{ State::None };
 
 	float sincount{ 0.0f };
 	float endtime{ 0.0f };
