@@ -92,6 +92,10 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "face.png", SPRITE_ID::FACE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "teacherFrame.png", SPRITE_ID::FACEFRAME_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "messageFrame.png", SPRITE_ID::TEXTFRAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "quater_sprite.png", SPRITE_ID::QUATER_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "turn_sprite.png", SPRITE_ID::TURN_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "spin_sprite.png", SPRITE_ID::SPIN_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "half_sprite.png", SPRITE_ID::HALF_SPRITE);
 	
 }
 
