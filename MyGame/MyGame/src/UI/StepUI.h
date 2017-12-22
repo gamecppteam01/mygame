@@ -9,11 +9,8 @@ class StepUI : public UI {
 		Start,
 		Staging,
 		Before_End,
-		End,
-	};
-	enum class Miss_State {
-		Start,
-		Staging,
+		Miss_Start,
+		Miss_Staging,
 		End,
 	};
 public:
@@ -23,13 +20,9 @@ public:
 	virtual void restart() override;
 	virtual void update(float deltaTime) override;
 	virtual void draw() const override;
-	bool is_StepSuccess() const;
-	void player_MissStep();
-
 	virtual void Notify(Notification type, void* param) override;
 private:
 	IWorld* world_;
-	std::weak_ptr<Player> player_;
 
 	//UIの座標、拡大率、透明度
 	Vector2 position_;
@@ -53,11 +46,17 @@ private:
 	float another_count{ 0.0f };
 	//UIのステート
 	UI_State state_;
-	Miss_State miss_state_;
 	//UIが表示されるか？
 	bool ui_Play_{ false };
 	//時間
 	float timer_; 
 
+	//ポーズ判定
 	bool pause_;
+
+	//Stepの成功か失敗か
+	bool Step_Success;
+	bool Step_Failed;
+	//Stepの種類
+	int Step;
 };
