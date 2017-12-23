@@ -36,6 +36,11 @@ static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Anima
 	{ BaseEnemy::Enemy_Animation::Stan,EnemyBullet::EnemyBullet_Animation::Stan },
 };
 
+BaseEnemy::BaseEnemy(const std::string & name):
+	Enemy(name)
+{
+}
+
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this, bulletid,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
 	downCount_(defDownCount), prevHitActorNumber_(0),centerPosition_(position)
@@ -61,6 +66,11 @@ void BaseEnemy::hitOther(const Vector3 & velocity)
 	bound_ += velocity;
 	//bulletVelocity_ += velocity;
 	//velocity_ += velocity;
+}
+
+std::shared_ptr<BaseEnemy> BaseEnemy::Create(IWorld * world, const Vector3 & position, int playerNumber)
+{
+	return std::make_shared<BaseEnemy>(world, "Enemy", position, playerNumber);
 }
 
 void BaseEnemy::onMessage(EventMessage message, void * param)

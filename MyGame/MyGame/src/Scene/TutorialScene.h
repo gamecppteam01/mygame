@@ -4,7 +4,8 @@
 #include"Screen/PauseScreen.h"
 #include"GamePlayState.h"
 #include"../Graphic/TextScreen.h"
-
+#include<queue>
+#include<stack>
 class TutorialPlayer;
 class TutorialScene :public Scene {
 private:
@@ -44,8 +45,10 @@ private:
 	const float InTime{ 0.5f };//カットインの再生時間
 	const float OutTime{ 0.5f };//カットインの再生時間
 	float cutInTimer_{ 0.0f };//カットインの現再生時間
-	State cutInNextState_;//カットイン再生後の状態
-	SPRITE_ID cutInID_;//カットインのID
+	std::queue<State> cutInNextState_;//カットイン再生後の状態
+	std::queue<State> textNextState_;//テキスト後の状態
+	SPRITE_ID currentCutIn_;//現在のカットインのID
+	std::stack<SPRITE_ID> cutInID_;//カットインのID待ちリスト
 	int tutorialNumber_;
 	World world_;
 	PauseScreen pause_;

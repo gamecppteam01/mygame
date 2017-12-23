@@ -5,9 +5,6 @@ class TutorialScene;
 class TutorialPlayer :public Player {
 public:
 	TutorialPlayer(IWorld* world, const std::string& name, const Vector3& position,TutorialScene* tutorial);
-
-	~TutorialPlayer();
-
 	void onUpdate(float deltaTime)override;
 
 	void hitPoint();

@@ -5,6 +5,11 @@
 #include"../../../Sound/TempoManager.h"
 #include"../../../Math/Random.h"
 
+Enemy_Round::Enemy_Round():
+	BaseEnemy("Enemy")
+{
+}
+
 Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber):
 	BaseEnemy(world,name,position,playerNumber, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f),
 		MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL)
@@ -12,6 +17,11 @@ Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3
 	points_.clear();
 	points_=world_->getCanChangedScoreMap().getEnemy_Round_CrawlPoint();
 	setNearestPoint();
+}
+
+std::shared_ptr<BaseEnemy> Enemy_Round::Create(IWorld * world, const Vector3 & position, int playerNumber)
+{
+	return std::make_shared<Enemy_Round>(world, "Enemy", position, playerNumber);
 }
 
 void Enemy_Round::JustStep()

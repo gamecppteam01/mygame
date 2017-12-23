@@ -9,6 +9,11 @@
 #include"../../Conv/DXConverter.h"
 #include"../../Graphic/Anime.h"
 
+Enemy::Enemy(const std::string& name):
+	Actor(name)
+{
+}
+
 Enemy::Enemy(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
 	Actor(world, name, position, body), gravity_(0.0f), animation_()
 {

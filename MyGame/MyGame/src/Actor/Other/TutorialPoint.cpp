@@ -22,14 +22,17 @@ void TutorialPoint::onDraw() const
 
 void TutorialPoint::onCollide(Actor & other)
 {
+	if (dead_)return;
 	if (other.getName() == "Player") {
 		static_cast<TutorialPlayer*>(&other)->hitPoint();
 		dead();
 		EffekseerManager::GetInstance().StopEffect3D(id_);
+		return;
 	}
 	if (other.getName() == "PlayerBullet") {
 		static_cast<TutorialPlayer*>(static_cast<PlayerBullet*>(&other)->getCCPlayer())->hitPoint();
 		dead();
 		EffekseerManager::GetInstance().StopEffect3D(id_);
+		return;
 	}
 }

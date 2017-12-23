@@ -7,11 +7,21 @@
 #include"../../../Sound/TempoManager.h"
 #include"../EnemyBullet.h"
 
+Enemy_Notice::Enemy_Notice():
+	BaseEnemy("Enemy")
+{
+}
+
 Enemy_Notice::Enemy_Notice(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body)
 	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL), nextPoint_(0), nextPosition_(position), isGoBonus_(false) {
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	nextPoint_ = getNearestPoint(centerPosition_);
 	state_ = Notice_State::Normal;
+}
+
+std::shared_ptr<BaseEnemy> Enemy_Notice::Create(IWorld * world, const Vector3 & position, int playerNumber)
+{
+	return std::make_shared<Enemy_Notice>(world, "Enemy", position, playerNumber);
 }
 
 void Enemy_Notice::onMessage(EventMessage message, void * param) {

@@ -14,10 +14,6 @@ TutorialPlayer::TutorialPlayer(IWorld * world, const std::string & name, const V
 {
 }
 
-TutorialPlayer::~TutorialPlayer()
-{
-}
-
 void TutorialPlayer::onUpdate(float deltaTime)
 {
 	Player::onUpdate(deltaTime);

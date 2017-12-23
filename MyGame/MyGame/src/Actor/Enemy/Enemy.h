@@ -5,6 +5,7 @@
 
 class Enemy :public Actor {
 public:
+	Enemy(const std::string& name);
 	Enemy(IWorld* world, const std::string& name, const Vector3& position, const IBodyPtr& body);
 	virtual ~Enemy(){}
 private:

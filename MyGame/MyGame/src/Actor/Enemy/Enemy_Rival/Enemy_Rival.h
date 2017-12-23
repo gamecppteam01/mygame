@@ -13,8 +13,11 @@ private:
 		StepMove//ステップ位置に行く
 	};
 public:
+	Enemy_Rival();
 	//コンストラクタ
 	Enemy_Rival(IWorld* world, const std::string& name, const Vector3& position, int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+
+	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber)override;
 
 private:
 	// 描画

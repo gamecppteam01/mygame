@@ -9,6 +9,10 @@
 #include"../../../Math/Easing.h"
 
 static const float attackResetDistance = 40.0f;
+Enemy_Rival::Enemy_Rival():
+	BaseEnemy("Enemy")
+{
+}
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
 	BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::RIVALENEMY_MODEL, MODEL_ID::RIVALENEMY_BULLET_MODEL) {
 
@@ -23,6 +27,11 @@ Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3
 	});
 	players_.push_front(world_->findActor("Player"));
 
+}
+
+std::shared_ptr<BaseEnemy> Enemy_Rival::Create(IWorld * world, const Vector3 & position, int playerNumber)
+{
+	return std::make_shared<Enemy_Rival>(world, "Enemy", position, playerNumber);
 }
 
 void Enemy_Rival::onDraw() const

@@ -22,6 +22,7 @@
 #include"../Actor/Player/TutorialPlayer.h"
 #include"../Graphic/EffekseerManager.h"
 #include"Screen/TutorialCutIn.h"
+#include"Screen/CreateEnemy.h"
 
 std::map<int,SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
@@ -48,7 +49,7 @@ void TutorialScene::start()
 	Sound::GetInstance().StopBGM();
 
 	world_.Initialize();
-	tutorialNumber_ = 0;
+	tutorialNumber_ = 1;
 	isEnd_ = false;
 	state_ = State::Play;
 	pause_.initialize();
@@ -73,7 +74,16 @@ void TutorialScene::start()
 
 	world_.getCanChangedTempoManager().setMusic(BGM_ID::STAGE1_BGM, 156.0f);
 
-	cutInID_ = SPRITE_ID::CUTIN_INTRODUCT_SPRITE;
+	std::queue<State>().swap(cutInNextState_);
+	std::queue<State>().swap(textNextState_);
+	std::stack<SPRITE_ID>().swap(cutInID_);
+
+	cutInID_.push(SPRITE_ID::CUTIN_LESSON1_SPRITE);
+	cutInID_.push(SPRITE_ID::CUTIN_INTRODUCT_SPRITE);
+	
+	cutInNextState_.push(TextDraw);
+	cutInNextState_.push(Play);
+	textNextState_.push(CutIn);
 	changeState(State::CutIn);
 
 	world_.FindInitialize();
@@ -96,7 +106,7 @@ void TutorialScene::draw() const
 	text_.Draw({ 190,0 });
 	if (state_ == Pause)pause_.draw();
 
-	if (state_ == CutIn)TutorialCutIn::draw(cutInID_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
+	if (state_ == CutIn)TutorialCutIn::draw(currentCutIn_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
 }
 
 void TutorialScene::end()
@@ -141,22 +151,20 @@ void TutorialScene::changeState(State state) {
 		break;
 	}
 	case CutIn: {
+		if (!cutInID_.empty()) {
+			currentCutIn_ = cutInID_.top();
+			cutInID_.pop();
+		}
 		cutInTimer_ = 0.0f;
 		break;
 	}
 	case TextDraw:
-		tutorialNumber_++;
-		if (tutorialNumber_ > 3) {
-			isEnd_ = true;
-			next_ = SceneType::SCENE_TITLE;
-			return;
-		}
 		text_.Init("Lesson" + std::to_string(tutorialNumber_) + ".txt", 22);
 
 		world_.getCanChangedTempoManager().pauseMusic();//‰¹‚ðÄ¶
 		break;
 	case Play:
-
+		CreateEnemy::create(&world_, "res/File/map.csv", 2);
 		break;
 	case Pause:
 		world_.pause();
@@ -174,7 +182,12 @@ void TutorialScene::update_textDraw(float deltaTime)
 		text_.Check();
 	}
 	if (text_.isEnd()) {
-		changeState(Play);
+		State next = Play;
+		if (!textNextState_.empty()) {
+			next = textNextState_.front();
+			textNextState_.pop();
+		}
+		changeState(next);
 		return;
 	}
 
@@ -214,7 +227,12 @@ void TutorialScene::update_CutIn(float deltaTime)
 {
 	cutInTimer_ += deltaTime;
 	if (cutInTimer_ >= StopTime+ InTime+ OutTime) {
-		changeState(TextDraw);
+		State next = TextDraw;
+		if (!cutInNextState_.empty()) {
+			next = cutInNextState_.front();
+			cutInNextState_.pop();
+		}
+		changeState(next);
 	}
 }
 
@@ -225,7 +243,15 @@ int TutorialScene::getTutorialNum() const
 
 void TutorialScene::nextLesson()
 {
-	if (state_ == Play)
+	if (state_ == Play) {
+		tutorialNumber_++;
+		if (tutorialNumber_ > 3) {
+			isEnd_ = true;
+			next_ = SceneType::SCENE_TITLE;
+			return;
+		}
+
+		cutInID_.push(cutinList[tutorialNumber_]);
 		changeState(CutIn);
-	cutInID_ = cutinList[tutorialNumber_];
+	}
 }

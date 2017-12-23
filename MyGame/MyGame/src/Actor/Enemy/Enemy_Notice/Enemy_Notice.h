@@ -10,8 +10,12 @@ private:
 		Steal,
 	};
 public:
+	Enemy_Notice();
 	//コンストラクタ
 	Enemy_Notice(IWorld* world, const std::string& name, const Vector3& position, int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
+	
+	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber);
+
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
 private:
