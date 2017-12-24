@@ -74,7 +74,7 @@ void GamePlayScene::start() {
 
 	//‘Iè”Ô†
 	int playerNumber = 1;
-	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*15.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
+	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
 
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});

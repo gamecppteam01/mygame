@@ -8,9 +8,11 @@ class IWorld;
 class RoundCamera {
 private:
 	enum class State {
+		Start,
 		Focus,
 		Move,
-		Return
+		Return,
+		End
 	};
 public:
 	RoundCamera(IWorld* world);
@@ -22,9 +24,11 @@ public:
 
 	bool isEnd()const { return isEnd_; }
 private:
+	void Start(float deltaTime);
 	void Focus(float deltaTime);
 	void Move(float deltaTime);
 	void Return(float deltaTime);
+	void End(float deltaTime);
 
 	void changeState(State state);
 private:
@@ -42,6 +46,7 @@ private:
 	Vector3 defaultPos_;//巡回開始時の位置
 	Vector3 targetVector_;//視点決定用ベクトル
 
+	Vector3 firstPos_;//1個目の場所
 	Vector3 outVector_{ 0.0f,50.0f,-60.0f };
 	bool isEnd_{ true };
 };
