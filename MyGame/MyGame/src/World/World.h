@@ -13,6 +13,7 @@
 #include"../Sound/TempoManager.h"
 #include"../ShadowMap/ShadowMap.h"
 #include"../ShadowMap/ShadowMap_Data.h"
+#include"../Camera/RoundCamera.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -77,12 +78,15 @@ public:
 	World(const World& other) = delete;
 	World& operator = (const World& other) = delete;
 
+	void roundCam();
+	bool roundEnd()const { return roundCamera_.isEnd(); }
 private:
 	void normaldraw() const;
 	void shadowdraw() const;
 private:
 	FieldPtr field_;
 	CameraPtr camera_;
+	RoundCamera roundCamera_;//演出用カメラ
 	Light  light_;
 	ActorManager actors_;
 	UIManager uiManager_;

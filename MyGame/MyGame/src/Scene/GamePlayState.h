@@ -6,4 +6,5 @@ enum GamePlayState
 	Play,
 	Pause,
 	End,
+	Round//ƒJƒƒ‰„‰ñ
 };

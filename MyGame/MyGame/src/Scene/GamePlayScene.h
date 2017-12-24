@@ -30,6 +30,7 @@ private:
 	void update_Play(float deltaTime);
 	void update_Pause(float deltaTime);
 	void update_End(float deltaTime);
+	void update_Round(float deltaTime);
 
 	void changeState(GamePlayState state);
 

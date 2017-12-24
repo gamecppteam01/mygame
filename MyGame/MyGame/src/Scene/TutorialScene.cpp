@@ -89,6 +89,8 @@ void TutorialScene::start()
 	world_.FindInitialize();
 
 	text_.Reset();
+
+	world_.init_update();
 }
 
 void TutorialScene::update(float deltaTime)

@@ -47,7 +47,8 @@ GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffe
 	updateFuncMap_[GamePlayState::Play] = [&](float deltaTime) {update_Play(deltaTime); };
 	updateFuncMap_[GamePlayState::Pause] = [&](float deltaTime) {update_Pause(deltaTime); };
 	updateFuncMap_[GamePlayState::End] = [&](float deltaTime) {update_End(deltaTime); };
-
+	updateFuncMap_[GamePlayState::Round] = [&](float deltaTime) {update_Round(deltaTime); };
+	
 }
 
 //開始
@@ -65,8 +66,6 @@ void GamePlayScene::start() {
 
 	//ライトの設定
 	settingLight();
-
-	state_ = GamePlayState::Start;
 
 	std::shared_ptr<Field> field = std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -146,6 +145,9 @@ void GamePlayScene::start() {
 
 	//Tスタンス解消関数
 	world_.init_update();
+
+	state_ = GamePlayState::Start;
+	changeState(Round);
 }
 
 //更新
@@ -274,6 +276,12 @@ void GamePlayScene::update_End(float deltaTime) {
 
 }
 
+void GamePlayScene::update_Round(float deltaTime)
+{
+	world_.update_end(deltaTime);
+	if (world_.roundEnd())changeState(GamePlayState::Start);
+}
+
 //状態遷移
 void GamePlayScene::changeState(GamePlayState state) {
 	if (state_ == state)return;//既にその状態なら遷移しない
@@ -294,6 +302,8 @@ void GamePlayScene::changeState(GamePlayState state) {
 		world_.restart();
 		break;
 	case End:
+		break;
+	case Round:
 		break;
 	default:
 		break;
@@ -324,6 +334,9 @@ void GamePlayScene::changeState(GamePlayState state) {
 
 		break;
 	}
+	case Round:
+		world_.roundCam();
+		break;
 	default:
 		break;
 	}

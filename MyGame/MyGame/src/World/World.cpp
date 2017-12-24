@@ -9,6 +9,7 @@ World::World() :
 	listener_([](EventMessage, void*) {}),
 	field_(std::make_shared<Field>()),
 	camera_(std::make_shared<OverLookingCamera>()),
+	roundCamera_(this),
 	light_(true),
 	uiManager_(),
 	stepTimer_(),
@@ -31,6 +32,7 @@ void World::Initialize()
 	//各値を初期値に
 	field_ = std::make_shared<Field>();
 	camera_ = std::make_shared<OverLookingCamera>();
+	roundCamera_ = RoundCamera(this);
 	light_.Initialize();
 	actors_.initialize();
 	uiManager_.initialize();
@@ -73,7 +75,8 @@ void World::update(float deltaTime) {
 	scoreManager_.updata(deltaTime);
 	// アクターの更新処理
 	actors_.update(deltaTime);
-	camera_->update(deltaTime);
+	if(roundCamera_.isEnd())camera_->update(deltaTime);
+	else roundCamera_.onUpdate(deltaTime);
 	uiManager_.update(deltaTime);
 	tempo_.update(deltaTime);
 
@@ -85,6 +88,7 @@ void World::update(float deltaTime) {
 
 void World::update_end(float deltaTime)
 {
+	if (!roundCamera_.isEnd())roundCamera_.onUpdate(deltaTime);
 	uiManager_.update(deltaTime);
 	lateDrawFuncList_.clear();
 	lateDrawFuncListAfterUI_.clear();
@@ -249,6 +253,11 @@ void World::setShadowMap(const bool flag, const MODEL_ID& id) {
 	shadow_data = DataManager::GetInstance().getShadowData(id);
 	shadowmap_.makeShadowMap(shadow_data.Id, shadow_data.Size, shadow_data.Direction);
 	shadowmap_.AllSetRange(shadow_data.MinPos, shadow_data.MaxPos);
+}
+
+void World::roundCam()
+{
+	roundCamera_.init();
 }
 
 void World::normaldraw() const {

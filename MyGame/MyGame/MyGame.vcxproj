@@ -192,6 +192,7 @@
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Camera\CameraActor.cpp" />
     <ClCompile Include="src\Camera\OverLookingCamera.cpp" />
+    <ClCompile Include="src\Camera\RoundCamera.cpp" />
     <ClCompile Include="src\Conv\DXConverter.cpp" />
     <ClCompile Include="src\DataManager\DataManager.cpp" />
     <ClCompile Include="src\Effect\CircleEffect.cpp" />
@@ -332,6 +333,7 @@
     <ClInclude Include="src\Camera\CameraActor.h" />
     <ClInclude Include="src\Camera\CameraPtr.h" />
     <ClInclude Include="src\Camera\OverLookingCamera.h" />
+    <ClInclude Include="src\Camera\RoundCamera.h" />
     <ClInclude Include="src\Conv\ByteConverter.h" />
     <ClInclude Include="src\Conv\DXConverter.h" />
     <ClInclude Include="src\DataManager\DataManager.h" />
