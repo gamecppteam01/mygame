@@ -15,6 +15,7 @@
 #include"CheckStepTask.h"
 #include"../../Effect/EffekseerEffect/TurnEffect.h"
 #include"../../UI/Appear_StepUI.h"
+#include "../../Effect/EffekseerEffect/EffectIclude.h"
 
 class PlayerBullet;
 
@@ -295,7 +296,11 @@ protected:
 	StepStanbyEffect stepEffect_;
 
 	CheckStepTask checkstep_;
+	//ステップのエフェクト
 	TurnEffect turnEffect_;
+	QuarterEffect quaterEffect_;
+	SpinEffect spinEffect_;
+	HalfEffect halfEffect_;
 
 protected:
 	const Vector3 defaultPosition_;

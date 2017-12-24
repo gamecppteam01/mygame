@@ -69,7 +69,8 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 		Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f), velocity_(Vector3::Zero), gravity_(0.0f), animation_(),
 	state_(Player_State::Idle), prevState_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
-	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this)
+	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this), spinEffect_(world),
+	quaterEffect_(world),halfEffect_(world)
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -750,8 +751,12 @@ void Player::to_StepSuccessMode()
 	auto stepUI = world_->findUI("StepUI");
 	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepSuccess, (void*)&nextStep_);
 
+	if (nextStep_ == 1) {
+		quaterEffect_.start();
+	}
 	if (nextStep_ == 2) {
-		Sound::GetInstance().PlaySE(SE_ID::HALF_SE);
+		//Sound::GetInstance().PlaySE(SE_ID::HALF_SE);
+		halfEffect_.start();
 		change_State_and_Anim(Player_State::Attack, stepAnimScoreList_.at(nextStep_).first);
 		return;
 	}
@@ -759,6 +764,7 @@ void Player::to_StepSuccessMode()
 		turnEffect_.start();
 	}
 	if (nextStep_ == 4) {
+		spinEffect_.start();
 		change_State_and_Anim(Player_State::Shoot, stepAnimScoreList_.at(nextStep_).first);
 		return;
 	}
@@ -859,6 +865,9 @@ void Player::end_StepSuccessMode()
 	world_->getCamera()->ZoomOut();
 
 	turnEffect_.end();
+	quaterEffect_.end();
+	spinEffect_.end();
+	halfEffect_.end();
 }
 
 void Player::end_AttackMode()

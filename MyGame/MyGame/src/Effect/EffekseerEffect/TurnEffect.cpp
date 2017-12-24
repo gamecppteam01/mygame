@@ -17,6 +17,7 @@ void TurnEffect::start()
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::TURN_EFFECT, effect_, &target->position());
 	Sound::GetInstance().PlaySE(SE_ID::TURN_SE, 1, 1);
 	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE, 1, 1);
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, 0.5);
 }
 
 void TurnEffect::update(float deltaTime)
