@@ -165,6 +165,31 @@ float Player::getPlayerScoreRate() const
 	return world_->getScoreManager().GetCharacterScoreRate(playerNumber_);
 }
 
+void Player::startStepAnim()
+{
+	animation_.ChangeAnim((int)Player_Animation::Quarter, 0.0f, 1.0f, false);
+	bullet_->changeAnimation(animConvList.at(Player_Animation::Quarter), 0.0f, 1.0f, false);
+}
+
+void Player::stepAnimUpdate(float deltaTime)
+{
+	animation_.Update(1.0f);
+	bullet_->stepAnimUpdate(deltaTime);
+
+}
+
+bool Player::isStepAnimEnd()
+{
+	return animation_.IsAnimEnd();
+}
+
+void Player::endStepAnim()
+{
+	animation_.ChangeAnim((int)Player_Animation::Move_Forward);
+	bullet_->changeAnimation(animConvList.at(Player_Animation::Move_Forward));
+
+}
+
 void Player::createBullet()
 {
 	bullet_ = std::make_shared<PlayerBullet>(world_, position_, this);

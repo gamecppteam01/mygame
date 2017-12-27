@@ -80,6 +80,7 @@ public:
 
 	void roundCam();
 	bool roundEnd()const { return roundCamera_.isEnd(); }
+	RoundCamera& getRoundCam() { return roundCamera_; }
 private:
 	void normaldraw() const;
 	void shadowdraw() const;

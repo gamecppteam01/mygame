@@ -9,7 +9,7 @@
 #include"Screen/PauseScreen.h"
 #include"GamePlayState.h"
 #include"../Graphic/TextScreen.h"
-
+#include"../Method/MethodExecutor.h"
 
 
 //リソース読み込み専用シーン
@@ -58,6 +58,10 @@ private:
 	float timeCount_{ 3.0f };//スタート時のタイマー
 	int currentCount_{ 4 };//スタートで到達したカウント
 	PauseScreen pause_;
+
+	MethodExecutor methodExecutor_;
+
+	float timer_{ 0.0f };
 	//状態毎更新map
 	std::map<GamePlayState, std::function<void(float)>> updateFuncMap_;
 };

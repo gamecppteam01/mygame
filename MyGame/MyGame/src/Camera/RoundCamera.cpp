@@ -11,6 +11,7 @@ RoundCamera::RoundCamera(IWorld* world):world_(world), isEnd_(true)
 void RoundCamera::init()
 {
 	targetList_.clear();
+	func_ = [] {};
 
 	auto player = world_->findActor("Player");
 	std::list<ActorPtr> enemy;
@@ -68,6 +69,11 @@ void RoundCamera::onUpdate(float deltaTime)
 
 }
 
+Vector3 RoundCamera::getCurrentTargetPos() const { 
+	if (currentTarget_ >= targetList_.size())return Vector3::Zero;
+	return targetList_.at(currentTarget_).lock()->position(); 
+}
+
 void RoundCamera::Start(float deltaTime)
 {
 	moveTimer_ += deltaTime;
@@ -76,8 +82,17 @@ void RoundCamera::Start(float deltaTime)
 
 void RoundCamera::Focus(float deltaTime)
 {
-	moveTimer_ += deltaTime;
-	if (moveTimer_ >= 1.0f)changeState(State::Move);
+	targetList_.at(currentTarget_).lock()->stepAnimUpdate(deltaTime);
+
+	if (targetList_.at(currentTarget_).lock()->isStepAnimEnd()) {
+		func_ = [&] {moveTimer_ += deltaTime; };
+		targetList_.at(currentTarget_).lock()->endStepAnim();
+	}
+	func_();
+	if (moveTimer_ >= 0.5f) {
+		changeState(State::Move);
+
+	}
 }
 
 void RoundCamera::Move(float deltaTime)
@@ -107,12 +122,13 @@ void RoundCamera::End(float deltaTime)
 	moveTimer_ += deltaTime;
 
 	//position_ = Easing::EaseOutQuad(moveTimer_, startPosition_, defaultPos_ - startPosition_, 1.0f);
-	position_.x = Easing::EaseOutCubic(min(1.0f,moveTimer_), startPosition_.x, (defaultPos_ - startPosition_).x, 1.0f);
-	position_.z = Easing::EaseOutCubic(min(1.0f,moveTimer_), startPosition_.z, (defaultPos_ - startPosition_).z, 1.0f);
-	position_.y = Easing::EaseOutQuad (min(1.0f,moveTimer_), startPosition_.y, (defaultPos_ - startPosition_).y, 1.0f);
+	float time = 0.5f;
+	position_.x = Easing::EaseOutCubic(min(time,moveTimer_), startPosition_.x, (defaultPos_ - startPosition_).x, time);
+	position_.z = Easing::EaseOutCubic(min(time,moveTimer_), startPosition_.z, (defaultPos_ - startPosition_).z, time);
+	position_.y = Easing::EaseOutQuad (min(time,moveTimer_), startPosition_.y, (defaultPos_ - startPosition_).y, time);
 
-	if (moveTimer_ >= 1.2f) {
-		moveTimer_ = 1.0f;
+	if (moveTimer_ >= time + 0.2f) {
+		moveTimer_ = time;
 		isEnd_ = true;
 	}
 
@@ -126,6 +142,7 @@ void RoundCamera::changeState(State state)
 		break;
 	case RoundCamera::State::Focus:
 		currentTarget_++;
+		func_ = [] {};
 		if (currentTarget_ >= targetList_.size())state = State::Return;
 		break;
 	case RoundCamera::State::Move:
@@ -147,6 +164,7 @@ void RoundCamera::changeState(State state)
 		break;
 	case RoundCamera::State::Focus:
 		moveTimer_ = 0.0f;
+		targetList_.at(currentTarget_).lock()->startStepAnim();
 		break;
 	case RoundCamera::State::Move:
 		moveTimer_ = 0.0f;

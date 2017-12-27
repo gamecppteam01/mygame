@@ -40,7 +40,7 @@ static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int>> stageLi
 };
 
 //コンストラクタ
-GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_() {
+GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_(), methodExecutor_(){
 	//更新遷移先の設定
 	updateFuncMap_[GamePlayState::Reload] = [&](float deltaTime) {update_Reload(deltaTime); };
 	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
@@ -54,6 +54,8 @@ GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffe
 //開始
 void GamePlayScene::start() {
 	isStart_ = false;
+
+	methodExecutor_.initialize();
 
 	Sound::GetInstance().StopBGM();
 
@@ -154,6 +156,8 @@ void GamePlayScene::start() {
 void GamePlayScene::update(float deltaTime) {
 	//状態更新
 	updateFuncMap_[state_](deltaTime);
+
+	methodExecutor_.update();
 }
 
 //描画
@@ -278,7 +282,13 @@ void GamePlayScene::update_End(float deltaTime) {
 
 void GamePlayScene::update_Round(float deltaTime)
 {
+	if (world_.getRoundCam().currentState()==RoundCamera::State::Focus) {
+		lightHandle_.setLightEnableHandle("Spot", true);
+	}
+	else lightHandle_.setLightEnableHandle("Spot", false);
+	lightHandle_.setLightPositionHandle("Spot", world_.getRoundCam().getCurrentTargetPos() + Vector3::Up*80.0f);
 	world_.update_end(deltaTime);
+
 	if (world_.roundEnd())changeState(GamePlayState::Start);
 }
 
@@ -303,7 +313,14 @@ void GamePlayScene::changeState(GamePlayState state) {
 		break;
 	case End:
 		break;
-	case Round:
+	case Round:	
+		methodExecutor_.set([&] ()->bool{
+			timer_ += Time::GetInstance().deltaTime()*2.0f;
+			standardLight_.setGlobalAmbientLight(Color(timer_, timer_, timer_, timer_));
+			return timer_ >= 0.5f;
+		});
+		
+		lightHandle_.setLightEnableHandle("Spot", false);
 		break;
 	default:
 		break;
@@ -335,6 +352,8 @@ void GamePlayScene::changeState(GamePlayState state) {
 		break;
 	}
 	case Round:
+		standardLight_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
+
 		world_.roundCam();
 		break;
 	default:

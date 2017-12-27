@@ -35,6 +35,11 @@ Vector3 & PlayerBullet::position()
 	return player_->position();
 }
 
+void PlayerBullet::stepAnimUpdate(float deltaTime)
+{
+	animation_.Update(1.0f);
+}
+
 void PlayerBullet::onMessage(EventMessage message, void * param)
 {
 }

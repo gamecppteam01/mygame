@@ -51,6 +51,13 @@ public:
 		return centerPosition_;
 	}
 
+	//停止時のステップアニメーション開始命令
+	virtual void startStepAnim()override;
+	//停止時のステップアニメーション更新命令
+	virtual void stepAnimUpdate(float deltaTime)override;
+	virtual bool isStepAnimEnd()override;
+	virtual void endStepAnim()override;
+
 	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber);
 protected:
 	// メッセージ処理

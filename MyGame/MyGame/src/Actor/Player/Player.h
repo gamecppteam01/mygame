@@ -66,6 +66,14 @@ public:
 	float getTimer()const { return timeCount_; }
 
 	float getShootAngle()const { return shootAngle_; }
+
+	//停止時のステップアニメーション開始命令
+	virtual void startStepAnim()override;
+	//停止時のステップアニメーション更新命令
+	virtual void stepAnimUpdate(float deltaTime)override;
+	virtual bool isStepAnimEnd()override;
+	virtual void endStepAnim()override;
+
 protected:
 	void createBullet();
 	virtual void initialize()override;

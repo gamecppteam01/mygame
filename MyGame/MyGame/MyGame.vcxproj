@@ -408,6 +408,7 @@
     <ClInclude Include="src\Math\TwoDimensionalArray.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
+    <ClInclude Include="src\Method\MethodExecutor.h" />
     <ClInclude Include="src\Method\MethodTimer.h" />
     <ClInclude Include="src\Resource\CsvReader.h" />
     <ClInclude Include="src\Resource\LoadingList.h" />

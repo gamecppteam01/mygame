@@ -36,6 +36,9 @@ private:
 
 	Vector3 mathBound(Actor & other);
 
+	//停止時のステップアニメーション更新命令
+	virtual void stepAnimUpdate(float deltaTime)override;
+
 	//ベース用
 private:
 

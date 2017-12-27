@@ -92,6 +92,12 @@ public:
 	//通知処理
 	void receiveNotification(Notification start);
 
+	//停止時のステップアニメーション開始命令
+	virtual void startStepAnim() {}
+	//停止時のステップアニメーション更新命令
+	virtual void stepAnimUpdate(float deltaTime) {}
+	virtual bool isStepAnimEnd() { return true; }
+	virtual void endStepAnim() {}
 	int getCharacterNumber()const { return characterNumber_; }
 	void setCharacterNumber(int num) { characterNumber_ = num; }
 	// コピー禁止

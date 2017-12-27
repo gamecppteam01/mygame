@@ -68,6 +68,31 @@ void BaseEnemy::hitOther(const Vector3 & velocity)
 	//velocity_ += velocity;
 }
 
+void BaseEnemy::startStepAnim()
+{
+	animation_.ChangeAnim((int)Enemy_Animation::Quarter,0.0f,1.0f,false);
+	bullet_->changeAnimation(animConvList.at(Enemy_Animation::Quarter), 0.0f, 1.0f, false);
+
+}
+
+void BaseEnemy::stepAnimUpdate(float deltaTime)
+{
+	animation_.Update(1.0f);
+	bullet_->stepAnimUpdate(deltaTime);
+
+}
+
+bool BaseEnemy::isStepAnimEnd()
+{
+	return animation_.IsAnimEnd();
+}
+
+void BaseEnemy::endStepAnim()
+{
+	animation_.ChangeAnim((int)Enemy_Animation::Move_Forward);
+	bullet_->changeAnimation(animConvList.at(Enemy_Animation::Move_Forward));
+}
+
 std::shared_ptr<BaseEnemy> BaseEnemy::Create(IWorld * world, const Vector3 & position, int playerNumber)
 {
 	return std::make_shared<BaseEnemy>(world, "Enemy", position, playerNumber);

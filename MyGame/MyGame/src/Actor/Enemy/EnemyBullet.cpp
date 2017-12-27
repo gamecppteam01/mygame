@@ -132,6 +132,11 @@ Vector3 EnemyBullet::mathBound(Actor & other)
 	return bound;
 }
 
+void EnemyBullet::stepAnimUpdate(float deltaTime)
+{
+	animation_.Update(1.0f);
+}
+
 Vector3 * EnemyBullet::getPositionPtr()
 {
 	return &position_;

@@ -37,6 +37,10 @@ public:
 	Player* getCCPlayer();
 
 	virtual Vector3& position()override;
+
+	//停止時のステップアニメーション更新命令
+	virtual void stepAnimUpdate(float deltaTime)override;
+
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
