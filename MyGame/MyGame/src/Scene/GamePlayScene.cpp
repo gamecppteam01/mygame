@@ -30,6 +30,7 @@
 #include "../UI/EndUI.h"
 #include "../UI/Song_Title_UI.h"
 #include"../Graphic/EffekseerManager.h"
+#include"../UI/SpecifiedStepUI.h"
 
 //ÉQÅ[ÉÄÇÃéûä‘
 static const float gameTime = 5.0f;
@@ -391,4 +392,5 @@ void GamePlayScene::settingUI() {
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
+	//world_.addUI(std::make_shared<SpecifiedStepUI>(&world_));
 }
