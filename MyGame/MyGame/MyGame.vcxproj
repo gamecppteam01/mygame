@@ -185,6 +185,7 @@
     <ClCompile Include="src\Actor\Judge\Judge_NPC\Judge_NPC.cpp" />
     <ClCompile Include="src\Actor\Other\TutorialPoint.cpp" />
     <ClCompile Include="src\Actor\Player\CheckStepTask.cpp" />
+    <ClCompile Include="src\Actor\Player\ComboChecker.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
     <ClCompile Include="src\Actor\Player\ShootCollider.cpp" />
@@ -321,6 +322,7 @@
     <ClInclude Include="src\Actor\Judge_NPC\Judge_NPC.h" />
     <ClInclude Include="src\Actor\Other\TutorialPoint.h" />
     <ClInclude Include="src\Actor\Player\CheckStepTask.h" />
+    <ClInclude Include="src\Actor\Player\ComboChecker.h" />
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />

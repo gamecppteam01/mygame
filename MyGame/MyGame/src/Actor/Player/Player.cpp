@@ -143,7 +143,7 @@ void Player::addVelocity(const Vector3 & velocity)
 void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 {
 	if (!isCanStumble()&&!isAttack()&&state_!=Player_State::Down&&state_ != Player_State::Reversal)return;
-
+	if (comboType_ == ComboChecker::ComboType::Combo_Burst)return;//バーストコンボ成立中はひるまない
 	bound_ += velocity;
 
 	//攻撃状態ならひるまない
@@ -216,6 +216,10 @@ void Player::initialize()
 	gyroCheck_.initialize();
 	musicScore_.Initialize();
 	appear_stepUI_.Initialize();
+	comboChecker_.clear();
+	comboType_ = ComboChecker::ComboType::Combo_None;
+	comboTimer_ = 0.0f;
+	puComboCount_ = 0;
 }
 
 void Player::onPause()
@@ -253,9 +257,17 @@ void Player::onMessage(EventMessage message, void * param)
 
 void Player::onUpdate(float deltaTime)
 {
-	auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
-	if (ptr!=nullptr) {
-		musicScore_.setNotice(ptr->getIsNotice(playerNumber_));
+	//バーストコンボ中は無条件ステップ
+	if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
+		musicScore_.setNotice(true);
+		comboTimer_ -= deltaTime;
+		if (comboTimer_ <= 0.0f)comboType_ = ComboChecker::ComboType::Combo_None;//時間になったらコンボを終了する
+	}
+	else {
+		auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
+		if (ptr != nullptr) {
+			musicScore_.setNotice(ptr->getIsNotice(playerNumber_));
+		}
 	}
 	playerUpdateFunc_[state_](deltaTime);
 	animation_.Update(MathHelper::Sign(deltaTime));
@@ -337,6 +349,8 @@ void Player::onDraw() const
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
+
+		DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
 	}
 	, false);
 
@@ -759,11 +773,28 @@ void Player::to_StepSuccessMode()
 	}
 	world_->getCamera()->ZoomIn(0, 0);
 
+	//今コンボ中じゃなかったらコンボ追加
+	if (comboType_ == ComboChecker::ComboType::Combo_None) {
+		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
+		comboType_ = ComboChecker::checkCombo(comboChecker_);
+		if (comboType_ == ComboChecker::ComboType::Combo_Burst)comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
+		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
+	}
 	int key = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT, key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	if (isJustStep_) {
-		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second);
+		float scoreRate = 1.0f;//コンボ用のスコアレート
+
+		//ポイントアップコンボ中はスコアレート1.2倍
+		if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
+			scoreRate = 1.2f;
+			puComboCount_--;
+			//回数が終わったらコンボ終了
+			if (puComboCount_ <= 0)comboType_ = ComboChecker::ComboType::Combo_None;
+
+		}
+		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second*scoreRate);
 	}
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);

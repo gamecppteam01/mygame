@@ -16,6 +16,7 @@
 #include"../../Effect/EffekseerEffect/TurnEffect.h"
 #include"../../UI/Appear_StepUI.h"
 #include "../../Effect/EffekseerEffect/EffectIclude.h"
+#include"ComboChecker.h"
 
 class PlayerBullet;
 
@@ -309,6 +310,11 @@ protected:
 	QuarterEffect quaterEffect_;
 	SpinEffect spinEffect_;
 	HalfEffect halfEffect_;
+
+	std::vector<Player_Animation> comboChecker_;
+	ComboChecker::ComboType comboType_;
+	float comboTimer_;//バーストコンボの持続時間
+	int puComboCount_;//ポイントアップコンボの残り回数
 
 protected:
 	const Vector3 defaultPosition_;
