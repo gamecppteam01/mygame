@@ -116,7 +116,7 @@ void World::draw() const {
 	for (auto& d : lateDrawFuncListAfterUI_) {
 		d();
 	}
-
+	roundCamera_.onDraw();
 	tempo_.draw();
 
 }

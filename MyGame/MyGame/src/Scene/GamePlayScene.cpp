@@ -149,7 +149,7 @@ void GamePlayScene::start() {
 	//TÉXÉ^ÉìÉXâè¡ä÷êî
 	world_.init_update();
 
-	state_ = GamePlayState::Start;
+	state_ = GamePlayState::Reload;
 	changeState(Round);
 }
 
@@ -322,6 +322,9 @@ void GamePlayScene::changeState(GamePlayState state) {
 		});
 		
 		lightHandle_.setLightEnableHandle("Spot", false);
+
+		Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+		Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE,80.0f);
 		break;
 	default:
 		break;

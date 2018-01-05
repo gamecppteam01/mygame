@@ -3,6 +3,7 @@
 #include<memory>
 #include<functional>
 #include"../Math/Vector3.h"
+#include"../Game/ID.h"
 
 class Actor;
 class IWorld;
@@ -23,6 +24,7 @@ public:
 	// 更新処理
 	void onUpdate(float deltaTime);
 
+	void onDraw()const;
 	bool isEnd()const { return isEnd_; }
 
 	State currentState()const { return state_; }
@@ -42,7 +44,11 @@ private:
 
 	int currentTarget_{ 0 };
 
+	float cutInTime_{ 0.0f };//カットイン用のタイマー
+
 	float moveTimer_{ 0.0f };
+	
+	float cheerVolume_{ 0.0f };//歓声の音量
 	
 	State state_;
 
@@ -56,4 +62,11 @@ private:
 	bool isEnd_{ true };
 
 	std::function<void()> func_{};
+
+	std::vector<SPRITE_ID> cutin_ids_{
+		SPRITE_ID::CUTIN_INTRODUCT_SPRITE,
+		SPRITE_ID::CUTIN_LESSON1_SPRITE,
+		SPRITE_ID::CUTIN_LESSON2_SPRITE,
+		SPRITE_ID::CUTIN_LESSON3_SPRITE
+	};
 };

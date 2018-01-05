@@ -3,6 +3,8 @@
 #include"../Actor/Actor.h"
 #include"Camera.h"
 #include"../Math/Easing.h"
+#include"../Scene/Screen/TutorialCutIn.h"
+#include"../Sound/Sound.h"
 
 RoundCamera::RoundCamera(IWorld* world):world_(world), isEnd_(true)
 {
@@ -32,6 +34,8 @@ void RoundCamera::init()
 
 	firstPos_ = targetList_.front().lock()->position() + outVector_;
 	isEnd_ = false;
+	cutInTime_ = 0.0f;
+	cheerVolume_ = 0.0f;
 }
 
 void RoundCamera::onUpdate(float deltaTime)
@@ -69,6 +73,12 @@ void RoundCamera::onUpdate(float deltaTime)
 
 }
 
+void RoundCamera::onDraw() const
+{
+	if (currentTarget_ >= cutin_ids_.size())return;//”ÍˆÍŠO‚ÍƒŠƒ^[ƒ“
+	if(state_==State::Focus)TutorialCutIn::draw(cutin_ids_.at(currentTarget_), 100.0f, cutInTime_, 1.0f, 0.5f, 0.5f);
+}
+
 Vector3 RoundCamera::getCurrentTargetPos() const { 
 	if (currentTarget_ >= targetList_.size())return Vector3::Zero;
 	return targetList_.at(currentTarget_).lock()->position(); 
@@ -82,6 +92,9 @@ void RoundCamera::Start(float deltaTime)
 
 void RoundCamera::Focus(float deltaTime)
 {
+	cheerVolume_ += deltaTime;
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, cheerVolume_);
+	cutInTime_ += deltaTime;
 	targetList_.at(currentTarget_).lock()->stepAnimUpdate(deltaTime);
 
 	if (targetList_.at(currentTarget_).lock()->isStepAnimEnd()) {
@@ -97,6 +110,9 @@ void RoundCamera::Focus(float deltaTime)
 
 void RoundCamera::Move(float deltaTime)
 {
+	cheerVolume_ -= deltaTime*5.0f;
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, cheerVolume_);
+
 	moveTimer_ += deltaTime;
 
 	position_ = Easing::EaseOutQuad(moveTimer_, startPosition_, targetList_.at(currentTarget_).lock()->position() + outVector_ - startPosition_, 1.0f);
@@ -106,6 +122,8 @@ void RoundCamera::Move(float deltaTime)
 
 void RoundCamera::Return(float deltaTime)
 {
+	cheerVolume_ -= deltaTime*5.0f;
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, cheerVolume_);
 
 	//moveTimer_ += deltaTime;
 	//
@@ -122,7 +140,7 @@ void RoundCamera::End(float deltaTime)
 	moveTimer_ += deltaTime;
 
 	//position_ = Easing::EaseOutQuad(moveTimer_, startPosition_, defaultPos_ - startPosition_, 1.0f);
-	float time = 0.5f;
+	float time = 2.0f;
 	position_.x = Easing::EaseOutCubic(min(time,moveTimer_), startPosition_.x, (defaultPos_ - startPosition_).x, time);
 	position_.z = Easing::EaseOutCubic(min(time,moveTimer_), startPosition_.z, (defaultPos_ - startPosition_).z, time);
 	position_.y = Easing::EaseOutQuad (min(time,moveTimer_), startPosition_.y, (defaultPos_ - startPosition_).y, time);
@@ -148,6 +166,8 @@ void RoundCamera::changeState(State state)
 	case RoundCamera::State::Move:
 		break;
 	case RoundCamera::State::Return:
+		Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+
 		break;
 	case RoundCamera::State::End:
 		break;
@@ -165,6 +185,10 @@ void RoundCamera::changeState(State state)
 	case RoundCamera::State::Focus:
 		moveTimer_ = 0.0f;
 		targetList_.at(currentTarget_).lock()->startStepAnim();
+		cutInTime_ = 0.0f;
+		Sound::GetInstance().PlaySE(SE_ID::CHEER_SE);
+		cheerVolume_ = 0.0f;
+		Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, cheerVolume_);
 		break;
 	case RoundCamera::State::Move:
 		moveTimer_ = 0.0f;
