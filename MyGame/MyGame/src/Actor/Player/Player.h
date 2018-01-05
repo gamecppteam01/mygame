@@ -313,6 +313,7 @@ protected:
 
 	std::vector<Player_Animation> comboChecker_;
 	ComboChecker::ComboType comboType_;
+	int comboResetTimer_;
 	float comboTimer_;//バーストコンボの持続時間
 	int puComboCount_;//ポイントアップコンボの残り回数
 

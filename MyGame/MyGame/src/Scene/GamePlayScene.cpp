@@ -115,7 +115,7 @@ void GamePlayScene::start() {
 	//world_.addStepTimeListener(enemy2);
 	//world_.addStepTimeListener(enemy3);
 
-	//world_.addStepTimeListener(player);
+	world_.addStepTimeListener(player);
 
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(-45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(45.0f)));

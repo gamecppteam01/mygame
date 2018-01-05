@@ -220,6 +220,7 @@ void Player::initialize()
 	comboType_ = ComboChecker::ComboType::Combo_None;
 	comboTimer_ = 0.0f;
 	puComboCount_ = 0;
+	comboResetTimer_ = 0;
 }
 
 void Player::onPause()
@@ -257,6 +258,10 @@ void Player::onMessage(EventMessage message, void * param)
 
 void Player::onUpdate(float deltaTime)
 {
+	//ジャスト範囲外かつコンボ制限を超過したら
+	if(!((world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1)){
+		if (comboResetTimer_ <= 0)comboChecker_.clear();//コンボをリセット
+	}
 	//バーストコンボ中は無条件ステップ
 	if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
 		musicScore_.setNotice(true);
@@ -351,6 +356,34 @@ void Player::onDraw() const
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
 
 		DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
+
+		//デバッグ表示
+		int i = 0;
+		for (const auto& c : comboChecker_) {
+			switch (c)
+			{
+			case Player_Animation::Quarter: {
+				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Quarter");
+				break;
+			}
+			case Player_Animation::Attack: {
+				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Half");
+				break;
+			}
+			case Player_Animation::Turn: {
+				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Turn");
+				break;
+			}
+			case Player_Animation::Shoot: {
+				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Spin");
+				break;
+			}
+			default:
+				break;
+			}
+			i++;
+		}
+
 	}
 	, false);
 
@@ -390,6 +423,16 @@ void Player::onCollideResult()
 
 void Player::JustStep()
 {
+	//ステップ関係中じゃなければカウントをマイナス
+	if (state_ != Player_State::Step&&
+		state_ != Player_State::Step_Success&&
+		state_ != Player_State::Attack&&
+		state_ != Player_State::Shoot&&
+		state_ != Player_State::ShootEnd
+		) {
+		//時間が来たら
+		comboResetTimer_--;
+	}
 	//ステップ周期が来たら
 	stepCount_++;
 	//姿勢のチェックが必要なら
@@ -773,16 +816,10 @@ void Player::to_StepSuccessMode()
 	}
 	world_->getCamera()->ZoomIn(0, 0);
 
-	//今コンボ中じゃなかったらコンボ追加
-	if (comboType_ == ComboChecker::ComboType::Combo_None) {
-		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
-		comboType_ = ComboChecker::checkCombo(comboChecker_);
-		if (comboType_ == ComboChecker::ComboType::Combo_Burst)comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
-		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
-	}
 	int key = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT, key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
+	bool isChangeTypeNone = false;//この回でnone状態に遷移したかどうか
 	if (isJustStep_) {
 		float scoreRate = 1.0f;//コンボ用のスコアレート
 
@@ -791,11 +828,22 @@ void Player::to_StepSuccessMode()
 			scoreRate = 1.2f;
 			puComboCount_--;
 			//回数が終わったらコンボ終了
-			if (puComboCount_ <= 0)comboType_ = ComboChecker::ComboType::Combo_None;
-
+			if (puComboCount_ <= 0) {
+				comboType_ = ComboChecker::ComboType::Combo_None;
+				isChangeTypeNone = true;
+			}
 		}
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second*scoreRate);
 	}
+	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
+	if (comboType_ == ComboChecker::ComboType::Combo_None&&!isChangeTypeNone) {
+		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
+		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
+		comboType_ = ComboChecker::checkCombo(comboChecker_);
+		if (comboType_ == ComboChecker::ComboType::Combo_Burst)comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
+		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
+	}
+
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
 	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first), 0.0f, 1.0f, false);

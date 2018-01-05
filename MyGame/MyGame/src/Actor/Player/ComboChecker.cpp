@@ -13,11 +13,13 @@ std::vector<Player_Animation> const ComboChecker::burst{
 ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& comboList) {
 	bool isMiss = false;
 	int i = 1;
+	bool isDoubleTurn = false;//ターン2連続発生時の例外
 	for (const auto& parts : comboList) {
 		if (parts != Player_Animation::Quarter&&parts != Player_Animation::Turn) {
 			isMiss = true;
 			break;
 		}
+		if (i == 2 && parts == Player_Animation::Turn&&comboList.front() == Player_Animation::Turn)isDoubleTurn = true;
 		i++;
 	}
 	//コンボパーツじゃない物が混じってたら
@@ -25,8 +27,10 @@ ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& 
 		//消す
 		comboList.erase(comboList.begin(), comboList.begin() + i);
 	}
-	if (comboList.size() != 3)return ComboChecker::ComboType::Combo_None;//コンボは必ず3連式
-
+	if (comboList.size() != 3) {
+		if (isDoubleTurn)comboList.pop_back();//ターンが二連続だったら1つにする
+		return ComboChecker::ComboType::Combo_None;//コンボは必ず3連式
+	}
 	//ポイントアップの並びかを調べる
 	if (std::equal(comboList.begin(), comboList.end(), pointUp.begin(), pointUp.end())) {
 		comboList.clear();
