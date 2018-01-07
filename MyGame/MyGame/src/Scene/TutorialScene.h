@@ -6,11 +6,15 @@
 #include"../Graphic/TextScreen.h"
 #include<queue>
 #include<stack>
+#include"../Light/StandardLight.h"
+#include"../Light/LightHandle.h"
+
 class TutorialPlayer;
 class TutorialScene :public Scene {
 private:
 	enum State {
 		Reload,
+		Next,
 		TextDraw,
 		CutIn,
 		Play,
@@ -39,7 +43,12 @@ public:
 
 	int getTutorialNum()const;
 
+	void nextTutorial();//カットインとテキスト描画の遷移先を決定する
+
 	void nextLesson();//状態遷移
+
+	void settingLight();
+
 private:
 	const float StopTime{ 3.0f };//停止時間
 	const float InTime{ 0.5f };//カットインの再生時間
@@ -54,7 +63,14 @@ private:
 	PauseScreen pause_;
 	TextScreen text_;
 	State state_;
+	State prevState_;
 	std::shared_ptr<TutorialPlayer> player_;
 	std::map<State, std::function<void(float)>> updateFuncMap_;
 
+	//標準ライトクラス
+	StandardLight standardLight_{};
+	//ライトハンドルクラス
+	LightHandle lightHandle_{};
+
+	std::shared_ptr<Judgement_SpotLight> light_;
 };

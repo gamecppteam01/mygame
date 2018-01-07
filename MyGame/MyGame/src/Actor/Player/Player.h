@@ -75,6 +75,7 @@ public:
 	virtual bool isStepAnimEnd()override;
 	virtual void endStepAnim()override;
 
+	void initCheckStep();
 protected:
 	void createBullet();
 	virtual void initialize()override;

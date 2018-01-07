@@ -2,28 +2,74 @@
 #include"../../Scene/TutorialScene.h"
 #include"../../Input/InputChecker.h"
 #include"../../Math/Random.h"
+#include"../Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 
 //足を止めるレッスン番号
 static const std::list<int> stopList{
-	2,
-	3
+	6,
+	8,
+	10,
+	12
 };
 
 TutorialPlayer::TutorialPlayer(IWorld * world, const std::string & name, const Vector3 & position, TutorialScene * tutorial):
-	Player(world,name,position,1),tutorial_(tutorial), hitCount_(0)
+	Player(world,name,position,1),tutorial_(tutorial), hitCount_(0), isAlreadyInLight_(false)
 {
 }
 
 void TutorialPlayer::onUpdate(float deltaTime)
 {
 	Player::onUpdate(deltaTime);
+
+	switch (tutorial_->getTutorialNum())
+	{
+	//スポットライトのチュートリアル
+	case 14: {
+		auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
+		if (ptr != nullptr) {
+			//既にライトに当たってたら当たらなくなったかを検索
+			if (isAlreadyInLight_) {
+				//ライトから外れたら次へ(カメラの関係上ステップ系中は戻らない)
+				if (!ptr->getIsNotice(playerNumber_)&&
+					state_ != Player_State::Step&&
+					state_ != Player_State::Step_Success&&
+					state_ != Player_State::Attack&&
+					state_ != Player_State::Shoot&&
+					state_ != Player_State::ShootEnd
+					)tutorial_->nextLesson();
+				return;
+			}
+			//当たってるか検索
+			if (ptr->getIsNotice(playerNumber_)) {
+				isAlreadyInLight_ = true;
+			}
+		}
+		break;
+	}
+	case 16: {
+		if (checkstep_.isEndCheck()) {
+			tutorial_->nextLesson();
+		}
+		break;
+	}
+	case 18: {
+		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)tutorial_->nextLesson();
+		break;
+	}
+	case 20: {
+		if (comboType_ == ComboChecker::ComboType::Combo_Burst)tutorial_->nextLesson();
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 
 void TutorialPlayer::hitPoint()
 {
 	hitCount_++;
-	if (tutorial_->getTutorialNum() == 1&&hitCount_ >= 3) {
+	if (tutorial_->getTutorialNum() == 3&&hitCount_ >= 3) {
 		checkstep_.initialize();
 		checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Turn});
 		checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Quarter});
@@ -39,18 +85,32 @@ void TutorialPlayer::textEnd(int lessonNum)
 	}
 }
 
+void TutorialPlayer::resetCombo()
+{
+	comboChecker_.clear();
+	comboType_ = ComboChecker::ComboType::Combo_None;
+	isChangeBurstMode_ = false;
+}
+
 bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend)
 {
 	switch (tutorial_->getTutorialNum())
 	{
-	case 1: {
+	case 3: {
 		if (state == Player_State::Step)return false;
 		break;
 	}
 	default:
 		break;
 	}
-	if (state == Player_State::Stumble)return false;
+	if (
+		tutorial_->getTutorialNum() != 14 &&
+		tutorial_->getTutorialNum() != 16 &&
+		tutorial_->getTutorialNum() != 18 &&
+		tutorial_->getTutorialNum() != 20
+		) {
+		if (state == Player_State::Stumble)return false;
+	}
 	return Player::change_State_and_Anim(state, animID, animFrame, animSpeed, isLoop, blend);
 }
 void TutorialPlayer::idle_Update(float deltaTime)
@@ -80,6 +140,9 @@ void TutorialPlayer::idle_Update(float deltaTime)
 			};
 			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
 			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
 
 		}
@@ -107,7 +170,7 @@ void TutorialPlayer::end_StepSuccessMode()
 	switch (nextStep_)
 	{
 	case 1:
-		if (tutorial_->getTutorialNum() == 2) {
+		if (tutorial_->getTutorialNum() == 6) {
 			tutorial_->nextLesson();
 			checkstep_.initialize();
 			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Quarter});
@@ -117,8 +180,11 @@ void TutorialPlayer::end_StepSuccessMode()
 	case 2:
 		break;
 	case 3:
-		if (tutorial_->getTutorialNum() == 3) {
+		if (tutorial_->getTutorialNum() == 8) {
 			tutorial_->nextLesson();
+			checkstep_.initialize();
+			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Turn, Player_Animation::Quarter});
+			checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Half});
 		}
 		break;
 	case 4:
@@ -126,5 +192,29 @@ void TutorialPlayer::end_StepSuccessMode()
 	default:
 		break;
 	}
+}
+
+void TutorialPlayer::end_AttackMode()
+{
+	Player::end_AttackMode();
+
+	if (tutorial_->getTutorialNum() == 10) {
+		tutorial_->nextLesson();
+		checkstep_.initialize();
+		checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Half, Player_Animation::Turn, Player_Animation::Quarter});
+		checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Shoot});
+	}
+
+}
+
+void TutorialPlayer::end_ShootMode()
+{
+	Player::end_ShootMode();
+
+	if (tutorial_->getTutorialNum() == 12) {
+		tutorial_->nextLesson();
+		checkstep_.initialize();
+	}
+
 }
 

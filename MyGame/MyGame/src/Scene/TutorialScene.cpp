@@ -48,10 +48,14 @@ void TutorialScene::start()
 {
 	Sound::GetInstance().StopBGM();
 
+	light_ = nullptr;
+
 	world_.Initialize();
+	settingLight();
 	tutorialNumber_ = 1;
 	isEnd_ = false;
 	state_ = State::Play;
+	prevState_ = State::Play;
 	pause_.initialize();
 	std::shared_ptr<Field> field = std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
@@ -81,16 +85,19 @@ void TutorialScene::start()
 	cutInID_.push(SPRITE_ID::CUTIN_LESSON1_SPRITE);
 	cutInID_.push(SPRITE_ID::CUTIN_INTRODUCT_SPRITE);
 	
-	cutInNextState_.push(TextDraw);
-	cutInNextState_.push(Play);
-	textNextState_.push(CutIn);
-	changeState(State::CutIn);
+	//textNextState_.push(CutIn);//バトルダンスとは？
+	//cutInNextState_.push(TextDraw);//バトルダンスについて
+	//textNextState_.push(TextDraw);//移動について
+	//textNextState_.push(Play);//移動させる
+	changeState(State::TextDraw);
 
 	world_.FindInitialize();
 
 	text_.Reset();
 
 	world_.init_update();
+
+	world_.getCanChangedTempoManager().startMusic();
 }
 
 void TutorialScene::update(float deltaTime)
@@ -109,6 +116,8 @@ void TutorialScene::draw() const
 	if (state_ == Pause)pause_.draw();
 
 	if (state_ == CutIn)TutorialCutIn::draw(currentCutIn_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
+	
+	Time::GetInstance().draw_fps();
 }
 
 void TutorialScene::end()
@@ -119,17 +128,19 @@ void TutorialScene::end()
 	EffekseerManager::GetInstance().Stop();
 	text_.End();
 	player_ = nullptr;
+	//ライトハンドルの全削除
+	lightHandle_.deleteLightHandleAll();
 }
 
 void TutorialScene::changeState(State state) {
 
-	if (state_ == state)return;//既にその状態なら遷移しない
+	//if (state_ == state)return;//既にその状態なら遷移しない
 
 							   //状態の終了処理を行う
 	switch (state_)
 	{
 	case TextDraw:
-		world_.getCanChangedTempoManager().restartMusic();//音を再生
+		//world_.getCanChangedTempoManager().restartMusic();//音を再生
 		player_->textEnd(tutorialNumber_);
 		break;
 	case Play:
@@ -142,6 +153,7 @@ void TutorialScene::changeState(State state) {
 	}
 
 	//状態を変えて
+	prevState_ = state_;
 	state_ = state;
 
 	//対応した変更時処理を行う
@@ -150,6 +162,10 @@ void TutorialScene::changeState(State state) {
 	case Reload: {
 		end();
 		start();
+		break;
+	}
+	case Next: {
+		nextTutorial();
 		break;
 	}
 	case CutIn: {
@@ -163,10 +179,10 @@ void TutorialScene::changeState(State state) {
 	case TextDraw:
 		text_.Init("Lesson" + std::to_string(tutorialNumber_) + ".txt", 22);
 
-		world_.getCanChangedTempoManager().pauseMusic();//音を再生
+		//world_.getCanChangedTempoManager().pauseMusic();//音を中断
 		break;
 	case Play:
-		CreateEnemy::create(&world_, "res/File/map.csv", 2);
+		//CreateEnemy::create(&world_, "res/File/map.csv", 2);
 		break;
 	case Pause:
 		world_.pause();
@@ -179,17 +195,18 @@ void TutorialScene::changeState(State state) {
 
 void TutorialScene::update_textDraw(float deltaTime)
 {
+	world_.update_end(deltaTime);
 	text_.Update();
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 		text_.Check();
 	}
 	if (text_.isEnd()) {
-		State next = Play;
-		if (!textNextState_.empty()) {
-			next = textNextState_.front();
-			textNextState_.pop();
-		}
-		changeState(next);
+		//State next = Play;
+		//if (!textNextState_.empty()) {
+		//	next = textNextState_.front();
+		//	textNextState_.pop();
+		//}
+		changeState(Next);
 		return;
 	}
 
@@ -227,14 +244,15 @@ void TutorialScene::update_Pause(float deltaTime)
 
 void TutorialScene::update_CutIn(float deltaTime)
 {
+	world_.update_end(deltaTime);
 	cutInTimer_ += deltaTime;
 	if (cutInTimer_ >= StopTime+ InTime+ OutTime) {
-		State next = TextDraw;
-		if (!cutInNextState_.empty()) {
-			next = cutInNextState_.front();
-			cutInNextState_.pop();
-		}
-		changeState(next);
+		//State next = TextDraw;
+		//if (!cutInNextState_.empty()) {
+		//	next = cutInNextState_.front();
+		//	cutInNextState_.pop();
+		//}
+		changeState(Next);
 	}
 }
 
@@ -243,17 +261,255 @@ int TutorialScene::getTutorialNum() const
 	return tutorialNumber_;
 }
 
+void TutorialScene::nextTutorial()
+{
+	switch (tutorialNumber_)
+	{
+	case 1: {
+		//一番目のテキストが終わったらバトルダンスについてのカットイン
+		if (prevState_ == State::TextDraw) {
+			changeState(CutIn);
+		}
+		//テキスト終わった後にカットインもおわったらバトルダンスの説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 2: {
+		//説明が終わったら移動のカットイン
+		if (prevState_ == State::TextDraw) {
+			changeState(CutIn);
+		}
+		//カットインが終わったら移動の説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 3: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			changeState(Play);//移動をやらせる
+		}
+		break;
+	}
+	case 4: {
+		//説明が終わったらステップのカットイン
+		if (prevState_ == State::TextDraw) {
+			changeState(CutIn);
+		}
+		//カットインが終わったらステップの説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 5: {
+		tutorialNumber_++;
+		changeState(TextDraw);//クォーターの説明へ
+		break;
+	}
+	case 6: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			changeState(Play);//クォーターをやらせる
+		}
+		break;
+	}
+	case 7: {
+		tutorialNumber_++;
+		changeState(TextDraw);//クォーターの説明が終わったらターンへ
+		break;
+	}
+	case 8: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			changeState(Play);//ターンをやらせる
+		}
+		break;
+	}
+	case 9: {
+		tutorialNumber_++;
+		changeState(TextDraw);//ハーフへ
+		break;
+	}
+	case 10: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			changeState(Play);//ハーフをやらせる
+		}
+		break;
+	}
+	case 11: {
+		tutorialNumber_++;
+		changeState(TextDraw);//スピンへ
+	}
+	case 12: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			changeState(Play);//スピンをやらせる
+		}
+		break;
+	}
+	case 13: {
+		//説明が終わったらライトのカットイン
+		if (prevState_ == State::TextDraw) {
+			changeState(CutIn);
+		}
+		//カットインが終わったらライトの説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 14: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			light_ = std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_);
+			world_.addActor(ActorGroup::NPC, light_);
+
+			changeState(Play);//ライトにはいらせる
+		}
+		break;
+	}
+	case 15: {
+		//説明が終わったら規定プログラムのカットイン
+		if (prevState_ == State::TextDraw) {
+			if(light_.use_count()>0)light_->dead();
+			changeState(CutIn);
+		}
+		//カットインが終わったら規定プログラムの説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 16: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			player_->initCheckStep();
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
+			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
+			
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
+			//player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
+
+			changeState(Play);//規定プログラムをやらせる
+		}
+		break;
+	}
+	case 17: {
+		//説明が終わったらコンボのカットイン
+		if (prevState_ == State::TextDraw) {
+			changeState(CutIn);
+		}
+		//カットインが終わったらコンボの説明へ
+		else {
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		break;
+	}
+	case 18: {
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			player_->resetCombo();
+			changeState(Play);//ポイントアップコンボをやらせる
+		}
+		break;
+	}
+	case 19: {
+		tutorialNumber_++;
+		changeState(TextDraw);//バーストコンボの説明
+		break;
+	}
+	case 20:{
+		if (prevState_ == Play) {
+			//やってたらほめる
+			tutorialNumber_++;
+			changeState(TextDraw);
+		}
+		else {
+			player_->resetCombo();
+			changeState(Play);//バーストコンボをやらせる
+		}
+		break;
+	}
+	case 21: {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_TITLE;
+		return;
+	}
+	default:
+		break;
+	}
+}
+
 void TutorialScene::nextLesson()
 {
 	if (state_ == Play) {
-		tutorialNumber_++;
-		if (tutorialNumber_ > 3) {
-			isEnd_ = true;
-			next_ = SceneType::SCENE_TITLE;
-			return;
-		}
-
 		cutInID_.push(cutinList[tutorialNumber_]);
-		changeState(CutIn);
+		changeState(Next);
 	}
+}
+
+void TutorialScene::settingLight()
+{
+	//標準ライトの設定
+	standardLight_.initialize();
+	standardLight_.changeLightTypeDir(Vector3(0.0f, -1.0f, 0.0f));
+	standardLight_.setLightAmbientColor(Color(0.1f, 0.1f, 0.1f, 0.1f));
+	standardLight_.setLghtSpecurColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	standardLight_.setLightDiffuseColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
+
+	//ライトハンドルの設定
+	lightHandle_.setUsePixelLighting(true);
+	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), 0.7f, 0.6f, 500.0f, 0.75f, 0.003f, 0.0f);
+	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
+	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
+	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	//グローバルアンビエントの設定
+	standardLight_.setGlobalAmbientLight(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	lightHandle_.setLightEnableHandle("Spot", false);
+
 }

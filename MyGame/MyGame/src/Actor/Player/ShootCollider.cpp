@@ -19,7 +19,7 @@ void ShootCollider::onUpdate(float deltaTime)
 
 void ShootCollider::onDraw() const
 {
-	body_->transform(getPose())->draw();
+	//body_->transform(getPose())->draw();
 }
 
 void ShootCollider::onCollide(Actor & other)

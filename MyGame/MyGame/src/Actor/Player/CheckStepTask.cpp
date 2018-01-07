@@ -46,3 +46,8 @@ bool CheckStepTask::operator()(const Player_Animation & anim)
 	auto lockitr = std::find(lockList_[currentCheckKey_].begin(), lockList_[currentCheckKey_].end(), anim);
 	return lockitr == lockList_.at(currentCheckKey_).end();
 }
+
+bool CheckStepTask::isEndCheck()
+{
+	return lockList_.size() <= currentCheckKey_;
+}

@@ -190,6 +190,11 @@ void Player::endStepAnim()
 
 }
 
+void Player::initCheckStep()
+{
+	checkstep_.initialize();
+}
+
 void Player::createBullet()
 {
 	bullet_ = std::make_shared<PlayerBullet>(world_, position_, this);
@@ -367,7 +372,7 @@ void Player::onDraw() const
 				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Quarter");
 				break;
 			}
-			case Player_Animation::Attack: {
+			case Player_Animation::Half: {
 				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Half");
 				break;
 			}

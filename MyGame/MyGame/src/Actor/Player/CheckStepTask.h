@@ -15,6 +15,7 @@ public:
 	//true‚È‚ç—LŒø
 	bool operator ()(const Player_Animation& anim);
 
+	bool isEndCheck();//ğŒ‚ğ‘S•”–‚½‚µ‚½‚©
 private:
 	int currentCheckKey_;
 	std::vector<std::list<Player_Animation>> lockList_;
