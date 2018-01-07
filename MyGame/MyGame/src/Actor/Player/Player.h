@@ -311,6 +311,7 @@ protected:
 	SpinEffect spinEffect_;
 	HalfEffect halfEffect_;
 
+	bool isChangeBurstMode_;//ステップ終了後にバーストモードに遷移するかどうか
 	std::vector<Player_Animation> comboChecker_;
 	ComboChecker::ComboType comboType_;
 	int comboResetTimer_;

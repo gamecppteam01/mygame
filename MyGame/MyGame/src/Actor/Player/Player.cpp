@@ -221,6 +221,7 @@ void Player::initialize()
 	comboTimer_ = 0.0f;
 	puComboCount_ = 0;
 	comboResetTimer_ = 0;
+	isChangeBurstMode_ = false;
 }
 
 void Player::onPause()
@@ -835,15 +836,19 @@ void Player::to_StepSuccessMode()
 		}
 		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnimScoreList_.at(nextStep_).second*scoreRate);
 	}
+	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
 	if (comboType_ == ComboChecker::ComboType::Combo_None&&!isChangeTypeNone) {
 		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
 		comboType_ = ComboChecker::checkCombo(comboChecker_);
-		if (comboType_ == ComboChecker::ComboType::Combo_Burst)comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
+		if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
+			isChangeBurstMode_ = true;
+			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
+			comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
+		}
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
 	}
-
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
 	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first), 0.0f, 1.0f, false);
@@ -968,6 +973,12 @@ void Player::end_StepSuccessMode()
 	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
 	world_->getCamera()->ZoomOut();
 
+	//バーストへの遷移が成立してたら遷移する
+	if (isChangeBurstMode_) {
+		isChangeBurstMode_ = false;
+		comboType_ = ComboChecker::ComboType::Combo_Burst;//一時的にNoneにしてステップ終了時にバーストに遷移
+		comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
+	}
 	turnEffect_.end();
 	quaterEffect_.end();
 	spinEffect_.end();
