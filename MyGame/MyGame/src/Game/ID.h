@@ -80,6 +80,9 @@ enum SPRITE_ID
     QUATER_SPRITE,
 
 	TITLE_CURSOR,
+	YES_TEXT,
+	NO_TEXT,
+	TUTORIAL_TEXT,
 
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };

@@ -58,6 +58,9 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "nextstage.png", SPRITE_ID::NEXTSTAGE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "clear.png", SPRITE_ID::CLEAR_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "sceneMove.png", SPRITE_ID::FADE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "tutorialText.png", SPRITE_ID::TUTORIAL_TEXT);
+	Sprite::GetInstance().Load(defaultPath + "YESText.png", SPRITE_ID::YES_TEXT);
+	Sprite::GetInstance().Load(defaultPath + "NOText.png", SPRITE_ID::NO_TEXT);
 	
 
 	Sprite::GetInstance().Load(defaultPath + "Enemy.png",   SPRITE_ID::ENEMY);

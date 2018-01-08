@@ -40,3 +40,11 @@ ShadowMap_Data DataManager::getShadowData(const MODEL_ID& id)
 {
 	return shdowData_[id];
 }
+
+void DataManager::setIsTutorial(bool flag){
+	is_Tutorial_ = flag;
+}
+
+bool DataManager::getIsTutorial() const{
+	return is_Tutorial_;
+}

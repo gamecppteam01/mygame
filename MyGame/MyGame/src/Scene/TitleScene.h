@@ -12,6 +12,8 @@ enum TitleState
 	first,
 	//二段階
 	second,
+	//三段階
+	third,
 };
 
 class TitleScene : public Scene {
@@ -46,5 +48,10 @@ private:
 		{ Vector2{ 450.0f,400.f },SceneType::SCENE_TUTORIAL },
 		{ Vector2{ 450.0f,525.f },SceneType::SCENE_STAGESELECT },
 		{ Vector2{ 450.0f,650.f },SceneType::SCENE_EXIT }//ゲーム終了(遷移先はダミー)
+	};
+	//カーソルの位置
+	const std::vector<std::pair<Vector2, bool>> cursorPoses2{
+		{ Vector2{450.0f,525.0f},true},
+		{ Vector2{ 450.0f,650.0f },false }
 	};
 };
