@@ -71,6 +71,7 @@ void TitleScene::update(float deltaTime)
 				}
 				else{
 					titleState_ = TitleState::third;
+					Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
 				}
 				DataManager::GetInstance().setIsTutorial(false);
 			}
