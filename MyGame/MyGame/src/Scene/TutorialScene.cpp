@@ -23,6 +23,7 @@
 #include"../Graphic/EffekseerManager.h"
 #include"Screen/TutorialCutIn.h"
 #include"Screen/CreateEnemy.h"
+#include"../Actor/Player/RegulationMaker.h"
 
 std::map<int,SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
@@ -421,14 +422,15 @@ void TutorialScene::nextTutorial()
 			changeState(TextDraw);
 		}
 		else {
-			player_->initCheckStep();
-			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
-			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
-			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
-			
-			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
-			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
-			//player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
+			RegulationMaker::SetRegulationTutorial(player_);//‹K’è‚Ìİ’è
+			//player_->initCheckStep();
+			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
+			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
+			////player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
+			//
+			//player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
+			//player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
+			////player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 
 			changeState(Play);//‹K’èƒvƒƒOƒ‰ƒ€‚ğ‚â‚ç‚¹‚é
 		}

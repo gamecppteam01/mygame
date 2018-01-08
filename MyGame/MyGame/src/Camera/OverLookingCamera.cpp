@@ -179,21 +179,23 @@ void OverLookingCamera::zoom_default(float deltaTime)
 void OverLookingCamera::zoom_in(float deltaTime)
 {
 	timeCount_ += deltaTime*zoomSpeed;
+	if (timeCount_ >= 1.0f) {
+		timeCount_ = 1.0f;
+		zoomType_ = 0;
+	}
 
 	easeFuncList_[easeKey_]();
 
-	if (timeCount_ >= 1.0f) {
-		zoomType_ = 0;
-	}
 }
 
 void OverLookingCamera::zoom_out(float deltaTime)
 {
 	timeCount_ -= deltaTime*zoomSpeed;
+	if (timeCount_ <= 0.0f) {
+		timeCount_ = 0.0f;
+		zoomType_ = 0;
+	}
 
 	easeFuncList_[easeKey_]();
 
-	if (timeCount_ <= 0.0f) {
-		zoomType_ = 0;
-	}
 }

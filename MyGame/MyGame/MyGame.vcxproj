@@ -188,6 +188,7 @@
     <ClCompile Include="src\Actor\Player\ComboChecker.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
+    <ClCompile Include="src\Actor\Player\RegulationMaker.cpp" />
     <ClCompile Include="src\Actor\Player\ShootCollider.cpp" />
     <ClCompile Include="src\Actor\Player\TutorialPlayer.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
@@ -327,6 +328,7 @@
     <ClInclude Include="src\Actor\Player\Player.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />
     <ClInclude Include="src\Actor\Player\Player_Animation.h" />
+    <ClInclude Include="src\Actor\Player\RegulationMaker.h" />
     <ClInclude Include="src\Actor\Player\ShootCollider.h" />
     <ClInclude Include="src\Actor\Player\Step_Type.h" />
     <ClInclude Include="src\Actor\Player\TutorialPlayer.h" />

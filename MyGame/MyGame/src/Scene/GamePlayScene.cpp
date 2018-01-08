@@ -31,13 +31,14 @@
 #include "../UI/Song_Title_UI.h"
 #include"../Graphic/EffekseerManager.h"
 #include"../UI/SpecifiedStepUI.h"
+#include"../Actor/Player/RegulationMaker.h"
 
 //ゲームの時間
 static const float gameTime = 5.0f;
-static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150),
-	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255),
-	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255)
+static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::function<void(const std::shared_ptr<Player>&)>>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量,規定設定関数
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation1(p); }),
+	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation2(p); }),
+	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation3(p); })
 };
 
 //コンストラクタ
@@ -80,6 +81,7 @@ void GamePlayScene::start() {
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
 
+	std::get<6>(stageList[stageNum_ - 1])(player);
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});

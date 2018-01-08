@@ -975,7 +975,7 @@ void Player::end_StepMode()
 
 void Player::end_StepSuccessMode()
 {
-	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
+	//if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
 	world_->getCamera()->ZoomOut();
 
 	//バーストへの遷移が成立してたら遷移する
