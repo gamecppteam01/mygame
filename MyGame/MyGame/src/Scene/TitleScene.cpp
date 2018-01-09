@@ -150,7 +150,7 @@ void TitleScene::draw() const
 	//ステージ選択か終了
 	if (titleState_ == TitleState::third) {
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
-		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, cursorPoses[cursor_].first, origin, 1.0f, Vector2::One);
+		//Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, cursorPoses[cursor_].first, origin, 1.0f, Vector2::One);
 		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f - cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, true);
 		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, false);
 		origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_SPRITE) / 2;

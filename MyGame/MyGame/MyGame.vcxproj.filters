@@ -953,5 +953,8 @@
     <ClInclude Include="src\Actor\Player\RegulationMaker.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Actor\Player\InputDrawer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

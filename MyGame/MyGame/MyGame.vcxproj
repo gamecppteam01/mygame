@@ -325,6 +325,7 @@
     <ClInclude Include="src\Actor\Player\CheckStepTask.h" />
     <ClInclude Include="src\Actor\Player\ComboChecker.h" />
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h" />
+    <ClInclude Include="src\Actor\Player\InputDrawer.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />
     <ClInclude Include="src\Actor\Player\Player_Animation.h" />
