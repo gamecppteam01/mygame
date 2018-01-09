@@ -71,15 +71,15 @@ void StageSelectScene::draw() const
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
 
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE1_TEXT_SPRITE, basePos, origin, 1.0f, Vector2::One*0.7f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE_1_SPRITE, basePos, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE2_TEXT_SPRITE) / 2;
 	if (cursor_ != 1)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE2_TEXT_SPRITE, Vector2{ basePos.x,basePos.y+padding }, origin, 1.0f, Vector2::One*0.7f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE_2_SPRITE, Vector2{ basePos.x,basePos.y+padding }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE3_TEXT_SPRITE) / 2;
 	if (cursor_ != 2)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGE3_TEXT_SPRITE, Vector2{ basePos.x,basePos.y + padding*2 }, origin, 1.0f, Vector2::One*0.7f);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGE_3_SPRITE, Vector2{ basePos.x,basePos.y + padding*2 }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
 
 	//ƒ^ƒCƒgƒ‹‚Ö‚Ì‘JˆÚ
@@ -93,6 +93,13 @@ void StageSelectScene::draw() const
 //	if (cursor_ != 3)SetDrawBright(100, 100, 100);
 //	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ WINDOW_WIDTH*0.5f,600.0f }, origin, 1.0f, Vector2::One);
 //	SetDrawBright(255, 255, 255);
+
+	
+	//‰æ‘œ•`‰æ
+	//Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::CHARACTER) / 2;
+	//Vector2 size2 = Sprite::GetInstance().GetSize(SPRITE_ID::CHARACTER_NAME) / 2;
+	//Sprite::GetInstance().Draw(SPRITE_ID::CHARACTER, Vector2{ WINDOW_WIDTH / 2 - 600.0f, WINDOW_HEIGHT / 2 - 100.0f }, 1.0f);
+	//Sprite::GetInstance().Draw(SPRITE_ID::CHARACTER_NAME, Vector2{ WINDOW_WIDTH / 2 - 600.0f, WINDOW_HEIGHT / 2 + 50.0f}, 1.0f);
 }
 
 void StageSelectScene::end()

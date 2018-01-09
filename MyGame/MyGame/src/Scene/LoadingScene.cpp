@@ -105,6 +105,10 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "Lesson2_Cutin.png", SPRITE_ID::CUTIN_LESSON2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Lesson3_Cutin.png", SPRITE_ID::CUTIN_LESSON3_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "titlecursor.png", SPRITE_ID::TITLE_CURSOR);
+
+	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "stage2name.png", SPRITE_ID::STAGE_2_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "stage3name.png", SPRITE_ID::STAGE_3_SPRITE);
 }
 
 void LoadingScene::LoadModel()
