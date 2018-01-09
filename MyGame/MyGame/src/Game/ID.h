@@ -224,4 +224,5 @@ enum class Notification {
 	Call_StepFailed,//ステップ失敗時
 
 	Call_ReciveStep,//ステップ受け取り成功
+	Call_ComboStep,//コンボ
 };
