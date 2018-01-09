@@ -32,6 +32,7 @@
 #include"../Graphic/EffekseerManager.h"
 #include"../UI/SpecifiedStepUI.h"
 #include"../Actor/Player/RegulationMaker.h"
+#include "../UI/SpecifiedStepManager.h"
 
 //ƒQ[ƒ€‚ÌŠÔ
 static const float gameTime = 5.0f;
@@ -397,5 +398,5 @@ void GamePlayScene::settingUI() {
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
-	//world_.addUI(std::make_shared<SpecifiedStepUI>(&world_));
+	world_.addUI(std::make_shared<SpecifiedStepManager>(&world_));
 }
