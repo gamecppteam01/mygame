@@ -32,10 +32,7 @@ public:
 	virtual void pause() override;
 	virtual void restart() override;
 
-
-private:
-
-	int stepMatching();
+	int stepMatching(int stepType);
 	
 private:
 	IWorld * world_;

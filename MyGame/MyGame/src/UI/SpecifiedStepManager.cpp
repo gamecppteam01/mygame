@@ -1,6 +1,13 @@
 #include "SpecifiedStepManager.h"
 #include "SpecifiedDraw.h"
 
+static const std::map<int, SPRITE_ID> changeSprList{
+	{ 1,SPRITE_ID::QUATER_SPRITE },
+	{ 2,SPRITE_ID::HALF_SPRITE },
+	{ 3,SPRITE_ID::TURN_SPRITE },
+	{ 4,SPRITE_ID::SPIN_SPRITE }
+};
+
 SpecifiedStepManager::SpecifiedStepManager(IWorld * world)
 	: UI{ "SpecifiedStepManager", position_ }, world_(world)
 {
@@ -20,8 +27,7 @@ void SpecifiedStepManager::initialize()
 void SpecifiedStepManager::update(float deltaTime)
 {
 	if (stepdraw_.empty()) return;
-	//stepMathingと一致したら消す
-	stepMatching();
+
 	for (auto &a : stepdraw_) {
 		a->update(deltaTime);
 	}
@@ -87,25 +93,32 @@ void SpecifiedStepManager::restart()
 	IsPause = false;
 }
 
-int SpecifiedStepManager::stepMatching()
+int SpecifiedStepManager::stepMatching(int stepType)
 {
 	if (stepdraw_.empty())return 0;
-	if (stepdraw_.front()->getIsStart()) return 0;
-	//ステップ １クオーター、２ハーフ、３ターン、４スピン
-	if (target_->getStep() == 1 && target_->getState() == Player::Player_State::Step_Success) {
-		if (stepdraw_.front()->getid() == SPRITE_ID::QUATER_SPRITE) stepdraw_.front()->IsStart();
-		
+	if (stepdraw_.front()->getid() == changeSprList.at(stepType)) {
+		stepdraw_.front()->IsStart();
 	}
-	if (target_->getStep() == 2 && target_->getState() == Player::Player_State::Attack) {
-		if (stepdraw_.front()->getid() == SPRITE_ID::HALF_SPRITE) stepdraw_.front()->IsStart();
-	}
-	if (target_->getStep() == 3 && target_->getState() == Player::Player_State::Step_Success) {
-		if (stepdraw_.front()->getid() == SPRITE_ID::TURN_SPRITE) stepdraw_.front()->IsStart();
-	}
-	if (target_->getStep() == 4 && target_->getState() == Player::Player_State::Shoot) {
-		if (stepdraw_.front()->getid() == SPRITE_ID::SPIN_SPRITE) stepdraw_.front()->IsStart();
-	}
-	if (target_->getStep() == 0)return 0;
+
+	return 1;
+
+
+	//if (stepdraw_.front()->getIsStart()) return 0;
+	////ステップ １クオーター、２ハーフ、３ターン、４スピン
+	//if (target_->getStep() == 1 && target_->getState() == Player::Player_State::Step_Success) {
+	//	if (stepdraw_.front()->getid() == SPRITE_ID::QUATER_SPRITE) stepdraw_.front()->IsStart();
+	//	
+	//}
+	//if (target_->getStep() == 2 && target_->getState() == Player::Player_State::Attack) {
+	//	if (stepdraw_.front()->getid() == SPRITE_ID::HALF_SPRITE) stepdraw_.front()->IsStart();
+	//}
+	//if (target_->getStep() == 3 && target_->getState() == Player::Player_State::Step_Success) {
+	//	if (stepdraw_.front()->getid() == SPRITE_ID::TURN_SPRITE) stepdraw_.front()->IsStart();
+	//}
+	//if (target_->getStep() == 4 && target_->getState() == Player::Player_State::Shoot) {
+	//	if (stepdraw_.front()->getid() == SPRITE_ID::SPIN_SPRITE) stepdraw_.front()->IsStart();
+	//}
+	//if (target_->getStep() == 0)return 0;
 	
 }
 

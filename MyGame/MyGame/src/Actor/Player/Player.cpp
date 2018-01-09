@@ -28,6 +28,7 @@
 #include"../Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 #include"ShootCollider.h"
 #include"../../UI/UI.h"
+#include"../../UI/SpecifiedStepManager.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
@@ -843,7 +844,7 @@ void Player::to_StepSuccessMode()
 	}
 	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
-	if (comboType_ == ComboChecker::ComboType::Combo_None&&!isChangeTypeNone) {
+	if (checkstep_.isEndCheck()&&comboType_ == ComboChecker::ComboType::Combo_None&&!isChangeTypeNone) {
 		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
 		comboType_ = ComboChecker::checkCombo(comboChecker_);
@@ -975,6 +976,8 @@ void Player::end_StepMode()
 
 void Player::end_StepSuccessMode()
 {
+	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
+	ssUIManager->stepMatching(nextStep_);
 	//if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
 	world_->getCamera()->ZoomOut();
 
@@ -993,6 +996,8 @@ void Player::end_StepSuccessMode()
 void Player::end_AttackMode()
 {
 	world_->getCamera()->ZoomOut();
+	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
+	ssUIManager->stepMatching(2);
 
 }
 
@@ -1001,6 +1006,10 @@ void Player::end_ShootMode()
 	world_->getCamera()->ZoomOut();
 	auto sc=world_->findActor("ShootCenter"); 
 	if (sc != nullptr)sc->dead();
+
+	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
+	ssUIManager->stepMatching(4);
+
 }
 
 void Player::end_ShootEndMode()
