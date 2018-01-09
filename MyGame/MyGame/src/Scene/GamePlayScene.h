@@ -11,7 +11,7 @@
 #include"../Graphic/TextScreen.h"
 #include"../Method/MethodExecutor.h"
 
-
+class SpecifiedStepManager;
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
 public:
@@ -54,7 +54,7 @@ private:
 	//フレームカウンター
 	float freamCounter_{ 0.0f };
 	bool isStart_;
-
+	std::shared_ptr<SpecifiedStepManager> specifiedStepManager_;
 	float timeCount_{ 3.0f };//スタート時のタイマー
 	int currentCount_{ 4 };//スタートで到達したカウント
 	PauseScreen pause_;

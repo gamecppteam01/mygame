@@ -277,6 +277,9 @@
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
     <ClCompile Include="src\UI\Song_Title_UI.cpp" />
+    <ClCompile Include="src\UI\SpecifiedDraw.cpp" />
+    <ClCompile Include="src\UI\SpecifiedStepManager.cpp" />
+    <ClCompile Include="src\UI\SpecifiedStepUI.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\TimeUI.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
@@ -459,6 +462,10 @@
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
     <ClInclude Include="src\UI\Song_Title_UI.h" />
+    <ClInclude Include="src\UI\SpecifiedDraw.h" />
+    <ClInclude Include="src\UI\SpecifiedDrawPtr.h" />
+    <ClInclude Include="src\UI\SpecifiedStepManager.h" />
+    <ClInclude Include="src\UI\SpecifiedStepUI.h" />
     <ClInclude Include="src\UI\StepUI.h" />
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />

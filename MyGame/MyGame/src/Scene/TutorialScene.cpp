@@ -24,6 +24,7 @@
 #include"Screen/TutorialCutIn.h"
 #include"Screen/CreateEnemy.h"
 #include"../Actor/Player/RegulationMaker.h"
+#include"../UI/SpecifiedStepManager.h"
 
 std::map<int,SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
@@ -422,7 +423,9 @@ void TutorialScene::nextTutorial()
 			changeState(TextDraw);
 		}
 		else {
-			RegulationMaker::SetRegulationTutorial(player_);//ãKíËÇÃê›íË
+			auto specStepMgr = std::make_shared<SpecifiedStepManager>(&world_);
+			world_.addUI(specStepMgr);
+			RegulationMaker::SetRegulationTutorial(player_, specStepMgr);//ãKíËÇÃê›íË
 			//player_->initCheckStep();
 			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
 			//player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});

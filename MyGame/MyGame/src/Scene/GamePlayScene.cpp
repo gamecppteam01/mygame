@@ -36,10 +36,10 @@
 
 //ゲームの時間
 static const float gameTime = 5.0f;
-static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::function<void(const std::shared_ptr<Player>&)>>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量,規定設定関数
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation1(p); }),
-	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation2(p); }),
-	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255,[](const std::shared_ptr<Player>& p) {RegulationMaker::SetRegulation3(p); })
+static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::function<void(const std::shared_ptr<Player>&,const std::shared_ptr<SpecifiedStepManager>&)>>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量,規定設定関数
+	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation1(p,s); }),
+	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation2(p,s); }),
+	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation3(p,s); })
 };
 
 //コンストラクタ
@@ -82,7 +82,6 @@ void GamePlayScene::start() {
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
 
-	std::get<6>(stageList[stageNum_ - 1])(player);
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
@@ -133,6 +132,8 @@ void GamePlayScene::start() {
 
 	//UIの設定
 	settingUI();
+
+	std::get<6>(stageList[stageNum_ - 1])(player, specifiedStepManager_);
 
 	//スコア表示設定
 	//scoreDisplay_.initialize();
@@ -398,5 +399,6 @@ void GamePlayScene::settingUI() {
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
-	world_.addUI(std::make_shared<SpecifiedStepManager>(&world_));
+	specifiedStepManager_ = std::make_shared<SpecifiedStepManager>(&world_);
+	world_.addUI(specifiedStepManager_);
 }
