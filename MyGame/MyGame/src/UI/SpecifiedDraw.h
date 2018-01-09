@@ -19,6 +19,7 @@ public:
 	SPRITE_ID getid() const;
 	bool getIsDead() const;
 	bool getIsStart() const;
+	void addPosition(const Vector2& pos);
 
 private:
 	SPRITE_ID id_;
@@ -26,5 +27,6 @@ private:
 	bool IsDead_{ false };
 	bool IsStart_{ false };
 	float timer_{ 0.0f };
+	float pos;
 	float alpha_;
 };
