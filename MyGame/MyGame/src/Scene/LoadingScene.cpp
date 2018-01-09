@@ -109,6 +109,13 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "stage2name.png", SPRITE_ID::STAGE_2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "stage3name.png", SPRITE_ID::STAGE_3_SPRITE);
+
+	Sprite::GetInstance().Load(defaultPath + "countDown1.png", SPRITE_ID::GAMESTART_1_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "countDown2.png", SPRITE_ID::GAMESTART_2_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "countDown3.png", SPRITE_ID::GAMESTART_3_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "start.png", SPRITE_ID::GAMESTART_START_SPRITE);
+
+	
 }
 
 void LoadingScene::LoadModel()

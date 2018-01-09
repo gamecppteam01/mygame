@@ -10,6 +10,7 @@
 #include"GamePlayState.h"
 #include"../Graphic/TextScreen.h"
 #include"../Method/MethodExecutor.h"
+#include"Screen/DrawStartSprite.h"
 
 class SpecifiedStepManager;
 //リソース読み込み専用シーン
@@ -39,6 +40,8 @@ private:
 	//UI設定関数
 	void settingUI();
 
+	//巡回からの強制遷移
+	void stopRound();
 private:
 	//現在のステージ番号
 	int stageNum_{ 1 };
@@ -58,6 +61,8 @@ private:
 	float timeCount_{ 3.0f };//スタート時のタイマー
 	int currentCount_{ 4 };//スタートで到達したカウント
 	PauseScreen pause_;
+
+	DrawStartSprite startDraw_;
 
 	MethodExecutor methodExecutor_;
 

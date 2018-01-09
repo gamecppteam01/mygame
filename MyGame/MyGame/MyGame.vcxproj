@@ -254,6 +254,7 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\Screen\CreateEnemy.cpp" />
+    <ClCompile Include="src\Scene\Screen\DrawStartSprite.cpp" />
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
     <ClCompile Include="src\Scene\Screen\ResultScoreDraw.cpp" />
     <ClCompile Include="src\Scene\Screen\TutorialCutIn.cpp" />
@@ -432,6 +433,7 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\Screen\CreateEnemy.h" />
+    <ClInclude Include="src\Scene\Screen\DrawStartSprite.h" />
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
     <ClInclude Include="src\Scene\Screen\ResultScoreDraw.h" />
     <ClInclude Include="src\Scene\Screen\TutorialCutIn.h" />

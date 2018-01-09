@@ -42,8 +42,15 @@ static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::func
 	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation3(p,s); })
 };
 
+static const std::map<int, std::pair<SPRITE_ID, DrawStartSprite_FadeType>> dssList{
+	{ 0,std::make_pair(SPRITE_ID::GAMESTART_START_SPRITE,DrawStartSprite_FadeType::Fade_Fall) },
+	{ 1,std::make_pair(SPRITE_ID::GAMESTART_1_SPRITE,DrawStartSprite_FadeType::Fade_Scale) },
+	{ 2,std::make_pair(SPRITE_ID::GAMESTART_2_SPRITE,DrawStartSprite_FadeType::Fade_Scale) },
+	{ 3,std::make_pair(SPRITE_ID::GAMESTART_3_SPRITE,DrawStartSprite_FadeType::Fade_Scale) },
+};
+
 //コンストラクタ
-GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_(), methodExecutor_(){
+GamePlayScene::GamePlayScene() :world_(), /*scoreDisplay_(nullptr),*/ playerEffectDraw_(nullptr), standardLight_(), lightHandle_(), pause_(), methodExecutor_(), startDraw_{SPRITE_ID::GAMESTART_1_SPRITE,DrawStartSprite_FadeType::Fade_Scale} {
 	//更新遷移先の設定
 	updateFuncMap_[GamePlayState::Reload] = [&](float deltaTime) {update_Reload(deltaTime); };
 	updateFuncMap_[GamePlayState::Start] = [&](float deltaTime) {update_Start(deltaTime); };
@@ -155,6 +162,7 @@ void GamePlayScene::start() {
 
 	state_ = GamePlayState::Reload;
 	changeState(Round);
+	startDraw_ = DrawStartSprite{ SPRITE_ID::GAMESTART_1_SPRITE,DrawStartSprite_FadeType::Fade_None };
 }
 
 //更新
@@ -163,6 +171,7 @@ void GamePlayScene::update(float deltaTime) {
 	updateFuncMap_[state_](deltaTime);
 
 	methodExecutor_.update();
+
 }
 
 //描画
@@ -179,10 +188,11 @@ void GamePlayScene::draw() const {
 
 	if (state_ != GamePlayState::Start)playerEffectDraw_.Draw();
 	else {
-		SetDrawBright(255, 155, 0);
-		NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2 - 45, WINDOW_HEIGHT / 2 - 70), (int)std::ceilf(timeCount_), 1, FONT_ID::BIG_FONT);
-		SetDrawBright(255, 255, 255);
+		//SetDrawBright(255, 155, 0);
+		//NumberManager::GetInstance().DrawNumber(Vector2(WINDOW_WIDTH / 2 - 45, WINDOW_HEIGHT / 2 - 70), (int)std::ceilf(timeCount_), 1, FONT_ID::BIG_FONT);
+		//SetDrawBright(255, 255, 255);
 	}
+	startDraw_.draw(Vector2{ WINDOW_WIDTH*0.5f,WINDOW_HEIGHT*0.5f });
 
 	if (state_ == GamePlayState::Pause)pause_.draw();
 }
@@ -215,6 +225,8 @@ void GamePlayScene::update_Reload(float deltaTime) {
 //開始更新
 void GamePlayScene::update_Start(float deltaTime) {
 	timeCount_ -= deltaTime;
+	startDraw_.update(deltaTime);
+	
 	if (timeCount_ <= 0.0f) {
 		if (isStart_) {
 			if (timeCount_ <= -0.2f) {
@@ -224,12 +236,17 @@ void GamePlayScene::update_Start(float deltaTime) {
 		}
 		Sound::GetInstance().PlaySE(SE_ID::COUNT_FINISH_SE);
 		isStart_ = true;
+		startDraw_ = DrawStartSprite{ dssList.at(0).first,dssList.at(0).second };
+
 		return;
 	}
 
 	if (currentCount_ > (int)std::ceilf(timeCount_)) {
 		currentCount_--;
 		currentCount_ = max(currentCount_, 0);
+		
+		startDraw_ = DrawStartSprite{ dssList.at(currentCount_).first,dssList.at(currentCount_).second };
+		
 		Sound::GetInstance().PlaySE(SE_ID::COUNT_SE);
 
 	}
@@ -240,6 +257,9 @@ void GamePlayScene::update_Start(float deltaTime) {
 //実行更新
 void GamePlayScene::update_Play(float deltaTime) {
 	world_.update(deltaTime);
+
+	startDraw_.update(deltaTime);
+	if (startDraw_.isDead())startDraw_ = DrawStartSprite{ SPRITE_ID::GAMESTART_1_SPRITE,DrawStartSprite_FadeType::Fade_None };//死んだらフェード終わり
 
 	if (world_.getCanChangedTempoManager().isEnd()) {
 		changeState(GamePlayState::End);
@@ -287,6 +307,11 @@ void GamePlayScene::update_End(float deltaTime) {
 
 void GamePlayScene::update_Round(float deltaTime)
 {
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
+		stopRound();
+		changeState(GamePlayState::Start);
+		return;
+	}
 	if (world_.getRoundCam().currentState()==RoundCamera::State::Focus) {
 		lightHandle_.setLightEnableHandle("Spot", true);
 	}
@@ -401,4 +426,10 @@ void GamePlayScene::settingUI() {
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
 	specifiedStepManager_ = std::make_shared<SpecifiedStepManager>(&world_);
 	world_.addUI(specifiedStepManager_);
+}
+
+void GamePlayScene::stopRound()
+{
+	lightHandle_.setLightEnableHandle("Spot", false);
+	world_.stopRound();
 }

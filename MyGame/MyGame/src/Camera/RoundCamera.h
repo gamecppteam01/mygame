@@ -30,6 +30,8 @@ public:
 	State currentState()const { return state_; }
 
 	Vector3 getCurrentTargetPos()const;
+
+	void endRound();
 private:
 	void Start(float deltaTime);
 	void Focus(float deltaTime);

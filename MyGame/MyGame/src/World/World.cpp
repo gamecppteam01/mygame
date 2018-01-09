@@ -260,6 +260,11 @@ void World::roundCam()
 	roundCamera_.init();
 }
 
+void World::stopRound()
+{
+	roundCamera_.endRound();
+}
+
 void World::normaldraw() const {
 	camera_->draw();
 	field_->draw();

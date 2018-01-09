@@ -84,6 +84,26 @@ Vector3 RoundCamera::getCurrentTargetPos() const {
 	return targetList_.at(currentTarget_).lock()->position(); 
 }
 
+void RoundCamera::endRound()
+{
+	state_ = State::End;
+	isEnd_ = true;
+	position_ = defaultPos_;
+	Camera::GetInstance().Position.Set(position_);
+
+	Camera::GetInstance().Target.Set(position_ + targetVector_);
+	Camera::GetInstance().SetRange(0.1f, 1000.0f);
+	Camera::GetInstance().SetViewAngle(60.0f);
+	Camera::GetInstance().Up.Set(Vector3::Up);
+	//Camera::GetInstance().SetRotation(Vector3::Zero);
+
+	Camera::GetInstance().Update();
+
+	Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+	std::for_each(targetList_.begin(), targetList_.end(), [](auto& t) {t.lock()->endStepAnim(); });
+
+}
+
 void RoundCamera::Start(float deltaTime)
 {
 	moveTimer_ += deltaTime;
