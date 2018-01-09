@@ -32,11 +32,11 @@ public:
 	virtual void pause() override;
 	virtual void restart() override;
 
+
 private:
 
 	int stepMatching();
-	void stepRecive();
-
+	
 private:
 	IWorld * world_;
 	Vector2 cursorPos_;
@@ -44,11 +44,9 @@ private:
 	float Xpos;
 	std::shared_ptr<Player> target_;
 	bool IsPause{ false };
-	float timer_{ 0.0f };
+	bool IsDeadEnd{ false };
 	std::list<int> reciveList_;
-	std::map<int, SPRITE_ID> stepMap;
 	int reciveStep_;
-	stepState step_;
 	//表示するステップ
 	std::vector<SpecifiedDrawPtr> stepdraw_;
 };

@@ -10,23 +10,23 @@ SpecifiedStepManager::SpecifiedStepManager(IWorld * world)
 void SpecifiedStepManager::initialize()
 {
 	reciveList_.clear();
-	stepMap.clear();
-	step_ = stepState::NONE;
-	cursorPos_ = Vector2(110.0f, 720.0f);
+	cursorPos_ = Vector2(110.0f, 620.0f);
 	target_ = std::static_pointer_cast<Player>(world_->findActor("Player"));
-	position_ = Vector2(100.0f, 750.0f);
+	position_ = Vector2(120.0f, 650.0f);
 		
 	
 }
 
 void SpecifiedStepManager::update(float deltaTime)
 {
+	if (stepdraw_.empty()) return;
 	//stepMathingと一致したら消す
-	if (stepMatching() == 1) ;
-	if (stepMatching() == 2) ;
-	if (stepMatching() == 3) ;
-	if (stepMatching() == 4) ;
-
+	stepMatching();
+	for (auto &a : stepdraw_) {
+		a->update(deltaTime);
+	}
+	auto itr = std::remove_if(stepdraw_.begin(), stepdraw_.end(), [](auto &a) {return a->getIsDead(); });
+	stepdraw_.erase(itr, stepdraw_.end());
 }
 
 void SpecifiedStepManager::draw() const
@@ -40,6 +40,8 @@ void SpecifiedStepManager::Notify(Notification type, void * param)
 {
 	//イベントメッセージで飛んできた値を格納する
 	if (type == Notification::Call_ReciveStep) {
+		
+		
 		reciveStep_ = *(int*)param;
 		
 		switch (reciveStep_)
@@ -64,7 +66,7 @@ void SpecifiedStepManager::Notify(Notification type, void * param)
 		default:
 			break;
 		}
-		position_ += Vector2(50.0f, 0.0f);
+		position_ += Vector2(120.0f, 0.0f);
 	}
 	
 }
@@ -81,26 +83,23 @@ void SpecifiedStepManager::restart()
 
 int SpecifiedStepManager::stepMatching()
 {
+	if (stepdraw_.empty())return 0;
+	if (stepdraw_.front()->getIsStart()) return 0;
 	//ステップ １クオーター、２ハーフ、３ターン、４スピン
 	if (target_->getStep() == 1 && target_->getState() == Player::Player_State::Step_Success) {
-		return 1;
+		if (stepdraw_.front()->getid() == SPRITE_ID::QUATER_SPRITE) stepdraw_.front()->IsStart();
+		
 	}
 	if (target_->getStep() == 2 && target_->getState() == Player::Player_State::Attack) {
-		return 2;
+		if (stepdraw_.front()->getid() == SPRITE_ID::HALF_SPRITE) stepdraw_.front()->IsStart();
 	}
 	if (target_->getStep() == 3 && target_->getState() == Player::Player_State::Step_Success) {
-		return 3;
+		if (stepdraw_.front()->getid() == SPRITE_ID::TURN_SPRITE) stepdraw_.front()->IsStart();
 	}
-	//ここが謎
 	if (target_->getStep() == 4 && target_->getState() == Player::Player_State::Shoot) {
-		return 4;
+		if (stepdraw_.front()->getid() == SPRITE_ID::SPIN_SPRITE) stepdraw_.front()->IsStart();
 	}
 	if (target_->getStep() == 0)return 0;
 	
-}
-
-void SpecifiedStepManager::stepRecive()
-{
-	//if(reciveStep_ == 1) step
 }
 

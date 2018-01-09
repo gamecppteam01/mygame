@@ -15,9 +15,16 @@ public:
 	virtual void update(float deltaTime) override;
 	virtual void draw() const override;
 
+	void IsStart();
+	SPRITE_ID getid() const;
+	bool getIsDead() const;
+	bool getIsStart() const;
+
 private:
 	SPRITE_ID id_;
 	Vector2 position_;
-	
-
+	bool IsDead_{ false };
+	bool IsStart_{ false };
+	float timer_{ 0.0f };
+	float alpha_;
 };
