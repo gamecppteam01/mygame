@@ -1,5 +1,6 @@
 #include "SpecifiedStepManager.h"
 #include "SpecifiedDraw.h"
+#include "../Input/Keyboard.h"
 
 static const std::map<int, SPRITE_ID> changeSprList{
 	{ 1,SPRITE_ID::QUATER_SPRITE },
@@ -20,7 +21,7 @@ void SpecifiedStepManager::initialize()
 	cursorPos_ = Vector2(100.0f, 650.0f);
 	target_ = std::static_pointer_cast<Player>(world_->findActor("Player"));
 	position_ = Vector2(120.0f, 650.0f);
-		
+	alpha_ = 1.0f;
 	
 }
 
@@ -34,9 +35,18 @@ void SpecifiedStepManager::update(float deltaTime)
 	if (stepdraw_.front()->getIsDead() == true) {
 		auto itr = std::remove_if(stepdraw_.begin(), stepdraw_.end(), [](auto &a) {return a->getIsDead(); });
 		stepdraw_.erase(itr, stepdraw_.end());
+		
 		for (auto &a : stepdraw_) {
 			a->addPosition(Vector2(-120.0f, 0.0f));
 		}
+		
+	}
+	if (target_->getState() == Player::Player_State::Step_Success) {
+		float timer_ = 0.0f;
+		timer_ += 0.1f;
+		if (timer_ <= 1.0f) alpha_ -= 0.1f;
+	} else { 
+		alpha_ = 1.0f; 
 	}
 }
 
@@ -45,15 +55,16 @@ void SpecifiedStepManager::draw() const
 	for (auto a : stepdraw_) {
 		a->draw();
 	}
-	Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
+	if(!stepdraw_.empty()) Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
+	if(!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
+		Sprite::GetInstance().Draw(SPRITE_ID::QUATER_SPRITE, cursorPos_ - Vector2(-10.0f,50.0f), alpha_);
+	
 }
 
 void SpecifiedStepManager::Notify(Notification type, void * param)
 {
 	//イベントメッセージで飛んできた値を格納する
 	if (type == Notification::Call_ReciveStep) {
-		
-		
 		reciveStep_ = *(int*)param;
 		
 		switch (reciveStep_)

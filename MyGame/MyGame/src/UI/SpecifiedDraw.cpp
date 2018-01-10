@@ -16,14 +16,13 @@ void SpecifiedDraw::initialize()
 void SpecifiedDraw::update(float deltaTime)
 {
 	if (IsStart_ == true) {
-		alpha_ -= 0.1f;
+		alpha_ -= 0.2f;
 		position_ += Vector2(0.0f, pos);
 		if(alpha_ <= 0.0f){
 			IsDead_ = true;
-//			position_ += Vector2(140.0f, 0.0f);
 		}
 
-		pos = MathHelper::Lerp(0.0f, 100.0f, timer_);
+		pos = MathHelper::Lerp(100.0f, 0.0f, timer_);
 
 		if (timer_ <= 1.0f) {
 			timer_ += 0.2f;

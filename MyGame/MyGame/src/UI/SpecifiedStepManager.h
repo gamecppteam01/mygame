@@ -39,6 +39,7 @@ private:
 	Vector2 cursorPos_;
 	Vector2 basePos_;
 	float Xpos;
+	float alpha_;
 	std::shared_ptr<Player> target_;
 	bool IsPause{ false };
 	bool IsDeadEnd{ false };
