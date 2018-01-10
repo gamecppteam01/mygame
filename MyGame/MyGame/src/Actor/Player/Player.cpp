@@ -977,7 +977,7 @@ void Player::end_StepMode()
 void Player::end_StepSuccessMode()
 {
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
-	ssUIManager->stepMatching(nextStep_);
+	if(ssUIManager!=nullptr)ssUIManager->stepMatching(nextStep_);
 	//if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
 	world_->getCamera()->ZoomOut();
 

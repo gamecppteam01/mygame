@@ -3,12 +3,16 @@
 #include"../Graphic/EffekseerManager.h"
 #include"../DataManager/DataManager.h"
 #include"../ShadowMap/ShadowMap_Data.h"
+#include"../Define.h"
 
 LoadingScene::LoadingScene() {
 	next_ = SceneType::SCENE_TITLE;
 }
 
 void LoadingScene::start() {
+	Sprite::GetInstance().Load("res/Sprite/nowloading.png", SPRITE_ID::LOADING_NL_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/dot.png", SPRITE_ID::LOADING_DOT_SPRITE);
+	SetUseASyncLoadFlag(TRUE);
 	//各種リソースのロードを行う
 	LoadSprite();
 	LoadModel();
@@ -18,16 +22,38 @@ void LoadingScene::start() {
 	LoadSE();
 	LoadEtcetera();
 	LoadShadowMap();
+	
+	SetUseASyncLoadFlag(FALSE);
 
-	isEnd_ = true;
+	for (auto& i : posits_) {
+		i = 0.0f;
+	}
+	timeCount_ = 0.0f;
 }
 
 void LoadingScene::update(float deltaTime) {
+	timeCount_ = std::fmodf(timeCount_ + deltaTime, 1.0f);
+	posits_[0] = (timeCount_ >= 0.1f) ? 1.0f : 0.0f;
+	posits_[1] = (timeCount_ >= 0.4f) ? 1.0f : 0.0f;
+	posits_[2] = (timeCount_ >= 0.7f) ? 1.0f : 0.0f;
 
+	if (GetASyncLoadNum() == 0) {
+		isEnd_ = true;
+	}
 }
 
 void LoadingScene::draw() const {
+	float size = 0.5f;
+	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_NL_SPRITE) / 2;
+	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_NL_SPRITE, SCREEN_SIZE*0.5f, origin, Vector2::One*size);
 
+	float xPos = origin.x*size + (Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x / 2)*size;
+	origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE) / 2;
+	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[0], Vector2::One*size);
+	xPos += Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x*size;
+	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[1], Vector2::One*size);
+	xPos += Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x*size;
+	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[2], Vector2::One*size);
 }
 
 void LoadingScene::end() {

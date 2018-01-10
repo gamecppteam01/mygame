@@ -1,5 +1,6 @@
 #pragma once
 #include"Scene.h"
+#include<array>
 
 //リソース読み込み専用シーン
 class LoadingScene:public Scene {
@@ -31,4 +32,8 @@ private:
 	//その他ステージ等の読み込み
 	void LoadEtcetera();
 
+private:
+	std::array<float, 3> posits_;
+
+	float timeCount_;
 };
