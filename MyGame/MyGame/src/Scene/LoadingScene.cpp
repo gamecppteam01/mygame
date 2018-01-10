@@ -12,11 +12,11 @@ LoadingScene::LoadingScene() {
 void LoadingScene::start() {
 	Sprite::GetInstance().Load("res/Sprite/nowloading.png", SPRITE_ID::LOADING_NL_SPRITE);
 	Sprite::GetInstance().Load("res/Sprite/dot.png", SPRITE_ID::LOADING_DOT_SPRITE);
+	LoadEffect();
 	SetUseASyncLoadFlag(TRUE);
 	//各種リソースのロードを行う
 	LoadSprite();
 	LoadModel();
-	LoadEffect();
 	LoadFont();
 	LoadBGM();
 	LoadSE();
@@ -130,6 +130,11 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "Lesson1_Cutin.png", SPRITE_ID::CUTIN_LESSON1_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Lesson2_Cutin.png", SPRITE_ID::CUTIN_LESSON2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Lesson3_Cutin.png", SPRITE_ID::CUTIN_LESSON3_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Half_Cutin.png", SPRITE_ID::CUTIN_HALF_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Quarter_Cutin.png", SPRITE_ID::CUTIN_QUARTER_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Spin_Cutin.png", SPRITE_ID::CUTIN_SPIN_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Success_Cutin.png", SPRITE_ID::CUTIN_SUCCESS_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Turn_Cutin.png", SPRITE_ID::CUTIN_TURN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "titlecursor.png", SPRITE_ID::TITLE_CURSOR);
 
 	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);

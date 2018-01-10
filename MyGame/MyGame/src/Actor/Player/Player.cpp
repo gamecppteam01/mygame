@@ -997,7 +997,7 @@ void Player::end_AttackMode()
 {
 	world_->getCamera()->ZoomOut();
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
-	ssUIManager->stepMatching(2);
+	if (ssUIManager != nullptr)ssUIManager->stepMatching(2);
 
 }
 
@@ -1008,7 +1008,7 @@ void Player::end_ShootMode()
 	if (sc != nullptr)sc->dead();
 
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
-	ssUIManager->stepMatching(4);
+	if (ssUIManager != nullptr)ssUIManager->stepMatching(4);
 
 }
 

@@ -6,10 +6,10 @@
 
 //足を止めるレッスン番号
 static const std::list<int> stopList{
-	6,
-	8,
-	10,
-	12
+	5,
+	7,
+	9,
+	11
 };
 
 TutorialPlayer::TutorialPlayer(IWorld * world, const std::string & name, const Vector3 & position, TutorialScene * tutorial):
@@ -24,7 +24,7 @@ void TutorialPlayer::onUpdate(float deltaTime)
 	switch (tutorial_->getTutorialNum())
 	{
 	//スポットライトのチュートリアル
-	case 14: {
+	case 13: {
 		auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
 		if (ptr != nullptr) {
 			//既にライトに当たってたら当たらなくなったかを検索
@@ -46,17 +46,17 @@ void TutorialPlayer::onUpdate(float deltaTime)
 		}
 		break;
 	}
-	case 16: {
+	case 14: {
 		if (checkstep_.isEndCheck()) {
 			tutorial_->nextLesson();
 		}
 		break;
 	}
-	case 18: {
+	case 15: {
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)tutorial_->nextLesson();
 		break;
 	}
-	case 20: {
+	case 16: {
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst)tutorial_->nextLesson();
 		break;
 	}
@@ -104,10 +104,10 @@ bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation 
 		break;
 	}
 	if (
+		tutorial_->getTutorialNum() != 13 &&
 		tutorial_->getTutorialNum() != 14 &&
-		tutorial_->getTutorialNum() != 16 &&
-		tutorial_->getTutorialNum() != 18 &&
-		tutorial_->getTutorialNum() != 20
+		tutorial_->getTutorialNum() != 15 &&
+		tutorial_->getTutorialNum() != 16
 		) {
 		if (state == Player_State::Stumble)return false;
 	}
@@ -170,7 +170,7 @@ void TutorialPlayer::end_StepSuccessMode()
 	switch (nextStep_)
 	{
 	case 1:
-		if (tutorial_->getTutorialNum() == 6) {
+		if (tutorial_->getTutorialNum() == 5) {
 			tutorial_->nextLesson();
 			checkstep_.initialize();
 			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Quarter});
@@ -180,7 +180,7 @@ void TutorialPlayer::end_StepSuccessMode()
 	case 2:
 		break;
 	case 3:
-		if (tutorial_->getTutorialNum() == 8) {
+		if (tutorial_->getTutorialNum() == 7) {
 			tutorial_->nextLesson();
 			checkstep_.initialize();
 			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Turn, Player_Animation::Quarter});
@@ -198,7 +198,7 @@ void TutorialPlayer::end_AttackMode()
 {
 	Player::end_AttackMode();
 
-	if (tutorial_->getTutorialNum() == 10) {
+	if (tutorial_->getTutorialNum() == 9) {
 		tutorial_->nextLesson();
 		checkstep_.initialize();
 		checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Half, Player_Animation::Turn, Player_Animation::Quarter});
@@ -211,7 +211,7 @@ void TutorialPlayer::end_ShootMode()
 {
 	Player::end_ShootMode();
 
-	if (tutorial_->getTutorialNum() == 12) {
+	if (tutorial_->getTutorialNum() == 11) {
 		tutorial_->nextLesson();
 		checkstep_.initialize();
 	}

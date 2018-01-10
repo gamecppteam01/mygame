@@ -49,8 +49,10 @@ public:
 
 	void settingLight();
 
+	void nextTutorialCount();
+
 private:
-	const float StopTime{ 3.0f };//停止時間
+	const float StopTime{ 2.0f };//停止時間
 	const float InTime{ 0.5f };//カットインの再生時間
 	const float OutTime{ 0.5f };//カットインの再生時間
 	float cutInTimer_{ 0.0f };//カットインの現再生時間
@@ -66,6 +68,8 @@ private:
 	State prevState_;
 	std::shared_ptr<TutorialPlayer> player_;
 	std::map<State, std::function<void(float)>> updateFuncMap_;
+
+	int tutorialTiming{ 0 };
 
 	//標準ライトクラス
 	StandardLight standardLight_{};
