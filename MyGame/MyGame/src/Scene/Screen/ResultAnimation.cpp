@@ -15,6 +15,8 @@ void ResultAnimation::set(const int & handle, const int & handle2){
 }
 
 void ResultAnimation::update(float deltaTime){
+	animation_.setAnimSpeed(50.0f);
+	animation2_.setAnimSpeed(50.0f);
 	animation_.Update(deltaTime);
 	animation2_.Update(deltaTime);
 }
@@ -25,8 +27,6 @@ void ResultAnimation::draw(const Vector3& position) const{
 }
 
 void ResultAnimation::animation(){
-	animation_.setAnimSpeed(50.0f);
-	animation2_.setAnimSpeed(50.0f);
 	animation_.ChangeAnim(2, 0.0f, 1.0f, true, 1.0f, true);
 	animation_.setLoop(false);
 	animation2_.ChangeAnim(2, 0.0f, 1.0f, true, 1.0f, true);

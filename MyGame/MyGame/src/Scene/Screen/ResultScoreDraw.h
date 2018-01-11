@@ -7,6 +7,7 @@ class ResultScoreDraw {
 enum State {
 	Start,
 	Move1,
+	Stop,
 	Animation,
 	Move2,
 	End,
@@ -37,4 +38,6 @@ private:
 	int curent_key;
 
 	ResultAnimation animation_;
+
+	bool animation;
 };

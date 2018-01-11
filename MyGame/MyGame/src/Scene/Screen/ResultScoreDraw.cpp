@@ -43,12 +43,22 @@ void ResultScoreDraw::init()
 	{return x.first.rank_ > y.first.rank_; });
 	curent_key = 0;
 
+	animation = false;
+
 	animation_.initialize();
 }
 
 void ResultScoreDraw::update(float deltaTime)
 {
 	if (curent_key >= PlayerList.size())return;
+
+	if (PlayerList[curent_key].first.playerNumber_ <= 1) {
+		animation_.set(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL), Model::GetInstance().GetHandle(MODEL_ID::PLAYER_BULLET_MODEL));
+	}
+	else {
+		animation_.set(Model::GetInstance().GetHandle(MODEL_ID::BALANCEENEMY_MODEL), Model::GetInstance().GetHandle(MODEL_ID::BALANCEENEMY_BULLET_MODEL));
+	}
+	animation_.update(deltaTime);
 
 	switch (state_)
 	{
@@ -64,34 +74,34 @@ void ResultScoreDraw::update(float deltaTime)
 		lerpTimer_ = min(lerpTimer_, 1.0);
 
 		if (lerpTimer_ >= 1.0f) {
-			state_ = ResultScoreDraw::Animation;
+			if (curent_key >= PlayerList.size() - 2) {
+				animation = true;
+				state_ = ResultScoreDraw::Animation;
+			}
+			else {
+				state_ = ResultScoreDraw::Stop;
+			}
+		}
+		break;
+	case ResultScoreDraw::Stop:
+		lerpTimer_ = 0.0f;
+		another_position_ = PlayerList[curent_key].second;
+		count += deltaTime * 0.75;
+		count = min(count, 1);
+		if (count >= 1) {
+			state_ = ResultScoreDraw::Move2;
 		}
 		break;
 	case ResultScoreDraw::Animation:	
-		if (PlayerList[curent_key].first.playerNumber_ <= 1) {
-			animation_.set(Model::GetInstance().GetHandle(MODEL_ID::PLAYER_MODEL), Model::GetInstance().GetHandle(MODEL_ID::PLAYER_BULLET_MODEL));
-		}
-		else {
-			animation_.set(Model::GetInstance().GetHandle(MODEL_ID::BALANCEENEMY_MODEL), Model::GetInstance().GetHandle(MODEL_ID::BALANCEENEMY_BULLET_MODEL));
-		}
-		if (curent_key >= PlayerList.size() - 2) {
 			//アニメーション
-			animation_.update(deltaTime);
+		if (animation) {
 			animation_.animation();
-			if (animation_.end()) {
-				lerpTimer_ = 0.0f;
-				another_position_ = PlayerList[curent_key].second;
-				state_ = ResultScoreDraw::Move2;
-			}
+			animation = false;
 		}
-		else {
+		if (animation_.end()) {
 			lerpTimer_ = 0.0f;
 			another_position_ = PlayerList[curent_key].second;
-			count += deltaTime * 0.75;
-			count = min(count, 1);
-			if (count >= 1) {
-				state_ = ResultScoreDraw::Move2;
-			}
+			state_ = ResultScoreDraw::Move2;
 		}
 		break;
 	case ResultScoreDraw::Move2:
