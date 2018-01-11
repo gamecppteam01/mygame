@@ -1,6 +1,6 @@
 #pragma once
 #include"../Math/Collision/CollisionMesh.h"
-
+#include"Audience.h"
 // フィールドクラス
 class Field {
 public:
@@ -29,4 +29,5 @@ private:
 	int wallCorner_;
 	int mSkyBox;
 	CollisionMesh mesh_;
+	Audience audience;
 };

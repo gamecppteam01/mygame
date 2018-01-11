@@ -5,13 +5,14 @@
 #include<DxLib.h>
 #include"../Math/Vector3.h"
 #include"../Graphic/Model.h"
+#include"../Graphic/Sprite.h"
 
 float to_radian(float degree) {
 	return degree / 180.0f*DX_PI_F;
 }
 // コンストラクタ
 Field::Field(int field,int skybox) :
-	mField(field), mSkyBox(skybox),mesh_(mField) {
+	mField(field), mSkyBox(skybox),mesh_(mField),audience() {
 	//モデルが設定されていなかったら返す
 	if (mField < 0||mSkyBox<0)return;
 
@@ -20,6 +21,7 @@ Field::Field(int field,int skybox) :
 	wallCorner_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_CORNER_MODEL);
 	wallSide_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_SIDE_MODEL);
 	wallUp_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_UP_MODEL);
+
 
 	Vector3 wallUp{ 0.0f,0.0f,420.0f };
 	// フィールドの座標指定
@@ -40,11 +42,13 @@ Field::Field(int field,int skybox) :
 	// スカイボックスの拡大率指定
 	//MV1SetScale(mSkyBox, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE * 15));
 	MV1SetScale(mSkyBox, Vector3::Vector3ToVECTOR(Vector3::One*5.0f));
+	audience.initialize();
 }
 
 // 更新
 void Field::update(float deltaTime) {
 	if (mField < 0 || mSkyBox<0)return;
+	audience.update(deltaTime);
 }
 
 // 描画
@@ -73,23 +77,27 @@ void Field::draw() const {
 	float x = 420.0f; float y = 300.0f;
 
 
-	MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{x,0.0f,y} *FIELD_SCALE));
-	MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,0.0f,0.0f, });
-	//MV1DrawModel(wallCorner_);
-	MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(-90.0f),0.0f, });
-	MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ -x,0.0f,y } *FIELD_SCALE));
-	//MV1DrawModel(wallCorner_);
-	MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ x,0.0f,-y } *FIELD_SCALE));
-	MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(90.0f),0.0f, });
-	//MV1DrawModel(wallCorner_);
-	MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ -x,0.0f,-y } *FIELD_SCALE));
-	MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(180.0f),0.0f, });
-	//MV1DrawModel(wallCorner_);
-	MV1SetPosition(wallSide_, Vector3::Vector3ToVECTOR(wallRight *FIELD_SCALE));
-	MV1DrawModel(wallSide_);
-	MV1SetPosition(wallSide_, Vector3::Vector3ToVECTOR(-wallRight *FIELD_SCALE));
-	MV1DrawModel(wallSide_);
-	MV1DrawModel(wallUp_);
+	//MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{x,0.0f,y} *FIELD_SCALE));
+	//MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,0.0f,0.0f, });
+	////MV1DrawModel(wallCorner_);
+	//MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(-90.0f),0.0f, });
+	//MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ -x,0.0f,y } *FIELD_SCALE));
+	////MV1DrawModel(wallCorner_);
+	//MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ x,0.0f,-y } *FIELD_SCALE));
+	//MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(90.0f),0.0f, });
+	////MV1DrawModel(wallCorner_);
+	//MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{ -x,0.0f,-y } *FIELD_SCALE));
+	//MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,to_radian(180.0f),0.0f, });
+	////MV1DrawModel(wallCorner_);
+	//MV1SetPosition(wallSide_, Vector3::Vector3ToVECTOR(wallRight *FIELD_SCALE));
+	//MV1DrawModel(wallSide_);
+	//MV1SetPosition(wallSide_, Vector3::Vector3ToVECTOR(-wallRight *FIELD_SCALE));
+	//MV1DrawModel(wallSide_);
+	//MV1DrawModel(wallUp_);
+
+	audience.draw(up, Vector3{ -90.0f,0.0f,0.0f });
+	audience.draw(right, Vector3{ -90.0f,0.0f,0.0f });
+	audience.draw(-right, Vector3{ -90.0f,0.0f,0.0f });
 }
 
 // フィールドのハンドル取得
