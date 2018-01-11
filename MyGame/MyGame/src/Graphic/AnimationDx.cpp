@@ -59,11 +59,13 @@ void AnimationDx::Draw(const Matrix& rotation) const
 	Model::GetInstance().Draw(modelHandle_, rotation);
 }
 
-void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed, bool isLoop,float blend)
+void AnimationDx::ChangeAnim(const int motion, const float frame,float animSpeed, bool isLoop,float blend, bool forceChange)
 {
-	// 現在と同じモーションの場合は何もしない
-	if (motion_ == motion) return;
-
+	//強制変更ではなく
+	if (!forceChange) {
+		// 現在と同じモーションの場合は何もしない
+		if (motion_ == motion) return;
+	}
 	prevMotion_ = motion_;
 	motion_		= motion;
 	prevAnimTimer_ = animTimer_;
