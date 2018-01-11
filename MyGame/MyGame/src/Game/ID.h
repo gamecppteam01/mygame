@@ -112,6 +112,8 @@ enum SPRITE_ID
 	ENEMY2_SCORE,
 	ENEMY3_SCORE,
 
+	RESULT_STAGE,
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

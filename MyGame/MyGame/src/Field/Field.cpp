@@ -96,8 +96,8 @@ void Field::draw() const {
 	//MV1DrawModel(wallUp_);
 
 	audience.draw(up, Vector3{ -90.0f,0.0f,0.0f });
-	audience.draw(right, Vector3{ -90.0f,0.0f,0.0f });
-	audience.draw(-right, Vector3{ -90.0f,0.0f,0.0f });
+	audience.draw(right, Vector3{ 0.0f,-90.0f,90.0f });
+	audience.draw(-right, Vector3{ 0.0f,90.0f,-90.0f });
 }
 
 // フィールドのハンドル取得

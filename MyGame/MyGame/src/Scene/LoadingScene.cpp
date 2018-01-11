@@ -155,7 +155,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "score_enemy1.png", SPRITE_ID::ENEMY1_SCORE);
 	Sprite::GetInstance().Load(defaultPath + "score_enemy2.png", SPRITE_ID::ENEMY2_SCORE);
 	Sprite::GetInstance().Load(defaultPath + "score_enemy3.png", SPRITE_ID::ENEMY3_SCORE);
-
+	Sprite::GetInstance().Load(defaultPath + "ResultStage.png", SPRITE_ID::RESULT_STAGE);
 
 	
 }
