@@ -13,6 +13,13 @@
 
 class StepComboManager : public UI {
 public:
+
+	enum Combo {
+		first,
+		second,
+
+	};
+
 	StepComboManager() = default;
 	StepComboManager(IWorld * world);
 	virtual void initialize() override;
@@ -23,13 +30,17 @@ public:
 	virtual void restart() override;
 
 	void ClearData(std::vector<Player_Animation> playeranm);
-
+	
 private:
 	IWorld * world_;
 	std::vector<StepComboUIPtr> stepcombo_;
 	std::shared_ptr<Player> target_;
 	int stepNum_;
+	int step_;
+	float alpha_;
+	Vector2 patternPos_;
 	Vector2 cursorPos_;
 	bool IsPause{ false };
-
+	bool IsOut{ false };
+	Combo combo_;
 };
