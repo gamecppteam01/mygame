@@ -3,7 +3,7 @@
 
 void Model_Animation_UI::initialize(){
 	//animations_.clear();
-	anm_ui_ptr = std::make_unique<Animation_UI>(MODEL_ID::BALANCEENEMY_MODEL, Vector3(-20.0f, -15.0f, 40.0f));
+	anm_ui_ptr = std::make_unique<Animation_UI>(MODEL_ID::BALANCEENEMY_MODEL, Vector3(-23.0f, -15.0f, 40.0f));
 }
 
 void Model_Animation_UI::Updata(float deltaTime){

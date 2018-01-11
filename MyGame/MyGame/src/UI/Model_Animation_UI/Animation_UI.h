@@ -28,6 +28,8 @@ private:
 	Vector3 position_;
 	//‰ñ“]
 	Matrix rotation_;
+	//’†SÀ•W
+	Vector3 centerPosition_;
 	//’j‚Æ—‚Ì‹——£
-	const Vector3 pairDistance{ 0.0f,0.0f,7.0f };
+	const Vector3 pairDistance{ 0.0f,0.0f,5.0f };
 };

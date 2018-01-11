@@ -3,7 +3,7 @@
 
 //コンストラクタ
 Animation_UI::Animation_UI(MODEL_ID id, const Vector3 & position)
-:position_(position),rotation_(Matrix::Identity * Matrix::CreateRotationY(90)){
+:position_(position),rotation_(Matrix::Identity * Matrix::CreateRotationY(90)),centerPosition_(position){
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));
 	animation_.ChangeAnim(0);
 
@@ -14,9 +14,9 @@ Animation_UI::Animation_UI(MODEL_ID id, const Vector3 & position)
 void Animation_UI::Update(float deltaTime){
 
 	rotation_ *= Matrix::CreateRotationY(1);
-	//position_ = pairDistance*rotation_ + centerPosition_;
+	position_ = pairDistance*rotation_ + centerPosition_;
 
-	Vector3 pos = position_ + (-pairDistance*rotation_);
+	Vector3 pos = centerPosition_ + (-pairDistance*rotation_);
 	pair_->setPosition(pos);
 	pair_->setRotation(rotation_ *  Matrix::CreateRotationY(180));
 	//アニメーション更新
