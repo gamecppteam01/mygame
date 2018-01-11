@@ -66,13 +66,14 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 		if (useparam <= 0.0f)break;
 	}
 }
-static void DrawSprite3D(const Vector3& position,float size,int handle,int r=255,int g=255,int b=255,int a=255, float startangle = 0.0f) {
+static void DrawSprite3D(const Vector3& position,float size,int handle,int r=255,int g=255,int b=255,int a=255, float startangle = 0.0f, float Xangle = 0.0f,float Zangle = 0.0f) {
 	//ƒQ[ƒW˜g‚Ì•`‰æî•ñ‚ð“ü—Í
 	VERTEX_3D vec[4];
-	vec[0].pos = position + Vector3{ -size,0.0f,size }*Matrix::CreateRotationY(startangle);
-	vec[1].pos = position + Vector3{ size,0.0f,size }*Matrix::CreateRotationY(startangle);
-	vec[2].pos = position + Vector3{ -size,0.0f,-size }*Matrix::CreateRotationY(startangle);
-	vec[3].pos = position + Vector3{ size,0.0f,-size }*Matrix::CreateRotationY(startangle);
+	vec[0].pos = position + Vector3{ -size,0.0f,size }*Matrix::CreateRotationY(startangle)*Matrix::CreateRotationX(Xangle)*Matrix::CreateRotationZ(Zangle);
+	vec[1].pos = position + Vector3{ size,0.0f,size }*Matrix::CreateRotationY(startangle)*Matrix::CreateRotationX(Xangle)*Matrix::CreateRotationZ(Zangle);
+	vec[2].pos = position + Vector3{ -size,0.0f,-size }*Matrix::CreateRotationY(startangle)*Matrix::CreateRotationX(Xangle)*Matrix::CreateRotationZ(Zangle);
+	vec[3].pos = position + Vector3{ size,0.0f,-size }*Matrix::CreateRotationY(startangle)*Matrix::CreateRotationX(Xangle)*Matrix::CreateRotationZ(Zangle);
+
 	vec[0].r = r;
 	vec[1].r = r;
 	vec[2].r = r;
