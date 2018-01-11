@@ -82,7 +82,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "pause.png", SPRITE_ID::PAUSE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "cursor.png", SPRITE_ID::CURSOR);
 	Sprite::GetInstance().Load(defaultPath + "nextstage.png", SPRITE_ID::NEXTSTAGE_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "clear.png", SPRITE_ID::CLEAR_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "clear2.png", SPRITE_ID::CLEAR_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "sceneMove.png", SPRITE_ID::FADE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "tutorialText.png", SPRITE_ID::TUTORIAL_TEXT);
 	Sprite::GetInstance().Load(defaultPath + "YESText.png", SPRITE_ID::YES_TEXT);
@@ -145,6 +145,17 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "countDown2.png", SPRITE_ID::GAMESTART_2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "countDown3.png", SPRITE_ID::GAMESTART_3_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "start.png", SPRITE_ID::GAMESTART_START_SPRITE);
+
+	Sprite::GetInstance().Load(defaultPath + "audience1.png", SPRITE_ID::AUDIENCE1);
+	Sprite::GetInstance().Load(defaultPath + "audience2.png", SPRITE_ID::AUDIENCE2);
+	Sprite::GetInstance().Load(defaultPath + "audience3.png", SPRITE_ID::AUDIENCE3);
+	Sprite::GetInstance().Load(defaultPath + "audience4.png", SPRITE_ID::AUDIENCE4);
+
+	Sprite::GetInstance().Load(defaultPath + "score_player.png", SPRITE_ID::PLAYER_SCORE);
+	Sprite::GetInstance().Load(defaultPath + "score_enemy1.png", SPRITE_ID::ENEMY1_SCORE);
+	Sprite::GetInstance().Load(defaultPath + "score_enemy2.png", SPRITE_ID::ENEMY2_SCORE);
+	Sprite::GetInstance().Load(defaultPath + "score_enemy3.png", SPRITE_ID::ENEMY3_SCORE);
+
 
 	
 }
