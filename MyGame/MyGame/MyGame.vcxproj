@@ -211,6 +211,7 @@
     <ClCompile Include="src\Effect\StepEffect.cpp" />
     <ClCompile Include="src\Fade\FadePanel.cpp" />
     <ClCompile Include="src\Fade\FadeSprite.cpp" />
+    <ClCompile Include="src\Field\Audience.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
     <ClCompile Include="src\Game\Time.cpp" />
     <ClCompile Include="src\Game\WorkFolder.cpp" />
@@ -256,6 +257,7 @@
     <ClCompile Include="src\Scene\Screen\CreateEnemy.cpp" />
     <ClCompile Include="src\Scene\Screen\DrawStartSprite.cpp" />
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
+    <ClCompile Include="src\Scene\Screen\ResultAnimation.cpp" />
     <ClCompile Include="src\Scene\Screen\ResultScoreDraw.cpp" />
     <ClCompile Include="src\Scene\Screen\TutorialCutIn.cpp" />
     <ClCompile Include="src\Scene\StageSelectScene.cpp" />
@@ -277,6 +279,9 @@
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
+    <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI.cpp" />
+    <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI_pair.cpp" />
+    <ClCompile Include="src\UI\Model_Animation_UI\Model_Animation_UI.cpp" />
     <ClCompile Include="src\UI\Song_Title_UI.cpp" />
     <ClCompile Include="src\UI\SpecifiedDraw.cpp" />
     <ClCompile Include="src\UI\SpecifiedStepManager.cpp" />
@@ -362,6 +367,7 @@
     <ClInclude Include="src\Effect\StepEffect.h" />
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Fade\FadeSprite.h" />
+    <ClInclude Include="src\Field\Audience.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
     <ClInclude Include="src\Function\Split.h" />
@@ -435,6 +441,7 @@
     <ClInclude Include="src\Scene\Screen\CreateEnemy.h" />
     <ClInclude Include="src\Scene\Screen\DrawStartSprite.h" />
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
+    <ClInclude Include="src\Scene\Screen\ResultAnimation.h" />
     <ClInclude Include="src\Scene\Screen\ResultScoreDraw.h" />
     <ClInclude Include="src\Scene\Screen\TutorialCutIn.h" />
     <ClInclude Include="src\Scene\StageSelectScene.h" />
@@ -463,6 +470,10 @@
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
+    <ClInclude Include="src\UI\Model_Animation_UI\Animation_UI.h" />
+    <ClInclude Include="src\UI\Model_Animation_UI\Animation_UI_pair.h" />
+    <ClInclude Include="src\UI\Model_Animation_UI\Anima_UI_Ptr.h" />
+    <ClInclude Include="src\UI\Model_Animation_UI\Model_Animation_UI.h" />
     <ClInclude Include="src\UI\Song_Title_UI.h" />
     <ClInclude Include="src\UI\SpecifiedDraw.h" />
     <ClInclude Include="src\UI\SpecifiedDrawPtr.h" />

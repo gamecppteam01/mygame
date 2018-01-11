@@ -1,14 +1,23 @@
 #include "StageSelectScene.h"
 #include"../Input/InputChecker.h"
 #include"../Graphic/Sprite.h"
+#include"../Graphic/Model.h"
 #include"../Define.h"
 #include"../DataManager/DataManager.h"
 #include "../Sound/Sound.h"
+#include"../Camera/Camera.h"
 
-StageSelectScene::StageSelectScene()
-{
+
+//遷移先リスト
+static const std::vector<std::tuple<SceneType, int, BGM_ID>> ButtonList{
+	std::make_tuple(SceneType::SCENE_GAMEPLAY, 1, BGM_ID::STAGE1_BGM),
+	std::make_tuple(SceneType::SCENE_GAMEPLAY, 2, BGM_ID::STAGE2_BGM),
+	std::make_tuple(SceneType::SCENE_GAMEPLAY, 3, BGM_ID::STAGE3_BGM),
+	std::make_tuple(SceneType::SCENE_TITLE, 1, BGM_ID::TITLE_BGM)
+};
+
+StageSelectScene::StageSelectScene(){
 	next_ = SceneType::SCENE_GAMEPLAY;
-
 }
 
 StageSelectScene::~StageSelectScene()
@@ -17,11 +26,18 @@ StageSelectScene::~StageSelectScene()
 
 void StageSelectScene::start()
 {
+	light_.initialize();
+	light_.changeLightTypeDir(Vector3(0.0f, 0.0f, 500.0f));
+	light_.setGlobalAmbientLight(Color(0.7f, 0.7f, 0.7f, 0.7f));
+	anim_UI_Mgr_.initialize();
 	cursor_ = 0;
 	prevCursor_ = 0;
 	sinCount_ = 0;
 	t = 0.0f;
 	Ypos = 0.0f;
+	ChangeModel();
+	anim_UI_Mgr_.Updata(1.0f/60.0f);
+
 }
 
 void StageSelectScene::update(float deltaTime)
@@ -31,18 +47,24 @@ void StageSelectScene::update(float deltaTime)
 		cursor_ = (cursor_ - 1 + ButtonList.size()) % ButtonList.size();
 		Ypos -= 150.0f;
 		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
+		count_ = 0;
+		timer_ = 0.0f;
+		ChangeModel();
 	}
 	else if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::S) ||
 		InputChecker::GetInstance().InputChecker::GetInstance().GetPovTriggerDownAngle() == 180){
 		cursor_ = (cursor_ + 1) % ButtonList.size();
 		Ypos += 150.0f;
 		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
+		count_ = 0;
+		timer_ = 0.0f;
+		ChangeModel();
 	}
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 		//シーン遷移
-		next_ = ButtonList[cursor_].first;
+		next_ = std::get<0>(ButtonList[cursor_]);
 		Sound::GetInstance().PlaySE(SE_ID::SELECT_SE, 1, 1);
-		DataManager::GetInstance().setStage(ButtonList[cursor_].second);//ステージ番号受け渡し
+		DataManager::GetInstance().setStage(std::get<1>(ButtonList[cursor_]));//ステージ番号受け渡し
 		isEnd_ = true;
 	}
 	//カーソルループ
@@ -51,10 +73,30 @@ void StageSelectScene::update(float deltaTime)
 	MathHelper::Clamp(Ypos, -150.0f, 600.0f);
 	t = MathHelper::Sin(sinCount_);
 	sinCount_ = (sinCount_ + 8) % 360;
+
+	ChangeBGM();
+
+	anim_UI_Mgr_.Updata(deltaTime);
+
+	if (timer_ >= 3.0f) {
+		if (UI_Models_[cursor_].size() == 1) return;
+		count_ = (count_ + 1) % UI_Models_[cursor_].size();
+		ChangeModel();
+		timer_ = 0.0f;
+	}
+	timer_ += deltaTime;
 }
 
 void StageSelectScene::draw() const
 {
+	Camera::GetInstance().Position.Set(Vector3(0, 0, 0));
+
+	Camera::GetInstance().Target.Set(Vector3(0.0f, 0.0f, 1.0f));
+	Camera::GetInstance().SetRange(0.1f, 1000.0f);
+	Camera::GetInstance().SetViewAngle(60.0f);
+	Camera::GetInstance().Up.Set(Vector3::Up);
+
+	Camera::GetInstance().Update();
 	
 	float cutSize = WINDOW_WIDTH / 6.0f;//ボタン軸のカット毎サイズ
 	Sprite::GetInstance().Draw(SPRITE_ID::SELECT_BACK, Vector2::Zero);
@@ -69,7 +111,6 @@ void StageSelectScene::draw() const
 	if(Ypos == 450)Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2(basePos - (WINDOW_WIDTH / 2 - 440.0f) + Vector2(0.0f, Ypos)), origin, std::abs(t), Vector2::One, true, true);
 	//ステージ1～3
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::STAGE1_TEXT_SPRITE) / 2;
-
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
 	Sprite::GetInstance().Draw(SPRITE_ID::STAGE_1_SPRITE, basePos, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
@@ -81,12 +122,18 @@ void StageSelectScene::draw() const
 	if (cursor_ != 2)SetDrawBright(100, 100, 100);
 	Sprite::GetInstance().Draw(SPRITE_ID::STAGE_3_SPRITE, Vector2{ basePos.x,basePos.y + padding*2 }, origin, 1.0f, Vector2::One*0.7f);
 	SetDrawBright(255, 255, 255);
-
 	//タイトルへの遷移
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
 	if (cursor_ != 3)SetDrawBright(100, 100, 100);
 	Sprite::GetInstance().Draw(SPRITE_ID::TOTITLE_SPRITE, Vector2{ basePos.x+60.0f,basePos.y + padding * 3 }, origin, 1.0f, Vector2::One*0.55f);
 	SetDrawBright(255, 255, 255);
+
+	//Model::GetInstance().Draw(MODEL_ID::BALANCEENEMY_MODEL, Vector3(0.0f, 0.0f, 20.0f));
+
+	if (cursor_ == 3) return;
+	anim_UI_Mgr_.Draw();
+
+
 
 //	//タイトルへの遷移
 //	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TOTITLE_SPRITE) / 2;
@@ -104,4 +151,18 @@ void StageSelectScene::draw() const
 
 void StageSelectScene::end()
 {
+}
+
+void StageSelectScene::ChangeBGM(){
+	prevCursor_ = current_cursor_;
+	current_cursor_ = cursor_;
+	if (prevCursor_ == current_cursor_) return;
+
+	Sound::GetInstance().StopBGM();
+	Sound::GetInstance().PlayBGM(std::get<2>(ButtonList[cursor_]), DX_PLAYTYPE_LOOP);
+}
+
+void StageSelectScene::ChangeModel(){
+	if (cursor_ == 3) return;
+		anim_UI_Mgr_.UseModelAnimation(UI_Models_[cursor_][count_][0], UI_Models_[cursor_][count_][1]);
 }

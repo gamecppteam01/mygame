@@ -1,6 +1,9 @@
 #pragma once
 #include"Scene.h"
 #include<vector>
+#include<array>
+#include"../Light/StandardLight.h"
+#include"../UI/Model_Animation_UI/Model_Animation_UI.h"
 
 //シーンテンプレート(名前部分は各自変更して使う事、シーンクラスを継承している)
 class StageSelectScene :public Scene {
@@ -19,23 +22,33 @@ public:
 	void end()override;
 	//その他必要な関数があれば下に作る
 
+private:
+	void ChangeBGM();
+	void ChangeModel();
 
 private:
 	//自作シーン内で必要な関数はここに作る
 
-	int cursor_{ 0 };//カーソル位置
+	StandardLight light_;
+	Model_Animation_UI anim_UI_Mgr_;
+
+	std::vector<std::vector<std::array<MODEL_ID,2>>> UI_Models_{
+		{ std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL } },
+		{ std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL } },
+		{ std::array<MODEL_ID,2>{MODEL_ID::RIVALENEMY_MODEL,MODEL_ID::RIVALENEMY_BULLET_MODEL } ,std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL } },
+		{ std::array<MODEL_ID,2>{MODEL_ID::DUMMY_MODEL,MODEL_ID::DUMMY_MODEL } }
+	};
+
+	int cursor_{ 0 };	//カーソル位置
+	int current_cursor_;//現在のカーソル位置
+	int prev_cursor_;	//前の状態のカーソル位置
 
 	int prevCursor_{ 0 };
 
 	int sinCount_{ 0 };
 	float t;
 	float Ypos;
-private:
-	//遷移先リスト
-	const std::vector<std::pair<SceneType,int>> ButtonList{
-		{SceneType::SCENE_GAMEPLAY,1},
-		{SceneType::SCENE_GAMEPLAY,2},
-		{SceneType::SCENE_GAMEPLAY,3},
-		{SceneType::SCENE_TITLE   ,1}
-	};
+
+	float timer_{ 0.0f };
+	int count_{ 0 };
 };

@@ -32,6 +32,22 @@ public:
 	void end() override;
 
 private:
+	//1段階目の更新
+	void firstUpdate();
+	//2段階目の更新
+	void secondUpdate();
+	//3段階目の更新
+	void thirdUpdate();
+	//1段階目の描画
+	void firstDraw() const;
+	//2段階目の描画
+	void secondDraw() const;
+	//3段階目の描画
+	void thirdDraw() const;
+	//ボタンがおされたか？
+	bool is_Triger_Chack();
+
+private:
 	//カーソル位置
 	int cursor_{ 0 };
 
@@ -42,6 +58,12 @@ private:
 	int SinCount_;
 	float temp;
 	int brightCount_{ 0 };
+
+	//タイトルロゴ
+	Vector2 logoPos_{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 20 };
+	Vector2 logoPos2_{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 140 };
+	float timer_{ 0 }, maxTimer{ 3.0f };
+
 private:
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
