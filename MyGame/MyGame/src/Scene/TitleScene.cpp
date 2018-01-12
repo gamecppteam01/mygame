@@ -29,8 +29,10 @@ void TitleScene::start()
 	Sound::GetInstance().StopBGM();
 	isEnd_ = false;
 	titleState_ = TitleState::first;
+	logoPos_ = Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 10);
 	cursor_ = 0;
 	timer_ = 0;
+	alpha_ = 0.0f;
 	brightCount_ = 0;
 	SinCount_ = 0;
 	Sound::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, DX_PLAYTYPE_LOOP);
@@ -47,10 +49,10 @@ void TitleScene::update(float deltaTime)
 		firstUpdate();
 		break;
 	case TitleState::second:
-		secondUpdate();
+		secondUpdate(deltaTime);
 		break;
 	case TitleState::third:
-		thirdUpdate();
+		thirdUpdate(deltaTime);
 		break;
 	}
 	
@@ -58,9 +60,6 @@ void TitleScene::update(float deltaTime)
 	//min(temp, 0.0f);
 	SinCount_ = (SinCount_ + 8) % 360;
 	brightCount_ = (brightCount_ + 2) % 360;
-
-	timer_ = min(timer_ + deltaTime, maxTimer);
-
 }
 
 void TitleScene::draw() const
@@ -106,11 +105,13 @@ void TitleScene::firstUpdate(){
 	}
 }
 
-void TitleScene::secondUpdate(){
+void TitleScene::secondUpdate(float deltaTime){
 	float t = timer_ / maxTimer;
 	logoPos_ = Vector2::Lerp(logoPos_, logoPos2_, t);
+	alpha_ = MathHelper::Lerp(0.0f, 1.0f, t);
+	timer_ = min(timer_ + deltaTime, maxTimer);
 
-	if (DataManager::GetInstance().getIsTutorial() == true ) {
+	if (DataManager::GetInstance().getIsTutorial() == true /* && timer_ >= maxTimer*/) {
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) || InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 			cursor_ = (cursor_ - 1 + cursorPoses2.size()) % cursorPoses2.size();
 			Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
@@ -138,10 +139,21 @@ void TitleScene::secondUpdate(){
 	}
 	else {
 		titleState_ = TitleState::third;
+		alpha_ = 0.0f;
+		timer_ = 0.0f;
+		cursor_ = 1;
 	}
+
 }
 
-void TitleScene::thirdUpdate(){
+void TitleScene::thirdUpdate(float deltaTime){
+	float t = timer_ / (maxTimer*0.5f) ;
+	if (DataManager::GetInstance().getIsTutorial() == false) {
+		logoPos_ = Vector2::Lerp(logoPos_, logoPos2_, t);
+	}
+	alpha_ = MathHelper::Lerp(0.0f, 1.0f, t);
+	timer_ = min(timer_ + deltaTime, maxTimer);
+
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::W) || InputChecker::GetInstance().GetPovTriggerDownAngle() == 0) {
 		cursor_ = (cursor_ - 1 + cursorPoses.size()) % cursorPoses.size();
 		Sound::GetInstance().PlaySE(SE_ID::CURSOL_SE, 1, 1);
@@ -172,25 +184,26 @@ void TitleScene::firstDraw() const{
 
 void TitleScene::secondDraw() const{
 	//if (timer_ <= maxTimer-0.1f) return;
-	
-	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
-	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f - cursorPoses2[cursor_].first.x*0.7f,cursorPoses2[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, true);
-	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses2[cursor_].first.x*0.7f,cursorPoses2[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, false);
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_SPRITE) / 2;
-	//チュートリアルをしますか？
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_TEXT) / 2;
-	Sprite::GetInstance().Draw(SPRITE_ID::TUTORIAL_TEXT, Vector2(WINDOW_WIDTH / 2, 400.0f), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
-	SetDrawBright(255, 255, 255);
-	//YES
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::YES_TEXT) / 2;
-	if (cursor_ != 0)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::YES_TEXT, Vector2(WINDOW_WIDTH / 2, cursorPoses2[0].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
-	SetDrawBright(255, 255, 255);
-	//NO
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::NO_TEXT) / 2;
-	if (cursor_ != 1)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::NO_TEXT, Vector2(WINDOW_WIDTH / 2, cursorPoses2[1].first.y), origin, 1.0f/*cursor_ == 1 ? std::abs(temp) : 1.0f*/, Vector2::One);
-	SetDrawBright(255, 255, 255);
+	if (DataManager::GetInstance().getIsTutorial() == true && timer_ >= maxTimer * 0.5f) {
+		Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::CURSOR) / 2;
+		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f - cursorPoses2[cursor_].first.x*0.7f,cursorPoses2[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, true);
+		Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses2[cursor_].first.x*0.7f,cursorPoses2[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, false);
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_SPRITE) / 2;
+		//チュートリアルをしますか？
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_TEXT) / 2;
+		Sprite::GetInstance().Draw(SPRITE_ID::TUTORIAL_TEXT, Vector2(WINDOW_WIDTH / 2, 400.0f), origin, alpha_, Vector2::One);
+		SetDrawBright(255, 255, 255);
+		//YES
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::YES_TEXT) / 2;
+		if (cursor_ != 0)SetDrawBright(100, 100, 100);
+		Sprite::GetInstance().Draw(SPRITE_ID::YES_TEXT, Vector2(WINDOW_WIDTH / 2, cursorPoses2[0].first.y), origin, alpha_, Vector2::One);
+		SetDrawBright(255, 255, 255);
+		//NO
+		origin = Sprite::GetInstance().GetSize(SPRITE_ID::NO_TEXT) / 2;
+		if (cursor_ != 1)SetDrawBright(100, 100, 100);
+		Sprite::GetInstance().Draw(SPRITE_ID::NO_TEXT, Vector2(WINDOW_WIDTH / 2, cursorPoses2[1].first.y), origin, alpha_, Vector2::One);
+		SetDrawBright(255, 255, 255);
+	}
 }
 
 void TitleScene::thirdDraw() const{
@@ -199,15 +212,15 @@ void TitleScene::thirdDraw() const{
 	Sprite::GetInstance().Draw(SPRITE_ID::CURSOR, Vector2{ WINDOW_WIDTH*0.5f + cursorPoses[cursor_].first.x,cursorPoses[cursor_].first.y }, origin, std::abs(temp), Vector2::One, true, false);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_SPRITE) / 2;
 	if (cursor_ != 0)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::TUTORIAL_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[0].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::TUTORIAL_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[0].first.y), origin, alpha_, Vector2::One);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::START_SPRITE) / 2;
 	if (cursor_ != 1)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::STAGESELECT_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y), origin, 1.0f/*cursor_==0 ? std::abs(temp):1.0f*/, Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::STAGESELECT_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[1].first.y), origin, alpha_, Vector2::One);
 	SetDrawBright(255, 255, 255);
 	origin = Sprite::GetInstance().GetSize(SPRITE_ID::END_SPRITE) / 2;
 	if (cursor_ != 2)SetDrawBright(100, 100, 100);
-	Sprite::GetInstance().Draw(SPRITE_ID::END_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[2].first.y), origin, 1.0f/*cursor_ == 1 ? std::abs(temp) : 1.0f*/, Vector2::One);
+	Sprite::GetInstance().Draw(SPRITE_ID::END_SPRITE, Vector2(WINDOW_WIDTH / 2, cursorPoses[2].first.y), origin, alpha_, Vector2::One);
 	SetDrawBright(255, 255, 255);
 }
 

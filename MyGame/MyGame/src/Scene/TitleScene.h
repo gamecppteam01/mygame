@@ -35,9 +35,9 @@ private:
 	//1段階目の更新
 	void firstUpdate();
 	//2段階目の更新
-	void secondUpdate();
+	void secondUpdate(float deltaTime);
 	//3段階目の更新
-	void thirdUpdate();
+	void thirdUpdate(float deltaTime);
 	//1段階目の描画
 	void firstDraw() const;
 	//2段階目の描画
@@ -60,9 +60,11 @@ private:
 	int brightCount_{ 0 };
 
 	//タイトルロゴ
-	Vector2 logoPos_{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 20 };
+	Vector2 logoPos_{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 40 };
 	Vector2 logoPos2_{ WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 140 };
-	float timer_{ 0 }, maxTimer{ 3.0f };
+	float timer_{ 0 }, maxTimer{ 1.0f };
+	//透明度
+	float alpha_{ 0.0f };
 
 private:
 	//カーソルの位置及びボタンの位置リスト
