@@ -33,6 +33,7 @@
 #include"../UI/SpecifiedStepUI.h"
 #include"../Actor/Player/RegulationMaker.h"
 #include "../UI/SpecifiedStepManager.h"
+#include"../UI/StepComboManager.h"
 
 //ƒQ[ƒ€‚ÌŽžŠÔ
 static const float gameTime = 5.0f;
@@ -92,7 +93,7 @@ void GamePlayScene::start() {
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Turn});
-	//
+
 	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
 	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
 	//player->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
@@ -425,7 +426,9 @@ void GamePlayScene::settingUI() {
 	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
 	specifiedStepManager_ = std::make_shared<SpecifiedStepManager>(&world_);
-	world_.addUI(specifiedStepManager_);
+	//world_.addUI(specifiedStepManager_);
+	stepcomboManager_ = std::make_shared<StepComboManager>(&world_);
+	world_.addUI(stepcomboManager_);
 }
 
 void GamePlayScene::stopRound()

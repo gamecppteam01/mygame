@@ -13,6 +13,7 @@
 #include"Screen/DrawStartSprite.h"
 
 class SpecifiedStepManager;
+class StepComboManager;
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
 public:
@@ -58,6 +59,7 @@ private:
 	float freamCounter_{ 0.0f };
 	bool isStart_;
 	std::shared_ptr<SpecifiedStepManager> specifiedStepManager_;
+	std::shared_ptr<StepComboManager> stepcomboManager_;
 	float timeCount_{ 3.0f };//スタート時のタイマー
 	int currentCount_{ 4 };//スタートで到達したカウント
 	PauseScreen pause_;

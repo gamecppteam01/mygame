@@ -122,6 +122,9 @@ enum SPRITE_ID
 
 	TIME_UI,
 
+	POINTUP_SPRITE,
+	BURST_SPRITE,
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

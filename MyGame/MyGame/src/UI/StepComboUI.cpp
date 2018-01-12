@@ -23,13 +23,28 @@ void StepComboUI::update(float deltaTime)
 		pos = MathHelper::Lerp(0.0f, -100.0f, timer_);
 		pos = MathHelper::Clamp(pos, 0.0f, -100.0f);
 
-		if (timer_ <= 1.0f) {
-			timer_ += 0.1f;
+		if (timer_ <= 60.0f) {
+			timer_ += deltaTime;
 		}
 		else{
 			IsStart_ = false;
 		}
 
+	}
+	//Á‚¦‚é‚Æ‚«
+	if (IsEnd_ == true) {
+		alpha_ -= 0.3f;
+		position_ += Vector2(0.0f, pos);
+
+		pos = MathHelper::Lerp(0.0f, 100.0f, timer_);
+		pos = MathHelper::Clamp(pos, 0.0f, 100.0f);
+
+		if(timer_ <= 1.0f){
+			timer_ += 0.01f;
+		}
+		else{
+			IsEnd_ = false;
+		}
 	}
 	
 	
@@ -63,4 +78,8 @@ bool StepComboUI::getIsStart() const
 SPRITE_ID StepComboUI::GetId() const
 {
 	return SPRITE_ID(id_);
+}
+
+int StepComboUI::getPos() {
+	return pos;
 }

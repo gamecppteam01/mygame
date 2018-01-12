@@ -159,6 +159,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "ResultStage.png", SPRITE_ID::RESULT_STAGE);
 
 	Sprite::GetInstance().Load(defaultPath + "clock.png", SPRITE_ID::TIME_UI);
+	Sprite::GetInstance().Load(defaultPath + "burst_ui.png", SPRITE_ID::BURST_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "pointup_ui.png", SPRITE_ID::POINTUP_SPRITE);
 }
 
 void LoadingScene::LoadModel()

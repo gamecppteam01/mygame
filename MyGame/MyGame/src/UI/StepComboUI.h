@@ -17,6 +17,7 @@ public:
 	bool getIsDead() const;
 	bool getIsStart() const;
 	SPRITE_ID GetId() const;
+	int getPos();
 
 private:
 	SPRITE_ID id_;

@@ -10,16 +10,8 @@
 #include <vector>
 #include <map>
 
-
 class StepComboManager : public UI {
 public:
-
-	enum Combo {
-		first,
-		second,
-
-	};
-
 	StepComboManager() = default;
 	StepComboManager(IWorld * world);
 	virtual void initialize() override;
@@ -38,9 +30,11 @@ private:
 	int stepNum_;
 	int step_;
 	float alpha_;
+	float alpha2_;
 	Vector2 patternPos_;
 	Vector2 cursorPos_;
 	bool IsPause{ false };
 	bool IsOut{ false };
-	Combo combo_;
+	bool IsPCheck{ false };
+	bool IsBCheck{ false };
 };
