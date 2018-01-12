@@ -33,6 +33,7 @@ public:
 	void setAnimSpeed(float animSpeed) { animSpeed_ = animSpeed; }
 	//モデルハンドルの取得
 	int getModelHandle() const;
+	void lastAnim();
 private:
 	void clearModel();
 	// コピーコンストラクタ

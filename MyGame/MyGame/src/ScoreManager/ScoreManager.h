@@ -20,7 +20,7 @@ public:
 	//更新
 	void updata(float deltaTime);
 	//選手の追加
-	void add_Player(int score, int number, float rate ,int rank ,const ActorPtr& target);
+	void add_Player(int score, int number, float rate ,int rank ,const ActorPtr& target, MODEL_ID manModel = MODEL_ID::PLAYER_MODEL, MODEL_ID womanModel = MODEL_ID::PLAYER_BULLET_MODEL);
 	//スコアの加算
 	void addScore(int number, int score);
 	//倍率の変更

@@ -252,6 +252,10 @@
     <ClCompile Include="src\Scene\GameOverScene.cpp" />
     <ClCompile Include="src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScene.cpp" />
+    <ClCompile Include="src\Scene\ResultDraw\ResultCamera.cpp" />
+    <ClCompile Include="src\Scene\ResultDraw\ResultField.cpp" />
+    <ClCompile Include="src\Scene\ResultDraw\ResultModelDrawer.cpp" />
+    <ClCompile Include="src\Scene\ResultDraw\ResultRankManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\Screen\CreateEnemy.cpp" />
@@ -286,6 +290,8 @@
     <ClCompile Include="src\UI\SpecifiedDraw.cpp" />
     <ClCompile Include="src\UI\SpecifiedStepManager.cpp" />
     <ClCompile Include="src\UI\SpecifiedStepUI.cpp" />
+    <ClCompile Include="src\UI\StepComboManager.cpp" />
+    <ClCompile Include="src\UI\StepComboUI.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\TimeUI.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
@@ -355,6 +361,7 @@
     <ClInclude Include="src\Effect\CircleEffect.h" />
     <ClInclude Include="src\Effect\Effect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\ColEffect.h" />
+    <ClInclude Include="src\Effect\EffekseerEffect\EffectIclude.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\HalfEffect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\QuarterEffect.h" />
     <ClInclude Include="src\Effect\EffekseerEffect\SpinEffect.h" />
@@ -433,6 +440,10 @@
     <ClInclude Include="src\Scene\GamePlayScene.h" />
     <ClInclude Include="src\Scene\GamePlayState.h" />
     <ClInclude Include="src\Scene\LoadingScene.h" />
+    <ClInclude Include="src\Scene\ResultDraw\ResultCamera.h" />
+    <ClInclude Include="src\Scene\ResultDraw\ResultField.h" />
+    <ClInclude Include="src\Scene\ResultDraw\ResultModelDrawer.h" />
+    <ClInclude Include="src\Scene\ResultDraw\ResultRankManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scene\Scenes.h" />
@@ -467,6 +478,7 @@
     <ClInclude Include="src\UI\ButtonUI.h" />
     <ClInclude Include="src\UI\ButtonUIPtr.h" />
     <ClInclude Include="src\UI\ComboGaugeUI.h" />
+    <ClInclude Include="src\UI\ComboStepUIPtr.h" />
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
@@ -479,6 +491,8 @@
     <ClInclude Include="src\UI\SpecifiedDrawPtr.h" />
     <ClInclude Include="src\UI\SpecifiedStepManager.h" />
     <ClInclude Include="src\UI\SpecifiedStepUI.h" />
+    <ClInclude Include="src\UI\StepComboManager.h" />
+    <ClInclude Include="src\UI\StepComboUI.h" />
     <ClInclude Include="src\UI\StepUI.h" />
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />

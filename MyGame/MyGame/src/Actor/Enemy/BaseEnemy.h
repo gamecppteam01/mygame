@@ -59,6 +59,9 @@ public:
 	virtual void endStepAnim()override;
 
 	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber);
+
+	MODEL_ID getModelID()const;
+	MODEL_ID getBulletModelID()const;
 protected:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -181,6 +184,7 @@ protected:
 
 	float boundPower_{ 15.0f };
 
+	MODEL_ID bulletModel_;
 protected:
 	//攻撃する範囲
 	const float attackDistance{ 30.0f };

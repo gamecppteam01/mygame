@@ -6,6 +6,8 @@
 #include "../World/World.h"
 #include <list>
 #include"Screen/ResultScoreDraw.h"
+#include"ResultDraw/ResultField.h"
+#include"ResultDraw/ResultRankManager.h"
 
 /* 順位とスコアを並べる、タイトルに戻る */
 /* すべてのスコアをソートして降順に画面に表示する */
@@ -32,9 +34,13 @@ private:
 
 	int sinCount_;
 	ResultScoreDraw score_;
+
+	ResultRankManager rrMgr_{};
+	ResultField field_;
+
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
-		{ Vector2{ 450.0f,500.f },SceneType::SCENE_GAMEPLAY },
-		{ Vector2{ 450.0f,625.f },SceneType::SCENE_TITLE }
+		{ Vector2{ 550.0f,100.f },SceneType::SCENE_GAMEPLAY },
+		{ Vector2{ 1000.0f,100.f },SceneType::SCENE_TITLE }
 	};
 };

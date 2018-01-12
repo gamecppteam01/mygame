@@ -49,6 +49,7 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));
 	bullet_->changeAnimation(EnemyBullet::EnemyBullet_Animation::Move_Forward);
 	modelHandle_ = id;
+	bulletModel_ = bulletid;
 	changeAnimation(Enemy_Animation::Move_Forward);
 
 	bullet_->initialize();
@@ -96,6 +97,16 @@ void BaseEnemy::endStepAnim()
 std::shared_ptr<BaseEnemy> BaseEnemy::Create(IWorld * world, const Vector3 & position, int playerNumber)
 {
 	return std::make_shared<BaseEnemy>(world, "Enemy", position, playerNumber);
+}
+
+MODEL_ID BaseEnemy::getModelID() const
+{
+	return modelHandle_;
+}
+
+MODEL_ID BaseEnemy::getBulletModelID() const
+{
+	return bulletModel_;
 }
 
 void BaseEnemy::onMessage(EventMessage message, void * param)

@@ -36,7 +36,7 @@ void ScoreManager::initialize(){
 	for (auto& e : enemyList) {
 		if (e == nullptr)continue;
 		std::shared_ptr<BaseEnemy> enemy = std::static_pointer_cast<BaseEnemy>(e);
-		add_Player(0, enemy->getPlayerNumber(), 1.0f,1, e);	//選手の追加
+		add_Player(0, enemy->getPlayerNumber(), 1.0f, 1, e, enemy->getModelID(), enemy->getBulletModelID());	//選手の追加
 		m_NumberList.push_back(enemy->getPlayerNumber());	//選手番号リストに追加
 	}
 }
@@ -59,8 +59,8 @@ void ScoreManager::updata(float deltaTime) {
 }
 
 //キャラクターの追加
-void ScoreManager::add_Player(int score, int number ,float rate, int rank,const ActorPtr& target){
-	m_ScoreDataList[number] = ScoreData(score,number, rate, rank,target);
+void ScoreManager::add_Player(int score, int number ,float rate, int rank,const ActorPtr& target, MODEL_ID manModel, MODEL_ID womanModel){
+	m_ScoreDataList[number] = ScoreData(score,number, rate, rank,target,manModel,womanModel);
 }
 
 //スコアの加算

@@ -11,7 +11,7 @@ SceneManager::SceneManager() :currentScene_(SceneType::SCENE_LOADING), fadesp_()
 	scenes_[SceneType::SCENE_GAMEPLAY] = std::make_shared<GamePlayScene>();
 	scenes_[SceneType::SCENE_CLEAR]    = std::make_shared<GameClearScene>();
 	scenes_[SceneType::SCENE_GAMEOVER] = std::make_shared<GameOverScene>();
-	scenes_[SceneType::SCENE_CREDIT] = std::make_shared<CreditScene>();
+	//scenes_[SceneType::SCENE_CREDIT] = std::make_shared<CreditScene>();
 	scenes_[SceneType::SCENE_TUTORIAL]   = std::make_shared<TutorialScene>();
 }
 

@@ -125,7 +125,10 @@ int AnimationDx::getModelHandle() const
 {
 	return modelHandle_;
 }
-
+void AnimationDx::lastAnim() {
+	animTimer_ = maxAnimTime_;
+	rate_ = 1.0f;
+}
 void AnimationDx::clearModel()
 {
 	MV1DeleteModel(modelHandle_);
