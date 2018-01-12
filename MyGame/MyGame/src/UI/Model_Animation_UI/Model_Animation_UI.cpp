@@ -26,3 +26,26 @@ void Model_Animation_UI::UseModelAnimation(MODEL_ID& id,MODEL_ID& id2,int step){
 	anm_ui_ptr->ChangeModel(id,id2);
 	//anm_ui_ptr->ChangeStep(step);
 }
+
+Vector3 Model_Animation_UI::getPosition() const
+{
+	return anm_ui_ptr->getPosition();
+}
+
+Vector3 Model_Animation_UI::getCenter() const{
+	return anm_ui_ptr->getCenter();
+}
+
+void Model_Animation_UI::setCenter(Vector3 & center)
+{
+	anm_ui_ptr->setCenter(center);
+}
+
+int Model_Animation_UI::getModelHandle() const
+{
+	return anm_ui_ptr->getModelHandle();
+}
+
+void Model_Animation_UI::setPosition(Vector3 & position){
+	anm_ui_ptr->setPosition(position);
+}

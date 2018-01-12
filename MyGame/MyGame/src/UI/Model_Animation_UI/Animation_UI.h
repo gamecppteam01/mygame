@@ -18,6 +18,10 @@ public:
 	void ChangeModel(MODEL_ID& id,MODEL_ID& id2);
 	void ChangeStep(int step);
 	void setPosition(Vector3& position);
+	Vector3 getPosition() const;
+	Vector3 getCenter() const;
+	void setCenter(Vector3& center);
+	int getModelHandle() const;
 
 private:
 	//パートナー

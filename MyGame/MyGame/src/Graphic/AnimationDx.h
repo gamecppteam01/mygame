@@ -31,6 +31,8 @@ public:
 	void setLoop(bool isLoop) { isLoop_ = isLoop; }
 	//アニメーションの再生速度を設定する
 	void setAnimSpeed(float animSpeed) { animSpeed_ = animSpeed; }
+	//モデルハンドルの取得
+	int getModelHandle() const;
 private:
 	void clearModel();
 	// コピーコンストラクタ

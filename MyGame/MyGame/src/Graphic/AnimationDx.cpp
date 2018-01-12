@@ -121,6 +121,11 @@ float AnimationDx::GetAnimMaxTime(int index) const
 	return MV1GetAnimTotalTime(modelHandle_, index) / 60.0f;
 }
 
+int AnimationDx::getModelHandle() const
+{
+	return modelHandle_;
+}
+
 void AnimationDx::clearModel()
 {
 	MV1DeleteModel(modelHandle_);

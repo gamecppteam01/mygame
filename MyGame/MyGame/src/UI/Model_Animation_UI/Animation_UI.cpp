@@ -44,3 +44,22 @@ void Animation_UI::setPosition(Vector3 & position){
 	position_ = position;
 	pair_->setPosition(position);
 }
+
+Vector3 Animation_UI::getPosition() const
+{
+	return position_;
+}
+
+Vector3 Animation_UI::getCenter() const{
+	return centerPosition_;
+}
+
+void Animation_UI::setCenter(Vector3 & center)
+{
+	centerPosition_ = center;
+}
+
+int Animation_UI::getModelHandle() const
+{
+	return animation_.getModelHandle();
+}

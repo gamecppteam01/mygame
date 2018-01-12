@@ -15,6 +15,11 @@ public:
 	void Draw() const;
 
 	void UseModelAnimation(MODEL_ID& id, MODEL_ID& id2, int step = 0);
+	Vector3 getPosition() const;
+	Vector3 getCenter() const;
+	void setCenter(Vector3& center);
+	int getModelHandle() const;
+	void setPosition(Vector3& position);
 
 private:
 	//std::list<Anima_UI_Ptr> animations_;

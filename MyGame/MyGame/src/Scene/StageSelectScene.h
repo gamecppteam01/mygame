@@ -7,6 +7,13 @@
 
 //シーンテンプレート(名前部分は各自変更して使う事、シーンクラスを継承している)
 class StageSelectScene :public Scene {
+	enum FADE{
+		FADE_OUT,
+		CHANGE_MODEL,
+		FADE_IN,
+
+		NONE,
+	};
 public:
 	//コンストラクタ(定数の設定等はここで行う、初期化並びを利用して必ず変数を1度初期化する事)
 	StageSelectScene();
@@ -33,8 +40,8 @@ private:
 	Model_Animation_UI anim_UI_Mgr_;
 
 	std::vector<std::vector<std::array<MODEL_ID,2>>> UI_Models_{
-		{ std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL } },
-		{ std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL } },
+		{ std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL } },
+		{ std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL }, std::array<MODEL_ID,2>{MODEL_ID::RIVALENEMY_MODEL,MODEL_ID::RIVALENEMY_BULLET_MODEL } },
 		{ std::array<MODEL_ID,2>{MODEL_ID::RIVALENEMY_MODEL,MODEL_ID::RIVALENEMY_BULLET_MODEL } ,std::array<MODEL_ID,2>{MODEL_ID::BALANCEENEMY_MODEL,MODEL_ID::BALANCEENEMY_BULLET_MODEL },std::array<MODEL_ID,2>{MODEL_ID::PLAYER_MODEL,MODEL_ID::PLAYER_BULLET_MODEL } },
 		{ std::array<MODEL_ID,2>{MODEL_ID::DUMMY_MODEL,MODEL_ID::DUMMY_MODEL } }
 	};
@@ -50,5 +57,13 @@ private:
 	float Ypos;
 
 	float timer_{ 0.0f };
+	float timer2_{ 0.0f };
+
 	int count_{ 0 };
+
+	Vector3 cameraPos_{ Vector3::Zero };
+	Vector3 cameraPos2_{ Vector3(0,0,-1000) };
+	Vector3 cameraTarget_{ Vector3(0,0,-1) };
+	Vector3 cameraTarget2_{ Vector3(1.0f, 0.0f, 1.0f) };
+	FADE fade_{ NONE };
 };
