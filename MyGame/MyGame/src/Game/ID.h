@@ -88,6 +88,11 @@ enum SPRITE_ID
 	CUTIN_SUCCESS_SPRITE,
 
 
+	RANK_ONE_SPRITE,
+	RANK_TWO_SPRITE,
+	RANK_THREE_SPRITE,
+
+	RANK_NAME_SPRITE,
 
 	HALF_SPRITE,
     TURN_SPRITE,
@@ -249,4 +254,7 @@ enum class Notification {
 
 	Call_ReciveStep,//ステップ受け取り成功
 	Call_ComboStep,//コンボ
+
+	Call_Success_Combo_PointUp,//ポイントアップコンボ成功通知
+	Call_Success_Combo_Burst,//バーストコンボ成功通知
 };
