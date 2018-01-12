@@ -158,7 +158,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "score_enemy3.png", SPRITE_ID::ENEMY3_SCORE);
 	Sprite::GetInstance().Load(defaultPath + "ResultStage.png", SPRITE_ID::RESULT_STAGE);
 
-	
+	Sprite::GetInstance().Load(defaultPath + "clock.png", SPRITE_ID::TIME_UI);
 }
 
 void LoadingScene::LoadModel()

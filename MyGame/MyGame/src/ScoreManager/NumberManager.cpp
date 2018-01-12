@@ -39,7 +39,14 @@ void NumberManager::DrawNumberTexture(const SPRITE_ID & id, const Vector2 & posi
 		const int n = string_numebr[i] - '0';
 		const RECT rect{ (float)n * size.x ,0.0f,(float)(n * size.x) + size.x,(float)size.y };
 		const Vector2  pos{ position.x + i * size.x * scale.x,position.y };
-		Sprite::GetInstance().Draw(id, pos, rect, Vector2(size.x, size.y) / 2, 1.0f, scale, 0.0f, true, false);
+		Vector2 origin = Vector2{ (size.x * 3) / 2,size.y / 2 };
+		if (number >= 100) {
+			origin = Vector2{(size.x * 3)/2,size.y/2 };
+		}
+		else if (number < 100 && number >= 10) {
+			origin = Vector2{ (size.x * 2) / 2,size.y / 2 };
+		}
+		Sprite::GetInstance().Draw(id, pos, rect, origin, 1.0f, scale, 0.0f, true, false);
 	}
 }
 
@@ -52,7 +59,14 @@ void NumberManager::DrawNumberTexture2(const SPRITE_ID &id, const Vector2 & posi
 		const int n = string_numebr[i] - '0';
 		const RECT rect{ (float)n * size.x ,0.0f,(float)(n * size.x) + size.x,(float)size.y };
 		const Vector2  pos{ position.x + i * size.x * scale.x + move,position.y };
-		Sprite::GetInstance().Draw(id, pos, rect, Vector2(size.x, size.y) / 2, 1.0f, scale, 0.0f, true, false);
+		Vector2 origin = Vector2{ (size.x * 3) / 2,size.y / 2 };
+		if (number >= 100) {
+			origin = Vector2{ (size.x * 3) / 2,size.y / 2 };
+		}
+		else if (number < 100 && number >= 10) {
+			origin = Vector2{ (size.x * 2) / 2,size.y / 2 };
+		}
+		Sprite::GetInstance().Draw(id, pos, rect, origin, 1.0f, scale, 0.0f, true, false);
 	}
 }
 

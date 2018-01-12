@@ -115,6 +115,8 @@ enum SPRITE_ID
 
 	RESULT_STAGE,
 
+	TIME_UI,
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

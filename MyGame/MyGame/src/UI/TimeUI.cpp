@@ -1,5 +1,6 @@
 #include "TimeUI.h"
 #include "../ScoreManager/NumberManager.h"
+#include"../Graphic/Sprite.h"
 #include"../Define.h"
 
 TimeUI::TimeUI(IWorld * world, const Vector2& position) 
@@ -7,30 +8,20 @@ TimeUI::TimeUI(IWorld * world, const Vector2& position)
 }
 
 void TimeUI::initialize(){
-	sincount = 0.0f;
-	scale_ = Vector2(0.0f,0.0f);
-	move_ = Vector2(0.0f, 0.0f);
 }
 
 void TimeUI::update(float deltaTime){
-	if (world_->getTempoManager().getRemainTime() <= 30) {
-		sincount += 1.0f * deltaTime;
-		sincount = std::fmodf(sincount, 360);
-		scale_ = Vector2::Lerp(Vector2(0.5, 0.5), Vector2(0.7, 0.7), std::abs(MathHelper::Sin(sincount)));
-		move_ = Vector2::Lerp(Vector2(0, 0), Vector2(-5, -5), std::abs(MathHelper::Sin(sincount)));
-	}
+
 }
 
 void TimeUI::draw() const{
+	const Vector2 position1{ position_.x + 64,position_.y + 64 };
+	Sprite::GetInstance().Draw(SPRITE_ID::TIME_UI, position1,Sprite::GetInstance().GetSize(SPRITE_ID::TIME_UI),Vector2::One);
+
 	if (world_->getTempoManager().getRemainTime() > 30) {
 		NumberManager::GetInstance().DrawNumberTexture(SPRITE_ID::NUMBER ,position_, (int)world_->getTempoManager().getRemainTime(), Vector2(64, 64), Vector2(0.5f, 0.5f));
 	}
 	else {
-		if (world_->getTempoManager().getRemainTime() > 9) {
-			NumberManager::GetInstance().DrawNumberTexture2(SPRITE_ID::REDNUMBER, position_ + move_, (int)world_->getTempoManager().getRemainTime(), Vector2(64, 64), scale_);
-		}
-		else {
-			NumberManager::GetInstance().DrawNumberTexture2(SPRITE_ID::REDNUMBER, position_, (int)world_->getTempoManager().getRemainTime(), Vector2(64, 64), scale_);
-		}
+		NumberManager::GetInstance().DrawNumberTexture2(SPRITE_ID::REDNUMBER, position_, (int)world_->getTempoManager().getRemainTime(), Vector2(64, 64), Vector2(0.5f, 0.5f));
 	}
 }

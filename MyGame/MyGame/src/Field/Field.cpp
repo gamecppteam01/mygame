@@ -76,7 +76,6 @@ void Field::draw() const {
 	MV1DrawModel(fieldUp_);
 	float x = 420.0f; float y = 300.0f;
 
-
 	//MV1SetPosition(wallCorner_, Vector3::Vector3ToVECTOR(Vector3{x,0.0f,y} *FIELD_SCALE));
 	//MV1SetRotationXYZ(wallCorner_, Vector3{ 0.0f,0.0f,0.0f, });
 	////MV1DrawModel(wallCorner_);
@@ -95,9 +94,9 @@ void Field::draw() const {
 	//MV1DrawModel(wallSide_);
 	//MV1DrawModel(wallUp_);
 
-	audience.draw(up, Vector3{ -90.0f,0.0f,0.0f });
-	audience.draw(right, Vector3{ 0.0f,-90.0f,90.0f });
-	audience.draw(-right, Vector3{ 0.0f,90.0f,-90.0f });
+	audience.draw(Vector3{0.0f,50.0f,225.0f},   Vector3{ -40.0f,0.0f,0.0f });
+	audience.draw(Vector3{375.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,40.0f });
+	audience.draw(Vector3{-375.0f,-50.0f,0.0f}, Vector3{ 0.0f,-90.0f,-40.0f });
 }
 
 // フィールドのハンドル取得
