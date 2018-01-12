@@ -105,8 +105,8 @@ void DualShock4Manager::Update() {
 	memcpy(previousData_, currentData_, dataSize_);
 	//“Ç‚Ýž‚Ý‚ðs‚¤(“Ç‚Ýž‚Ýƒf[ƒ^‚ÍcurrentData_‚ÉŠi”[‚³‚ê‚é)
 	if (ReadFile(handle_, currentData_, dataSize_, &readBytes, NULL) == TRUE) {
-		Update_Angle();
-		Update_Acceleration();
+		if (readBytes > 24 + isbluetooth_)Update_Angle();
+		if (readBytes > 24 + isbluetooth_)Update_Acceleration();
 	}
 	else {
 		//OutputDebugString("Ž¸”s");
