@@ -9,8 +9,6 @@
 #include <map>
 
 class Player;
-//指示を出す個数
-//static const int Directiv{ 4 };
 class SpecifiedStepManager  : public UI{
 
 	enum stepState {
@@ -43,8 +41,9 @@ private:
 	std::shared_ptr<Player> target_;
 	bool IsPause{ false };
 	bool IsDeadEnd{ false };
-	std::list<int> reciveList_;
+	bool IsPad_{ false };
 	int reciveStep_;
+	float timer_;
 	//表示するステップ
 	std::vector<SpecifiedDrawPtr> stepdraw_;
 };

@@ -3,9 +3,12 @@
 #include "../Math/Math.h"
 #include "UI.h"
 #include "SpecifiedDrawPtr.h"
+#include "../Actor/Player/Player.h"
 #include <vector>
 #include <map>
 #include <list>
+
+class Player;
 
 class SpecifiedDraw : public UI{
 public:
@@ -20,6 +23,7 @@ public:
 	bool getIsDead() const;
 	bool getIsStart() const;
 	void addPosition(const Vector2& pos);
+	int getPos();
 
 private:
 	SPRITE_ID id_;
@@ -29,4 +33,5 @@ private:
 	float timer_{ 0.0f };
 	float pos;
 	float alpha_;
+	std::shared_ptr<Player> player_;
 };

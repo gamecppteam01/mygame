@@ -20,14 +20,15 @@ void SpecifiedDraw::update(float deltaTime)
 		position_ += Vector2(0.0f, pos);
 		if(alpha_ <= 0.0f){
 			IsDead_ = true;
+
 		}
 
-		pos = MathHelper::Lerp(100.0f, 0.0f, timer_);
+		pos = MathHelper::Lerp(0.0f, 100.0f, timer_);
+		pos = MathHelper::Clamp(pos, 0.0f, 100.0f);
 
-		if (timer_ <= 1.0f) {
-			timer_ += 0.2f;
+		if (timer_ <= 60.0f) {
+			timer_ += deltaTime;
 		}
-		
 	}
 }
 
@@ -59,4 +60,9 @@ bool SpecifiedDraw::getIsStart() const
 void SpecifiedDraw::addPosition(const Vector2 & pos)
 {
 	position_ += pos;
+}
+
+int SpecifiedDraw::getPos()
+{
+	return pos;
 }

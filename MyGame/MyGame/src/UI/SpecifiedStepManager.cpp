@@ -17,34 +17,40 @@ SpecifiedStepManager::SpecifiedStepManager(IWorld * world)
 
 void SpecifiedStepManager::initialize()
 {
-	reciveList_.clear();
-	cursorPos_ = Vector2(100.0f, 650.0f);
+	cursorPos_ = Vector2(50.0f, 600.0f);
 	target_ = std::static_pointer_cast<Player>(world_->findActor("Player"));
-	position_ = Vector2(120.0f, 650.0f);
+	position_ = Vector2(100.0f, 620.0f);
 	alpha_ = 1.0f;
-	
+	Xpos = 0.0f;
 }
 
 void SpecifiedStepManager::update(float deltaTime)
 {
 	if (stepdraw_.empty()) return;
-
 	for (auto &a : stepdraw_) {
 		a->update(deltaTime);
 	}
+
+	if (stepdraw_.front()->getPos() >= 100.0f) IsPad_ = true;
+
 	if (stepdraw_.front()->getIsDead() == true) {
 		auto itr = std::remove_if(stepdraw_.begin(), stepdraw_.end(), [](auto &a) {return a->getIsDead(); });
 		stepdraw_.erase(itr, stepdraw_.end());
-		
-		for (auto &a : stepdraw_) {
-			a->addPosition(Vector2(-120.0f, 0.0f));
+		if (IsPad_ = true) {
+			for (auto &a : stepdraw_) {
+				a->addPosition(Vector2(-200.0f, 0.0f));
+			}
 		}
+		/*if (timer_ <= 1.0f) timer_ += 0.1f; 
+		Xpos = MathHelper::Lerp(0.0f, -120.0f, timer_);
+		Xpos = MathHelper::Clamp(Xpos, -120.0f, 0.0f);
+		*/
 		
 	}
 	if (target_->getState() == Player::Player_State::Step_Success) {
-		float timer_ = 0.0f;
-		timer_ += 0.1f;
-		if (timer_ <= 1.0f) alpha_ -= 0.1f;
+		if (stepdraw_.front()->getIsDead() == true) { 
+			alpha_ -= 0.1f;
+		}
 	} else { 
 		alpha_ = 1.0f; 
 	}
@@ -57,7 +63,7 @@ void SpecifiedStepManager::draw() const
 	}
 	if(!stepdraw_.empty()) Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
 	if(!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
-		Sprite::GetInstance().Draw(SPRITE_ID::QUATER_SPRITE, cursorPos_ - Vector2(-10.0f,50.0f), alpha_);
+		Sprite::GetInstance().Draw(SPRITE_ID::QUATER_SPRITE, cursorPos_ - Vector2(-20.0f,60.0f), alpha_);
 	
 }
 
@@ -89,7 +95,7 @@ void SpecifiedStepManager::Notify(Notification type, void * param)
 		default:
 			break;
 		}
-		position_ += Vector2(120.0f, 0.0f);
+		position_ += Vector2(200.0f, 0.0f);
 	}
 	
 }
