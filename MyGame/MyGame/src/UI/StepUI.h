@@ -11,6 +11,7 @@ class StepUI : public UI {
 		Before_End,
 		Miss_Start,
 		Miss_Staging,
+		Zero,
 		End,
 	};
 public:
@@ -46,6 +47,7 @@ private:
 	float another_count{ 0.0f };
 	//UIのステート
 	UI_State state_;
+	UI_State state2_;
 	//UIが表示されるか？
 	bool ui_Play_{ false };
 	//時間
