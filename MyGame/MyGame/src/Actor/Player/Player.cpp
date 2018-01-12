@@ -844,16 +844,25 @@ void Player::to_StepSuccessMode()
 	}
 	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
-	if (checkstep_.isEndCheck()&&comboType_ == ComboChecker::ComboType::Combo_None&&!isChangeTypeNone) {
+	if (checkstep_.isEndCheck() && comboType_ == ComboChecker::ComboType::Combo_None && !isChangeTypeNone) {
 		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
 		comboType_ = ComboChecker::checkCombo(comboChecker_);
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
+
+			auto stepComboMgr = world_->findUI("StepComboManager");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
+
 			isChangeBurstMode_ = true;
 			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
 			comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
 		}
-		if (comboType_ == ComboChecker::ComboType::Combo_PointUp)puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
+		if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
+			puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
+		
+			auto stepComboMgr = world_->findUI("StepComboManager");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
+		}
 	}
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
