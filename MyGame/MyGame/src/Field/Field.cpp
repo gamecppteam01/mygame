@@ -21,7 +21,7 @@ Field::Field(int field,int skybox) :
 	wallCorner_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_CORNER_MODEL);
 	wallSide_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_SIDE_MODEL);
 	wallUp_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_UP_MODEL);
-
+	audience_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_UP_MODEL);
 
 	Vector3 wallUp{ 0.0f,0.0f,420.0f };
 	// フィールドの座標指定
@@ -42,6 +42,7 @@ Field::Field(int field,int skybox) :
 	// スカイボックスの拡大率指定
 	//MV1SetScale(mSkyBox, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE * 15));
 	MV1SetScale(mSkyBox, Vector3::Vector3ToVECTOR(Vector3::One*5.0f));
+
 	audience.initialize();
 }
 
@@ -93,10 +94,29 @@ void Field::draw() const {
 	//MV1SetPosition(wallSide_, Vector3::Vector3ToVECTOR(-wallRight *FIELD_SCALE));
 	//MV1DrawModel(wallSide_);
 	//MV1DrawModel(wallUp_);
+	
+	for (int i = 0; i < 9; i++) {
+		MV1SetRotationXYZ(audience_, Vector3{ to_radian(90.0f),to_radian(0.0f),to_radian(180.0f) });
+		MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.0f,1.0f,1.0f } * 0.1));
+		MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{ -240.0f + 60.0f * i,25.0f,135.0f }));
+		MV1DrawModel(audience_);
+	}
+	for (int i = 0; i < 6; i++) {
+		MV1SetRotationXYZ(audience_, Vector3{ to_radian(0.0f),to_radian(90.0f),to_radian(90.0f) });
+		MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.0f,1.0f,1.0f } * 0.1));
+		MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{-225.0f,20.0f, -150.0f + 60.0f * i }));
+		MV1DrawModel(audience_);
+	}
+	for (int i = 0; i < 6; i++) {
+		MV1SetRotationXYZ(audience_, Vector3{ to_radian(0.0f),to_radian(270.0f),to_radian(-90.0f) });
+		MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.0f,1.0f,1.0f } * 0.1));
+		MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{225.0f,20.0f, -150.0f + 60.0f * i }));
+		MV1DrawModel(audience_);
+	}
 
-	audience.draw(Vector3{0.0f,50.0f,225.0f},   Vector3{ -40.0f,0.0f,0.0f });
-	audience.draw(Vector3{375.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,40.0f });
-	audience.draw(Vector3{-375.0f,-50.0f,0.0f}, Vector3{ 0.0f,-90.0f,-40.0f });
+	audience.draw(Vector3{0.0f,51.0f,190.0f},   Vector3{ -40.0f,0.0f,0.0f },1);
+	audience.draw(Vector3{275.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,40.0f },2);
+	audience.draw(Vector3{-275.0f,50.0f,0.0f}, Vector3{ 0.0f,-90.0f,-40.0f },2);
 }
 
 // フィールドのハンドル取得

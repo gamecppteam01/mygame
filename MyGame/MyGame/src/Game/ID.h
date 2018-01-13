@@ -198,6 +198,8 @@ enum MODEL_ID
 	EFFECT_LIGHT_MODEL,
 	JUST_CIRCLE_MODEL,
 
+	AUDIENCE,
+
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

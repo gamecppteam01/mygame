@@ -28,6 +28,7 @@ private:
 	int wallSide_;
 	int wallCorner_;
 	int mSkyBox;
+	int audience_;
 	CollisionMesh mesh_;
 	Audience audience;
 };

@@ -298,5 +298,6 @@ void LoadingScene::LoadEtcetera()
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_corner.mv1", MODEL_ID::STAGE_WALL_CORNER_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_side.mv1", MODEL_ID::STAGE_WALL_SIDE_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_up.mv1", MODEL_ID::STAGE_WALL_UP_MODEL);
+	Model::GetInstance().Load(defaultPath + "Stage/field/audience.mv1", MODEL_ID::AUDIENCE);
 
 }
