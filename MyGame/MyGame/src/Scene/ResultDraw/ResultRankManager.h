@@ -74,6 +74,7 @@ private:
 
 	float lerpTimer_;
 
+	int stage_{ 1 };//ステージ番号
 	int incSize_{ 0 };//ずらし値
 	float timer_;
 	std::vector<std::tuple<ScoreData, Vector3, Matrix, std::shared_ptr<ResultModelDrawer>, Vector2>> characters_;

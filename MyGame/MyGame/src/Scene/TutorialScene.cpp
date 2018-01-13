@@ -98,6 +98,9 @@ void TutorialScene::start()
 
 	text_.Reset();
 
+	std::shared_ptr<WarningManager> warningUI = std::make_shared<WarningManager>(&world_);
+	world_.addUI(warningUI);
+
 	world_.init_update();
 
 	world_.getCanChangedTempoManager().startMusic();

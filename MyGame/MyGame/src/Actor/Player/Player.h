@@ -274,7 +274,7 @@ protected:
 	//よろけから回復するまでの時間
 	float stumbleResurrectTime_{ 0.5f };
 
-
+	bool isFirst_{ true };//初回更新
 	//女関連
 	//女本体
 	std::shared_ptr<PlayerBullet> bullet_{};

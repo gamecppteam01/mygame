@@ -203,6 +203,7 @@ void Player::createBullet()
 
 void Player::initialize()
 {
+	isFirst_ = true;
 	position_ = centerPosition_ + bulletDistance;
 	gravity_ = 0.0f;
 	state_ = Player_State::Idle;
@@ -281,7 +282,9 @@ void Player::onUpdate(float deltaTime)
 			musicScore_.setNotice(ptr->getIsNotice(playerNumber_));
 		}
 	}
-	playerUpdateFunc_[state_](deltaTime);
+	if (isFirst_)isFirst_ = false;
+	else playerUpdateFunc_[state_](deltaTime);
+
 	animation_.Update(MathHelper::Sign(deltaTime));
 
 	//今フレームの更新を適用

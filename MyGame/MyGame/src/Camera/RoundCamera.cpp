@@ -75,8 +75,8 @@ void RoundCamera::onUpdate(float deltaTime)
 
 void RoundCamera::onDraw() const
 {
-	if (currentTarget_ >= cutin_ids_.size())return;//範囲外はリターン
-	if(state_==State::Focus)TutorialCutIn::draw(cutin_ids_.at(currentTarget_), 100.0f, cutInTime_, 1.0f, 0.5f, 0.5f);
+	if (currentTarget_ >= cutin_ids_.at(currentStage_-1).size())return;//範囲外はリターン
+	if(state_==State::Focus)TutorialCutIn::draw(cutin_ids_.at(currentStage_-1).at(currentTarget_), 100.0f, cutInTime_, 1.0f, 0.5f, 0.5f);
 }
 
 Vector3 RoundCamera::getCurrentTargetPos() const { 
@@ -102,6 +102,11 @@ void RoundCamera::endRound()
 	Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
 	std::for_each(targetList_.begin(), targetList_.end(), [](auto& t) {t.lock()->endStepAnim(); });
 
+}
+
+void RoundCamera::setStage(int num)
+{
+	currentStage_ = num;
 }
 
 void RoundCamera::Start(float deltaTime)

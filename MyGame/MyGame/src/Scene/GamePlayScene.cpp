@@ -37,10 +37,10 @@
 
 //ゲームの時間
 static const float gameTime = 5.0f;
-static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::function<void(const std::shared_ptr<Player>&,const std::shared_ptr<SpecifiedStepManager>&)>>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量,規定設定関数
-	std::make_tuple(BGM_ID::STAGE1_BGM,156.0f,3,3,false,150,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation1(p,s); }),
-	std::make_tuple(BGM_ID::STAGE2_BGM,180.0f,3,2,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation2(p,s); }),
-	std::make_tuple(BGM_ID::STAGE3_BGM,132.0f,2,3,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation3(p,s); })
+static const std::vector<std::tuple<BGM_ID, float, int, int, bool, int,std::function<void(const std::shared_ptr<Player>&,const std::shared_ptr<SpecifiedStepManager>&)>, int>> stageList{//楽曲ID,BPM,拍数,巡回エネミーの数,ライバルの有無,音量,規定設定関数,ライト狙いエネミーの数
+	std::make_tuple(BGM_ID::STAGE1_BGM,67.0f,2,3,false,150,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation1(p,s); },1),
+	std::make_tuple(BGM_ID::STAGE2_BGM,134.0f,3,3,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation2(p,s); },1),
+	std::make_tuple(BGM_ID::STAGE3_BGM,120.0f,3,2,true,255,[](const std::shared_ptr<Player>& p,const std::shared_ptr<SpecifiedStepManager>& s) {RegulationMaker::SetRegulation3(p,s); },2)
 };
 
 static const std::map<int, std::pair<SPRITE_ID, DrawStartSprite_FadeType>> dssList{
@@ -103,13 +103,23 @@ void GamePlayScene::start() {
 	//auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy);
 	//world_.addStepTimeListener(enemy);
-	for (int i = 0; i < std::get<3>(stageList[stageNum_-1]); i++) {
+	for (int i = 0; i < std::get<3>(stageList[stageNum_ - 1]); i++) {
 		playerNumber++;
 		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", pos, playerNumber);
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 		pos += Vector3{ 70.0f,0.0f,30.0f };
 	}
+	pos = Vector3{ 90.0f,10.0f,-60.0f };
+	for (int i = 0; i < std::get<7>(stageList[stageNum_ - 1]); i++) {
+		playerNumber++;
+		auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
+		world_.addActor(ActorGroup::ENEMY, enemy);
+		world_.addStepTimeListener(enemy);
+		pos += Vector3{ -60.0f,0.0f,40.0f };
+	}
+
+	
 	if (std::get<4>(stageList[stageNum_-1])) {
 		playerNumber++;
 		auto enemy = std::make_shared<Enemy_Rival>(&world_, "Enemy", Vector3::Up*10.0f + Vector3(-30.f, 0.f, 30.f), playerNumber);
@@ -140,7 +150,7 @@ void GamePlayScene::start() {
 
 	//UIの設定
 	settingUI();
-
+	
 	std::get<6>(stageList[stageNum_ - 1])(player, specifiedStepManager_);
 
 	//スコア表示設定
@@ -392,7 +402,7 @@ void GamePlayScene::changeState(GamePlayState state) {
 	case Round:
 		standardLight_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
 
-		world_.roundCam();
+		world_.roundCam(stageNum_);
 		break;
 	default:
 		break;

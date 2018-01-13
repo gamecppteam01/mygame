@@ -12,6 +12,7 @@ static const Vector2 defaultPos{ WINDOW_WIDTH + 100.0f, 200.0f };
 static const Vector3 defaultCameraPos{ 0.0f,50.0f,-50.0f };
 
 static const std::vector<Vector3> rankPositions{
+	Vector3{ -120.0f,0.0f,0.0f },
 	Vector3{ 80.0f,0.0f,0.0f },
 	Vector3{ -80.0f,0.0f,0.0f },
 	Vector3{ 40.0f,0.0f,0.0f },
@@ -22,9 +23,17 @@ static const std::vector<Vector3> rankPositions{
 static const std::vector<std::pair<bool, SPRITE_ID>> rankSprList{
 	{ false,SPRITE_ID::RANK_THREE_SPRITE },
 	{ false,SPRITE_ID::RANK_THREE_SPRITE },
+	{ false,SPRITE_ID::RANK_THREE_SPRITE },
 	{ true,SPRITE_ID::RANK_THREE_SPRITE },
 	{ true,SPRITE_ID::RANK_TWO_SPRITE },
 	{ true,SPRITE_ID::RANK_ONE_SPRITE }
+};
+
+
+static const std::vector<std::vector<SPRITE_ID>> names{
+	{ SPRITE_ID::RANK_PLAYER_SPRITE, SPRITE_ID::RANK_NAME1_SPRITE ,SPRITE_ID::RANK_NAME5_SPRITE ,SPRITE_ID::RANK_NAME14_SPRITE,SPRITE_ID::RANK_NAME2_SPRITE },
+	{ SPRITE_ID::RANK_PLAYER_SPRITE, SPRITE_ID::RANK_NAME4_SPRITE ,SPRITE_ID::RANK_NAME6_SPRITE ,SPRITE_ID::RANK_NAME7_SPRITE ,SPRITE_ID::RANK_NAME8_SPRITE ,SPRITE_ID::RANK_NAME3_SPRITE },
+	{ SPRITE_ID::RANK_PLAYER_SPRITE, SPRITE_ID::RANK_NAME12_SPRITE,SPRITE_ID::RANK_NAME9_SPRITE ,SPRITE_ID::RANK_NAME11_SPRITE,SPRITE_ID::RANK_NAME10_SPRITE,SPRITE_ID::RANK_NAME13_SPRITE }
 };
 
 ResultRankManager::ResultRankManager()
@@ -45,7 +54,7 @@ void ResultRankManager::init()
 	characters_.clear();
 
 	auto datas = DataManager::GetInstance().getData();
-
+	stage_ = DataManager::GetInstance().getStage();
 	Vector3 position{ -80.0f,0.0f,0.0f };
 
 	int i = rankPositions.size() - datas.size();
@@ -54,19 +63,22 @@ void ResultRankManager::init()
 		Matrix id{ Matrix::Identity };
 		std::shared_ptr<ResultModelDrawer> rmd = std::make_shared<ResultModelDrawer>();
 
-		position = rankPositions[i];
 
 		characters_.push_back(std::make_tuple(d, position, id, rmd, defaultPos));
 		std::get<3>(characters_.back())->setModel(std::get<0>(characters_.back()).manModel_, std::get<0>(characters_.back()).womanModel_);
 		std::get<3>(characters_.back())->setAnim(0);
 		std::get<3>(characters_.back())->lastAnim();
 		
-		i++;
-		//position += Vector3{ 40.0f,0.0f,0.0f };
+		position += Vector3{ 40.0f,0.0f,0.0f };
 	}
 
 	std::sort(characters_.begin(), characters_.end(), [](auto& c1, auto& c2) {return std::get<0>(c1).score_ < std::get<0>(c2).score_; });
 
+	for (auto& c : characters_) {
+		std::get<1>(c) = rankPositions[i];
+		i++;
+
+	}
 }
 
 void ResultRankManager::update(float deltaTime)
@@ -135,7 +147,8 @@ void ResultRankManager::draw() const
 		Vector2 pos = std::get<4>(c);
 		//NumberManager::GetInstance().DrawNumberTexture(SPRITE_ID::NUMBER, pos, std::get<0>(c).score_, Vector2(64, 64), Vector2(0.5f, 0.5f));
 		if (rankSprList.at(count + incSize_).first)Sprite::GetInstance().Draw(rankSprList.at(count + incSize_).second, pos, Vector2::Zero, Vector2::One*scl);
-		Sprite::GetInstance().Draw(SPRITE_ID::RANK_NAME_SPRITE, pos + Vector2{ sprx ,0.0f }, Vector2::Zero, Vector2::One*0.5f);
+		auto spr = names.at(stage_ - 1).at(std::get<0>(c).playerNumber_ - 1);
+		Sprite::GetInstance().Draw(spr, pos + Vector2{ sprx ,0.0f }, Vector2::Zero, Vector2::One*0.4f);
 
 	}
 

@@ -255,9 +255,10 @@ void World::setShadowMap(const bool flag, const MODEL_ID& id) {
 	shadowmap_.AllSetRange(shadow_data.MinPos, shadow_data.MaxPos);
 }
 
-void World::roundCam()
+void World::roundCam(int num)
 {
 	roundCamera_.init();
+	roundCamera_.setStage(num);
 }
 
 void World::stopRound()

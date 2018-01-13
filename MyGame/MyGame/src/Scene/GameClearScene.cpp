@@ -7,6 +7,7 @@
 #include"../Camera/Camera.h"
 #include"../Graphic/Model.h"
 
+
 GameClearScene::GameClearScene():sinCount_(0), field_()
 {
 	next_ = SceneType::SCENE_TITLE;

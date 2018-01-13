@@ -78,7 +78,7 @@ public:
 	World(const World& other) = delete;
 	World& operator = (const World& other) = delete;
 
-	void roundCam();
+	void roundCam(int num);
 	void stopRound();
 	bool roundEnd()const { return roundCamera_.isEnd(); }
 	RoundCamera& getRoundCam() { return roundCamera_; }

@@ -32,6 +32,8 @@ public:
 	Vector3 getCurrentTargetPos()const;
 
 	void endRound();
+
+	void setStage(int num);
 private:
 	void Start(float deltaTime);
 	void Focus(float deltaTime);
@@ -41,6 +43,7 @@ private:
 
 	void changeState(State state);
 private:
+	int currentStage_{ 1 };//ステージ番号
 	IWorld* world_;
 	std::vector<std::weak_ptr<Actor>> targetList_;
 
@@ -65,10 +68,11 @@ private:
 
 	std::function<void()> func_{};
 
-	std::vector<SPRITE_ID> cutin_ids_{
-		SPRITE_ID::CUTIN_INTRODUCT_SPRITE,
-		SPRITE_ID::CUTIN_LESSON1_SPRITE,
-		SPRITE_ID::CUTIN_LESSON2_SPRITE,
-		SPRITE_ID::CUTIN_LESSON3_SPRITE
+
+	std::vector<std::vector<SPRITE_ID>> cutin_ids_{
+		{ SPRITE_ID::RANK_NAME1_SPRITE, SPRITE_ID::RANK_NAME1_SPRITE ,SPRITE_ID::RANK_NAME5_SPRITE ,SPRITE_ID::RANK_NAME14_SPRITE,SPRITE_ID::RANK_NAME2_SPRITE },
+		{ SPRITE_ID::RANK_NAME1_SPRITE, SPRITE_ID::RANK_NAME4_SPRITE ,SPRITE_ID::RANK_NAME6_SPRITE ,SPRITE_ID::RANK_NAME7_SPRITE ,SPRITE_ID::RANK_NAME8_SPRITE ,SPRITE_ID::RANK_NAME3_SPRITE },
+		{ SPRITE_ID::RANK_NAME1_SPRITE, SPRITE_ID::RANK_NAME12_SPRITE,SPRITE_ID::RANK_NAME9_SPRITE ,SPRITE_ID::RANK_NAME11_SPRITE,SPRITE_ID::RANK_NAME10_SPRITE,SPRITE_ID::RANK_NAME13_SPRITE }
 	};
+
 };

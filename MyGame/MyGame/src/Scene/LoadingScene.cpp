@@ -150,7 +150,22 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "topIcon.png", SPRITE_ID::RANK_ONE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "secondIcon.png", SPRITE_ID::RANK_TWO_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "thirdIcon.png", SPRITE_ID::RANK_THREE_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "nameFrame001.png", SPRITE_ID::RANK_NAME_SPRITE);
+	
+	Sprite::GetInstance().Load(defaultPath + "nameFramePlayer.png", SPRITE_ID::RANK_PLAYER_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame001.png", SPRITE_ID::RANK_NAME1_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame002.png", SPRITE_ID::RANK_NAME2_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame003.png", SPRITE_ID::RANK_NAME3_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame004.png", SPRITE_ID::RANK_NAME4_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame005.png", SPRITE_ID::RANK_NAME5_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame006.png", SPRITE_ID::RANK_NAME6_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame007.png", SPRITE_ID::RANK_NAME7_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame008.png", SPRITE_ID::RANK_NAME8_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame009.png", SPRITE_ID::RANK_NAME9_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame010.png", SPRITE_ID::RANK_NAME10_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame011.png", SPRITE_ID::RANK_NAME11_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame012.png", SPRITE_ID::RANK_NAME12_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame013.png", SPRITE_ID::RANK_NAME13_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFrame014.png", SPRITE_ID::RANK_NAME14_SPRITE);
 
 	Sprite::GetInstance().Load(defaultPath + "audience1.png", SPRITE_ID::AUDIENCE1);
 	Sprite::GetInstance().Load(defaultPath + "audience2.png", SPRITE_ID::AUDIENCE2);
@@ -232,9 +247,9 @@ void LoadingScene::LoadBGM()
 {
 	std::string defaultPath = "res/Sound/bgm/";//全リソース共通パス
 	Sound::GetInstance().LoadBGM(defaultPath + "title.mp3", BGM_ID::TITLE_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.wav", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.mp3", BGM_ID::STAGE1_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.mp3", BGM_ID::STAGE3_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.wav", BGM_ID::STAGE3_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "clear.mp3", BGM_ID::CLEAR_BGM);
 }
 
