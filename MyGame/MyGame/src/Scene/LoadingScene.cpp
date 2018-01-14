@@ -181,6 +181,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "clock.png", SPRITE_ID::TIME_UI);
 	Sprite::GetInstance().Load(defaultPath + "burst_ui.png", SPRITE_ID::BURST_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "pointup_ui.png", SPRITE_ID::POINTUP_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nice_sprite.png", SPRITE_ID::NICE_SPRITE);
 }
 
 void LoadingScene::LoadModel()
@@ -247,9 +248,9 @@ void LoadingScene::LoadBGM()
 {
 	std::string defaultPath = "res/Sound/bgm/";//全リソース共通パス
 	Sound::GetInstance().LoadBGM(defaultPath + "title.mp3", BGM_ID::TITLE_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.mp3", BGM_ID::STAGE1_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.wav", BGM_ID::STAGE3_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage1c_bgm.mp3", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage2b_bgm.wav", BGM_ID::STAGE2_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage3b_bgm.wav", BGM_ID::STAGE3_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "clear.mp3", BGM_ID::CLEAR_BGM);
 }
 

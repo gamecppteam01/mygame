@@ -63,7 +63,7 @@ void SpecifiedStepManager::draw() const
 	}
 	if(!stepdraw_.empty()) Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
 	if(!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
-		Sprite::GetInstance().Draw(SPRITE_ID::QUATER_SPRITE, cursorPos_ - Vector2(-20.0f,60.0f), alpha_);
+		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f,-65.0f), alpha_);
 	
 }
 
