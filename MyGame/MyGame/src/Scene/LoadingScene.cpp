@@ -257,9 +257,9 @@ void LoadingScene::LoadBGM()
 {
 	std::string defaultPath = "res/Sound/bgm/";//全リソース共通パス
 	Sound::GetInstance().LoadBGM(defaultPath + "title.mp3", BGM_ID::TITLE_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.mp3", BGM_ID::STAGE1_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.wav", BGM_ID::STAGE3_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgmc.mp3", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgmb.wav", BGM_ID::STAGE2_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgmb.wav", BGM_ID::STAGE3_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "clear.mp3", BGM_ID::CLEAR_BGM);
 }
 
