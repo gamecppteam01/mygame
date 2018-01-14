@@ -1058,5 +1058,8 @@
     <ClInclude Include="src\UI\StepComboUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Field\AudienceDrawer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

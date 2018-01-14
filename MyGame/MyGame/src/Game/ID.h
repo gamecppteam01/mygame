@@ -199,7 +199,7 @@ enum MODEL_ID
 	JUST_CIRCLE_MODEL,
 
 	AUDIENCE,
-
+	STAGE_SEAT,
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

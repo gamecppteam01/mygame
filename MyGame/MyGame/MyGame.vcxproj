@@ -375,6 +375,7 @@
     <ClInclude Include="src\Fade\FadePanel.h" />
     <ClInclude Include="src\Fade\FadeSprite.h" />
     <ClInclude Include="src\Field\Audience.h" />
+    <ClInclude Include="src\Field\AudienceDrawer.h" />
     <ClInclude Include="src\Field\Field.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
     <ClInclude Include="src\Function\Split.h" />

@@ -26,6 +26,7 @@ void GameClearScene::start()
 	score_.init();
 
 	state_ = State::Start;
+	field_.init();
 }
 
 void GameClearScene::update(float deltaTime)
