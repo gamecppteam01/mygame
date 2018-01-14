@@ -274,7 +274,13 @@ void Player::onUpdate(float deltaTime)
 	if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
 		musicScore_.setNotice(true);
 		comboTimer_ -= deltaTime;
-		if (comboTimer_ <= 0.0f)comboType_ = ComboChecker::ComboType::Combo_None;//時間になったらコンボを終了する
+		if (comboTimer_ <= 0.0f) {
+			comboType_ = ComboChecker::ComboType::Combo_None;//時間になったらコンボを終了する
+			auto stepComboMgr = world_->findUI("StepComboManager");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+			auto stepdrawer = world_->findUI("ComboDrawer");
+			if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
+		}
 	}
 	else {
 		auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
@@ -654,6 +660,7 @@ void Player::step_Update(float deltaTime)
 		successStep_ = 4;
 		nextStep_ = successStep_;
 		gyroCheck_.initAngle();
+		Sound::GetInstance().PlaySE(SE_ID::STEP_SUCCESS_SE);//音成立
 	}
 	if (DualShock4Manager::GetInstance().GetAngle3D().z > 45.0f&&DualShock4Manager::GetInstance().GetAngle3D().z <= 100.0f) {
 		gyroCheck_.initRotate();
@@ -840,6 +847,11 @@ void Player::to_StepSuccessMode()
 			//回数が終わったらコンボ終了
 			if (puComboCount_ <= 0) {
 				comboType_ = ComboChecker::ComboType::Combo_None;
+				auto stepComboMgr = world_->findUI("StepComboManager");
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+				auto stepdrawer = world_->findUI("ComboDrawer");
+				if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
+
 				isChangeTypeNone = true;
 			}
 		}
@@ -858,6 +870,7 @@ void Player::to_StepSuccessMode()
 
 			isChangeBurstMode_ = true;
 			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
+
 			comboTimer_ = 8.0f;//バーストコンボが成立したら8秒間無敵
 		}
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
@@ -866,6 +879,10 @@ void Player::to_StepSuccessMode()
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
 		}
+
+		auto stepComboMgr = world_->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_ComboParts,(void*)&comboChecker_);
+
 	}
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);

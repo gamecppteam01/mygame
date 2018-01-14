@@ -275,6 +275,9 @@ enum class Notification {
 	Call_ReciveStep,//ステップ受け取り成功
 	Call_ComboStep,//コンボ
 
+	Call_ComboParts,
+
 	Call_Success_Combo_PointUp,//ポイントアップコンボ成功通知
 	Call_Success_Combo_Burst,//バーストコンボ成功通知
+	Call_Combo_End,//コンボ終了通知
 };
