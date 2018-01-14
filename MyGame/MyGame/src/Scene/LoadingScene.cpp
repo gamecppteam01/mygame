@@ -132,6 +132,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "Lesson2_Cutin.png", SPRITE_ID::CUTIN_LESSON2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Lesson3_Cutin.png", SPRITE_ID::CUTIN_LESSON3_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Lesson4_Cutin.png", SPRITE_ID::CUTIN_LESSON4_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "Lesson5_Cutin.png", SPRITE_ID::CUTIN_LESSON5_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "step1_Cutin.png", SPRITE_ID::CUTIN_LESSON_QUARTER_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "step2_Cutin.png", SPRITE_ID::CUTIN_LESSON_TURN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "step3_Cutin.png", SPRITE_ID::CUTIN_LESSON_HALF_SPRITE);
@@ -256,9 +257,9 @@ void LoadingScene::LoadBGM()
 {
 	std::string defaultPath = "res/Sound/bgm/";//全リソース共通パス
 	Sound::GetInstance().LoadBGM(defaultPath + "title.mp3", BGM_ID::TITLE_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage1c_bgm.mp3", BGM_ID::STAGE1_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage2b_bgm.wav", BGM_ID::STAGE2_BGM);
-	Sound::GetInstance().LoadBGM(defaultPath + "stage3b_bgm.wav", BGM_ID::STAGE3_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage1_bgm.mp3", BGM_ID::STAGE1_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage2_bgm.wav", BGM_ID::STAGE2_BGM);
+	Sound::GetInstance().LoadBGM(defaultPath + "stage3_bgm.wav", BGM_ID::STAGE3_BGM);
 	Sound::GetInstance().LoadBGM(defaultPath + "clear.mp3", BGM_ID::CLEAR_BGM);
 }
 

@@ -533,8 +533,13 @@ void TutorialScene::nextTutorial()
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;
-		}
+		}	
 		case 3: {
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON4_SPRITE);
+			changeState(CutIn);//ãKíË
+			break;
+		}
+		case 4: {
 			if (light_.use_count()>0)light_->dead();
 
 			nextTutorialCount();
@@ -561,8 +566,13 @@ void TutorialScene::nextTutorial()
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;
-		}
+		}		
 		case 3: {
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON5_SPRITE);
+			changeState(CutIn);//ÉRÉìÉ{
+			break;
+		}
+		case 4: {
 			nextTutorialCount();
 			changeState(TextDraw);//éüÇ÷
 			break;
