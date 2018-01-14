@@ -31,7 +31,8 @@ void StageSelectScene::start()
 	light_.setGlobalAmbientLight(Color(0.7f, 0.7f, 0.7f, 0.7f));
 	anim_UI_Mgr_.initialize();
 	cursor_ = 0;
-	prevCursor_ = 0;
+	prevCursor_ = 99;
+	current_cursor_ = 99;
 	sinCount_ = 0;
 	t = 0.0f;
 	Ypos = 0.0f;
