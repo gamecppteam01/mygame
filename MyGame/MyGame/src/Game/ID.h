@@ -81,6 +81,11 @@ enum SPRITE_ID
 	CUTIN_LESSON1_SPRITE,
 	CUTIN_LESSON2_SPRITE,
 	CUTIN_LESSON3_SPRITE,
+	CUTIN_LESSON4_SPRITE,
+	CUTIN_LESSON_QUARTER_SPRITE,
+	CUTIN_LESSON_HALF_SPRITE,
+	CUTIN_LESSON_TURN_SPRITE,
+	CUTIN_LESSON_SPIN_SPRITE,
 	CUTIN_QUARTER_SPRITE,
 	CUTIN_HALF_SPRITE,
 	CUTIN_TURN_SPRITE,
@@ -284,4 +289,7 @@ enum class Notification {
 	Call_Success_Combo_PointUp,//ポイントアップコンボ成功通知
 	Call_Success_Combo_Burst,//バーストコンボ成功通知
 	Call_Combo_End,//コンボ終了通知
+
+	Call_Combo_Add,
+	Call_Combo_Delete,
 };

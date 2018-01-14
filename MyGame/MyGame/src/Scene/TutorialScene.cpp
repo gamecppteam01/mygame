@@ -344,7 +344,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			cutInID_.push(SPRITE_ID::CUTIN_QUARTER_SPRITE);
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON_QUARTER_SPRITE);
 			changeState(CutIn);//クォーター
 			break;
 		}
@@ -384,7 +384,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			cutInID_.push(SPRITE_ID::CUTIN_TURN_SPRITE);
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON_TURN_SPRITE);
 			changeState(CutIn);//ターン
 			break;
 		}
@@ -424,7 +424,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			cutInID_.push(SPRITE_ID::CUTIN_HALF_SPRITE);
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON_HALF_SPRITE);
 			changeState(CutIn);//ハーフ
 			break;
 		}
@@ -464,7 +464,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			cutInID_.push(SPRITE_ID::CUTIN_SPIN_SPRITE);
+			cutInID_.push(SPRITE_ID::CUTIN_LESSON_SPIN_SPRITE);
 			changeState(CutIn);//スピン
 			break;
 		}
