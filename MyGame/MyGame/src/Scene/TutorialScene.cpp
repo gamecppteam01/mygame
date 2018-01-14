@@ -25,6 +25,7 @@
 #include"Screen/CreateEnemy.h"
 #include"../Actor/Player/RegulationMaker.h"
 #include"../UI/SpecifiedStepManager.h"
+#include"../UI/StepComboManager.h"
 
 std::map<int, SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
@@ -575,6 +576,9 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			auto stepcomboManager = std::make_shared<StepComboManager>(&world_);
+			world_.addUI(stepcomboManager);
+
 			player_->resetCombo();
 			changeState(Play);//ポイントアップコンボ
 			break;

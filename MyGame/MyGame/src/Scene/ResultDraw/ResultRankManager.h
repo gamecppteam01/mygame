@@ -74,6 +74,8 @@ private:
 
 	float lerpTimer_;
 
+	float soundVolume_{ 1.0f };
+
 	int stage_{ 1 };//ステージ番号
 	int incSize_{ 0 };//ずらし値
 	float timer_;

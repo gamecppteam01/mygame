@@ -40,7 +40,7 @@ public:
 	};
 public:
 	Player(IWorld* world, const std::string& name, const Vector3& position, int playerNumber);
-	virtual ~Player() {}
+	virtual ~Player();
 	//外部公開関数
 public:
 	//入力制限を追加する
@@ -311,6 +311,8 @@ protected:
 	QuarterEffect quaterEffect_;
 	SpinEffect spinEffect_;
 	HalfEffect halfEffect_;
+
+	int puEffectID_{ -1 };//ポイントアップエフェクトのID
 
 	bool isChangeBurstMode_;//ステップ終了後にバーストモードに遷移するかどうか
 	std::vector<Player_Animation> comboChecker_;

@@ -125,6 +125,10 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 	appear_stepUI_.SetWorld(world);
 }
 
+Player::~Player()
+{
+}
+
 void Player::setCheckStepTask(std::list<Player_Animation> checkstep)
 {
 	checkstep_.setInputLimit(checkstep);
@@ -267,8 +271,15 @@ void Player::onMessage(EventMessage message, void * param)
 void Player::onUpdate(float deltaTime)
 {
 	//ジャスト範囲外かつコンボ制限を超過したら
-	if(!((world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1)){
-		if (comboResetTimer_ <= 0)comboChecker_.clear();//コンボをリセット
+	if (!((world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1)) {
+		if (comboResetTimer_ <= 0) {
+			comboChecker_.clear();//コンボをリセット
+			auto stepComboMgr = world_->findUI("StepComboManager");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+			auto stepdrawer = world_->findUI("ComboDrawer");
+			if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
+
+		}
 	}
 	//バーストコンボ中は無条件ステップ
 	if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
@@ -837,11 +848,13 @@ void Player::to_StepSuccessMode()
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::STEP_SUCCESS_EFFECT, key, &position_);
 	//スコア加算を呼び出す(ステップ開始時点でジャスト判定に合っていなかったら加算されない)
 	bool isChangeTypeNone = false;//この回でnone状態に遷移したかどうか
+	bool isChangePUMode = false;
 	if (isJustStep_) {
 		float scoreRate = 1.0f;//コンボ用のスコアレート
 
 		//ポイントアップコンボ中はスコアレート1.2倍
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
+
 			scoreRate = 1.2f;
 			puComboCount_--;
 			//回数が終わったらコンボ終了
@@ -852,6 +865,9 @@ void Player::to_StepSuccessMode()
 				auto stepdrawer = world_->findUI("ComboDrawer");
 				if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
 
+				if (EffekseerManager::GetInstance().isPlayEffect3D(puEffectID_)) {
+					EffekseerManager::GetInstance().StopEffect3D(puEffectID_);
+				}
 				isChangeTypeNone = true;
 			}
 		}
@@ -867,6 +883,8 @@ void Player::to_StepSuccessMode()
 
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
+			auto cd = world_->findUI("ComboDrawer");
+			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
 
 			isChangeBurstMode_ = true;
 			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
@@ -875,13 +893,20 @@ void Player::to_StepSuccessMode()
 		}
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
 			puComboCount_ = 4;//ポイントアップコンボが成立したら4回スコア上昇
-		
+			if (!EffekseerManager::GetInstance().isPlayEffect3D(puEffectID_)) {
+				puEffectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT);
+				EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::POINT_UP_EFFECT, puEffectID_, &position_);
+			}
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
+			auto cd = world_->findUI("ComboDrawer");
+			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
+			isChangePUMode = true;
 		}
 
 		auto stepComboMgr = world_->findUI("ComboDrawer");
 		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_ComboParts,(void*)&comboChecker_);
+
 
 	}
 	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;

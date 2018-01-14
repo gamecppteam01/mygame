@@ -5,6 +5,7 @@
 #include"../../ScoreManager/NumberManager.h"
 #include"../../Math/Easing.h"
 #include"../../Graphic/Sprite.h"
+#include"../../Sound/Sound.h"
 
 static const float movePower{ 10.0f };
 static const float lightUp{ 50.0f };
@@ -48,7 +49,7 @@ void ResultRankManager::init()
 	isLast_ = false;
 	state_ = State::Start;
 	settingLight();
-
+	soundVolume_ = 1.0f;
 	camera_.init();
 
 	characters_.clear();
@@ -119,6 +120,15 @@ void ResultRankManager::update(float deltaTime)
 		break;
 	default:
 		break;
+	}
+	if (state_ != ResultRankManager::State::Animation) {
+		if (Sound::GetInstance().IsPlaySE(SE_ID::CHEER_SE)) {
+			soundVolume_ -= deltaTime;
+			Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, soundVolume_);
+			if (soundVolume_ <= 0.0f) {
+				Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
+			}
+		}
 	}
 	camera_.update(deltaTime);
 
@@ -276,6 +286,7 @@ void ResultRankManager::End(float deltaTime)
 
 void ResultRankManager::changeState(State state,bool isLoop)
 {
+
 	state_ = state;
 
 	switch (state_)
@@ -299,6 +310,9 @@ void ResultRankManager::changeState(State state,bool isLoop)
 	case ResultRankManager::State::Animation:
 		std::get<3>(characters_[currentTarget_])->setAnim(animType_, isLoop);
 		timer_ = 0.0f;
+		Sound::GetInstance().PlaySE(SE_ID::CHEER_SE);
+		soundVolume_ = 1.0f;
+		Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE,soundVolume_);
 		break;
 	case ResultRankManager::State::EndLight:
 		lightHandle_.setLightEnableHandle("Spot", false);
