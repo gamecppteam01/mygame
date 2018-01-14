@@ -270,9 +270,15 @@ void Player::onMessage(EventMessage message, void * param)
 
 void Player::onUpdate(float deltaTime)
 {
+	if (comboType_ == ComboChecker::ComboType::Combo_PointUp) {
+		if (!EffekseerManager::GetInstance().isPlayEffect3D(puEffectID_)) {
+			puEffectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT, position_, Vector3::Zero, Vector3::One*0.5f);
+			EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::POINT_UP_EFFECT, puEffectID_, &position_);
+		}
+	}
 	//ジャスト範囲外かつコンボ制限を超過したら
 	if (!((world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1)) {
-		if (comboResetTimer_ <= 0) {
+		if (comboResetTimer_ <= 0&&comboType_==ComboChecker::ComboType::Combo_None) {
 			comboChecker_.clear();//コンボをリセット
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
@@ -286,6 +292,7 @@ void Player::onUpdate(float deltaTime)
 		musicScore_.setNotice(true);
 		comboTimer_ -= deltaTime;
 		if (comboTimer_ <= 0.0f) {
+			comboChecker_.clear();
 			comboType_ = ComboChecker::ComboType::Combo_None;//時間になったらコンボを終了する
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
@@ -838,9 +845,11 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
-	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
-		change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
-		return;
+	if (nextStep_!=2&&nextStep_!=4) {
+		if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
+			change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
+			return;
+		}
 	}
 	world_->getCamera()->ZoomIn(0, 0);
 
@@ -876,15 +885,15 @@ void Player::to_StepSuccessMode()
 	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
 	if (checkstep_.isEndCheck() && comboType_ == ComboChecker::ComboType::Combo_None && !isChangeTypeNone) {
-		comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
+		//comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
-		comboType_ = ComboChecker::checkCombo(comboChecker_);
+		comboType_ = ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_);
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
 
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
-			auto cd = world_->findUI("ComboDrawer");
-			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
+			//auto cd = world_->findUI("ComboDrawer");
+			//if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
 
 			isChangeBurstMode_ = true;
 			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
@@ -899,13 +908,13 @@ void Player::to_StepSuccessMode()
 			}
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
-			auto cd = world_->findUI("ComboDrawer");
-			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
+			//auto cd = world_->findUI("ComboDrawer");
+			//if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
 			isChangePUMode = true;
 		}
 
-		auto stepComboMgr = world_->findUI("ComboDrawer");
-		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_ComboParts,(void*)&comboChecker_);
+		//auto stepComboMgr = world_->findUI("ComboDrawer");
+		//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_ComboParts,(void*)&comboChecker_);
 
 
 	}

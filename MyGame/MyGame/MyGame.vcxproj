@@ -280,6 +280,7 @@
     <ClCompile Include="src\Tween\TweenObject.cpp" />
     <ClCompile Include="src\UI\Appear_StepUI.cpp" />
     <ClCompile Include="src\UI\ButtonUI.cpp" />
+    <ClCompile Include="src\UI\ComboDrawer.cpp" />
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="src\UI\SpecifiedStepUI.cpp" />
     <ClCompile Include="src\UI\StepComboManager.cpp" />
     <ClCompile Include="src\UI\StepComboUI.cpp" />
+    <ClCompile Include="src\UI\StepParts.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\TimeUI.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
@@ -478,6 +480,7 @@
     <ClInclude Include="src\UI\Appear_StepUI.h" />
     <ClInclude Include="src\UI\ButtonUI.h" />
     <ClInclude Include="src\UI\ButtonUIPtr.h" />
+    <ClInclude Include="src\UI\ComboDrawer.h" />
     <ClInclude Include="src\UI\ComboGaugeUI.h" />
     <ClInclude Include="src\UI\ComboStepUIPtr.h" />
     <ClInclude Include="src\UI\EndUI.h" />
@@ -494,6 +497,7 @@
     <ClInclude Include="src\UI\SpecifiedStepUI.h" />
     <ClInclude Include="src\UI\StepComboManager.h" />
     <ClInclude Include="src\UI\StepComboUI.h" />
+    <ClInclude Include="src\UI\StepParts.h" />
     <ClInclude Include="src\UI\StepUI.h" />
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />
