@@ -10,4 +10,5 @@ public:
 private:
 	int count;
 	float timer;
+	int audience_;
 };

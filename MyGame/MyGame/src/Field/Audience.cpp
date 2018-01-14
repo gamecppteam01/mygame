@@ -2,6 +2,7 @@
 #include "../Graphic/Sprite.h"
 #include"../Graphic/DxlibGraphic.h"
 #include"../Graphic/Model.h"
+#include"../Math/Random.h"
 float radian(float degree) {
 	return degree / 180.0f*DX_PI_F;
 }
@@ -29,87 +30,58 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 	switch (num)
 	{
 	case 1:
-		switch (count)
-		{
-		case 1:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x - 120 + 40 * i,position.y,position.z }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x - 200 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 2:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x - 120 + 40 * i,position.y,position.z }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x - 42 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 3:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x - 120 + 40 * i,position.y,position.z }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE3), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x + 110 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 4:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x - 120 + 40 * i,position.y,position.z }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE4), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
-			}
-			break;
-		default:
-			break;
 		}
 		break;
 	case 2:
-		switch (count)
-		{
-		case 1:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x ,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 0  - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 2:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 3:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE3), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 4:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE4), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
-			}
-			break;
-		default:
-			break;
 		}
 		break;
 	case 3:
-		switch (count)
-		{
-		case 1:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x ,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 0 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 2:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 3:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE3), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+		}
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 3; i++) {
+				DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
-			break;
-		case 4:
-			for (int i = 0; i < 7; i++) {
-				DrawSprite3D(Vector3{ position.x,position.y,position.z - 120 + 40 * i }, 40.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE4), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
-			}
-			break;
-		default:
-			break;
 		}
 		break;
 	default:
 		break;
 	}
 }
+

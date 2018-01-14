@@ -171,6 +171,9 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "audience2.png", SPRITE_ID::AUDIENCE2);
 	Sprite::GetInstance().Load(defaultPath + "audience3.png", SPRITE_ID::AUDIENCE3);
 	Sprite::GetInstance().Load(defaultPath + "audience4.png", SPRITE_ID::AUDIENCE4);
+	Sprite::GetInstance().Load(defaultPath + "audience_men1.png", SPRITE_ID::AUDIENCE_MEN1);
+	Sprite::GetInstance().Load(defaultPath + "audience_men2.png", SPRITE_ID::AUDIENCE_MEN2);
+	Sprite::GetInstance().Load(defaultPath + "audience_women.png", SPRITE_ID::AUDIENCE_WOMEN);
 
 	Sprite::GetInstance().Load(defaultPath + "score_player.png", SPRITE_ID::PLAYER_SCORE);
 	Sprite::GetInstance().Load(defaultPath + "score_enemy1.png", SPRITE_ID::ENEMY1_SCORE);
