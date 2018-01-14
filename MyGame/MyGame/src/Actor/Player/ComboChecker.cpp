@@ -122,6 +122,7 @@ ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& 
 	}
 	}
 	default:
+		comboList.clear();//4ŒÂˆÈã‚¾‚Á‚½‚ç‘S•”Á‚·
 		break;
 	}
 

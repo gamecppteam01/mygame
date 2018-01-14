@@ -868,6 +868,7 @@ void Player::to_StepSuccessMode()
 			puComboCount_--;
 			//回数が終わったらコンボ終了
 			if (puComboCount_ <= 0) {
+				comboChecker_.clear();
 				comboType_ = ComboChecker::ComboType::Combo_None;
 				auto stepComboMgr = world_->findUI("StepComboManager");
 				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);

@@ -9,6 +9,7 @@ ComboDrawer::ComboDrawer():
 
 void ComboDrawer::initialize()
 {
+	stepUIs_.clear();
 }
 
 void ComboDrawer::update(float deltaTime)

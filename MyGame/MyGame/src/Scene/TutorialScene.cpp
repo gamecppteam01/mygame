@@ -26,6 +26,8 @@
 #include"../Actor/Player/RegulationMaker.h"
 #include"../UI/SpecifiedStepManager.h"
 #include"../UI/StepComboManager.h"
+#include"../UI/ComboDrawer.h"
+
 
 std::map<int, SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
@@ -555,6 +557,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			player_->resetCombo();
 			auto specStepMgr = std::make_shared<SpecifiedStepManager>(&world_);
 			world_.addUI(specStepMgr);
 			RegulationMaker::SetRegulationTutorial(player_, specStepMgr);//規定の設定
@@ -586,7 +589,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			auto stepcomboManager = std::make_shared<StepComboManager>(&world_);
+			auto stepcomboManager = std::make_shared<ComboDrawer>();
 			world_.addUI(stepcomboManager);
 
 			player_->resetCombo();
@@ -612,6 +615,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			world_.findUI("ComboDrawer")->initialize();
 			player_->resetCombo();
 			changeState(Play);//バーストコンボ
 			break;
