@@ -292,6 +292,7 @@ void Player::onUpdate(float deltaTime)
 		musicScore_.setNotice(true);
 		comboTimer_ -= deltaTime;
 		if (comboTimer_ <= 0.0f) {
+			musicScore_.setNotice(false);
 			comboChecker_.clear();
 			comboType_ = ComboChecker::ComboType::Combo_None;//ŽžŠÔ‚É‚È‚Á‚½‚çƒRƒ“ƒ{‚ðI—¹‚·‚é
 			auto stepComboMgr = world_->findUI("StepComboManager");
