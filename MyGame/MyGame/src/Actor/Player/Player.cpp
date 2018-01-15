@@ -845,6 +845,7 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
+	bool isLast = checkstep_.isLast();
 	//if (nextStep_!=2&&nextStep_!=4) {
 		if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
 			change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
@@ -885,7 +886,7 @@ void Player::to_StepSuccessMode()
 	}
 	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
-	if (checkstep_.isEndCheck() && comboType_ == ComboChecker::ComboType::Combo_None && !isChangeTypeNone) {
+	if (checkstep_.isEndCheck()&& !isLast && comboType_ == ComboChecker::ComboType::Combo_None && !isChangeTypeNone) {
 		//comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
 		comboType_ = ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_);

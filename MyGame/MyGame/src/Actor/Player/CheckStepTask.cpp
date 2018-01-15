@@ -51,3 +51,8 @@ bool CheckStepTask::isEndCheck()
 {
 	return lockList_.size() <= currentCheckKey_;
 }
+
+bool CheckStepTask::isLast()
+{
+	return currentCheckKey_== lockList_.size()-1;
+}
