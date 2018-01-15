@@ -40,7 +40,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x - 200 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x - 200 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x - 200 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -58,7 +58,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x - 42 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x - 42 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x - 42 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -76,7 +76,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x + 110 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x + 110 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x + 110 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -96,7 +96,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -114,7 +114,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -134,7 +134,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
@@ -152,7 +152,7 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_MEN2), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				case 2:
-					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+					DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::AUDIENCE_WOMEN1), 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 					break;
 				default:
 					break;
