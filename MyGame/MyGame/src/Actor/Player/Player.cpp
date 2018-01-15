@@ -777,7 +777,7 @@ void Player::stumble_Update(float deltaTime)
 	if (timeCount_ >= fallTime) {
 		//“]“|ˆ—‚ğ‘‚­
 		downTime_ = downTime;//ƒ_ƒEƒ“ŠÔİ’è
-		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.f, 1.f, false))playerUpdateFunc_[state_](deltaTime);
+		if (change_State_and_Anim(Player_State::Down, Player_Animation::Down, 0.f, 1.f, false,0.0f))playerUpdateFunc_[state_](deltaTime);
 
 	}
 
