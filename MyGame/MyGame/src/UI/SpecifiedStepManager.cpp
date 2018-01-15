@@ -66,14 +66,36 @@ void SpecifiedStepManager::draw() const
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 	if (!stepdraw_.empty()) {
-		if (target_->getState() == Player::Player_State::Step_Success) {
+		if ((stepdraw_.front()->getid() == SPRITE_ID::QUATER_SPRITE && target_->getState() == Player::Player_State::Step_Success)) {
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+			Sprite::GetInstance().Draw(SPRITE_ID::FLASH_SPRITE, stepdraw_.front()->getPosition());
+		}
+		if ((stepdraw_.front()->getid() == SPRITE_ID::TURN_SPRITE && target_->getState() == Player::Player_State::Step_Success)) {
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+			Sprite::GetInstance().Draw(SPRITE_ID::FLASH_SPRITE, stepdraw_.front()->getPosition());
+		}
+		if ((stepdraw_.front()->getid() == SPRITE_ID::HALF_SPRITE && target_->getState() == Player::Player_State::Attack)) {
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+			Sprite::GetInstance().Draw(SPRITE_ID::FLASH_SPRITE, stepdraw_.front()->getPosition());
+		}
+		if ((stepdraw_.front()->getid() == SPRITE_ID::SPIN_SPRITE && target_->getState() == Player::Player_State::Shoot)) {
 			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 			Sprite::GetInstance().Draw(SPRITE_ID::FLASH_SPRITE, stepdraw_.front()->getPosition());
 		}
 		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
 	}
-	if (!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
+	if (!stepdraw_.empty() && stepdraw_.front()->getid() == SPRITE_ID::QUATER_SPRITE && target_->getState() == Player::Player_State::Step_Success) {
 		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f, -65.0f), alpha_);
+	}
+	if (!stepdraw_.empty() && stepdraw_.front()->getid() == SPRITE_ID::TURN_SPRITE && target_->getState() == Player::Player_State::Step_Success) {
+		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f, -65.0f), alpha_);
+	}
+	if (!stepdraw_.empty() && stepdraw_.front()->getid() == SPRITE_ID::HALF_SPRITE && target_->getState() == Player::Player_State::Attack) {
+		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f, -65.0f), alpha_);
+	}
+	if (!stepdraw_.empty() && stepdraw_.front()->getid() == SPRITE_ID::SPIN_SPRITE && target_->getState() == Player::Player_State::Shoot) {
+		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f, -65.0f), alpha_);
+	}
 }
 
 void SpecifiedStepManager::Notify(Notification type, void * param)

@@ -31,14 +31,12 @@ void StepComboManager::update(float deltaTime)
 	{
 		i->update(deltaTime);
 
-		if ((i->GetId() == SPRITE_ID::HALF_SPRITE || i->GetId() == SPRITE_ID::SPIN_SPRITE)) {
+		if ((stepcombo_.size() == 1 && (i->GetId() != SPRITE_ID::QUATER_SPRITE || i->GetId() != SPRITE_ID::TURN_SPRITE))) {
 			alpha_ = 0.0f;
-			/*if (stepcombo_.at(2)->GetId() == SPRITE_ID::HALF_SPRITE || stepcombo_.at(2)->GetId() == SPRITE_ID::SPIN_SPRITE) {
-			}*/
 		}
-		/*if(i->GetId() == SPRITE_ID::QUATER_SPRITE || i->GetId() == SPRITE_ID::HALF_SPRITE){
-			alpha_ = 0.5f;
-		}*/
+		if ((stepcombo_.size() == 2 && (i->GetId() != SPRITE_ID::QUATER_SPRITE))) {
+			alpha_ = 0.0f;
+		}
 	}
 	
 	if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::R)) {
