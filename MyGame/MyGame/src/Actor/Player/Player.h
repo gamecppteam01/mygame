@@ -321,6 +321,7 @@ protected:
 	float comboTimer_;//バーストコンボの持続時間
 	int puComboCount_;//ポイントアップコンボの残り回数
 
+	bool attackCheckKeep{ false };
 protected:
 	const Vector3 defaultPosition_;
 

@@ -389,34 +389,34 @@ void Player::onDraw() const
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
 
-		DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
+		//DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
 
-		//デバッグ表示
-		int i = 0;
-		for (const auto& c : comboChecker_) {
-			switch (c)
-			{
-			case Player_Animation::Quarter: {
-				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Quarter");
-				break;
-			}
-			case Player_Animation::Half: {
-				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Half");
-				break;
-			}
-			case Player_Animation::Turn: {
-				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Turn");
-				break;
-			}
-			case Player_Animation::Shoot: {
-				DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Spin");
-				break;
-			}
-			default:
-				break;
-			}
-			i++;
-		}
+		////デバッグ表示
+		//int i = 0;
+		//for (const auto& c : comboChecker_) {
+		//	switch (c)
+		//	{
+		//	case Player_Animation::Quarter: {
+		//		DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Quarter");
+		//		break;
+		//	}
+		//	case Player_Animation::Half: {
+		//		DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Half");
+		//		break;
+		//	}
+		//	case Player_Animation::Turn: {
+		//		DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Turn");
+		//		break;
+		//	}
+		//	case Player_Animation::Shoot: {
+		//		DrawFormatString(50, 400 + 50 * i, GetColor(255, 255, 255), "Spin");
+		//		break;
+		//	}
+		//	default:
+		//		break;
+		//	}
+		//	i++;
+		//}
 
 	}
 	, false);
@@ -567,10 +567,10 @@ void Player::idle_Update(float deltaTime)
 		/*if (*/change_State_and_Anim(Player_State::Move, Player_Animation::Move_Forward);//)playerUpdateFunc_[state_](deltaTime);
 		return;
 	}
-	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
-		return;
-	}
+	//if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
+	//	if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
+	//	return;
+	//}
 	if (isChangeStep()) {
 		if (isJustTiming()) {
 			change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left);//)playerUpdateFunc_[state_](deltaTime);
@@ -612,10 +612,10 @@ void Player::move_Update(float deltaTime)
 	framevelocity.x += move.x*movePower;
 	framevelocity.z += move.y*movePower;
 
-	if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
-		if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
-		return;
-	}
+	//if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::R1)) {
+	//	if (change_State_and_Anim(Player_State::Shoot, Player_Animation::Shoot, 0.0f, 1.0f, false))playerUpdateFunc_[state_](deltaTime);
+	//	return;
+	//}
 
 	if (isChangeStep()) {
 		if (isJustTiming()) {
@@ -845,12 +845,12 @@ void Player::to_StepMode()
 
 void Player::to_StepSuccessMode()
 {
-	if (nextStep_!=2&&nextStep_!=4) {
+	//if (nextStep_!=2&&nextStep_!=4) {
 		if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
 			change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
 			return;
 		}
-	}
+	//}
 	world_->getCamera()->ZoomIn(0, 0);
 
 	int key = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);

@@ -364,6 +364,10 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			player_->initCheckStep();
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Turn});
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
+
 			changeState(Play);//クォーター
 			break;
 		}
@@ -404,6 +408,10 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			player_->initCheckStep();
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Quarter});
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Turn});
+
 			changeState(Play);//ターン
 			break;
 		}
@@ -444,6 +452,10 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			player_->initCheckStep();
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Quarter, Player_Animation::Turn});
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
+
 			changeState(Play);//ハーフ
 			break;
 		}
@@ -484,6 +496,9 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			player_->initCheckStep();
+			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Half, Player_Animation::Turn});
+			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
 			changeState(Play);//スピン
 			break;
 		}

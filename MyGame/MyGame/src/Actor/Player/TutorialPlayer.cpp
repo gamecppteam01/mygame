@@ -70,9 +70,6 @@ void TutorialPlayer::hitPoint()
 {
 	hitCount_++;
 	if (tutorial_->getTutorialNum() == 3&&hitCount_ >= 3) {
-		checkstep_.initialize();
-		checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Turn});
-		checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Quarter});
 		tutorial_->nextLesson();
 	}
 }
@@ -175,9 +172,6 @@ void TutorialPlayer::end_StepSuccessMode()
 	case 1:
 		if (tutorial_->getTutorialNum() == 5) {
 			tutorial_->nextLesson();
-			checkstep_.initialize();
-			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Quarter});
-			checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Turn});
 			break;
 		}
 	case 2:
@@ -185,9 +179,6 @@ void TutorialPlayer::end_StepSuccessMode()
 	case 3:
 		if (tutorial_->getTutorialNum() == 7) {
 			tutorial_->nextLesson();
-			checkstep_.initialize();
-			checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Turn, Player_Animation::Quarter});
-			checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Half});
 		}
 		break;
 	case 4:
@@ -203,9 +194,6 @@ void TutorialPlayer::end_AttackMode()
 
 	if (tutorial_->getTutorialNum() == 9) {
 		tutorial_->nextLesson();
-		checkstep_.initialize();
-		checkstep_.setInputLimit(std::list<Player_Animation>{Player_Animation::Half, Player_Animation::Turn, Player_Animation::Quarter});
-		checkstep_.setInputRelease(std::list<Player_Animation>{Player_Animation::Shoot});
 	}
 
 }
@@ -216,7 +204,6 @@ void TutorialPlayer::end_ShootMode()
 
 	if (tutorial_->getTutorialNum() == 11) {
 		tutorial_->nextLesson();
-		checkstep_.initialize();
 	}
 
 }
