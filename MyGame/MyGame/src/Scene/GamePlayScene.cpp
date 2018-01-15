@@ -368,6 +368,9 @@ void GamePlayScene::changeState(GamePlayState state) {
 		});
 		
 		lightHandle_.setLightEnableHandle("Spot", false);
+		if (specifiedStepManager_ != nullptr) {
+			specifiedStepManager_->setDraw(true);
+		}
 
 		Sound::GetInstance().StopSE(SE_ID::CHEER_SE);
 		Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE,80.0f);
@@ -403,7 +406,9 @@ void GamePlayScene::changeState(GamePlayState state) {
 	}
 	case Round:
 		standardLight_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
-
+		if (specifiedStepManager_ != nullptr) {
+			specifiedStepManager_->setDraw(false);
+		}
 		world_.roundCam(stageNum_);
 		break;
 	default:

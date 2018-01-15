@@ -33,6 +33,7 @@ public:
 
 	int stepMatching(int stepType);
 	
+	void setDraw(bool is);
 private:
 	IWorld * world_;
 	Vector2 cursorPos_;
@@ -48,4 +49,6 @@ private:
 	//表示するステップ
 	std::vector<SpecifiedDrawPtr> stepdraw_;
 	GamePlayState state_;
+
+	bool isDraw_{ true };
 };

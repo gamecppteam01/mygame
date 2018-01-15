@@ -217,7 +217,10 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_men/rivalEnemy_men.mv1", MODEL_ID::RIVALENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_women/rivalEnemy_women.mv1", MODEL_ID::RIVALENEMY_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "judge/judgemodel.mv1", MODEL_ID::JUDGE_MODEL);
+	Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_men/balanceEnemy_men.mv1", MODEL_ID::NOTICEENEMY_MODEL);
+	Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_women/balanceEnemy_women.mv1", MODEL_ID::NOTICEENEMY_BULLET_MODEL);
 }
+
 
 void LoadingScene::LoadMovie()
 {

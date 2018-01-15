@@ -60,7 +60,8 @@ void SpecifiedStepManager::update(float deltaTime)
 
 void SpecifiedStepManager::draw() const
 {
-	
+	if (!isDraw_)return;
+
 	for (auto a : stepdraw_) {
 		a->draw();
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -168,5 +169,10 @@ int SpecifiedStepManager::stepMatching(int stepType)
 	//}
 	//if (target_->getStep() == 0)return 0;
 	
+}
+
+void SpecifiedStepManager::setDraw(bool is)
+{
+	isDraw_ = is;
 }
 
