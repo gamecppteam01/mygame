@@ -602,7 +602,7 @@ void BaseEnemy::updateWakeUp(float deltaTime){
 	wakwUpTime_ += deltaTime;
 
 	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
-		change_State_and_Anim(prevState_, Enemy_Animation::Move_Forward,false);
+		change_State_and_Anim(prevState_, Enemy_Animation::Move_Forward);
 }
 
 void BaseEnemy::updateFever(float deltaTime){
