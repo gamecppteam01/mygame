@@ -24,6 +24,7 @@ public:
 	bool getIsStart() const;
 	void addPosition(const Vector2& pos);
 	int getPos();
+	Vector2 getPosition() const;
 
 private:
 	SPRITE_ID id_;

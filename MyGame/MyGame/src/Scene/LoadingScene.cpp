@@ -200,6 +200,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "burst_ui.png", SPRITE_ID::BURST_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "pointup_ui.png", SPRITE_ID::POINTUP_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nice_sprite.png", SPRITE_ID::NICE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "titlecursorflash.png", SPRITE_ID::CURSOR_FLASH);
+	Sprite::GetInstance().Load(defaultPath + "flash.png", SPRITE_ID::FLASH_SPRITE);
 }
 
 void LoadingScene::LoadModel()

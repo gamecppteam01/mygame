@@ -5,6 +5,7 @@
 #include "../Graphic/Sprite.h"
 #include "../Actor/Player/Player.h"
 #include "SpecifiedDrawPtr.h"
+#include "../Scene/GamePlayState.h"
 #include <vector>
 #include <map>
 
@@ -46,4 +47,5 @@ private:
 	float timer_;
 	//表示するステップ
 	std::vector<SpecifiedDrawPtr> stepdraw_;
+	GamePlayState state_;
 };

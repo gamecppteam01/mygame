@@ -22,6 +22,7 @@ void SpecifiedStepManager::initialize()
 	position_ = Vector2(100.0f, 620.0f);
 	alpha_ = 1.0f;
 	Xpos = 0.0f;
+	timer_ = 0.0f;
 }
 
 void SpecifiedStepManager::update(float deltaTime)
@@ -29,6 +30,7 @@ void SpecifiedStepManager::update(float deltaTime)
 	if (stepdraw_.empty()) return;
 	for (auto &a : stepdraw_) {
 		a->update(deltaTime);
+		timer_++;
 	}
 
 	if (stepdraw_.front()->getPos() >= 100.0f) IsPad_ = true;
@@ -38,14 +40,12 @@ void SpecifiedStepManager::update(float deltaTime)
 		stepdraw_.erase(itr, stepdraw_.end());
 		if (IsPad_ = true) {
 			for (auto &a : stepdraw_) {
+
 				a->addPosition(Vector2(-200.0f, 0.0f));
+
 			}
 		}
-		/*if (timer_ <= 1.0f) timer_ += 0.1f; 
-		Xpos = MathHelper::Lerp(0.0f, -120.0f, timer_);
-		Xpos = MathHelper::Clamp(Xpos, -120.0f, 0.0f);
-		*/
-		
+		 
 	}
 	if (target_->getState() == Player::Player_State::Step_Success) {
 		if (stepdraw_.front()->getIsDead() == true) { 
@@ -54,17 +54,26 @@ void SpecifiedStepManager::update(float deltaTime)
 	} else { 
 		alpha_ = 1.0f; 
 	}
+	
+	
 }
 
 void SpecifiedStepManager::draw() const
 {
+	
 	for (auto a : stepdraw_) {
 		a->draw();
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-	if(!stepdraw_.empty()) Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
-	if(!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
-		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f,-65.0f), alpha_);
-	
+	if (!stepdraw_.empty()) {
+		if (target_->getState() == Player::Player_State::Step_Success) {
+			SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+			Sprite::GetInstance().Draw(SPRITE_ID::FLASH_SPRITE, stepdraw_.front()->getPosition());
+		}
+		Sprite::GetInstance().Draw(SPRITE_ID::TITLE_CURSOR, cursorPos_);
+	}
+	if (!stepdraw_.empty() && target_->getState() == Player::Player_State::Step_Success)
+		Sprite::GetInstance().Draw(SPRITE_ID::NICE_SPRITE, cursorPos_ + Vector2(25.0f, -65.0f), alpha_);
 }
 
 void SpecifiedStepManager::Notify(Notification type, void * param)

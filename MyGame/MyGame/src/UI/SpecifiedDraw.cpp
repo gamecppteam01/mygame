@@ -66,3 +66,8 @@ int SpecifiedDraw::getPos()
 {
 	return pos;
 }
+
+Vector2 SpecifiedDraw::getPosition() const
+{
+	return position_;
+}
