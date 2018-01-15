@@ -37,6 +37,11 @@ public:
 	void setID(DrawStepType type);
 
 	void changeState(State state);
+
+	SPRITE_ID getDrawType()const;
+
+	Vector2 getPos()const;
+	float getAlpha()const;
 private:
 	State state_{ State::Start };
 

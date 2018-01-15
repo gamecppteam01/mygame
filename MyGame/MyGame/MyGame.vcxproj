@@ -282,6 +282,7 @@
     <ClCompile Include="src\UI\ButtonUI.cpp" />
     <ClCompile Include="src\UI\ComboDrawer.cpp" />
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
+    <ClCompile Include="src\UI\ComboSupportUI.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI.cpp" />
@@ -483,6 +484,7 @@
     <ClInclude Include="src\UI\ComboDrawer.h" />
     <ClInclude Include="src\UI\ComboGaugeUI.h" />
     <ClInclude Include="src\UI\ComboStepUIPtr.h" />
+    <ClInclude Include="src\UI\ComboSupportUI.h" />
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />

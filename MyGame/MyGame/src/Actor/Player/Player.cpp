@@ -893,8 +893,8 @@ void Player::to_StepSuccessMode()
 
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
-			//auto cd = world_->findUI("ComboDrawer");
-			//if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
+			auto cd = world_->findUI("ComboDrawer");
+			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
 
 			isChangeBurstMode_ = true;
 			comboType_ = ComboChecker::ComboType::Combo_None;//一時的にNoneにしてステップ終了時にバーストに遷移
@@ -909,8 +909,8 @@ void Player::to_StepSuccessMode()
 			}
 			auto stepComboMgr = world_->findUI("StepComboManager");
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
-			//auto cd = world_->findUI("ComboDrawer");
-			//if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
+			auto cd = world_->findUI("ComboDrawer");
+			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
 			isChangePUMode = true;
 		}
 

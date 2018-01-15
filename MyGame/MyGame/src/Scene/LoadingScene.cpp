@@ -4,14 +4,26 @@
 #include"../DataManager/DataManager.h"
 #include"../ShadowMap/ShadowMap_Data.h"
 #include"../Define.h"
+static const std::vector<SPRITE_ID> ids_{
+	SPRITE_ID::LOADING_1_SPRITE,
+	SPRITE_ID::LOADING_2_SPRITE,
+	SPRITE_ID::LOADING_3_SPRITE,
+	SPRITE_ID::LOADING_4_SPRITE,
+	SPRITE_ID::LOADING_5_SPRITE,
+	SPRITE_ID::LOADING_6_SPRITE
+};
 
 LoadingScene::LoadingScene() {
 	next_ = SceneType::SCENE_TITLE;
 }
 
 void LoadingScene::start() {
-	Sprite::GetInstance().Load("res/Sprite/nowloading.png", SPRITE_ID::LOADING_NL_SPRITE);
-	Sprite::GetInstance().Load("res/Sprite/dot.png", SPRITE_ID::LOADING_DOT_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading1.png", SPRITE_ID::LOADING_1_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading2.png", SPRITE_ID::LOADING_2_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading3.png", SPRITE_ID::LOADING_3_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading4.png", SPRITE_ID::LOADING_4_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading5.png", SPRITE_ID::LOADING_5_SPRITE);
+	Sprite::GetInstance().Load("res/Sprite/loading6.png", SPRITE_ID::LOADING_6_SPRITE);
 	LoadEffect();
 	SetUseASyncLoadFlag(TRUE);
 	//各種リソースのロードを行う
@@ -29,13 +41,15 @@ void LoadingScene::start() {
 		i = 0.0f;
 	}
 	timeCount_ = 0.0f;
+	keyCount_ = 0;
 }
 
 void LoadingScene::update(float deltaTime) {
-	timeCount_ = std::fmodf(timeCount_ + deltaTime, 1.0f);
-	posits_[0] = (timeCount_ >= 0.1f) ? 1.0f : 0.0f;
-	posits_[1] = (timeCount_ >= 0.4f) ? 1.0f : 0.0f;
-	posits_[2] = (timeCount_ >= 0.7f) ? 1.0f : 0.0f;
+	timeCount_ += deltaTime;
+	if (timeCount_ >= 0.1f) {
+		timeCount_ = 0.0f;
+		keyCount_ = (keyCount_ + 1) % 6;
+	}
 
 	if (GetASyncLoadNum() == 0) {
 		isEnd_ = true;
@@ -44,16 +58,9 @@ void LoadingScene::update(float deltaTime) {
 
 void LoadingScene::draw() const {
 	float size = 0.5f;
-	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_NL_SPRITE) / 2;
-	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_NL_SPRITE, SCREEN_SIZE*0.5f, origin, Vector2::One*size);
+	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_1_SPRITE) / 2;
+	Sprite::GetInstance().Draw(ids_.at(keyCount_), SCREEN_SIZE*0.5f, origin, Vector2::One*size);
 
-	float xPos = origin.x*size + (Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x / 2)*size;
-	origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE) / 2;
-	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[0], Vector2::One*size);
-	xPos += Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x*size;
-	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[1], Vector2::One*size);
-	xPos += Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_DOT_SPRITE).x*size;
-	Sprite::GetInstance().Draw(SPRITE_ID::LOADING_DOT_SPRITE, SCREEN_SIZE*0.5f + Vector2{ xPos,0.0f }, origin, posits_[2], Vector2::One*size);
 }
 
 void LoadingScene::end() {
@@ -143,7 +150,9 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "Success_Cutin.png", SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "Turn_Cutin.png", SPRITE_ID::CUTIN_TURN_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "titlecursor.png", SPRITE_ID::TITLE_CURSOR);
-
+	Sprite::GetInstance().Load(defaultPath + "burstcomboUI.png", SPRITE_ID::COMBO_BURST_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "pointupcomboUI.png", SPRITE_ID::COMBO_POINTUP_SPRITE);
+	
 	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "stage2name.png", SPRITE_ID::STAGE_2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "stage3name.png", SPRITE_ID::STAGE_3_SPRITE);
@@ -276,7 +285,7 @@ void LoadingScene::LoadSE()
 	Sound::GetInstance().LoadSE(defaultPath + "systemse.mp3", SE_ID::SELECT_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "half_se.mp3", SE_ID::HALF_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "spin_se.wav", SE_ID::SPIN_SE);
-	Sound::GetInstance().LoadSE(defaultPath + "quater_se.mp3", SE_ID::QUATER_SE);
+	Sound::GetInstance().LoadSE(defaultPath + "quarter_se.mp3", SE_ID::QUATER_SE);
 	Sound::GetInstance().LoadSE(defaultPath + "turn_se.mp3", SE_ID::TURN_SE);
 	Sound::GetInstance().SetSEVolume(SE_ID::HIT_SE, 1.0f);
 }

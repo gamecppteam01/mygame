@@ -90,6 +90,9 @@ void TutorialPlayer::resetCombo()
 	comboChecker_.clear();
 	comboType_ = ComboChecker::ComboType::Combo_None;
 	isChangeBurstMode_ = false;
+	auto stepdrawer = world_->findUI("ComboDrawer");
+	if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_Reset);
+
 }
 
 bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame, float animSpeed, bool isLoop, float blend)

@@ -151,3 +151,18 @@ void StepParts::changeState(State state)
 		break;
 	}
 }
+
+SPRITE_ID StepParts::getDrawType() const
+{
+	return id_;
+}
+
+Vector2 StepParts::getPos() const
+{
+	return position_;
+}
+
+float StepParts::getAlpha() const
+{
+	return alpha_;
+}

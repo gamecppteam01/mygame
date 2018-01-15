@@ -1,4 +1,7 @@
 #include "ComboDrawer.h"
+#include"../Math/MathHelper.h"
+#include"../Graphic/Sprite.h"
+#include"ComboSupportUI.h"
 
 static const Vector2 defCursorPos{ 100.0f, 600.0f };
 static const float slideSize{ 200.0f };
@@ -10,10 +13,22 @@ ComboDrawer::ComboDrawer():
 void ComboDrawer::initialize()
 {
 	stepUIs_.clear();
+	comboType_ = SuccessComboType::None;
+	alpha_ = 0.0f;
+
 }
 
 void ComboDrawer::update(float deltaTime)
 {
+	if (comboType_ == SuccessComboType::None) {
+		alpha_ -= deltaTime*2.0f;
+	}
+	else {
+		alpha_ += deltaTime*2.0f;
+
+	}
+	alpha_ = MathHelper::Clamp(alpha_, 0.0f, 1.0f);
+
 	for (auto& s : stepUIs_) {
 		s.update(deltaTime);
 	}
@@ -26,9 +41,11 @@ void ComboDrawer::update(float deltaTime)
 
 void ComboDrawer::draw() const
 {
+	ComboSupportUI::drawCombo(stepUIs_);
 	for (auto& s : stepUIs_) {
 		s.draw();
 	}
+	Sprite::GetInstance().Draw(id_, Vector2{ 100.0f,340.0f }, alpha_);
 }
 
 void ComboDrawer::Notify(Notification type, void * param)
@@ -82,7 +99,22 @@ void ComboDrawer::Notify(Notification type, void * param)
 	//	}
 	//	break;
 	//}
-	//case Notification::Call_Success_Combo_PointUp:
+	case Notification::Call_Success_Combo_PointUp: {
+		comboType_ = SuccessComboType::PointUp;
+		id_ = SPRITE_ID::COMBO_POINTUP_SPRITE;
+		break;
+	}
+	case Notification::Call_Success_Combo_Burst: {
+		comboType_ = SuccessComboType::Burst;
+		id_ = SPRITE_ID::COMBO_BURST_SPRITE;
+		break;
+	}
+	case Notification::Call_Combo_Reset: {
+		stepUIs_.clear();
+		comboType_ = SuccessComboType::None;
+		alpha_ = 0.0f;
+		break;
+	}
 	//	isCombo_ = true;
 	//	if (stepUIs_.size() < 3) {
 	//		int s = stepUIs_.size();
@@ -143,7 +175,7 @@ void ComboDrawer::Notify(Notification type, void * param)
 			s.dead();
 			deleteCount--;
 		}
-
+		comboType_ = SuccessComboType::None;
 		break;
 	}
 		//isCombo_ = false;

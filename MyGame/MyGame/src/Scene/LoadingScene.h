@@ -36,4 +36,5 @@ private:
 	std::array<float, 3> posits_;
 
 	float timeCount_;
+	int keyCount_;
 };
