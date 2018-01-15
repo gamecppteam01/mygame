@@ -27,6 +27,9 @@ private:
 
 	virtual void to_Normal() override;
 	virtual void to_Fever() override;
+
+	void updateWakeUp(float deltaTime) override;
+
 private:
 	int getNearestPoint(const Vector3& position);
 

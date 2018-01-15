@@ -168,6 +168,15 @@ void Enemy_Notice::to_Fever() {
 	probability_ = 3;
 }
 
+void Enemy_Notice::updateWakeUp(float deltaTime)
+{
+		wakwUpTime_ += deltaTime;
+
+		if (wakwUpTime_ >= animation_.GetAnimMaxTime())
+			change_State_and_Anim(prevState_, Enemy_Animation::Move_Forward, false);
+
+}
+
 int Enemy_Notice::getNearestPoint(const Vector3 & position) {
 	int result = 0;
 	for (int i = 0; i < roundPoint_.size(); i++) {
