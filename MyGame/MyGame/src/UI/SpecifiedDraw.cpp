@@ -16,7 +16,7 @@ void SpecifiedDraw::initialize()
 void SpecifiedDraw::update(float deltaTime)
 {
 	if (IsStart_ == true) {
-		alpha_ -= 0.2f;
+		alpha_ -= timer_;
 		position_ += Vector2(0.0f, pos);
 		if(alpha_ <= 0.0f){
 			IsDead_ = true;
@@ -26,8 +26,8 @@ void SpecifiedDraw::update(float deltaTime)
 		pos = MathHelper::Lerp(0.0f, 100.0f, timer_);
 		pos = MathHelper::Clamp(pos, 0.0f, 100.0f);
 
-		if (timer_ <= 60.0f) {
-			timer_ += deltaTime;
+		if (timer_ <= 1.0f) {
+			timer_ += 0.1f;
 		}
 	}
 }
