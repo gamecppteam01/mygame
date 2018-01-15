@@ -6,6 +6,7 @@
 #include"../Math/Vector3.h"
 #include"../Graphic/Model.h"
 #include"../Graphic/Sprite.h"
+#include"../Math/Random.h"
 
 float to_radian(float degree) {
 	return degree / 180.0f*DX_PI_F;
@@ -110,10 +111,9 @@ void Field::draw() const {
 	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{225.0f,0.0f, 0.0f }));
 	MV1DrawModel(audience_);
 
-
-	audience.draw(Vector3{0.0f,51.0f,175.0f},   Vector3{ -90.0f,0.0f,0.0f },1);
+	audience.draw(Vector3{0.0f,51.0f,175.0f}, Vector3{ -90.0f,0.0f,0.0f }, 1);
+	audience.draw(Vector3{ -250.0f,45.0f,0.0f }, Vector3{ 0.0f,-90.0f,-90.0f }, 2);
 	audience.draw(Vector3{250.0f,45.0f,0.0f},   Vector3{ 0.0f,90.0f,90.0f },3);
-	audience.draw(Vector3{-250.0f,45.0f,0.0f}, Vector3{ 0.0f,-90.0f,-90.0f },2);
 }
 
 // フィールドのハンドル取得
