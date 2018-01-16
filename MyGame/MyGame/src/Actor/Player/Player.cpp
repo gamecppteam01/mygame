@@ -71,7 +71,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 	state_(Player_State::Idle), prevState_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this), spinEffect_(world),
-	quaterEffect_(world),halfEffect_(world)
+	quaterEffect_(world),halfEffect_(world), isZoomEnd_(true), checkFunc_([&] {return ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_); })
 {
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
@@ -208,6 +208,7 @@ void Player::createBullet()
 void Player::initialize()
 {
 	isFirst_ = true;
+	isZoomEnd_ = true;
 	position_ = centerPosition_ + bulletDistance;
 	gravity_ = 0.0f;
 	state_ = Player_State::Idle;
@@ -847,12 +848,10 @@ void Player::to_StepMode()
 void Player::to_StepSuccessMode()
 {
 	bool isLast = checkstep_.isLast();
-	//if (nextStep_!=2&&nextStep_!=4) {
-		if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
-			change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
-			return;
-		}
-	//}
+	if (!checkstep_(stepAnimScoreList_.at(nextStep_).first)) {
+		change_State_and_Anim(Player_State::Idle, Player_Animation::Move_Forward, 0.0f, 1.0f, true, 0.0f);
+		return;
+	}
 	world_->getCamera()->ZoomIn(0, 0);
 
 	int key = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::STEP_SUCCESS_EFFECT, centerPosition_, Vector3::Zero, Vector3::One*10.0f);
@@ -888,9 +887,8 @@ void Player::to_StepSuccessMode()
 	isChangeBurstMode_ = false;
 	//今コンボ中じゃないかつこの回でポイントアップが終わってなかったらコンボ追加
 	if (checkstep_.isEndCheck()&& !isLast && comboType_ == ComboChecker::ComboType::Combo_None && !isChangeTypeNone) {
-		//comboChecker_.push_back(stepAnimScoreList_.at(nextStep_).first);
 		comboResetTimer_ = 2;//コンボリセットまでの猶予は2回
-		comboType_ = ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_);
+		comboType_ = checkFunc_();
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
 
 			auto stepComboMgr = world_->findUI("StepComboManager");
@@ -915,13 +913,7 @@ void Player::to_StepSuccessMode()
 			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
 			isChangePUMode = true;
 		}
-
-		//auto stepComboMgr = world_->findUI("ComboDrawer");
-		//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_ComboParts,(void*)&comboChecker_);
-
-
 	}
-	//stepAnimScoreList_.at(nextStep_)Player_Animation::Quarter;
 	changeAnimation(stepAnimScoreList_.at(nextStep_).first, 0.0f, 1.0f, false);
 	bullet_->changeAnimation(animConvList.at(stepAnimScoreList_.at(nextStep_).first), 0.0f, 1.0f, false);
 
@@ -1047,8 +1039,11 @@ void Player::end_StepSuccessMode()
 		if (ssUIManager != nullptr)ssUIManager->stepMatching(nextStep_);
 	}
 	//if (!checkstep_(stepAnimScoreList_.at(nextStep_).first))return;
-	world_->getCamera()->ZoomOut();
 
+	isZoomEnd_ = false;
+	world_->getCamera()->setZoomEndFunc([&] {isZoomEnd_ = true; });
+
+	world_->getCamera()->ZoomOut();
 	//バーストへの遷移が成立してたら遷移する
 	if (isChangeBurstMode_) {
 		isChangeBurstMode_ = false;
@@ -1063,6 +1058,9 @@ void Player::end_StepSuccessMode()
 
 void Player::end_AttackMode()
 {
+	isZoomEnd_ = false;
+	world_->getCamera()->setZoomEndFunc([&] {isZoomEnd_ = true; });
+
 	world_->getCamera()->ZoomOut();
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
 	if (ssUIManager != nullptr)ssUIManager->stepMatching(2);
@@ -1071,6 +1069,9 @@ void Player::end_AttackMode()
 
 void Player::end_ShootMode()
 {
+	isZoomEnd_ = false;
+	world_->getCamera()->setZoomEndFunc([&] {isZoomEnd_ = true; });
+
 	world_->getCamera()->ZoomOut();
 	auto sc=world_->findActor("ShootCenter"); 
 	if (sc != nullptr)sc->dead();

@@ -7,6 +7,7 @@ class Player;
 //プレイヤーの攻撃(女)
 class PlayerBullet:public Actor {
 	friend class Player;
+	friend class TutorialPlayer;
 public:
 	//アニメーションのキー番号(各値は、実際にmv1に設定されているアニメーションと関連付ける事)
 	enum class PlayerBullet_Animation {

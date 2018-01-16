@@ -238,6 +238,8 @@ protected:
 	//ステップの周期を測る
 	int stepCount_{ 0 };
 
+	bool isZoomEnd_{ true };
+
 	float shootAngle_;
 	//汎用タイマー
 	float timeCount_;
@@ -273,6 +275,8 @@ protected:
 
 	//よろけから回復するまでの時間
 	float stumbleResurrectTime_{ 0.5f };
+
+	std::function<ComboChecker::ComboType()> checkFunc_;
 
 	bool isFirst_{ true };//初回更新
 	//女関連

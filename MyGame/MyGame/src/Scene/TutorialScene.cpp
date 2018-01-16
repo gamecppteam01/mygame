@@ -26,7 +26,7 @@
 #include"../Actor/Player/RegulationMaker.h"
 #include"../UI/SpecifiedStepManager.h"
 #include"../UI/StepComboManager.h"
-#include"../UI/ComboDrawer.h"
+#include"../UI/TutorialComboDrawer.h"
 
 
 std::map<int, SPRITE_ID> cutinList{
@@ -604,7 +604,10 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			auto stepcomboManager = std::make_shared<ComboDrawer>();
+			player_->setCheckType(ComboChecker::ComboType::Combo_PointUp);
+			auto stepcomboManager = std::make_shared<TutorialComboDrawer>();
+			stepcomboManager->init(TutorialComboDrawer::DrawComboType::PointUp);
+
 			world_.addUI(stepcomboManager);
 
 			player_->resetCombo();
@@ -630,7 +633,10 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
-			world_.findUI("ComboDrawer")->initialize();
+			player_->setCheckType(ComboChecker::ComboType::Combo_Burst);
+			std::shared_ptr<TutorialComboDrawer> stepcomboManager = std::static_pointer_cast<TutorialComboDrawer>(world_.findUI("ComboDrawer"));
+			stepcomboManager->initialize();
+			stepcomboManager->init(TutorialComboDrawer::DrawComboType::Burst);
 			player_->resetCombo();
 			changeState(Play);//バーストコンボ
 			break;

@@ -29,13 +29,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -297,6 +297,7 @@
     <ClCompile Include="src\UI\StepParts.cpp" />
     <ClCompile Include="src\UI\StepUI.cpp" />
     <ClCompile Include="src\UI\TimeUI.cpp" />
+    <ClCompile Include="src\UI\TutorialComboDrawer.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UITemplate.cpp" />
@@ -504,6 +505,7 @@
     <ClInclude Include="src\UI\StepUIManager.h" />
     <ClInclude Include="src\UI\StepUIPtr.h" />
     <ClInclude Include="src\UI\TimeUI.h" />
+    <ClInclude Include="src\UI\TutorialComboDrawer.h" />
     <ClInclude Include="src\UI\UI.h" />
     <ClInclude Include="src\UI\UIInclude.h" />
     <ClInclude Include="src\UI\UIManager.h" />

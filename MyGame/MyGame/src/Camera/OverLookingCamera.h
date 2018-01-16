@@ -14,6 +14,7 @@ public:
 	void ZoomIn(int pointKey,int easeKey);
 	void ZoomOut();
 
+	void setZoomEndFunc(std::function<void()> func);
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);
@@ -45,6 +46,7 @@ private:
 
 	std::vector<std::function<void()>> easeFuncList_;
 
+	std::list<std::function<void()>> callBack_;
 
 	int pointKey_{ 0 };
 	int easeKey_{ 0 };

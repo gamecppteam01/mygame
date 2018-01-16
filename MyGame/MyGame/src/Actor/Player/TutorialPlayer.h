@@ -13,6 +13,7 @@ public:
 
 	void resetCombo();
 
+	void setCheckType(ComboChecker::ComboType type);
 private:
 	virtual bool change_State_and_Anim(Player_State state, Player_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true, float blend = 1.0f);
 

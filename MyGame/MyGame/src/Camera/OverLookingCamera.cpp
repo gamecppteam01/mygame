@@ -28,7 +28,7 @@ static const std::vector<Vector3> zoomTargetVector{
 static const Vector3 moveVector{ 0.0f,0.0f,0.0f };
 
 OverLookingCamera::OverLookingCamera(IWorld * world, const std::string & name, const Vector3 & position, const IBodyPtr & body):
-	Actor(world, name, position, body), target_(nullptr), targetTranslate_(Vector3::Zero)
+	Actor(world, name, position, body), target_(nullptr), targetTranslate_(Vector3::Zero), callBack_()
 {
 	zoomFuncList_.emplace_back([&](float deltaTime) {zoom_default(deltaTime); });
 	zoomFuncList_.emplace_back([&](float deltaTime) {zoom_in(deltaTime); });
@@ -51,6 +51,7 @@ OverLookingCamera::OverLookingCamera(IWorld * world, const std::string & name, c
 	upLength_ = defUpLength;
 	targetVector_ = defTargetVector;
 
+	callBack_.clear();
 }
 
 void OverLookingCamera::setTarget(ActorPtr & target)
@@ -136,6 +137,11 @@ void OverLookingCamera::ZoomOut()
 	zoomType_ = 2;
 }
 
+void OverLookingCamera::setZoomEndFunc(std::function<void()> func)
+{
+	callBack_.push_back(func);
+}
+
 void OverLookingCamera::setFirstPos()
 {
 	Vector3 nextPos = target_->position();
@@ -182,6 +188,10 @@ void OverLookingCamera::zoom_in(float deltaTime)
 	if (timeCount_ >= 1.0f) {
 		timeCount_ = 1.0f;
 		zoomType_ = 0;
+		for (auto& c : callBack_) {
+			c();
+		}
+		callBack_.clear();
 	}
 
 	easeFuncList_[easeKey_]();
@@ -194,6 +204,10 @@ void OverLookingCamera::zoom_out(float deltaTime)
 	if (timeCount_ <= 0.0f) {
 		timeCount_ = 0.0f;
 		zoomType_ = 0;
+		for (auto& c : callBack_) {
+			c();
+		}
+		callBack_.clear();
 	}
 
 	easeFuncList_[easeKey_]();

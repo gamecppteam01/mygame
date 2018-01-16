@@ -14,6 +14,7 @@ class ComboDrawer:public UI{
 	};
 public:
 	ComboDrawer();
+	virtual ~ComboDrawer(){}
 
 	virtual void initialize();
 	//çXêV
@@ -27,7 +28,8 @@ public:
 	void addStep(Player_Animation type);
 
 	StepParts::DrawStepType chooseID(Player_Animation type);
-private:
+
+protected:
 	std::vector<StepParts> stepUIs_;
 
 	SuccessComboType comboType_{ SuccessComboType::None };

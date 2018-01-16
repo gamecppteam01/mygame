@@ -196,6 +196,226 @@ ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& 
 	return ComboChecker::ComboType::Combo_None;
 }
 
+ComboChecker::ComboType ComboChecker::checkComboTutorial(std::vector<Player_Animation>& comboList, Player_Animation next, IWorld * world, ComboType type)
+{
+	if (type == ComboChecker::ComboType::Combo_None) {
+		return checkCombo(comboList, next, world);
+	}
+	//コンボパーツじゃないのが来たら
+	if (next != Player_Animation::Quarter&&next != Player_Animation::Turn) {
+		int deleteSize = comboList.size();//削除数
+		comboList.clear();
+		auto stepComboMgr = world->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+		return ComboType::Combo_None;
+	}
+	switch (type)
+	{
+	case ComboChecker::ComboType::Combo_PointUp:
+		switch (comboList.size())
+		{
+		case 0: {//初コンボなら
+			if (next == Player_Animation::Turn)return ComboType::Combo_None;
+
+			comboList.push_back(next);
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+			return ComboType::Combo_None;
+			break;
+		}
+		case 1: {//1コンボしてるなら
+			if (next == Player_Animation::Quarter) {
+				comboList.push_back(next);
+				auto stepComboMgr = world->findUI("ComboDrawer");
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+			}
+			else {//次がターンなら
+				comboList.clear();
+				int deleteSize = 1;//削除数
+				auto stepComboMgr = world->findUI("ComboDrawer");
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+
+				comboList.push_back(next);
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+			}
+
+			return ComboType::Combo_None;
+			break;
+		}
+		case 2: {//2コンボしてるなら
+			if (next == Player_Animation::Turn) {
+				comboList.push_back(next);
+				auto stepComboMgr = world->findUI("ComboDrawer");
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+				return ComboType::Combo_PointUp;
+			}
+			else {//クォーターなら
+				comboList.erase(comboList.begin());
+
+				int deleteSize = 1;//削除数
+				auto stepComboMgr = world->findUI("ComboDrawer");
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+
+				comboList.push_back(next);
+				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+				return ComboType::Combo_None;
+			}
+
+		}
+		default:
+			comboList.clear();//4個以上だったら全部消す
+			break;
+		}
+		break;
+	case ComboChecker::ComboType::Combo_Burst:
+		break;
+	default:
+		break;
+	}
+
+	return ComboChecker::ComboType::Combo_None;
+}
+
+ComboChecker::ComboType ComboChecker::checkComboBurst(std::vector<Player_Animation>& comboList, Player_Animation next, IWorld * world)
+{
+	//コンボパーツじゃないのが来たら
+	if (next != Player_Animation::Quarter&&next != Player_Animation::Turn) {
+		int deleteSize = comboList.size();//削除数
+		comboList.clear();
+		auto stepComboMgr = world->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+		return ComboType::Combo_None;
+	}
+
+	switch (comboList.size())
+	{
+	case 0: {//初コンボなら
+		if (next == Player_Animation::Quarter)return ComboType::Combo_None;
+
+		comboList.push_back(next);
+		auto stepComboMgr = world->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+		return ComboType::Combo_None;
+		break;
+	}
+	case 1: {//1コンボしてるなら
+		if (next == Player_Animation::Quarter) {
+			comboList.push_back(next);
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+		}
+		else {//次がターンなら
+			comboList.clear();
+			int deleteSize = 1;//削除数
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+
+			comboList.push_back(next);
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+		}
+
+		return ComboType::Combo_None;
+		break;
+	}
+	case 2: {//2コンボしてるなら
+		if (next == Player_Animation::Turn) {
+			comboList.push_back(next);
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+			return ComboType::Combo_Burst;
+		}
+		else {//クォーターなら
+			comboList.erase(comboList.begin(), comboList.end());
+
+			int deleteSize = 2;//削除数
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+
+			//comboList.push_back(next);
+			//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+			return ComboType::Combo_None;
+		}
+
+	}
+	default:
+		comboList.clear();//4個以上だったら全部消す
+		break;
+	}
+}
+
+ComboChecker::ComboType ComboChecker::checkComboPointUp(std::vector<Player_Animation>& comboList, Player_Animation next, IWorld * world)
+{
+	//コンボパーツじゃないのが来たら
+	if (next != Player_Animation::Quarter&&next != Player_Animation::Turn) {
+		int deleteSize = comboList.size();//削除数
+		comboList.clear();
+		auto stepComboMgr = world->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+		return ComboType::Combo_None;
+	}
+
+	switch (comboList.size())
+	{
+	case 0: {//初コンボなら
+		if (next == Player_Animation::Turn)return ComboType::Combo_None;
+
+		comboList.push_back(next);
+		auto stepComboMgr = world->findUI("ComboDrawer");
+		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+		return ComboType::Combo_None;
+		break;
+	}
+	case 1: {//1コンボしてるなら
+		if (next == Player_Animation::Quarter) {
+			comboList.push_back(next);
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+		}
+		else {//次がターンなら
+			comboList.clear();
+			int deleteSize = 1;//削除数
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+		}
+
+		return ComboType::Combo_None;
+		break;
+	}
+	case 2: {//2コンボしてるなら
+		if (next == Player_Animation::Turn) {
+			comboList.push_back(next);
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+			return ComboType::Combo_PointUp;
+		}
+		else {//クォーターなら
+			comboList.erase(comboList.begin());
+
+			int deleteSize = 1;//削除数
+			auto stepComboMgr = world->findUI("ComboDrawer");
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Delete, (void*)&deleteSize);
+
+			comboList.push_back(next);
+			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
+
+			return ComboType::Combo_None;
+		}
+
+	}
+	default:
+		comboList.clear();//4個以上だったら全部消す
+		break;
+	}
+}
+
 ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& comboList) {
 	bool isMiss = false;
 	int i = 1;
