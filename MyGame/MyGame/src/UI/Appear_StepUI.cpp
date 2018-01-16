@@ -26,7 +26,7 @@ void Appear_StepUI::Draw(const Vector3 & position) const{
 		switch (player_->getStep())
 		{
 		case 1:
-			DrawSprite3D(position, 12.5f, Sprite::GetInstance().GetHandle(SPRITE_ID::APPEAR_STEP_QUARTER),255,255,255,100);
+			DrawSprite3D(position, 12.5f, Sprite::GetInstance().GetHandle(SPRITE_ID::APPEAR_STEP_QUARTER));
 			break;
 		case 2:
 			DrawSprite3D(position, 12.5f, Sprite::GetInstance().GetHandle(SPRITE_ID::APPEAR_STEP_HALF));
