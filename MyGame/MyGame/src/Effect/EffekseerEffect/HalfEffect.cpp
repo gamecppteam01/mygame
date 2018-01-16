@@ -13,8 +13,7 @@ void HalfEffect::start()
 	effect_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::HALF_EFFECT);
 	EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::HALF_EFFECT, effect_, &target->position());
 	Sound::GetInstance().PlaySE(SE_ID::HALF_SE, 1, 1);
-	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE, 1, 1);
-	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, 0.5);
+	Sound::GetInstance().SetSEVolume(SE_ID::HALF_SE, 1);
 }
 
 void HalfEffect::update(float deltaTime)
