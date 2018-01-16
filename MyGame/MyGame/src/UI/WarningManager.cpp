@@ -63,8 +63,12 @@ void WarningManager::update(float deltaTime)
 	//Œü‚«‚ðŒˆ’è
 	Vector2 target = player_.lock()->getStumbleDirection();
 	stateChange(target);
-	if (!pause_) {
+	if (!pause_ && warningCount() <= 9) {
 		sincount += 8;
+		sincount = std::fmodf(sincount, 360);
+	}
+	else if (!pause_ && warningCount() > 9) {
+		sincount += 12;
 		sincount = std::fmodf(sincount, 360);
 	}
 	switch (state_)

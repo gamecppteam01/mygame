@@ -13,7 +13,6 @@ void Audience::initialize(){
 	timer = 0.0f;
 	for (int j = 0; j < 7; j++) {
 		for (int i = 0; i < 7; i++) {
-			/*num_[i][j] = Random::GetInstance().Range(0, 2);*/
 			switch (Random::GetInstance().Range(1,6))
 			{
 			case 1:
