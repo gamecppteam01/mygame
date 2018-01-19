@@ -685,7 +685,8 @@ void Player::step_Update(float deltaTime)
 		successStep_ = 4;
 		nextStep_ = successStep_;
 		//現在制限されているステップじゃなかったら
-		if (std::find(checkstep_.getLockList_().begin(), checkstep_.getLockList_().end(), toAnimList.at(nextStep_)) == checkstep_.getLockList_().end()) {
+		auto locklist = checkstep_.getLockList_();
+		if (std::find(locklist.begin(), locklist.end(), toAnimList.at(nextStep_)) == locklist.end()) {
 			//成立UIを表示
 			appear_stepUI_.Notify(nextStep_);
 		}
