@@ -67,7 +67,8 @@ public:
 	float getTimer()const { return timeCount_; }
 
 	float getShootAngle()const { return shootAngle_; }
-
+	//攻撃力
+	int getAttackPower()const { return attackPower_; }
 	//停止時のステップアニメーション開始命令
 	virtual void startStepAnim()override;
 	//停止時のステップアニメーション更新命令
@@ -229,6 +230,8 @@ protected:
 	bool isJustTiming()const;
 
 protected:
+	//攻撃力
+	int attackPower_{ 5 };
 	//成立したステップ(0=非成立,1=クォーター,2=ハーフ,3=ターン,4横回転)
 	int successStep_;
 	//次のステップ

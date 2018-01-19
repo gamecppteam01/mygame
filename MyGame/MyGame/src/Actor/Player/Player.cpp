@@ -986,6 +986,7 @@ void Player::to_AttackMode()
 		}
 	}
 
+	attackPower_ = 20;
 }
 
 void Player::to_ShootMode()
@@ -997,6 +998,8 @@ void Player::to_ShootMode()
 	Vector3 shootVector = *bulletPosition_ - position_;
 	shootVector = shootVector.Normalize();
 	bulletVelocity_ = shootVector*(turnPower_*defaultTurnPower);
+
+	attackPower_ = 20;
 }
 
 void Player::to_ShootEndMode()
@@ -1082,6 +1085,8 @@ void Player::end_AttackMode()
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
 	if (ssUIManager != nullptr)ssUIManager->stepMatching(2);
 
+	attackPower_ = 5;
+
 }
 
 void Player::end_ShootMode()
@@ -1095,6 +1100,8 @@ void Player::end_ShootMode()
 
 	auto ssUIManager = std::static_pointer_cast<SpecifiedStepManager>(world_->findUI("SpecifiedStepManager"));
 	if (ssUIManager != nullptr)ssUIManager->stepMatching(4);
+
+	attackPower_ = 5;
 
 }
 

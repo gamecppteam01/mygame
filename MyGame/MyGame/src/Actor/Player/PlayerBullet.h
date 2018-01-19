@@ -42,6 +42,7 @@ public:
 	//停止時のステップアニメーション更新命令
 	virtual void stepAnimUpdate(float deltaTime)override;
 
+	int getAttackPower()const;
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param);

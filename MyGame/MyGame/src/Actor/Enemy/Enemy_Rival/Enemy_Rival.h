@@ -23,33 +23,17 @@ private:
 	// 描画
 	virtual void onDraw() const override;
 
-	//ステップ通知時の処理
-	virtual void JustStep()override;
 	virtual void onShadowDraw() const override;
 
 	virtual void updateNormal(float deltaTime)override;
-	virtual void updateTrack(float deltaTime)override;
 	virtual void to_Normal()override;
-	virtual void to_Track()override;
 	//周回ポイント一覧のうち最も近い点を求める
 	int getNearestPoint(const Vector3 & position);
 
 private:
-	//Track時専用のステップ更新
-	void justStepTrack();
-	//Trackの次モードへの移行
-	void toNextStepTrackMode(chooseAttackTargetMode nextMode);
-
-	//攻撃対象が存在している場合
-	void chooseStepAttackTarget(const ActorPtr& player);
-	//プレイヤーが1位だったら
-	void chooseStepAttackTopPlayer(const ActorPtr& player, const Vector3 basePos);
-	bool chooseStepIsAttack();
 
 	void setNextPosition();
 
-	//転倒カウントのセット
-	virtual void setCountDown();
 private:
 	//次のポイント
 	int nextPoint_{ 0 };

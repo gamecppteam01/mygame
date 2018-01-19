@@ -24,6 +24,8 @@ public:
 	EnemyBullet(IWorld* world, const std::string& name, const Vector3& position, BaseEnemy* enemy,MODEL_ID id, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
 
 	void hitOther(const Vector3& bound);
+
+	int getAttackPower()const;
 private:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;

@@ -20,6 +20,11 @@ void EnemyBullet::hitOther(const Vector3 & bound)
 	enemy_->hitOther(bound);
 }
 
+int EnemyBullet::getAttackPower() const
+{
+	return enemy_->getAttackPower();
+}
+
 void EnemyBullet::onMessage(EventMessage message, void * param)
 {
 }
@@ -42,6 +47,7 @@ void EnemyBullet::onCollide(Actor & other)
 {
 	if (other.getName() == "Player") {
 		Vector3 bound = mathBound(other);
+		enemy_->setCountDown(static_cast<Player*>(&other)->getAttackPower());
 		//相手を跳ね返す
 		static_cast<Player*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
@@ -54,11 +60,11 @@ void EnemyBullet::onCollide(Actor & other)
 			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
 			return;
 		}
-		enemy_->setCountDown();
 
 	}
 	if (other.getName() == "PlayerBullet") {
 		Vector3 bound = mathBound(other);
+		enemy_->setCountDown(static_cast<PlayerBullet*>(&other)->getAttackPower());
 		//相手を跳ね返す
 		static_cast<PlayerBullet*>(&other)->hitEnemy(name_, bound);
 		//自身も跳ね返る
@@ -71,18 +77,18 @@ void EnemyBullet::onCollide(Actor & other)
 			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
 			return;
 		}
-		enemy_->setCountDown();
 	}
 	else if (other.getName() == "ShootCenter") {
 		Vector3 bound = mathBound(other);
 		enemy_->setBoundPower(4);
 		//自身も跳ね返る
 		hitOther(-bound);
-		enemy_->setCountDown();
+		enemy_->setCountDown(20);
 	}
 	else if (other.getName() == "Enemy") {
 		//自分自身なら判定しない
 		if (static_cast<BaseEnemy*>(&other)->getPlayerNumber() == enemy_->playerNumber_) return;
+		enemy_->setCountDown(static_cast<BaseEnemy*>(&other)->getAttackPower());
 
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
@@ -96,11 +102,11 @@ void EnemyBullet::onCollide(Actor & other)
 			enemy_->change_State_and_Anim(BaseEnemy::Enemy_State::Normal, BaseEnemy::Enemy_Animation::Move_Forward);
 			return;
 		}
-		//setCountDown();
 	}
 
 	if (other.getName() == "EnemyBullet") {
 		if (static_cast<EnemyBullet*>(&other)->enemy_->getPlayerNumber() == enemy_->getPlayerNumber())return;
+		enemy_->setCountDown(static_cast<EnemyBullet*>(&other)->getAttackPower());
 
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
@@ -117,7 +123,6 @@ void EnemyBullet::onCollide(Actor & other)
 			return;
 		}
 
-		enemy_->setCountDown();
 	}
 
 }

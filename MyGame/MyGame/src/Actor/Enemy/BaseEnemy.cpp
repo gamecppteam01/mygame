@@ -19,8 +19,6 @@ static const float defBoundPower = 5.0f;
 static const float viewAngle = 60.0f;
 //動き出す視界角度
 static const float moveAngle = 20.0f;
-//基本的なダウン値
-static const int defDownCount = 1;
 
 //男->女でアニメーションを変換
 static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Animation> animConvList{
@@ -43,7 +41,7 @@ BaseEnemy::BaseEnemy(const std::string & name):
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
 	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this, bulletid,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
-	downCount_(defDownCount), prevHitActorNumber_(0),centerPosition_(position)
+	prevHitActorNumber_(0),centerPosition_(position)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));
@@ -125,10 +123,6 @@ void BaseEnemy::onUpdate(float deltaTime){
 		updateStep(deltaTime);
 		break;
 	}
-	case BaseEnemy::Enemy_State::Track: {
-		updateTrack(deltaTime);
-		break;
-	}
 	case BaseEnemy::Enemy_State::Attack: {
 		updateAttack(deltaTime);
 		break;
@@ -182,10 +176,11 @@ void BaseEnemy::onShadowDraw() const{
 void BaseEnemy::onCollide(Actor & other)
 {
 	if (other.getName() == "Player") {
+		auto pl = static_cast<Player*>(&other);
+		setCountDown(pl->getAttackPower());
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 
-		auto pl = static_cast<Player*>(&other);
 		pl->hitEnemy(name_, bound);
 		if (pl->getState() == Player::Player_State::Shoot)setBoundPower(4);
 		else setBoundPower(3);
@@ -200,12 +195,12 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		setCountDown();
 	}
 	else if (other.getName() == "PlayerBullet") {
+		auto pl = static_cast<PlayerBullet*>(&other);
+		setCountDown(pl->getAttackPower());
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
-		auto pl = static_cast<PlayerBullet*>(&other);
 		pl->hitEnemy(name_, bound);
 		if (pl->getPlayer()->getState() == Player::Player_State::Shoot)setBoundPower(4);
 		else setBoundPower(3);
@@ -219,18 +214,18 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		setCountDown();
 	}
 	else if (other.getName() == "ShootCenter") {
 		Vector3 bound = mathBound(other);
 		setBoundPower(4);
 		//自身も跳ね返る
 		hitOther(-bound);
-		setCountDown();
+		setCountDown(20);
 	}
 	else if (other.getName() == "Enemy") {
 		//自分自身なら判定しない
 		if (static_cast<BaseEnemy*>(&other)->getPlayerNumber() == playerNumber_) return;
+		setCountDown(static_cast<BaseEnemy*>(&other)->getAttackPower());
 
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
@@ -244,10 +239,10 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		//setCountDown();
 	}
 	else if (other.getName() == "EnemyBullet") {
 		if (static_cast<EnemyBullet*>(&other)->enemy_->playerNumber_ == playerNumber_)return;
+		setCountDown(static_cast<EnemyBullet*>(&other)->getAttackPower());
 		Vector3 bound = mathBound(other);
 		//相手を跳ね返す
 		static_cast<EnemyBullet*>(&other)->hitOther(bound);
@@ -260,7 +255,6 @@ void BaseEnemy::onCollide(Actor & other)
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
-		//setCountDown();
 	}
 
 }
@@ -279,6 +273,7 @@ void BaseEnemy::onCollideResult()
 	downTimer_.Action();
 	//ダウン値が溜まったら
 	if (downCount_ <= 0) {
+		downCount_ = defDownCount;
 		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down,false);
 	}
 }
@@ -452,10 +447,6 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 		to_Step(anim);
 		break;
 	}
-	case BaseEnemy::Enemy_State::Track:{
-		to_Track();
-		break;
-	}
 	case BaseEnemy::Enemy_State::Attack: {
 		to_Attack(anim);
 		break;
@@ -499,19 +490,17 @@ void BaseEnemy::to_Step(BaseEnemy::Enemy_Animation anim)
 
 }
 
-void BaseEnemy::to_Track()
-{
-	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(centerPosition_)+Vector3(Random::GetInstance().Range(-20.0f,20.0f),0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
-}
 
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
-	//3回ステップ来たら攻撃対象をリセット
-	nonTargetResetTimer_.Initialize();
-	nonTargetResetTimer_.AddEmpty(3);
-	nonTargetResetTimer_.Add([&] {prevHitActorNumber_ = -1; });
+	attackPower_ = 8;
+
+	////3回ステップ来たら攻撃対象をリセット
+	//nonTargetResetTimer_.Initialize();
+	//nonTargetResetTimer_.AddEmpty(3);
+	//nonTargetResetTimer_.Add([&] {prevHitActorNumber_ = -1; });
 	attackTarget_ = getNearestActor();
-	prevHitActorNumber_ = attackTarget_.lock()->getCharacterNumber();
+	//prevHitActorNumber_ = attackTarget_.lock()->getCharacterNumber();
 	//stepTime_ = animation_.GetAnimMaxTime((int)anim);
 	stepTime_ = 1.5f;
 }
@@ -559,15 +548,6 @@ void BaseEnemy::updateStep(float deltaTime)
 
 }
 
-void BaseEnemy::updateTrack(float deltaTime)
-{
-	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
-		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
-		return;
-	}
-	addVelocity_NextPosition(deltaTime);
-
-}
 void BaseEnemy::updateAttack(float deltaTime)
 {
 	stepTime_ -= deltaTime;
@@ -577,17 +557,17 @@ void BaseEnemy::updateAttack(float deltaTime)
 		return;
 	}
 
-	centerPosition_ += (attackTarget_.lock()->position() - centerPosition_).Normalize() *attackPower;
-
-	//ここから回転
-	Vector3 baseRotatePos = bulletDistance;
-	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
-	//回転を更新
-	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
-
-	Vector3 rotatePos = -bulletDistance;
-	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
-
+	switch (attackType_)
+	{
+	case BaseEnemy::AttackType::Half:
+		half(deltaTime);
+		break;
+	case BaseEnemy::AttackType::Spin:
+		spin(deltaTime);
+		break;
+	default:
+		break;
+	}
 }
 void BaseEnemy::updateDown(float deltaTime)
 {
@@ -606,6 +586,26 @@ void BaseEnemy::updateWakeUp(float deltaTime){
 }
 
 void BaseEnemy::updateFever(float deltaTime){
+}
+
+void BaseEnemy::half(float deltaTime)
+{
+	centerPosition_ += (attackTarget_.lock()->position() - centerPosition_).Normalize() *attackPower;
+
+	//ここから回転
+	Vector3 baseRotatePos = bulletDistance;
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
+	//回転を更新
+	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -20.0f*turnPower_);
+
+	Vector3 rotatePos = -bulletDistance;
+	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-stepTime_*5.0f));
+
+
+}
+
+void BaseEnemy::spin(float deltaTime)
+{
 }
 
 bool BaseEnemy::isCanStep() const
@@ -648,10 +648,10 @@ ActorPtr BaseEnemy::getNearestActor()
 	return attackTarget;
 }
 
-void BaseEnemy::setCountDown()
+void BaseEnemy::setCountDown(int downCount)
 {
 	//ダウンしてなければダウン値蓄積を有効化
 	if (state_ == Enemy_State::Down)return;
 	downTimer_.Initialize();
-	downTimer_.Add([this] {downCount_--; });
+	downTimer_.Add([this, downCount] {downCount_ -= downCount; });
 }

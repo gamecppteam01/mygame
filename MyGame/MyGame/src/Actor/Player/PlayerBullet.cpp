@@ -40,6 +40,11 @@ void PlayerBullet::stepAnimUpdate(float deltaTime)
 	animation_.Update(1.0f);
 }
 
+int PlayerBullet::getAttackPower() const
+{
+	return player_->getAttackPower();
+}
+
 void PlayerBullet::onMessage(EventMessage message, void * param)
 {
 }

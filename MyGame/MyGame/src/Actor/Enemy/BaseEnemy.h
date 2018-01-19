@@ -24,12 +24,15 @@ public:
 	enum class Enemy_State {
 		Normal,//通常時更新
 		Step,//ステップを開始する
-		Track,//追跡中
 		Attack,//攻撃
 		Down,//転倒
 		WakeUp,//起き上がり
 		Fever,//スポットライト獲得中
 
+	};
+	enum class AttackType {
+		Half,
+		Spin
 	};
 public:
 	BaseEnemy(const std::string& name);
@@ -45,7 +48,7 @@ public:
 	Enemy_State getEnemyState()const { return state_; }
 
 	//転倒カウントのセット
-	virtual void setCountDown();
+	virtual void setCountDown(int downCount);
 
 	virtual Vector3& position()override {
 		return centerPosition_;
@@ -62,6 +65,10 @@ public:
 
 	MODEL_ID getModelID()const;
 	MODEL_ID getBulletModelID()const;
+
+	//攻撃力
+	int getAttackPower()const { return attackPower_; }
+
 protected:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -115,7 +122,6 @@ protected:
 
 	virtual void to_Normal();
 	virtual void to_Step(Enemy_Animation anim);
-	virtual void to_Track();
 	virtual void to_Attack(Enemy_Animation anim);
 	virtual void to_Down();
 	virtual void to_WakeUp();
@@ -123,15 +129,19 @@ protected:
 
 	virtual void updateNormal(float deltaTime);
 	virtual void updateStep(float deltaTime);
-	virtual void updateTrack(float deltaTime);
 	virtual void updateAttack(float deltaTime);
 	virtual void updateDown(float deltaTime);
 	virtual void updateWakeUp(float deltaTime);
 	virtual void updateFever(float deltaTime);
 
+	virtual void half(float deltaTime);
+	virtual void spin(float deltaTime);
+
 	//ステップ可能か
 	bool isCanStep()const;
 protected:
+	//攻撃力
+	int attackPower_{ 5 };
 	float stepTime_{ 0.0f };
 	Vector3 velocity_;
 	//はじかれ時のベクトル
@@ -159,8 +169,11 @@ protected:
 	//選手番号
 	int playerNumber_;
 
+	//基本的なダウン値
+	int defDownCount{ 10 };
 	//ダウンするまでのカウント
-	int downCount_;
+	int downCount_{ defDownCount };
+
 	//ダウンカウントの変更タイマー
 	MethodTimer downTimer_;
 	//攻撃対象からの除外設定解除タイマー
@@ -175,6 +188,9 @@ protected:
 
 	Enemy_State state_{ Enemy_State::Normal };
 	Enemy_State prevState_{ Enemy_State::Normal };
+
+	//攻撃タイプ
+	AttackType attackType_{ AttackType::Half };
 
 	//前に当たった相手の番号
 	int prevHitActorNumber_{ 0 };
