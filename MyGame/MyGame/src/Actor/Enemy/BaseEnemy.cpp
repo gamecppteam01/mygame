@@ -135,6 +135,10 @@ void BaseEnemy::onUpdate(float deltaTime){
 		updateWakeUp(deltaTime);
 		break;
 	}
+	case BaseEnemy::Enemy_State::Track: {
+		updateTrack(deltaTime);
+		break;
+	}
 	case BaseEnemy::Enemy_State::Fever: {
 		updateFever(deltaTime);
 		break;
@@ -459,6 +463,11 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 		to_WakeUp();
 		break;
 	}
+	case BaseEnemy::Enemy_State::Track: {
+		to_Track();
+		break;
+	}
+
 	case BaseEnemy::Enemy_State::Fever:
 		to_Fever();
 		break;
@@ -490,6 +499,10 @@ void BaseEnemy::to_Step(BaseEnemy::Enemy_Animation anim)
 
 }
 
+void BaseEnemy::to_Track()
+{
+	nextPosition_ = world_->getCanChangedScoreMap().getNextPoint(centerPosition_) + Vector3(Random::GetInstance().Range(-20.0f, 20.0f), 0.0f, Random::GetInstance().Range(-20.0f, 20.0f));
+}
 
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
@@ -545,6 +558,15 @@ void BaseEnemy::updateStep(float deltaTime)
 		return;
 	}
 
+
+}
+void BaseEnemy::updateTrack(float deltaTime)
+{
+	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(nextPosition_.x, nextPosition_.z)) <= 10.0f) {
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
+		return;
+	}
+	addVelocity_NextPosition(deltaTime);
 
 }
 

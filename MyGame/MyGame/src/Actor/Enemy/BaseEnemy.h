@@ -27,6 +27,7 @@ public:
 		Attack,//攻撃
 		Down,//転倒
 		WakeUp,//起き上がり
+		Track,//追跡
 		Fever,//スポットライト獲得中
 
 	};
@@ -125,6 +126,7 @@ protected:
 	virtual void to_Attack(Enemy_Animation anim);
 	virtual void to_Down();
 	virtual void to_WakeUp();
+	virtual void to_Track();
 	virtual void to_Fever();
 
 	virtual void updateNormal(float deltaTime);
@@ -132,6 +134,7 @@ protected:
 	virtual void updateAttack(float deltaTime);
 	virtual void updateDown(float deltaTime);
 	virtual void updateWakeUp(float deltaTime);
+	virtual void updateTrack(float deltaTime);
 	virtual void updateFever(float deltaTime);
 
 	virtual void half(float deltaTime);
