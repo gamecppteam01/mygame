@@ -61,10 +61,15 @@ static const std::map<Player_Animation, PlayerBullet::PlayerBullet_Animation> an
 	{ Player_Animation::Turn,PlayerBullet::PlayerBullet_Animation::Turn },
 	{ Player_Animation::Reversal,PlayerBullet::PlayerBullet_Animation::Reversal },
 	{ Player_Animation::Stumble,PlayerBullet::PlayerBullet_Animation::Stumble }
-
-
 };
 
+static const std::map<int, Player_Animation> toAnimList{
+	{ 0,Player_Animation::Move_Forward },//例外
+	{ 1,Player_Animation::Quarter },//クォーター変換
+	{ 2,Player_Animation::Half },//ハーフ変換
+	{ 3,Player_Animation::Turn },//ターン変換
+	{ 4,Player_Animation::Shoot }//スピン変換
+}; 
 Player::Player(IWorld* world, const std::string& name, const Vector3& position, int playerNumber) :
 	Actor(world, name, position, std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f),
 		Matrix::Identity, 20.0f, 3.0f)), upVelocity_(0.0f), velocity_(Vector3::Zero), gravity_(0.0f), animation_(),
@@ -574,24 +579,24 @@ void Player::idle_Update(float deltaTime)
 	//	return;
 	//}
 	if (isChangeStep()) {
-		if (isJustTiming()) {
+		//if (isJustTiming()) {
 			change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left);//)playerUpdateFunc_[state_](deltaTime);
-		}
-		else {
-			std::vector<Vector2> stumbleList{
-				Vector2::Right,
-				Vector2::Left,
-				Vector2::Up,
-				Vector2::Down
-			};
-			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
-			
-			//成功通知
-			auto stepUI = world_->findUI("StepUI");
-			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
-			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
-
-		}
+		//}
+		//else {
+		//	std::vector<Vector2> stumbleList{
+		//		Vector2::Right,
+		//		Vector2::Left,
+		//		Vector2::Up,
+		//		Vector2::Down
+		//	};
+		//	stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+		//	
+		//	//成功通知
+		//	auto stepUI = world_->findUI("StepUI");
+		//	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
+		//	change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
+		//
+		//}
 		return;
 	}
 	upVelocity_ -= upVelocity_*0.5f;
@@ -620,24 +625,24 @@ void Player::move_Update(float deltaTime)
 	//}
 
 	if (isChangeStep()) {
-		if (isJustTiming()) {
+		//if (isJustTiming()) {
 			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
-		}
-		else {
-			std::vector<Vector2> stumbleList{
-				Vector2::Right,
-				Vector2::Left,
-				Vector2::Up,
-				Vector2::Down
-			};
-			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+		//}
+		//else {
+		//	std::vector<Vector2> stumbleList{
+		//		Vector2::Right,
+		//		Vector2::Left,
+		//		Vector2::Up,
+		//		Vector2::Down
+		//	};
+		//	stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-			//成功通知
-			auto stepUI = world_->findUI("StepUI");
-			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
-			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
+		//	//成功通知
+		//	auto stepUI = world_->findUI("StepUI");
+		//	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
+		//	if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
-		}
+		//}
 		return;
 	}
 
@@ -679,6 +684,11 @@ void Player::step_Update(float deltaTime)
 	if (std::abs(gyroCheck_.getAngle()) >= 300.0f) {
 		successStep_ = 4;
 		nextStep_ = successStep_;
+		//現在制限されているステップじゃなかったら
+		if (std::find(checkstep_.getLockList_().begin(), checkstep_.getLockList_().end(), toAnimList.at(nextStep_)) == checkstep_.getLockList_().end()) {
+			//成立UIを表示
+			appear_stepUI_.Notify(nextStep_);
+		}
 		gyroCheck_.initAngle();
 		Sound::GetInstance().PlaySE(SE_ID::STEP_SUCCESS_SE);//音成立
 	}
@@ -686,6 +696,12 @@ void Player::step_Update(float deltaTime)
 		gyroCheck_.initRotate();
 		if (nextStep_ != successStep_)Sound::GetInstance().PlaySE(SE_ID::STEP_SUCCESS_SE);//音成立
 		nextStep_ = successStep_;
+		//現在制限されているステップじゃなかったら
+		auto locklist = checkstep_.getLockList_();
+		if (std::find(locklist.begin(), locklist.end(), toAnimList.at(nextStep_)) == locklist.end()) {
+			//成立UIを表示
+			appear_stepUI_.Notify(nextStep_);
+		}
 	}
 
 }
@@ -841,7 +857,7 @@ void Player::to_StepMode()
 	gyroCheck_.initialize();
 	successStep_ = 0;
 	nextStep_ = 0;
-
+	appear_stepUI_.Notify(0);
 	stepEffect_.start();
 }
 

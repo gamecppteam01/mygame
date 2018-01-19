@@ -17,6 +17,8 @@ public:
 
 	bool isEndCheck();//ğŒ‚ğ‘S•”–‚½‚µ‚½‚©
 	bool isLast();//ğŒ‚ªŒã1ŒÂ‚©
+
+	std::list<Player_Animation> getLockList_()const;//§ŒÀƒŠƒXƒgæ“¾
 private:
 	int currentCheckKey_;
 	std::vector<std::list<Player_Animation>> lockList_;

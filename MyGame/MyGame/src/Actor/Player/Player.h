@@ -276,7 +276,7 @@ protected:
 	//よろけから回復するまでの時間
 	float stumbleResurrectTime_{ 0.5f };
 
-	std::function<ComboChecker::ComboType()> checkFunc_;
+	std::function<ComboChecker::ComboType()> checkFunc_;//コンボの成否判定関数
 
 	bool isFirst_{ true };//初回更新
 	//女関連
@@ -299,11 +299,11 @@ protected:
 	//何のStepが出るかのUI
 	Appear_StepUI appear_stepUI_;
 
-	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;
-	std::map<Player_State, std::function<void()>> playerEndModeFunc_;
-	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;
+	std::map<Player_State, std::function<void(float)>> playerUpdateFunc_;//更新リスト
+	std::map<Player_State, std::function<void()>> playerEndModeFunc_;//終了時リスト
+	std::map<Player_State, std::function<void()>> playerToNextModeFunc_;//開始時リスト
 
-	std::list<SE_ID> restartSEList_;
+	std::list<SE_ID> restartSEList_;//再開時に鳴らすSEリスト
 
 	int effectID_{ -1 };
 

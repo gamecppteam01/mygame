@@ -56,3 +56,11 @@ bool CheckStepTask::isLast()
 {
 	return currentCheckKey_== lockList_.size()-1;
 }
+
+std::list<Player_Animation> CheckStepTask::getLockList_() const
+{
+	//全部終わってたら空のやつ
+	if (lockList_.size() <= currentCheckKey_)return std::list<Player_Animation>();
+	//終わって無かったらその時点での制限リストを返す
+	return lockList_.at(currentCheckKey_);
+}
