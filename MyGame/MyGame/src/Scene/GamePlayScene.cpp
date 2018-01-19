@@ -207,8 +207,9 @@ void GamePlayScene::draw() const {
 	}
 	startDraw_.draw(Vector2{ WINDOW_WIDTH*0.5f,WINDOW_HEIGHT*0.5f });
 
-	if (state_ == GamePlayState::Pause)pause_.draw();
-	showrank_->draw();
+	if (state_ == GamePlayState::Pause)pause_.draw(), showrank_->pause();
+	if (state_ != GamePlayState::Pause) showrank_->restart();
+	if (state_ == GamePlayState::Play) showrank_->draw();
 }
 
 //I—¹

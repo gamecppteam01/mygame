@@ -13,9 +13,13 @@ public:
 	void update(float deltaTime) ;
 	void draw() const ;
 
+	void pause();
+	void restart();
+
 private:
 	IWorld * world_;
 	ScoreData* score_;
 	Vector3 position_;
-	SPRITE_ID id_;
+	int id_;
+	bool pause_{ false };
 };
