@@ -26,7 +26,7 @@
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
-#include"../Fade/FadePanel.h"
+#include"../Effect/Fade/FadePanel.h"
 #include "../UI/EndUI.h"
 #include "../UI/Song_Title_UI.h"
 #include"../Graphic/EffekseerManager.h"
@@ -139,10 +139,10 @@ void GamePlayScene::start() {
 
 	world_.addStepTimeListener(player);
 
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(-45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(150.0f, 0.0f, 75.0f), Matrix::CreateRotationY(45.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(150.0f, 0.0f, -75.0f), Matrix::CreateRotationY(135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-150.0f, 0.0f, -75.0f), Matrix::CreateRotationY(-135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-180.0f, 0.0f, 90.0f), Matrix::CreateRotationY(-45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(180.0f, 0.0f, 90.0f), Matrix::CreateRotationY(45.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(180.0f, 0.0f, -90.0f), Matrix::CreateRotationY(135.0f)));
+	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-180.0f, 0.0f, -90.0f), Matrix::CreateRotationY(-135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_));
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();

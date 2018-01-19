@@ -54,41 +54,41 @@ void Audience::draw(const Vector3& position, const Vector3& rotation, const int&
 	case 1:
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x - 200 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, num_[i+1][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x - 230 + 50 * i,position.y + 8 * j,position.z + 25 * j }, 10.0f, num_[i+1][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x - 42 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, num_[i+1][j+2], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x - 45 + 50 * i,position.y + 8 * j,position.z + 25 * j }, 10.0f, num_[i+1][j+2], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x + 110 + 50 * i,position.y + 7 * j,position.z + 25 * j }, 10.0f, num_[i+3][j], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x + 140 + 50 * i,position.y + 8 * j,position.z + 25 * j }, 10.0f, num_[i+3][j], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		break;
 	case 2:
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, num_[i][j], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x - 20 * j,position.y + 7 * j,position.z + 55 - 50 * i }, 10.0f, num_[i][j], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x - 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, num_[i+2][j+2], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x - 20 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, num_[i+2][j+2], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		break;
 	case 3:
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 50 - 50 * i }, 10.0f, num_[i+1][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x + 20 * j,position.y + 7 * j,position.z + 55 - 50 * i }, 10.0f, num_[i+1][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		for (int j = 0; j < 4; j++) {
 			for (int i = 0; i < 3; i++) {
-				DrawSprite3D(Vector3{ position.x + 22 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, num_[i+2][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
+				DrawSprite3D(Vector3{ position.x + 20 * j,position.y + 7 * j,position.z + 200 - 50 * i }, 10.0f, num_[i+2][j+3], 255, 255, 255, 255, rotation.y, rotation.x, rotation.z);
 			}
 		}
 		break;

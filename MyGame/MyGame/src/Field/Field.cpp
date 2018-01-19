@@ -97,23 +97,23 @@ void Field::draw() const {
 	//MV1DrawModel(wallUp_);
 	
 	MV1SetRotationXYZ(audience_, Vector3{ to_radian(0.0f),to_radian(180.0f),to_radian(0.0f) });
-	MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.05f,1.0f,1.0f } *13.5f));
-	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{ 3.0f,0.0f,135.0f }));
+	MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.25f,1.0f,1.0f } *13.5f));
+	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{ 3.0f,0.0f,180.0f }));
 	MV1DrawModel(audience_);
 
 	MV1SetRotationXYZ(audience_, Vector3{ to_radian(0.0f),to_radian(90.0f),to_radian(0.0f) });
 	MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.0f,1.0f,1.0f } *13.5f));
-	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{-225.0f,0.0f, 0.0f }));
+	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{-270.0f,0.0f, 0.0f }));
 	MV1DrawModel(audience_);
 
 	MV1SetRotationXYZ(audience_, Vector3{ to_radian(0.0f),to_radian(270.0f),to_radian(0.0f) });
 	MV1SetScale(audience_, Vector3::Vector3ToVECTOR(Vector3{ 1.0f,1.0f,1.0f } * 13.5f));
-	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{225.0f,0.0f, 0.0f }));
+	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{270.0f,0.0f, 0.0f }));
 	MV1DrawModel(audience_);
 
-	audience.draw(Vector3{0.0f,56.0f,175.0f}, Vector3{ -90.0f,0.0f,0.0f }, 1);
-	audience.draw(Vector3{ -246.0f,51.0f,0.0f }, Vector3{ 0.0f,-90.0f,-90.0f }, 2);
-	audience.draw(Vector3{246.0f,51.0f,0.0f},   Vector3{ 0.0f,90.0f,90.0f },3);
+	audience.draw(Vector3{0.0f,57.0f,210.0f}, Vector3{ -90.0f,0.0f,0.0f }, 1);
+	audience.draw(Vector3{ -295.0f,50.0f,0.0f }, Vector3{ 0.0f,-90.0f,-90.0f }, 2);
+	audience.draw(Vector3{295.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,90.0f },3);
 }
 
 // フィールドのハンドル取得
@@ -144,10 +144,10 @@ Vector3 Field::CorrectPosition(const Vector3 & position)
 
 float Field::getXWidth() const
 {
-	return 280.0f*FIELD_SCALE;
+	return 292.5f*FIELD_SCALE;
 }
 
 float Field::getZWidth() const
 {
-	return 130.0f*FIELD_SCALE;
+	return 142.5f*FIELD_SCALE;
 }
