@@ -579,24 +579,24 @@ void Player::idle_Update(float deltaTime)
 	//	return;
 	//}
 	if (isChangeStep()) {
-		//if (isJustTiming()) {
+		if (isJustTiming()) {
 			change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left);//)playerUpdateFunc_[state_](deltaTime);
-		//}
-		//else {
-		//	std::vector<Vector2> stumbleList{
-		//		Vector2::Right,
-		//		Vector2::Left,
-		//		Vector2::Up,
-		//		Vector2::Down
-		//	};
-		//	stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
-		//	
-		//	//成功通知
-		//	auto stepUI = world_->findUI("StepUI");
-		//	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
-		//	change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
-		//
-		//}
+		}
+		else {
+			std::vector<Vector2> stumbleList{
+				Vector2::Right,
+				Vector2::Left,
+				Vector2::Up,
+				Vector2::Down
+			};
+			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+			
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
+			change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble);//)playerUpdateFunc_[state_](deltaTime);
+		
+		}
 		return;
 	}
 	upVelocity_ -= upVelocity_*0.5f;
@@ -625,24 +625,24 @@ void Player::move_Update(float deltaTime)
 	//}
 
 	if (isChangeStep()) {
-		//if (isJustTiming()) {
+		if (isJustTiming()) {
 			if (change_State_and_Anim(Player_State::Step, Player_Animation::Step_Left))playerUpdateFunc_[state_](deltaTime);
-		//}
-		//else {
-		//	std::vector<Vector2> stumbleList{
-		//		Vector2::Right,
-		//		Vector2::Left,
-		//		Vector2::Up,
-		//		Vector2::Down
-		//	};
-		//	stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
+		}
+		else {
+			std::vector<Vector2> stumbleList{
+				Vector2::Right,
+				Vector2::Left,
+				Vector2::Up,
+				Vector2::Down
+			};
+			stumbleDirection_ = stumbleList[Random::GetInstance().Range(0, 3)];
 
-		//	//成功通知
-		//	auto stepUI = world_->findUI("StepUI");
-		//	if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
-		//	if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
+			//成功通知
+			auto stepUI = world_->findUI("StepUI");
+			if (stepUI != nullptr)stepUI->Notify(Notification::Call_StepFailed);
+			if (change_State_and_Anim(Player_State::Stumble, Player_Animation::Stumble))playerUpdateFunc_[state_](deltaTime);
 
-		//}
+		}
 		return;
 	}
 
@@ -1229,5 +1229,5 @@ bool Player::isJustTiming() const
 {
 	//return world_->getCanChangedTempoManager().getBeatCount() % 3 == 0;
 	if (musicScore_.getNotice())return true;
-	return (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1;
+	return musicScore_.isJust();// (world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) >= world_->getCanChangedTempoManager().getMusicCount() - 2;
 }

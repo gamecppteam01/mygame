@@ -100,7 +100,7 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	Color c{ 0,130,200,255 };//ゲージ色
 	Color fc{ 0,0,0,255 };//枠色
 
-	if (percent >= 75.0f)c=Color(200, 130, 0,255);//4小節毎に判定
+	if (isJust())c=Color(200, 130, 0,255);//4小節毎に判定
 
 	//ライトに入ってる時限定の処理
 	if (isNotice_) {
@@ -115,7 +115,7 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE),-90.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), fc.r, fc.g, fc.b, fc.a, -90.0f);
+	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), fc.r, fc.g, fc.b, fc.a, -180.0f);
 
 	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
 	//DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
@@ -179,4 +179,10 @@ void MusicScoreManager::setNotice(bool notice)
 		EffekseerManager::GetInstance().StopEffect3D(handle_);
 	}
 	isNotice_ = notice;
+}
+
+bool MusicScoreManager::isJust() const
+{
+	float percent = currentMeasure_ / (world_->getCanChangedTempoManager().getMusicCount()*world_->getCanChangedTempoManager().getBeat())*100.f;
+	return percent >= 50.0f;
 }

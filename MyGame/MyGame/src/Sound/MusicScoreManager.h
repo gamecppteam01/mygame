@@ -18,6 +18,8 @@ public:
 
 	bool getNotice()const;
 	void setNotice(bool notice);
+
+	bool isJust()const;
 private:
 	Vector2 scoreSize_{ Vector2::Zero };
 	IWorld* world_{ nullptr };
