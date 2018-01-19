@@ -11,9 +11,11 @@
 #include"../Graphic/TextScreen.h"
 #include"../Method/MethodExecutor.h"
 #include"Screen/DrawStartSprite.h"
+#include"../UI/ShowRankUI.h"
 
 class SpecifiedStepManager;
 class StepComboManager;
+class ShowRankUI;
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
 public:
@@ -60,6 +62,8 @@ private:
 	bool isStart_;
 	std::shared_ptr<SpecifiedStepManager> specifiedStepManager_;
 	std::shared_ptr<StepComboManager> stepcomboManager_;
+
+	std::unique_ptr<ShowRankUI> showrank_;
 	float timeCount_{ 3.0f };//スタート時のタイマー
 	int currentCount_{ 4 };//スタートで到達したカウント
 	PauseScreen pause_;

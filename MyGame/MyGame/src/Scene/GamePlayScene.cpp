@@ -208,6 +208,7 @@ void GamePlayScene::draw() const {
 	startDraw_.draw(Vector2{ WINDOW_WIDTH*0.5f,WINDOW_HEIGHT*0.5f });
 
 	if (state_ == GamePlayState::Pause)pause_.draw();
+	showrank_->draw();
 }
 
 //終了
@@ -290,6 +291,7 @@ void GamePlayScene::update_Play(float deltaTime) {
 
 	//エフェクト更新
 	playerEffectDraw_.Update(deltaTime);
+	showrank_->update(deltaTime);
 }
 
 //ポーズ更新
@@ -450,6 +452,7 @@ void GamePlayScene::settingUI() {
 	world_.addUI(specifiedStepManager_);
 	//stepcomboManager_ = std::make_shared<StepComboManager>(&world_);
 	//world_.addUI(stepcomboManager_);
+	showrank_ = std::make_unique<ShowRankUI>(&world_);
 	auto cd = std::make_shared<ComboDrawer>();
 	world_.addUI(cd);
 }
