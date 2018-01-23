@@ -26,7 +26,7 @@
 #include"../Game/Time.h"
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
-#include"../Effect/Fade/FadePanel.h"
+#include"../Fade/FadePanel.h"
 #include "../UI/EndUI.h"
 #include "../UI/Song_Title_UI.h"
 #include"../Graphic/EffekseerManager.h"
@@ -128,6 +128,7 @@ void GamePlayScene::start() {
 		world_.addActor(ActorGroup::ENEMY, enemy);
 		world_.addStepTimeListener(enemy);
 	}
+
 	//playerNumber++;
 	//auto enemy2 = std::make_shared<Enemy_Power>(&world_, "Enemy", Vector3::Up*15.0f + Vector3(70.f, 0.f, -60.f), playerNumber);
 	//world_.addActor(ActorGroup::ENEMY, enemy2);
