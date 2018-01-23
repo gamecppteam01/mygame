@@ -244,7 +244,7 @@ bool Judgement_SpotLight::IsInEnemy()
 	return IsInEnemy_;
 }
 
-int Judgement_SpotLight::getCountEnemy(int enemy)
+int Judgement_SpotLight::getCountEnemy()
 {
 	return count_;
 }

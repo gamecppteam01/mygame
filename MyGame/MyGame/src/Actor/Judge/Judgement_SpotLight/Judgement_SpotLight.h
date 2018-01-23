@@ -44,7 +44,7 @@ public:
 	//スポットライト内に敵がいるかどうか？
 	bool IsInEnemy();
 	//スポットライト内に敵が何体いるか？
-	int getCountEnemy(int enemy);
+	int getCountEnemy();
 
 private:
 	void SetUp(float deltaTime);
