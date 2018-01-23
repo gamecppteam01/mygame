@@ -41,6 +41,11 @@ public:
 	//スコアの取得
 	bool getIsNotice(int num)const;
 
+	//スポットライト内に敵がいるかどうか？
+	bool IsInEnemy();
+	//スポットライト内に敵が何体いるか？
+	int getCountEnemy(int enemy);
+
 private:
 	void SetUp(float deltaTime);
 	void ReadyUpdate(float deltaTime);
@@ -70,6 +75,7 @@ private:
 	std::map<LightMood, Spot_Data> m_LightData;
 	//カウント
 	int m_Count{ 0 };
+	int count_{ 0 };
 	//現在の時間
 	float m_NowTimer{ 0.0f };
 	//最大の時間
@@ -78,4 +84,6 @@ private:
 	//float out_angle{ 0.7f }, in_angle{ 0.6f }, atten0{ 0.75f }, atten1{ 0.003f };
 
 	std::map<State, std::function<void(float deltaTime)>> m_StateUpdateFunc;
+
+	bool IsInEnemy_{ false };
 };

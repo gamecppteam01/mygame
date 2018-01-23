@@ -51,12 +51,31 @@ void Judgement_SpotLight::onCollide(Actor & other) {
 
 //判定
 bool Judgement_SpotLight::Judgement(ActorPtr& target) {
+
+	switch (m_State)
+	{
+	case State::CenterLighting:
+		if (is_In_Distans(target) == true) {
+			IsInEnemy_ = true;
+			count_++;
+		}
+		return false;
+		break;
+	case State::SpotLighting:
+		if (is_In_Distans(target) == true) {
+			return true;
+		}
+	default:
+		break;
+	}
+	if (m_State == State::SpotLighting) count_ = 0;
 	if (m_State != State::SpotLighting) return false;
 
 	if (is_In_Distans(target) == true) {
 		return true;
 	}
 	return false;
+
 }
 
 bool Judgement_SpotLight::Judgement(const Vector3 & target) {
@@ -91,7 +110,6 @@ void Judgement_SpotLight::SetUp(float deltaTime) {
 
 	if (m_Timer <= 0.0f) {
 		m_Timer = 2.0f;
-		world_->sendMessage(EventMessage::Lighting, (void*)&position_);
 		m_State = State::Ready;
 		return;
 	}
@@ -123,6 +141,7 @@ void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
 	Color color = Color::Lerp(Color(0.5f, 0.5f, 0.5f, 0.5f), Color(0.1f, 0.1f, 0.1f, 0.1f), t);
 	m_LightHandle.setGlobalAmbientLight(color);
+	world_->sendMessage(EventMessage::Lighting, (void*)&position_);
 
 	//暗くなったらセンターライトの点灯
 	if (m_NowTimer >= m_MaxTimer) { m_LightHandle.setLightEnableHandle("Spot", true); }
@@ -218,4 +237,14 @@ void Judgement_SpotLight::TimeJudge(ScoreData* data) {
 		}
 
 	}
+}
+
+bool Judgement_SpotLight::IsInEnemy()
+{
+	return IsInEnemy_;
+}
+
+int Judgement_SpotLight::getCountEnemy(int enemy)
+{
+	return count_;
 }
