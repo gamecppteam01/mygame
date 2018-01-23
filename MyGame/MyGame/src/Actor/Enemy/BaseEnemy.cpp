@@ -160,7 +160,7 @@ void BaseEnemy::onUpdate(float deltaTime){
 
 	bulletUpdate(deltaTime);
 
-
+	timer_ += deltaTime;
 }
 
 void BaseEnemy::onDraw() const
@@ -395,6 +395,16 @@ void BaseEnemy::searchTarget(float deltaTime)
 		else if(leftAngle < 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), rotateAngle);
 		
 	}
+}
+//一定距離内にいるか？
+bool BaseEnemy::is_In_Distans(ActorPtr & target, const Vector3& mypos, float distance) const
+{
+	float result;
+	//ターゲットと自分の距離を求める
+	result = Vector3::Distance(target->position(), mypos);
+	//自分とターゲットとの距離が一定以内だったら真
+	if (result <= distance) { return true; }
+	return false;
 }
 
 void BaseEnemy::bulletUpdate(float deltaTime)

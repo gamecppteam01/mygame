@@ -12,6 +12,7 @@
 class ScoreManager {
 public:
 	//コンストラクタ
+	ScoreManager() = default;
 	ScoreManager(IWorld* world);
 	//デストラクタ
 	~ScoreManager();
@@ -61,4 +62,6 @@ private:
 	//カウント
 	int m_Count;
 	int timeCount_;
+	//1位の選手データ
+	ScoreData m_FirstData;
 };

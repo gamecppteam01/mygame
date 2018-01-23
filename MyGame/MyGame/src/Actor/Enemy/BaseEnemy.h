@@ -113,6 +113,8 @@ protected:
 
 	//指定位置への移動
 	void addVelocity_NextPosition(float deltaTime);
+	//一定距離内にいるか？
+	bool is_In_Distans(ActorPtr& target,const Vector3& mypos, float distance = 60.0f) const;
 
 	//アニメーションの変更
 	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true);
@@ -166,6 +168,9 @@ protected:
 
 	//イージングタイマー
 	float speedEaseTimer_{ 0.0f };
+
+	//タイマー
+	float timer_{ 0.0f };
 
 	ActorPtr target_;
 

@@ -29,6 +29,7 @@ void ScoreManager::initialize(){
 		std::shared_ptr<Player> player = std::static_pointer_cast<Player>(p);
 		add_Player(0, player->getPlayerNumber(), 1.0f,1, p);//選手の追加
 		m_NumberList.push_back(player->getPlayerNumber());	//選手番号リストに追加
+		m_FirstData = m_ScoreDataList[player->getPlayerNumber()];
 	}
 
 	std::list<ActorPtr> enemyList;
@@ -66,6 +67,10 @@ void ScoreManager::add_Player(int score, int number ,float rate, int rank,const 
 //スコアの加算
 void ScoreManager::addScore(int number, int score){
 	m_ScoreDataList[number].score_ += score * m_ScoreDataList[number].scoreRate_;
+
+	if (m_FirstData.score_ < m_ScoreDataList[number].score_) {
+		m_FirstData = m_ScoreDataList[number];
+	}
 }
 
 //登録されているキャラ数を返す
@@ -100,14 +105,15 @@ float ScoreManager::mathScoreRata_All_Not(const Vector3 & target)
 
 //最大スコアを返す
 int ScoreManager::getMaxScore() const{
-	int maxScore = 0;
-	for (auto n : m_NumberList) {
-		if (maxScore < m_ScoreDataList.at(n).score_) {
-			maxScore = m_ScoreDataList.at(n).score_;
-		}
-	}
-	//maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
-	return maxScore;
+	//int maxScore = 0;
+	//for (auto n : m_NumberList) {
+	//	if (maxScore < m_ScoreDataList.at(n).score_) {
+	//		maxScore = m_ScoreDataList.at(n).score_;
+	//	}
+	//}
+	////maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
+	//return maxScore;
+	return m_FirstData.score_;
 }
 
 ScoreData* ScoreManager::getScoreData(int num)
