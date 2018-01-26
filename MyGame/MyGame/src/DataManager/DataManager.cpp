@@ -48,3 +48,13 @@ void DataManager::setIsTutorial(bool flag){
 bool DataManager::getIsTutorial() const{
 	return is_Tutorial_;
 }
+
+void DataManager::setCount(int count)
+{
+	count_ = count;
+}
+
+int DataManager::getCount() const
+{
+	return count_;
+}

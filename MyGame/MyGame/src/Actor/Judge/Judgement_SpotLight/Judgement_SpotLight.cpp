@@ -8,6 +8,7 @@
 #include"../../../ScoreManager/ScoreManager.h"
 #include"../../../ScoreManager/ScoreData.h"
 #include"../../../Input/Keyboard.h"
+#include"../../../DataManager/DataManager.h"
 #include<list>
 #include<minmax.h>
 
@@ -58,6 +59,7 @@ bool Judgement_SpotLight::Judgement(ActorPtr& target) {
 		if (is_In_Distans(target) == true) {
 			IsInEnemy_ = true;
 			count_++;
+			DataManager::GetInstance().setCount(count_);
 		}
 		return false;
 		break;

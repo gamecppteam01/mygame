@@ -28,6 +28,9 @@ public:
 	void setIsTutorial(bool flag);
 	bool getIsTutorial() const;
 
+	void setCount(int count);
+	int getCount() const;
+
 private:
 	std::list<ScoreData> datas_;
 	std::map<MODEL_ID, ShadowMap_Data> shdowData_;
@@ -37,4 +40,7 @@ private:
 
 	//チュートリアルをしているか？
 	bool is_Tutorial_{ true };
+
+	//スポットライト内にいる数
+	int count_;
 };

@@ -43,6 +43,8 @@ public:
 
 	//スポットライト内に敵がいるかどうか？
 	bool IsInEnemy();
+	//
+	bool IsGetSpotLight();
 	//スポットライト内に敵が何体いるか？
 	int getCountEnemy();
 
@@ -86,4 +88,5 @@ private:
 	std::map<State, std::function<void(float deltaTime)>> m_StateUpdateFunc;
 
 	bool IsInEnemy_{ false };
+	bool IsGetSpotLight_{ false };
 };
