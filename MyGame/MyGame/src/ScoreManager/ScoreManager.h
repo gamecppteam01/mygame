@@ -49,6 +49,8 @@ public:
 	void getScoreDataMap(std::map<int, ScoreData*> &map);
 	//1位から順に入ったScoreData型のリストを返す
 	void getRankingList(std::list<ScoreData>& list);
+	//センターライト内に入っている選手番号のリストを返す
+	std::list<int> getPlayerNumberList();
 
 private:
 	//ワールド

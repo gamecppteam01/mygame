@@ -38,6 +38,8 @@ public:
 	virtual bool Judgement(ActorPtr& target) override;
 	virtual bool Judgement(const Vector3& target) override;
 
+	//センターライト時に敵が範囲内にいるか？
+	bool In_Range(ActorPtr& target);
 	//スコアの取得
 	bool getIsNotice(int num)const;
 

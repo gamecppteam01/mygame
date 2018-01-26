@@ -67,16 +67,17 @@ bool Judgement_SpotLight::Judgement(ActorPtr& target) {
 		if (is_In_Distans(target) == true) {
 			return true;
 		}
+		return false;
 	default:
 		break;
 	}
-	if (m_State == State::SpotLighting) count_ = 0;
-	if (m_State != State::SpotLighting) return false;
+	//if (m_State == State::SpotLighting) count_ = 0;
+	//if (m_State != State::SpotLighting) return false;
 
-	if (is_In_Distans(target) == true) {
-		return true;
-	}
-	return false;
+	//if (is_In_Distans(target) == true) {
+	//	return true;
+	//}
+	//return false;
 
 }
 
@@ -86,6 +87,16 @@ bool Judgement_SpotLight::Judgement(const Vector3 & target) {
 	Vector2 myPos = Vector2(position_.x, position_.z);
 	Vector2 targetPos = Vector2(target.x, target.z);
 	if (Vector2::Distance(myPos, targetPos) <= 28.0f) {
+		return true;
+	}
+	return false;
+}
+
+bool Judgement_SpotLight::In_Range(ActorPtr & target)
+{
+	if (m_State != State::CenterLighting) return false;
+	
+	if (is_In_Distans(target) == true) {
 		return true;
 	}
 	return false;

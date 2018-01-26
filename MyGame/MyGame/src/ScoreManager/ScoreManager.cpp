@@ -2,6 +2,7 @@
 #include<algorithm>
 #include"../Actor/Actor.h"
 #include"../Actor/Player/Player.h"
+#include"../Actor/Judge/Judgement_SpotLight/Judgement_SpotLight.h"
 #include"../Actor/Enemy/BaseEnemy.h"
 #include"../DataManager/DataManager.h"
 
@@ -105,14 +106,6 @@ float ScoreManager::mathScoreRata_All_Not(const Vector3 & target)
 
 //最大スコアを返す
 int ScoreManager::getMaxScore() const{
-	//int maxScore = 0;
-	//for (auto n : m_NumberList) {
-	//	if (maxScore < m_ScoreDataList.at(n).score_) {
-	//		maxScore = m_ScoreDataList.at(n).score_;
-	//	}
-	//}
-	////maxScore = *std::max_element(m_ScoreList.begin(), m_ScoreList.end());
-	//return maxScore;
 	return m_FirstData.score_;
 }
 
@@ -123,13 +116,7 @@ ScoreData* ScoreManager::getScoreData(int num)
 
 //一位の選手のスコアデータを返す
 ScoreData ScoreManager::getFirst() {
-	ScoreData data;
-	for (auto n : m_NumberList) {
-		if (getMaxScore() == m_ScoreDataList[n].score_) {
-			data = m_ScoreDataList[n];
-		}
-	}
-	return data;
+	return m_FirstData;
 }
 
 //指定の倍率を返す
@@ -158,4 +145,17 @@ void ScoreManager::getRankingList(std::list<ScoreData>& list) {
 			score = m_ScoreDataList.at(n).score_;
 		}
 	}
+}
+
+std::list<int> ScoreManager::getPlayerNumberList()
+{
+	std::list<int> numbers;
+	ActorPtr light = m_World->findActor("SpotLight");
+	std::shared_ptr<Judgement_SpotLight> spot = std::static_pointer_cast<Judgement_SpotLight>(light);
+	for (int n : m_NumberList) {
+		if (spot->In_Range(m_ScoreDataList[n].target_.lock()) == true) {
+			numbers.push_back(m_ScoreDataList[n].playerNumber_);
+		}
+	}
+	return numbers;
 }
