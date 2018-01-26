@@ -40,8 +40,7 @@ BaseEnemy::BaseEnemy(const std::string & name):
 }
 
 BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this, bulletid,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
-	prevHitActorNumber_(0),centerPosition_(position)
+	Enemy(world, name, position, body), bullet_(std::make_shared<EnemyBullet>(world, name, position, this, bulletid, body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position), finalPosition_(position), prevHitActorNumber_(0),centerPosition_(position)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));

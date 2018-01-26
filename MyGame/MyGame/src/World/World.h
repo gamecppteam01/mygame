@@ -14,6 +14,7 @@
 #include"../ShadowMap/ShadowMap.h"
 #include"../ShadowMap/ShadowMap_Data.h"
 #include"../Camera/RoundCamera.h"
+#include"../Field/FieldGrid.h"
 
 // ワールドクラス
 class World : public IWorld {
@@ -57,6 +58,8 @@ public:
 	virtual ScoreMap& getCanChangedScoreMap()override;
 	virtual TempoManager& getCanChangedTempoManager()override;
 	virtual TempoManager getTempoManager()const override;
+	virtual FieldGrid& getGrid()override;
+
 	// アクターの追加
 	virtual void addActor(ActorGroup group, const ActorPtr& actor) override;
 	// アクターの検索
@@ -97,6 +100,8 @@ private:
 	ScoreMap scoreMap_;
 	//ステップ通知
 	StepTimer stepTimer_;
+
+	FieldGrid grid_;
 
 	std::list<std::function<void()>> lateDrawFuncList_;
 	std::list<std::function<void()>> lateDrawFuncListAfterUI_;

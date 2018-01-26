@@ -185,6 +185,7 @@ bool BoundingBox::intersects(const Vector3 & position, const Vector3 & direction
 	else if (position.z < mMin.z || position.z > mMax.z) {
 		return false;
 	}
+	return true;
 }
 
 // �ߐړ_

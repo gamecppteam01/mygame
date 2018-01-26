@@ -117,7 +117,7 @@ void EffekseerManager::Update()
 
 	trackEffectList_.remove_if([&](std::tuple<EFFECT_ID, int, Vector3*>& target) {
 		int key = std::get<1>(target);
-		return IsEffekseer3DEffectPlaying(key)==-1;
+		return IsEffekseer3DEffectPlaying(key) == -1 || std::get<2>(target) == nullptr;
 	});
 
 	for (auto& tel : trackEffectList_) {
@@ -139,6 +139,9 @@ void EffekseerManager::Draw() const
 void EffekseerManager::End()
 {
 	effectList_.clear();
+	for (auto& t : trackEffectList_) {
+		std::get<2>(t) = nullptr;
+	}
 	trackEffectList_.clear();
 	if(check_!=-1)Effkseer_End();
 }

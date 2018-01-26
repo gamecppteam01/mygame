@@ -22,6 +22,14 @@ public:
 		setData(0, 0, xSize, ySize,0, dataSize, data...);
 
 	}
+	//配列サイズの設定
+	void setSize(int x, int y) {
+		dataList_.clear();
+		dataList_.resize(y);
+		for (auto& d : dataList_) {
+			d.resize(x);
+		}
+	}
 	//データの取得
 	T& getElement(int x, int y) {
 		return dataList_[y][x];
@@ -54,7 +62,7 @@ public:
 		}
 		return keyXY;
 	}
-	//全要素のポインタコンテナを作成して返す(非推奨)
+	//全要素のポインタコンテナを作成して返す
 	std::vector<T*> getAllDataPtr() {
 		std::vector<T*> result;
 		int ySize = dataList_.size();
@@ -65,6 +73,9 @@ public:
 			}
 		}
 		return result;
+	}
+	void clear() {
+		dataList_.clear();
 	}
 	//二次元配列の行ごとの要素数
 	int getXSize()const { return dataList_[0].size(); }

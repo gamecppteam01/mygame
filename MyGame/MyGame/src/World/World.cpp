@@ -16,7 +16,8 @@ World::World() :
 	scoreManager_(this),
 	scoreMap_(this),
 	tempo_(),
-	shadowmap_() {
+	shadowmap_(),
+	grid_(this) {
 }
 
 World::~World()
@@ -51,6 +52,8 @@ void World::Initialize()
 void World::FindInitialize() {
 	scoreManager_.initialize();
 	scoreMap_.initialize();
+
+	grid_.initialize();
 }
 
 void World::pause()
@@ -203,6 +206,11 @@ TempoManager & World::getCanChangedTempoManager()
 TempoManager World::getTempoManager()const
 {
 	return tempo_;
+}
+
+FieldGrid & World::getGrid()
+{
+	return grid_;
 }
 
 // アクターの追加
