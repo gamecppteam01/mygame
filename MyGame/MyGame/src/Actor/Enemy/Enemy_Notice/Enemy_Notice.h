@@ -2,6 +2,7 @@
 
 #include"../BaseEnemy.h"
 #include"../../../ScoreManager/ScoreData.h"
+#include"../../../ScoreManager/ScoreManager.h"
 
 class Enemy_Notice : public BaseEnemy{
 private:
@@ -20,7 +21,7 @@ public:
 	virtual void onMessage(EventMessage message, void* param) override;
 private:
 	//ステップ通知時の処理
-	virtual void JustStep()override;
+	virtual void JustStep()override {}
 
 	virtual void updateNormal(float deltaTime) override;
 	virtual void updateFever(float deltaTime) override;
@@ -54,7 +55,14 @@ private:
 	std::vector<Vector3> roundPoint_;
 	//ステップフラグ
 	bool stepFlag_{ false };
+	bool stepAttackFlag_{ false };
 	//チェンジフラグ
 	bool changeFlag_{ false };
-
+	//ステップカウント
+	int stepCount_{ 0 };
+	int timer_{ 0 };
+	//１キャラの大きさ
+	float charaPos_;
+	bool lightFlag_{ false };
+	
 };

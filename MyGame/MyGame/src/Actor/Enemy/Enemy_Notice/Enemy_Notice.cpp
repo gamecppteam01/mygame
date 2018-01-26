@@ -6,6 +6,10 @@
 #include"../../../Math/Random.h"
 #include"../../../Sound/TempoManager.h"
 #include"../EnemyBullet.h"
+#include"../../../DataManager/DataManager.h"
+
+//1キャラ当たりのサイズ
+static float charaPos{ 20.0f };
 
 Enemy_Notice::Enemy_Notice():
 	BaseEnemy("Enemy")
@@ -16,7 +20,10 @@ Enemy_Notice::Enemy_Notice(IWorld * world, const std::string & name, const Vecto
 	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::NOTICEENEMY_MODEL, MODEL_ID::NOTICEENEMY_BULLET_MODEL), nextPoint_(0), nextPosition_(position), isGoBonus_(false) {
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	nextPoint_ = getNearestPoint(centerPosition_);
+	//最初のステート
 	state_ = Notice_State::Normal;
+	charaPos_ = charaPos;
+	downCount_ = 10;
 }
 
 std::shared_ptr<BaseEnemy> Enemy_Notice::Create(IWorld * world, const Vector3 & position, int playerNumber)
@@ -27,58 +34,18 @@ std::shared_ptr<BaseEnemy> Enemy_Notice::Create(IWorld * world, const Vector3 & 
 void Enemy_Notice::onMessage(EventMessage message, void * param) {
 	switch (message)
 	{
+	//ライトが光っていたら
 	case EventMessage::Lighting:
 		state_ = Notice_State::Steal;
 		nextPosition_ = (Vector3&)param;
 		lightPosition_ = nextPosition_;
 		changeFlag_ = false;
 		break;
+	//ライトが消えていたら
 	case EventMessage::Extinction:
 		state_ = Notice_State::Normal;
 		changeFlag_ = true;
 		break;
-	}
-}
-
-void Enemy_Notice::JustStep() {
-	nonTargetResetTimer_.Action();
-	if (!isCanStep())return;
-
-	ActorPtr act = getNearestActor();
-	//攻撃射程圏内なら
-	if (Vector2::Distance(Vector2(getNearestActor()->position().x, getNearestActor()->position().z), Vector2(centerPosition_.x, centerPosition_.z)) <= attackDistance&&
-		prevHitActorNumber_ != act->getCharacterNumber()) {
-		change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Spin);
-		return;
-	}
-
-	//通常時は6拍子毎
-	int rhythmTime = 6;
-	if (world_->getScoreManager().GetCharacterScoreRate(playerNumber_) > 1.0f) {
-		//ボーナス時は3拍子毎
-		rhythmTime = 3;
-	}
-
-	rhythmTimeCount_++;
-	if (rhythmTimeCount_ < rhythmTime) {
-		if (isGoBonus_ && state_ == Notice_State::Normal) {
-			setNextPosition();
-		}
-		return;
-	}
-
-	rhythmTimeCount_ = 0;
-	if (state_ != Notice_State::Normal) return;
-	int r = Random::GetInstance().Range(0, 9);
-	if (r < probability_) {
-		//ターン
-		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn, false);
-	}
-	else {
-		//クォーター
-		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
-		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter, false);
 	}
 }
 
@@ -96,57 +63,114 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 	Vector3 jumpVector = Vector3(0.0f, gravity_, 0.0f);
 	velocity_ += jumpVector;
 
-	Vector2 myPos;
 	Vector2 pointPos;
+	Vector2 myPos;
+	Vector2 lightPos;
 	switch (state_)
 	{
+		//巡回
 	case Enemy_Notice::Normal:
 		myPos = Vector2(centerPosition_.x, centerPosition_.z);
 		pointPos = Vector2(nextPosition_.x, nextPosition_.z);
-
+		lightPos = Vector2(lightPosition_.x, lightPosition_.z);
 		//ポイントに到達したら
 		if (Vector2::Distance(myPos, pointPos) <= 10.0f && !isGoBonus_) {
 			setNextPosition();
 		}
 		break;
+		//ライトを狙う
 	case Enemy_Notice::Steal:
-		if (data_->notice_ == true) {
-			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-			change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Turn, false);
+		lightFlag_ = true;
+		
+		//スポットライト取得
+		if (data_->notice_ == true && Vector2::Distance(myPos,lightPos) <= 10.0f) {
+			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
+			change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Quarter, false);
+			lightFlag_ = false;
 		}
 		break;
 	}
+
+	if (lightFlag_ = true) {
+		lightPos = Vector2(lightPosition_.x, lightPosition_.z);
+
+		//センターライト内にいたら
+		if (Vector2::Distance(myPos, lightPos) <= 10.0f) {
+			//すべてのキャラを取得
+			std::list<ScoreData*> datas_; datas_.clear();
+			world_->getCanChangedScoreManager().getScoreDataList(datas_);
+
+			//自分自身を削除
+			datas_.remove_if([&](ScoreData* data)->bool {return data->playerNumber_ == playerNumber_; });
+			
+
+			Vector3 myPos = Vector3(centerPosition_.x, centerPosition_.y, centerPosition_.z);
+			for (auto a : datas_) {
+				
+				if (animation_.IsAnimEnd() == true && stepFlag_ == true ) {
+					changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
+					OutputDebugString("IDLE\n");
+					stepFlag_ = false;
+				}
+
+				//近くに敵がいたとき
+				//敵が一体だったら
+				if (timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() <= 1 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4)) {
+					attackType_ = BaseEnemy::AttackType::Half;
+					if (animation_.IsAnimEnd() == true && stepFlag_ == false) {
+						//Halfを行う
+						change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Half, false);
+						stepFlag_ = true;
+					}
+				}
+				//敵が一体以上だったら
+				if (timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() >= 2 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4)) {
+					attackType_ = BaseEnemy::AttackType::Spin;
+					if (animation_.IsAnimEnd() == true && stepFlag_ == false) {
+						//Spinを行う
+						change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Spin, false);
+						stepFlag_ = true;
+					}
+				}
+			}
+		}
+	}
+	timer_++;
 }
 
 void Enemy_Notice::updateFever(float deltaTime) {
 
-	int r = Random::GetInstance().Range(0, 9);
-	if (animation_.IsAnimEnd() == true) {
-		if (r < probability_ && stepFlag_ == false) {
-			//ターン
-			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-			changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
-			stepFlag_ = true;
-			OutputDebugString("TURN\n");
-		}
-		else if(stepFlag_ == false){
-			//クォーター
-			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
-			changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
-			stepFlag_ = true;
-			OutputDebugString("QUARTER\n");
-		}
-	}
+	//ステップの間にアイドルを挟む
 	if (animation_.IsAnimEnd() == true && stepFlag_ == true && changeFlag_ == false) {
 		changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
 		OutputDebugString("IDLE\n");
 		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 		stepFlag_ = false;
 	}
-	if (animation_.IsAnimEnd() == true && changeFlag_ == true) {
+
+	if (animation_.IsAnimEnd() == true && changeFlag_ == true && stepFlag_ == false) {
 		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle, true);
 		setNextPosition();
 	}
+
+	//スポットライトを獲得したら
+	//クオーター、クオーター、ターンを繰り返す
+	if (timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ <= 1) {
+		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
+		changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
+		OutputDebugString("QUARTER\n");
+		stepFlag_ = true;
+		stepCount_++;
+	}
+	if (timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ == 2) {
+		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+		OutputDebugString("TURN\n");
+		changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
+		stepFlag_ = true;
+		stepCount_ = 0;
+	}
+
+	timer_++;
 }
 
 void Enemy_Notice::to_Normal() {
