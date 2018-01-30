@@ -66,7 +66,7 @@ void Enemy_Round::updateNormal(float deltaTime)
 		Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
 
 	Step();
-	Around_Enemy(50.0f);
+	//Around_Enemy(50.0f);
 }
 
 void Enemy_Round::onShadowDraw() const
@@ -92,10 +92,10 @@ void Enemy_Round::setNearestPoint()
 
 void Enemy_Round::nextPosition()
 {
-	nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
-	if (Around_Enemy(50.0f) >= 1) {
+	//nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
+	//if (Around_Enemy(50.0f) >= 1) {
 		nextKey_ = (nextKey_ - Random::GetInstance().Range(1, 12) + points_.size()) % points_.size();
-	}
+	//}
 	nextPosition_ = points_[nextKey_];
 	
 }
@@ -140,7 +140,7 @@ int Enemy_Round::Around_Enemy(float distance)
 {
 	int enemy_count = 0;
 	int num = world_->getCanChangedScoreManager().GetCharacterCount();
-	ScoreData* data[5];
+	ScoreData* data[7];
 	for (int i = 0; i <= num; i++) {
 		data[i] = world_->getCanChangedScoreManager().getScoreData(min(i+1,num));
 		if (is_In_Distans(ActorPtr(data[i]->target_), centerPosition_, distance)){
