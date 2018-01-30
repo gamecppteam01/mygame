@@ -159,8 +159,6 @@ void BaseEnemy::onUpdate(float deltaTime) {
 	correctPosition();
 
 	if(attackType_ != AttackType::Spin) bulletUpdate(deltaTime);
-
-	timer_ += deltaTime;
 }
 
 void BaseEnemy::onDraw() const

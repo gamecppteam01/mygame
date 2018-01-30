@@ -60,7 +60,6 @@ private:
 	bool changeFlag_{ false };
 	//ステップカウント
 	int stepCount_{ 0 };
-	int timer_{ 0 };
 	//１キャラの大きさ
 	float charaPos_;
 	bool lightFlag_{ false };

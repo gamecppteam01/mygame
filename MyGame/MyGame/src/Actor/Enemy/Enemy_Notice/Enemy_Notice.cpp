@@ -118,7 +118,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 
 				//近くに敵がいたとき
 				//敵が一体だったら
-				if (timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() <= 1 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4 - 10)) {
+				if ((int)timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() <= 1 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4 - 10)) {
 					attackType_ = BaseEnemy::AttackType::Half;
 					if (animation_.IsAnimEnd() == true && stepFlag_ == false) {
 						//Halfを行う
@@ -128,7 +128,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 					}
 				}
 				//敵が一体以上だったら
-				if (timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() >= 2 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4 - 10)) {
+				if ((int)timer_ % 60 == 0 && world_->getCanChangedScoreManager().getPlayerNumberList().size() >= 2 && BaseEnemy::is_In_Distans(a->target_.lock(), myPos, charaPos_ * 4 - 10)) {
 					attackType_ = BaseEnemy::AttackType::Spin;
 					if (animation_.IsAnimEnd() == true && stepFlag_ == false) {
 						//Spinを行う
@@ -164,7 +164,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 
 	//スポットライトを獲得したら
 	//クオーター、クオーター、ターンを繰り返す
-	if (timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ <= 1) {
+	if ((int)timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ <= 1) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 		changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
 		OutputDebugString("QUARTER\n");
@@ -172,7 +172,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 		stepCount_++;
 		timer_ = 0;
 	}
-	if (timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ == 2) {
+	if ((int)timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ == 2) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
 		changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
 		OutputDebugString("TURN\n");
