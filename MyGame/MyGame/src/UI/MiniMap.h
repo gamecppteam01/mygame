@@ -19,7 +19,6 @@ public:
 	void draw() const override;
 
 private:
-	const Vector2 position_;
 	const Vector2 map_position_;
 	Vector2 player_position_;
 	Vector2 spotLight_position_;

@@ -744,8 +744,8 @@ void Player::shoot_Update(float deltaTime)
 {
 	velocity_ = Vector3::Zero;
 	shootAngle_ += 3.5f;
-	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * spinPower;
-	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));
+	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - shootAngle_) / 180.0f)) * spinPower;//離れ具合
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-shootAngle_));//男の位置更新
 	//回転を更新
 	//rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -2.0f*turnPower_);
 

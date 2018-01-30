@@ -8,7 +8,7 @@ class Player;
 
 class ColEffect {
 public:
-	ColEffect(IWorld* world);
+	explicit ColEffect(IWorld* world);
 	~ColEffect() {}
 	void Initialize();
 	void Update(float deltaTime);

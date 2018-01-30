@@ -11,6 +11,7 @@ class SceneManager {
 public:
 	SceneManager();
 	~SceneManager();
+	void init();
 	void start();
 	void update(float deltaTime);
 	void draw();

@@ -107,9 +107,9 @@ inline std::vector<int> SligeDigit(int num) {
 		return result;
 	}
 
-	int mod = 0;
 	int i = 0;
 	while (num >= 1) {
+		int mod = 0;
 		mod = num % 10;
 		num = num / 10;
 		result.push_back(mod);

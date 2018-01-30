@@ -12,7 +12,6 @@ public:
 	void draw() const override;
 private:
 	int number_;
-	Vector2 position_;
 	float sincount;
 	Vector2 scale_;
 	Vector2 move_;

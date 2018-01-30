@@ -8,6 +8,7 @@ public:
 
 private:
 	virtual void start() override {
+		sceneManager_.init();
 		sceneManager_.start();
 
 	}

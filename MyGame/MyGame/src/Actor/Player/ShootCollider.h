@@ -4,7 +4,7 @@
 class Player;
 class ShootCollider:public Actor {
 public:
-	ShootCollider(Player* player);
+	explicit ShootCollider(Player* player);
 
 	void onUpdate(float deltaTime)override;
 

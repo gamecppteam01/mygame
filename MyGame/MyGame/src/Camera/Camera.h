@@ -22,7 +22,7 @@ public:
 		Vector3 position_;
 	public:
 		Vector3 Get() const { return position_; }
-		void Set(Vector3 position) { position_ = position; }
+		void Set(const Vector3& position) { position_ = position; }
 	};
 
 	// カメラの注視点座標クラス
@@ -32,7 +32,7 @@ public:
 		Vector3 target_;
 	public:
 		Vector3 Get() const { return target_; }
-		void Set(Vector3 target) { target_ = target; }
+		void Set(const Vector3& target) { target_ = target; }
 	};
 
 	// カメラの上方向クラス
@@ -42,7 +42,7 @@ public:
 		Vector3 up_;
 	public:
 		Vector3 Get() const { return up_; }
-		void Set(Vector3 up) { up_ = up; }
+		void Set(const Vector3& up) { up_ = up; }
 	};
 
 	// 更新

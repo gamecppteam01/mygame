@@ -58,7 +58,7 @@ public:
 			ScreenFlip();
 		}
 
-		end();
+		//end();
 
 		//DXLibg—pI—¹ˆ—
 		DxLib_End();

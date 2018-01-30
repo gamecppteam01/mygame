@@ -4,7 +4,7 @@
 class UITemplate:public UI {
 public:
 	//コンストラクタ
-	UITemplate(const Vector2& position);
+	explicit UITemplate(const Vector2& position);
 
 	//初期化
 	virtual void initialize()override;

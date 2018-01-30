@@ -25,7 +25,7 @@ struct ScoreDataCell {
 
 class ScoreBase {
 public:
-	ScoreBase(IWorld* world);
+	explicit ScoreBase(IWorld* world);
 	~ScoreBase();
 	void Initialize();
 	//ÉXÉRÉAâ¡éZ

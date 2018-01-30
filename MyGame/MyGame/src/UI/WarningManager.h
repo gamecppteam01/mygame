@@ -19,7 +19,7 @@ class Player;
 class WarningManager : public UI {
 public:
 	//コンストラクタ
-	WarningManager(IWorld* world);
+	explicit WarningManager(IWorld* world);
 	//初期化
 	virtual void initialize() override;
 	virtual void pause() override;

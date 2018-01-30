@@ -268,6 +268,7 @@ void LoadingScene::LoadFont()
 	FontManager::GetInstance().AddFont(FONT_ID::DEFAULT_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
 	FontManager::GetInstance().AddFont(FONT_ID::TUTORIAL_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 70);
+	FontManager::GetInstance().AddFont(FONT_ID::KEYBOARD_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 28);
 }
 
 void LoadingScene::LoadBGM()
@@ -325,7 +326,7 @@ void LoadingScene::LoadEtcetera()
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_corner.mv1", MODEL_ID::STAGE_WALL_CORNER_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_side.mv1", MODEL_ID::STAGE_WALL_SIDE_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/wall_up.mv1", MODEL_ID::STAGE_WALL_UP_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/field/audience.mv1", MODEL_ID::AUDIENCE);
+	//Model::GetInstance().Load(defaultPath + "Stage/field/audience.mv1", MODEL_ID::AUDIENCE);
 	Model::GetInstance().Load(defaultPath + "Stage/audienceSeat/audienceSeat.mv1", MODEL_ID::STAGE_SEAT);
 
 }

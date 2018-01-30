@@ -8,7 +8,7 @@
 
 class ScoreDisplay {
 public:
-	ScoreDisplay(ScoreManager* score);
+	explicit ScoreDisplay(ScoreManager* score);
 	~ScoreDisplay();
 	void initialize();
 	void setScoreManager(ScoreManager* score);

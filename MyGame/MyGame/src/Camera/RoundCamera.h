@@ -17,7 +17,7 @@ public:
 		End
 	};
 public:
-	RoundCamera(IWorld* world);
+	explicit RoundCamera(IWorld* world);
 
 	void init();
 

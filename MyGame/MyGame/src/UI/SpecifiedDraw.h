@@ -28,7 +28,6 @@ public:
 
 private:
 	SPRITE_ID id_;
-	Vector2 position_;
 	bool IsDead_{ false };
 	bool IsStart_{ false };
 	float timer_{ 0.0f };

@@ -6,7 +6,7 @@
 
 class QuarterEffect {
 public:
-	QuarterEffect(IWorld * world);
+	explicit QuarterEffect(IWorld * world);
 	~QuarterEffect() { world_ = nullptr; }
 	void start();
 	void update(float deltaTime);

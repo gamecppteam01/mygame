@@ -45,7 +45,7 @@ void FadeSprite::update(float deltaTime)
 void FadeSprite::draw() const
 {
 	if (!isActive_)return;
-
+	if (!Sprite::GetInstance().IsASyncLoad(SPRITE_ID::FADE_SPRITE))return;
 	auto size = Sprite::GetInstance().GetSize(SPRITE_ID::FADE_SPRITE);
 
 	float fade = Easing::EaseOutQuad(fadeTimer_, 0.0f, size.x*0.5f, 1.0f);
@@ -59,7 +59,7 @@ bool FadeSprite::isActive() const
 	return isActive_;
 }
 
-void FadeSprite::addCallBack(std::function<void()> func)
+void FadeSprite::addCallBack(const std::function<void()>& func)
 {
 	function_ = func;
 }

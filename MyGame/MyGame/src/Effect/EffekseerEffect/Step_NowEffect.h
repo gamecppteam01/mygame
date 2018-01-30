@@ -5,7 +5,7 @@
 
 class Player;
 class Step_NowEffect {
-	Step_NowEffect(IWorld* world);
+	explicit Step_NowEffect(IWorld* world);
 	~Step_NowEffect(){}
 	void Initialize();
 	void Update(float deltaTime);

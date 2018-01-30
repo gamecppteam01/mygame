@@ -1,7 +1,7 @@
 #include "EndUI.h"
 
 EndUI::EndUI(TempoManager* tempoManager,const Vector2 & position)
-	:UI{ "EndUI",position },tempoManager_(tempoManager),position_(position){
+	:UI{ "EndUI",position },tempoManager_(tempoManager){
 }
 
 void EndUI::initialize(){

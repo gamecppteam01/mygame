@@ -17,7 +17,7 @@ public:
 	void draw()const;
 	bool isActive()const;
 	
-	void addCallBack(std::function<void()> func);
+	void addCallBack(const std::function<void()>& func);
 
 	void in(float deltaTime);
 	void stop(float deltaTime);

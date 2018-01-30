@@ -21,7 +21,6 @@ public:
 
 private:
 	SPRITE_ID id_;
-	Vector2 position_;
 	float pos;
 	float alpha_;
 	float timer_;

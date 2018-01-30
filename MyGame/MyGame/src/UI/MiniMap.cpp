@@ -3,7 +3,7 @@
 #include"../Input/Keyboard.h"
 
 MiniMap::MiniMap(IWorld* world,const Vector2& position ,const Vector2& map_position)
-	:UI{ "MiniMap",position },world_(world),position_(position), map_position_(map_position){
+	:UI{ "MiniMap",position },world_(world), map_position_(map_position){
 }
 
 void MiniMap::initialize(){

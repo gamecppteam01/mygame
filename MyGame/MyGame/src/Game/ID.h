@@ -221,7 +221,7 @@ enum MODEL_ID
 	EFFECT_LIGHT_MODEL,
 	JUST_CIRCLE_MODEL,
 
-	AUDIENCE,
+	//AUDIENCE,
 	STAGE_SEAT,
 	COUNT_MODEL//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
@@ -263,6 +263,7 @@ enum FONT_ID {
 	DEFAULT_FONT,
 	BIG_FONT,
 	TUTORIAL_FONT,
+	KEYBOARD_FONT,
 	COUNT_FONT//全リソース数確認用キー(このキーにリソースを設定しないこと)
 
 };

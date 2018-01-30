@@ -6,7 +6,7 @@
 
 class HalfEffect {
 public:
-	HalfEffect(IWorld * world);
+	explicit HalfEffect(IWorld * world);
 	~HalfEffect() { world_ = nullptr; }
 	void start();
 	void update(float deltaTime);

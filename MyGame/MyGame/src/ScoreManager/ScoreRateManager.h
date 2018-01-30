@@ -6,7 +6,7 @@
 class ScoreRataManager {
 public:
 	//コンストラクタ
-	ScoreRataManager(IWorld* world);
+	explicit ScoreRataManager(IWorld* world);
 	//初期化
 	void initialize();
 	//計算結果の倍率を返す

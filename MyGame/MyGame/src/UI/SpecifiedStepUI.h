@@ -34,7 +34,7 @@ class SpecifiedStepUI : public UI {
 	};
 public:
 	SpecifiedStepUI() = default;
-	SpecifiedStepUI(IWorld * world);
+	explicit SpecifiedStepUI(IWorld * world);
 	~SpecifiedStepUI() { }
 	virtual void initialize() override;
 	virtual void update(float deltaTime) override;

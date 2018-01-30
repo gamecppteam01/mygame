@@ -13,7 +13,7 @@ enum class State {
 class ComboGaugeUI : public UI{
 public:
 	//コンストラクタ
-	ComboGaugeUI(const Vector2& gaugePos);
+	explicit ComboGaugeUI(const Vector2& gaugePos);
 	//初期化
 	virtual void initialize() override;
 	//更新

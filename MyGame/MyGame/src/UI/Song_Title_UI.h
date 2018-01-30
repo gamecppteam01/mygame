@@ -7,7 +7,7 @@
 class Song_Title_UI : public UI {
 public:
 	//コンストラクタ
-	Song_Title_UI(int soundhandle);
+	explicit Song_Title_UI(int soundhandle);
 	//初期化
 	virtual void initialize() override;
 	//更新

@@ -6,7 +6,7 @@
 
 class TurnEffect {
 public:
-	TurnEffect(IWorld * world);
+	explicit TurnEffect(IWorld * world);
 	~TurnEffect() { world_ = nullptr; }
 	void start();
 	void update(float deltaTime);

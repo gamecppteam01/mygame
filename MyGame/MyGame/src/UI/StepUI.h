@@ -15,7 +15,7 @@ class StepUI : public UI {
 		End,
 	};
 public:
-	StepUI(IWorld* world);
+	explicit StepUI(IWorld* world);
 	virtual void initialize() override;
 	virtual void pause() override;
 	virtual void restart() override;
@@ -26,7 +26,6 @@ private:
 	IWorld* world_;
 
 	//UIの座標、拡大率、透明度
-	Vector2 position_;
 	Vector2 scale_;
 	float alpha_;
 

@@ -13,7 +13,7 @@ class ScoreManager {
 public:
 	//コンストラクタ
 	ScoreManager() = default;
-	ScoreManager(IWorld* world);
+	explicit ScoreManager(IWorld* world);
 	//デストラクタ
 	~ScoreManager();
 	//初期化

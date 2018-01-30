@@ -23,7 +23,7 @@ class SpecifiedStepManager  : public UI{
 
 public:
 	SpecifiedStepManager() = default;
-	SpecifiedStepManager(IWorld * world);
+	explicit SpecifiedStepManager(IWorld * world);
 	virtual void initialize() override;
 	virtual void update(float deltaTime) override;
 	virtual void draw() const override;

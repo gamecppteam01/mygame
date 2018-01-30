@@ -11,6 +11,24 @@ public:
 		}
 		return result;
 	}
+	static std::string Int_to_String(int num) {
+		std::string result;
+
+		int underDigit = num % 256;
+		int overDigit = num / 256;
+		underDigit -= 128;//unsigned charからcharへの変換(値合わせ)
+		overDigit -= 128;//unsigned charからcharへの変換(値合わせ)
+		result.push_back(overDigit);
+		result.push_back(underDigit);
+
+		return result;
+	}
+	static int String_to_Int(const std::string& text) {
+		int underNum = text.back() + 128;//charからunsigned charに変換
+		int overNum = text.front() + 128;//charからunsigned charに変換
+
+		return overNum * 256 + underNum;
+	}
 	//指定バイト数の最大値を返す
 	static int ByteMaxSize(int size) {
 		return std::pow(256, size);

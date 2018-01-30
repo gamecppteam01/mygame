@@ -4,7 +4,7 @@
 #include"../Define.h"
 
 TimeUI::TimeUI(IWorld * world, const Vector2& position) 
-	: UI { "TimeUI", position },world_(world),position_(position){
+	: UI { "TimeUI", position },world_(world){
 }
 
 void TimeUI::initialize(){

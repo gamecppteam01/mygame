@@ -154,8 +154,7 @@ void OverLookingCamera::setFirstPos()
 	position_ = nextPos;
 	prevPosition_ = nextPos;
 
-	Vector3 targetPos = Vector3::Zero;
-	targetPos = position_ + Vector3(0.0f, 0.0f, backwardLength_);
+	Vector3 targetPos = position_ + Vector3(0.0f, 0.0f, backwardLength_);
 	targetPos.y = 0.0f;
 	//ˆê‰žy‚ðŒÅ’è‚µ’¼‚·
 	position_.y = upLength_ + addDistance;

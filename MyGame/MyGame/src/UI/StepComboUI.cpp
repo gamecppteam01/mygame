@@ -1,7 +1,7 @@
 #include "StepComboUI.h"
 
 StepComboUI::StepComboUI(const SPRITE_ID& id, const Vector2& position)
-	: UI{ "StepComboUI",position_ }, id_(id), position_(position)
+	: UI{ "StepComboUI",position_ }, id_(id)
 {
 	initialize();
 }

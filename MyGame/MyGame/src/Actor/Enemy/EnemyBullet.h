@@ -50,7 +50,5 @@ private:
 	void changeAnimation(EnemyBullet_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f,bool isLoop  = true);
 
 private:
-	//アニメーション
-	AnimationDx animation_;
 	BaseEnemy* enemy_;
 };

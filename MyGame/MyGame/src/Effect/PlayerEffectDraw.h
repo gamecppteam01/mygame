@@ -10,7 +10,7 @@ private:
 		None
 	};
 public:
-	PlayerEffectDraw(Player* player);
+	explicit PlayerEffectDraw(Player* player);
 	~PlayerEffectDraw();
 	void Initialize();
 	void setPlayerEffectDraw(Player* player);

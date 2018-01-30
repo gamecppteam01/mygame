@@ -9,7 +9,7 @@
 
 class CollisionMesh {
 public:
-	CollisionMesh(int model) :model_{ model } {
+	explicit CollisionMesh(int model) :model_{ model } {
 	}
 	//ƒƒbƒVƒ…‚Æü•ª‚Ì“–‚½‚è”»’è
 	bool collide_line(const VECTOR& start, const VECTOR& end, VECTOR* point = nullptr, VECTOR* normal = nullptr)const {

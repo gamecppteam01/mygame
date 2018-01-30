@@ -12,7 +12,6 @@ public:
 	void draw() const override;
 	bool end() const;
 private:
-	Vector2 position_;
 	TempoManager* tempoManager_;
 	float time_;
 	Vector2 scale_{20.0f,20.0f};

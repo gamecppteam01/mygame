@@ -107,35 +107,35 @@ int DualShock4Input::GetPovTriggerDownAngle() const
 {
 	int pov = DualShock4Manager::GetInstance().GetByte(5);
 	int prevPov = DualShock4Manager::GetInstance().GetPrevByte(5);
-	if ((pov & 8) != 0)return -1;
+	if ((pov & 8) != 0)return -1;//é∏îs
 	if ((pov & 7) == 7) {
-		if((prevPov & 7) != 7)return 315;
+		if((prevPov & 7) != 7)return 315;//ç∂è„
 		else return -1;
 	}
 	if ((pov & 6) == 6) {
-		if((prevPov & 6) != 6)return 270;
+		if((prevPov & 6) != 6)return 270;//ç∂
 		else return -1;
 	}
 	if ((pov & 5) == 5) {
-		if((prevPov & 5) != 5)return 225;
+		if((prevPov & 5) != 5)return 225;//ç∂â∫
 		else return -1;
 	}
 	if ((pov & 4) == 4) {
-		if((prevPov & 4) != 4)return 180;
+		if((prevPov & 4) != 4)return 180;//â∫
 		else return -1;
 	}
 	if ((pov & 3) == 3) {
-		if((prevPov & 3) != 3)return 135;
+		if((prevPov & 3) != 3)return 135;//âEâ∫
 		else return -1;
 	}
 	if ((pov & 2) == 2) {
-		if((prevPov & 2) != 2)return 90;
+		if((prevPov & 2) != 2)return 90;//âE
 		else return -1;
 	}
 	if ((pov & 1) == 1) {
-		if((prevPov & 1) != 1)return 45;
+		if((prevPov & 1) != 1)return 45;//âEè„
 		else return -1;
 	}
-	if ((prevPov & 8) == 0)return -1;
-	else return 0;
+	if ((prevPov & 8) == 0)return -1;//é∏îs
+	else return 0;//è„
 }

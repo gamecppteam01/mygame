@@ -30,7 +30,6 @@ ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& 
 		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
 
 		return ComboType::Combo_None;
-		break;
 	}
 	case 1: {//1コンボしてるなら
 		switch (comboList.front())
@@ -75,7 +74,6 @@ ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& 
 			break;
 		}
 		return ComboType::Combo_None;
-		break;
 	case 2: {//2コンボしてるなら
 		if (comboList.front() == Player_Animation::Quarter) {//PUコンボ
 			if (next == Player_Animation::Turn) {
@@ -222,7 +220,6 @@ ComboChecker::ComboType ComboChecker::checkComboTutorial(std::vector<Player_Anim
 			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
 
 			return ComboType::Combo_None;
-			break;
 		}
 		case 1: {//1コンボしてるなら
 			if (next == Player_Animation::Quarter) {
@@ -241,7 +238,6 @@ ComboChecker::ComboType ComboChecker::checkComboTutorial(std::vector<Player_Anim
 			}
 
 			return ComboType::Combo_None;
-			break;
 		}
 		case 2: {//2コンボしてるなら
 			if (next == Player_Animation::Turn) {
@@ -300,7 +296,6 @@ ComboChecker::ComboType ComboChecker::checkComboBurst(std::vector<Player_Animati
 		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
 
 		return ComboType::Combo_None;
-		break;
 	}
 	case 1: {//1コンボしてるなら
 		if (next == Player_Animation::Quarter) {
@@ -319,7 +314,6 @@ ComboChecker::ComboType ComboChecker::checkComboBurst(std::vector<Player_Animati
 		}
 
 		return ComboType::Combo_None;
-		break;
 	}
 	case 2: {//2コンボしてるなら
 		if (next == Player_Animation::Turn) {
@@ -370,7 +364,6 @@ ComboChecker::ComboType ComboChecker::checkComboPointUp(std::vector<Player_Anima
 		if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_Add, (void*)&next);
 
 		return ComboType::Combo_None;
-		break;
 	}
 	case 1: {//1コンボしてるなら
 		if (next == Player_Animation::Quarter) {
@@ -386,7 +379,6 @@ ComboChecker::ComboType ComboChecker::checkComboPointUp(std::vector<Player_Anima
 		}
 
 		return ComboType::Combo_None;
-		break;
 	}
 	case 2: {//2コンボしてるなら
 		if (next == Player_Animation::Turn) {

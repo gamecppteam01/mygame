@@ -6,7 +6,7 @@
 
 class StepStanbyEffect {
 public:
-	StepStanbyEffect(IWorld * world);
+	explicit StepStanbyEffect(IWorld * world);
 	~StepStanbyEffect() { world_ = nullptr; }
 	void start();
 	void update(float deltaTime);

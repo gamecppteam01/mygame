@@ -3,7 +3,7 @@
 
 class TutorialPoint:public Actor {
 public:
-	TutorialPoint(const Vector3& position);
+	explicit TutorialPoint(const Vector3& position);
 	~TutorialPoint();
 
 	void onDraw()const override;

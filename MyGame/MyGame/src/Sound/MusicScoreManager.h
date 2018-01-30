@@ -6,7 +6,7 @@
 class MusicScoreManager{
 public:
 	MusicScoreManager() = default;
-	MusicScoreManager(IWorld* world);
+	explicit MusicScoreManager(IWorld* world);
 	~MusicScoreManager();
 	void SetWorld(IWorld* world);
 	void SetSize(const Vector2& size);

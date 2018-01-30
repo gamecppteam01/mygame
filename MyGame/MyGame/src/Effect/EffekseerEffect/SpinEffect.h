@@ -4,7 +4,7 @@
 
 class SpinEffect {
 public:
-	SpinEffect(IWorld * world);
+	explicit SpinEffect(IWorld * world);
 	~SpinEffect() { world_ = nullptr; }
 	void start();
 	void update(float deltaTime);

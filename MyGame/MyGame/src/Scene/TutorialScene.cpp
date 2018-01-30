@@ -288,7 +288,6 @@ void TutorialScene::nextTutorial()
 			nextTutorialCount();
 			changeState(TextDraw);//ŽŸ‚Ö
 			return;
-			break;
 		}
 		default:
 			break;

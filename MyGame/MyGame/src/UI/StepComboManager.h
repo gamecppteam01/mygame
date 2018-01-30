@@ -13,7 +13,7 @@
 class StepComboManager : public UI {
 public:
 	StepComboManager() = default;
-	StepComboManager(IWorld * world);
+	explicit StepComboManager(IWorld * world);
 	virtual void initialize() override;
 	virtual void update(float deltaTime) override;
 	virtual void draw() const override;
