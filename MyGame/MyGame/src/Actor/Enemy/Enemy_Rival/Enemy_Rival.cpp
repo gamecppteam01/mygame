@@ -8,16 +8,24 @@
 #include"../../../Sound/TempoManager.h"
 #include"../../../Math/Easing.h"
 
+//移動MAXタイマー
+static const float moveMaxTimer_ = 3.0f;
+
 static const float attackResetDistance = 40.0f;
-Enemy_Rival::Enemy_Rival():
+Enemy_Rival::Enemy_Rival() :
 	BaseEnemy("Enemy")
 {
 }
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
 	BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::RIVALENEMY_MODEL, MODEL_ID::RIVALENEMY_BULLET_MODEL) {
 
-	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
+	////roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
+	////targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
+	/*roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
+	nextPoint_ = getNearestPoint(centerPosition_);*/
+	points_.clear();
+	points_ = world_->getCanChangedScoreMap().getEnemy_Round_CrawlPoint();
+	setNearestPoint();
 
 	world_->findActors("Enemy", players_);
 
@@ -33,6 +41,8 @@ Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3
 	});
 	players_.push_front(world_->findActor("Player"));
 
+	scoreManager_ = &world->getCanChangedScoreManager();
+	initialize();
 }
 
 std::shared_ptr<BaseEnemy> Enemy_Rival::Create(IWorld * world, const Vector3 & position, int playerNumber)
@@ -40,37 +50,48 @@ std::shared_ptr<BaseEnemy> Enemy_Rival::Create(IWorld * world, const Vector3 & p
 	return std::make_shared<Enemy_Rival>(world, "Enemy", position, playerNumber);
 }
 
+void Enemy_Rival::initialize() {
+	m_LightStateUpdateFunc[LightState::Extinction] = [this](float deltaTime) {ExtinctionUpdate(deltaTime); };
+	m_LightStateUpdateFunc[LightState::CenterLighting] = [this](float deltaTime) {CenterLightingUpdate(deltaTime); };
+	m_LightStateUpdateFunc[LightState::SpotLighting] = [this](float deltaTime) {SpotLighting(deltaTime); };
+	lightState_ = LightState::Extinction;
+	rivalState_ = RivalState::MoveMode;
+	attackType_ = AttackType::Half;
+	startPos_ = centerPosition_;
+}
+
+void Enemy_Rival::onMessage(EventMessage message, void * param){
+	switch (message)
+	{
+	case EventMessage::Lighting:
+		lightPosition_ = (Vector3&)param;
+		nextPosition_ = lightPosition_ + Vector3::Up * 6 ;
+		lightState_ = LightState::CenterLighting;
+		rivalState_ = RivalState::AttackMode;
+		moveTimer_ = 0.0f;
+		break;
+	case EventMessage::Extinction:
+		lightState_ = LightState::Extinction;
+		moveTimer_ = 0.0f;
+		break;
+	}
+}
+
 void Enemy_Rival::onDraw() const
 {
 	BaseEnemy::onDraw();
-	//world_->setLateDraw([this] {
-	//	switch (chooseAttackTargetMode_)
-	//	{
-	//	case Enemy_Rival::chooseAttackTargetMode::NotAttack:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "NotAttack");
-	//		break;
-	//	case Enemy_Rival::chooseAttackTargetMode::AttackMove:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "AttackMove");
-	//		break;
-	//	case Enemy_Rival::chooseAttackTargetMode::Attack:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Attack");
-	//		break;
-	//	case Enemy_Rival::chooseAttackTargetMode::Return:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Return");
-	//		break;
-	//	case Enemy_Rival::chooseAttackTargetMode::Step:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "Step");
-	//		break;
-	//	case Enemy_Rival::chooseAttackTargetMode::StepMove:
-	//		DebugDraw::DebugDrawFormatString(400, 300, GetColor(255, 255, 255), "StepMove");
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//	DebugDraw::DebugDrawFormatString(350, 300, GetColor(255, 255, 255), "%d", rhythmTimeCount_);
-	//	
-	//	DebugDraw::DebugDrawFormatString(600, 400, GetColor(255, 255, 255), "%f:%f:%f", centerPosition_.x, centerPosition_.y, centerPosition_.z);
-	//});
+	DebugDraw::DebugDrawFormatString(200, 300, GetColor(255, 255, 255), "%f", moveTimer_);
+
+	Vector2 myPos = Vector2(centerPosition_.x, centerPosition_.z);
+	Vector2 pointPos = Vector2(nextPosition_.x, nextPosition_.z);
+
+	//ポイントに到達したら
+	float dis = Vector2::Distance(myPos, pointPos);
+	DebugDraw::DebugDrawFormatString(200, 200, GetColor(255, 255, 255), "%f", dis);
+
+	DebugDraw::DebugDrawFormatString(200, 100, GetColor(255, 255, 255), "%f", stopTimer_);
+
+
 }
 
 void Enemy_Rival::onShadowDraw() const
@@ -83,57 +104,60 @@ void Enemy_Rival::onShadowDraw() const
 
 void Enemy_Rival::updateNormal(float deltaTime)
 {
-	//3拍目は動かない
-	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {
-		speedEaseTimer_ = 0.0f;
-		return;
-	}
-
-	//2拍分の時間
-	float maxEaseTime = world_->getCanChangedTempoManager().getOneBeatTime()*2.0f;
-	//0.5拍を取得、ここを勢いの頂点とする
-	float quarter=maxEaseTime*0.25f;
-	
-	speedEaseTimer_ += deltaTime;
-	float maxp = 2.f;
-	float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
-
-	//float answer = 1.f-std::abs(speedEaseTimer_ - quarter)*5.f;
-	/*
-	float ptime = speedEaseTimer_ / maxEaseTime;
-	float pease = Easing::EaseInOutCubic(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
-	float pnormal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
-
-	speedEaseTimer_ += deltaTime;
-	float time = speedEaseTimer_ / maxEaseTime;
-	float ease = Easing::EaseInOutCubic(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
-	float normal = Easing::Linear(speedEaseTimer_, 0.0f, 1.0f, maxEaseTime);
-
-	float answer = (ease - pease);
-	answer = powf(answer, 2);
-	answer *= 300.0f;
-	*/
-
-	OutputDebugString(std::to_string(answer).c_str());
-	OutputDebugString("\n");
-
-	Vector3 vel = (targetPos_ - centerPosition_);
-	vel.y = 0.0f;
-	centerPosition_ += vel.Normalize()*movePower*answer;
-
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
-	//ポイントに近づいたら次のポイントに移動
-	if (Vector2::Distance(Vector2(centerPosition_.x, centerPosition_.z), Vector2(targetPos_.x,targetPos_.z)) <= 10.0f)setNextPosition();
+	m_LightStateUpdateFunc[lightState_](deltaTime);
+	
 
 }
 
 void Enemy_Rival::to_Normal()
 {
-	targetPos_ = world_->getCanChangedScoreMap().getNearestBonusPoint(centerPosition_);
-	//setNextPosition();
-	speedEaseTimer_ = 0.0f;
+	prevAttackType_ = attackType_;
+	attackType_ = AttackType::Half;
+	count_ = 0;
+	moveTimer_ = 0.0f;
+	stopTimer_ = 0.0f;
 }
+
+void Enemy_Rival::to_Step(Enemy_Animation anim) {
+	//対応したアニメーションの終了時間を取得する
+	stepTime_ = animation_.GetAnimMaxTime((int)anim);
+
+	//setNextPosition();
+	moveCount_ = 0;
+	prevRivalState_ = rivalState_;
+	rivalState_ = RivalState::AttackMode;
+}
+
+void Enemy_Rival::to_Attack(Enemy_Animation anim)
+{
+	attackPower_ = 8;
+	if (lightState_ != LightState::CenterLighting) {
+		attackTarget_ = getNearestActor();
+	}
+	spinAngle_ = 0.0f;
+	stepTime_ = 1.5f;
+	prevRivalState_ = rivalState_;
+	rivalState_ = RivalState::MoveMode;
+	if (scoreManager_->getFirst().score_ <= scoreManager_->GetCharacterScore(playerNumber_) && lightState_ == LightState::Extinction) {
+		setNextPosition();
+	}
+	else if(lightState_ == LightState::Extinction){
+		nextPosition_ = scoreManager_->getFirst().target_.lock()->position();
+	}
+	startPos_ = centerPosition_;
+}
+
+//void Enemy_Rival::spin(float deltaTime){
+//	velocity_ = Vector3::Zero;
+//	angle_ += 3.5f;
+//	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - angle_) / 180.0f)) * 6;
+//	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-angle_));
+//
+//	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1 - (MathHelper::Abs(180.f - angle_) / 180.0f))*6;
+//	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-angle_));
+//}
 
 int Enemy_Rival::getNearestPoint(const Vector3 & position)
 {
@@ -147,20 +171,211 @@ int Enemy_Rival::getNearestPoint(const Vector3 & position)
 	}
 	return result;
 }
+void Enemy_Rival::setNearestPoint()
+{
+	nextPosition_ = points_.front();
+	nextKey_ = 0;
+	int i = 0;
+	for (auto& p : points_) {
+		if (Vector3::Distance(nextPosition_, position_) > Vector3::Distance(p, position_)) {
+			nextPosition_ = p;
+			nextKey_ = i;
+		}
+		i++;
+	}
+}
 
 
 void Enemy_Rival::setNextPosition()
 {
-	//ターゲットカウントを-1する
-	nextPoint_ = (nextPoint_ + roundPoint_.size() - 1) % roundPoint_.size();
-
+	////ターゲットカウントを-1する
+	//nextPoint_=(nextPoint_+roundPoint_.size()-1)%roundPoint_.size();
+	//
 	//float rate = 1.0f;
-	//Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(position_, &rate);
+	//Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(centerPosition_, &rate);
 	//if (rate >= 1.05f) {
-	//	isGoBonus_ = true;
-	//	nextPosition_ = nextPosition + Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
+	//	nextPosition_ = nextPosition +Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
 	//	return;
 	//}
-	targetPos_ = roundPoint_[nextPoint_];
+	//nextPosition_ = roundPoint_[nextPoint_];
+	nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
+	nextPosition_ = points_[nextKey_];
+	stopTimer_ = 0.0f;
+}
 
+void Enemy_Rival::ExtinctionUpdate(float deltaTime) {
+	float t = 0;
+	float dis;
+	Vector2 myPos;
+	Vector2 pointPos;
+	std::list<ScoreData*> datas;
+
+	switch (rivalState_)
+	{
+		//攻撃モード
+	case Enemy_Rival::RivalState::AttackMode:
+		scoreManager_->getScoreDataList(datas);
+		//datasから自身を削除
+		datas.remove_if([&](ScoreData* data)->bool {
+			return data->playerNumber_ == getPlayerNumber();
+		});
+
+		for (auto d : datas) {
+			dis = Vector3::Distance(d->target_.lock()->position(), position_);
+			if (dis <= 40.0f) {
+				attackType_ = AttackType::Spin;
+			}
+			else if (Vector3::Distance(d->target_.lock()->position(), position_) <= 60.0f) {
+				count_++;
+			}
+		}
+		if (attackType_ == AttackType::Spin) {
+			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Spin);
+		}
+		else if (attackType_ == AttackType::Half && count_ == 1) {
+			attackType_ = AttackType::Half;
+			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Half);
+		}
+		else {
+			if (scoreManager_->getFirst().score_ <= scoreManager_->GetCharacterScore(playerNumber_)) {
+				setNextPosition();
+			}
+			else {
+				nextPosition_ = scoreManager_->getFirst().target_.lock()->position();
+			}
+			startPos_ = centerPosition_;
+			prevRivalState_ = rivalState_;
+			rivalState_ = RivalState::MoveMode;
+		}
+		break;
+
+		//移動モード
+	case Enemy_Rival::RivalState::MoveMode:
+		t = moveTimer_ / moveMaxTimer_;
+		centerPosition_ = Vector3::Lerp(startPos_, nextPosition_, t);
+
+		velocity_ = Vector3::Zero;
+		myPos = Vector2(centerPosition_.x, centerPosition_.z);
+		pointPos = Vector2(nextPosition_.x, nextPosition_.z);
+
+		//ポイントに到達したら
+		dis = Vector2::Distance(myPos, pointPos);
+		if (dis <= 1.0f) {
+			stopTimer_ += deltaTime;
+			if (stopTimer_ <= 1.0f) return;
+			moveTimer_ = 0.0f;
+			prevRivalState_ = rivalState_;
+			moveCount_++;
+			rivalState_ = RivalState::StepMode;
+		}
+		moveTimer_ = min(moveTimer_ + deltaTime, moveMaxTimer_);
+		break;
+
+		//ステップモード
+	case Enemy_Rival::RivalState::StepMode:
+		if (moveCount_ >= 2) {
+			if (stepCount_ >= 2) {
+				stepCount_ = 0;
+				world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+				change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn);
+			}
+			else {
+				stepCount_++;
+				world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
+				change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter);
+			}
+		}
+		else {
+			rivalState_ = RivalState::AttackMode;
+			setNextPosition();
+		}
+		break;
+	}
+}
+
+void Enemy_Rival::CenterLightingUpdate(float deltaTime){
+	float t = 0;
+	float dis;
+	Vector2 myPos;
+	Vector2 pointPos;
+	std::list<ScoreData*> datas;
+	std::list<int> numbers;
+
+	switch (rivalState_)
+	{
+		//攻撃モード
+	case Enemy_Rival::RivalState::AttackMode:
+		scoreManager_->getScoreDataList(datas);
+		//datasから自身を削除
+		datas.remove_if([&](ScoreData* data)->bool {
+			return data->playerNumber_ == getPlayerNumber();
+		});
+		//if (prevAttackType_ == AttackType::Spin) {
+		//	stopTimer_ += deltaTime;
+		//	if (stopTimer_ <= 1.0f) return;
+		//}
+		for (auto d : datas) {
+			dis = Vector3::Distance(centerPosition_, lightPosition_);
+			if (Vector3::Distance(d->target_.lock()->position(), position_) <= 40.0f && Vector3::Distance(centerPosition_, lightPosition_) <= 20.0f) {
+				attackType_ = AttackType::Spin;
+			}
+			else if (Vector3::Distance(d->target_.lock()->position(), position_) <= 60.0f) {
+				numbers = scoreManager_->getPlayerNumberList();
+				numbers.remove_if([&](int number)->bool {return number == getPlayerNumber(); });
+				if (numbers.size() < 1)return;
+					attackTarget_ = scoreManager_->getScoreData(numbers.front())->target_;
+			}
+		}
+		if (attackType_ == AttackType::Spin) {
+			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Spin);
+		}
+		else if (attackType_ == AttackType::Half && numbers.size() != 0) {
+			attackType_ = AttackType::Half;
+			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Half);
+		}
+		else {
+			nextPosition_ = lightPosition_ + Vector3::Up * 6;
+			startPos_ = centerPosition_;
+			prevRivalState_ = rivalState_;
+			rivalState_ = RivalState::MoveMode;
+		}
+		break;
+
+		//移動モード
+	case Enemy_Rival::RivalState::MoveMode:
+		t = moveTimer_ / (moveMaxTimer_ - 1);
+		centerPosition_ = Vector3::Lerp(startPos_, nextPosition_, t);
+
+		velocity_ = Vector3::Zero;
+		myPos = Vector2(centerPosition_.x, centerPosition_.z);
+		pointPos = Vector2(nextPosition_.x, nextPosition_.z);
+
+		//ポイントに到達したら
+		dis = Vector2::Distance(myPos, pointPos);
+		if (dis <= 1.0f) {
+			stopTimer_ += deltaTime;
+			if (stopTimer_ <= 1.0f) return;
+			moveTimer_ = 0.0f;
+			prevRivalState_ = rivalState_;
+			moveCount_++;
+			rivalState_ = RivalState::AttackMode;
+		}
+		moveTimer_ = min(moveTimer_ + deltaTime, (moveMaxTimer_ - 1));
+		break;
+
+		//ステップモード
+	case Enemy_Rival::RivalState::StepMode:
+		break;
+	}
+
+	ScoreData* data_ = scoreManager_->getScoreData(playerNumber_);
+	if (data_->notice_ == true) {
+		lightState_ = LightState::SpotLighting;
+		//world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
+		//change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Turn, false);
+	}
+}
+
+void Enemy_Rival::SpotLighting(float deltaTime)
+{
 }

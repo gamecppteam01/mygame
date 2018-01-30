@@ -209,6 +209,9 @@ protected:
 	float boundPower_{ 15.0f };
 
 	MODEL_ID bulletModel_;
+
+	//スピンアングル
+	float spinAngle_{ 0.0f };
 protected:
 	//攻撃する範囲
 	const float attackDistance{ 30.0f };

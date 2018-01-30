@@ -34,14 +34,14 @@ static const std::map<BaseEnemy::Enemy_Animation, EnemyBullet::EnemyBullet_Anima
 	{ BaseEnemy::Enemy_Animation::Stan,EnemyBullet::EnemyBullet_Animation::Stan },
 };
 
-BaseEnemy::BaseEnemy(const std::string & name):
+BaseEnemy::BaseEnemy(const std::string & name) :
 	Enemy(name)
 {
 }
 
-BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position,int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid):
-	Enemy(world,name,position,body),bullet_(std::make_shared<EnemyBullet>(world,name,position,this, bulletid,body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
-	prevHitActorNumber_(0),centerPosition_(position)
+BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body, MODEL_ID id, MODEL_ID bulletid) :
+	Enemy(world, name, position, body), bullet_(std::make_shared<EnemyBullet>(world, name, position, this, bulletid, body)), turnPower_(1.0f), playerNumber_(playerNumber), nextPosition_(position),
+	prevHitActorNumber_(0), centerPosition_(position)
 {
 	world_->addActor(ActorGroup::ENEMY_BULLET, bullet_);
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));
@@ -57,7 +57,7 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	bulletRotation_ = bullet_->getRotationPtr();
 
 	target_ = world_->findActor("Player");
-	
+
 }
 
 void BaseEnemy::hitOther(const Vector3 & velocity)
@@ -69,7 +69,7 @@ void BaseEnemy::hitOther(const Vector3 & velocity)
 
 void BaseEnemy::startStepAnim()
 {
-	animation_.ChangeAnim((int)Enemy_Animation::Quarter,0.0f,1.0f,false);
+	animation_.ChangeAnim((int)Enemy_Animation::Quarter, 0.0f, 1.0f, false);
 	bullet_->changeAnimation(animConvList.at(Enemy_Animation::Quarter), 0.0f, 1.0f, false);
 
 }
@@ -111,13 +111,13 @@ void BaseEnemy::onMessage(EventMessage message, void * param)
 {
 }
 
-void BaseEnemy::onUpdate(float deltaTime){
-	
+void BaseEnemy::onUpdate(float deltaTime) {
+
 	switch (state_)
 	{
 	case BaseEnemy::Enemy_State::Normal: {
 		updateNormal(deltaTime);
-		break; 
+		break;
 	}
 	case BaseEnemy::Enemy_State::Step: {
 		updateStep(deltaTime);
@@ -145,7 +145,7 @@ void BaseEnemy::onUpdate(float deltaTime){
 	}
 	default:
 		break;
-	}	
+	}
 	//アニメーションを更新
 	animation_.Update(MathHelper::Sign(deltaTime));
 
@@ -158,7 +158,7 @@ void BaseEnemy::onUpdate(float deltaTime){
 	}
 	correctPosition();
 
-	bulletUpdate(deltaTime);
+	if(state_ != Enemy_State::Attack && attackType_ == AttackType::Spin) bulletUpdate(deltaTime);
 
 	timer_ += deltaTime;
 }
@@ -171,7 +171,7 @@ void BaseEnemy::onDraw() const
 }
 
 //影の描画
-void BaseEnemy::onShadowDraw() const{
+void BaseEnemy::onShadowDraw() const {
 	//判定の中心に描画位置を合わせる
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
@@ -194,8 +194,8 @@ void BaseEnemy::onCollide(Actor & other)
 		//プレイヤーとプレイヤー弾は必ず連番であるため、プレイヤー+1は弾
 		int keysub;
 		if (attackTarget_.expired())keysub = 2;
-		else keysub=other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
-		if (state_ == Enemy_State::Attack&&(keysub==0|| keysub==-1)) {
+		else keysub = other.getCharacterNumber() == attackTarget_.lock()->getCharacterNumber();
+		if (state_ == Enemy_State::Attack && (keysub == 0 || keysub == -1)) {
 			change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward);
 			return;
 		}
@@ -268,7 +268,7 @@ void BaseEnemy::onCollideResult()
 	bound_.y = 0.0f;
 	Vector3 bound = bound_.Normalize()*boundPower_;
 	bound.y = 0.0f;
-	
+
 	bulletVelocity_ += bound;
 	velocity_ += bound;
 
@@ -278,7 +278,7 @@ void BaseEnemy::onCollideResult()
 	//ダウン値が溜まったら
 	if (downCount_ <= 0) {
 		downCount_ = defDownCount;
-		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down,false);
+		change_State_and_Anim(Enemy_State::Down, Enemy_Animation::Down, false);
 	}
 }
 
@@ -313,7 +313,7 @@ bool BaseEnemy::field(Vector3 & result)
 	return false;
 }
 
-float BaseEnemy::mathSpeed(float current, float maxSpeed,float maxTime, float topTime)
+float BaseEnemy::mathSpeed(float current, float maxSpeed, float maxTime, float topTime)
 {
 	//2拍分の時間
 	float maxEaseTime = maxTime;
@@ -351,14 +351,14 @@ void BaseEnemy::JustStep()
 	if (!isCanStep())return;
 	ActorPtr act = getNearestActor();
 	//攻撃射程圏内なら
-	if (Vector3::Distance(act->position(), centerPosition_)<= attackDistance&&prevHitActorNumber_!= act->getCharacterNumber()) {
+	if (Vector3::Distance(act->position(), centerPosition_) <= attackDistance&&prevHitActorNumber_ != act->getCharacterNumber()) {
 		change_State_and_Anim(Enemy_State::Attack, stepAnim[1].first);
 		return;
 	}
 	int key = Random::GetInstance().Range(0, 1);
 	if (key == 1)key++;
 
-	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first,false);
+	change_State_and_Anim(Enemy_State::Step, stepAnim[key].first, false);
 	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[key].second);
 }
 
@@ -392,8 +392,8 @@ void BaseEnemy::searchTarget(float deltaTime)
 		//左なら右に
 		if (leftAngle > 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -rotateAngle);
 		//右なら左に
-		else if(leftAngle < 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), rotateAngle);
-		
+		else if (leftAngle < 90.0f) rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), rotateAngle);
+
 	}
 }
 //一定距離内にいるか？
@@ -421,14 +421,14 @@ void BaseEnemy::addVelocity_NextPosition(float deltaTime)
 	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
 }
 
-void BaseEnemy::changeAnimation(Enemy_Animation animID,float animFrame, float animSpeed, bool isLoop)
+void BaseEnemy::changeAnimation(Enemy_Animation animID, float animFrame, float animSpeed, bool isLoop)
 {
-	animation_.ChangeAnim((int)animID, animFrame,animSpeed,isLoop);
+	animation_.ChangeAnim((int)animID, animFrame, animSpeed, isLoop);
 	bullet_->changeAnimation(animConvList.at(animID), animFrame, animSpeed, isLoop);
-	
+
 }
 
-bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
+bool BaseEnemy::change_State(Enemy_State state, BaseEnemy::Enemy_Animation anim)
 {
 	//状態が変わらないなら失敗
 	if (state_ == state)return false;
@@ -453,11 +453,11 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 	//状態変更を行う
 	switch (state_)
 	{
-	case BaseEnemy::Enemy_State::Normal:{
+	case BaseEnemy::Enemy_State::Normal: {
 		to_Normal();
 		break;
 	}
-	case BaseEnemy::Enemy_State::Step:{
+	case BaseEnemy::Enemy_State::Step: {
 		to_Step(anim);
 		break;
 	}
@@ -490,8 +490,8 @@ bool BaseEnemy::change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim)
 
 bool BaseEnemy::change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop)
 {
-	if (!change_State(state,animID))return false;
-	changeAnimation(animID,0.0f,1.0f,isLoop);
+	if (!change_State(state, animID))return false;
+	changeAnimation(animID, 0.0f, 1.0f, isLoop);
 
 	return true;
 }
@@ -517,7 +517,7 @@ void BaseEnemy::to_Track()
 void BaseEnemy::to_Attack(BaseEnemy::Enemy_Animation anim)
 {
 	attackPower_ = 8;
-
+	spinAngle_ = 0.0f;
 	////3回ステップ来たら攻撃対象をリセット
 	//nonTargetResetTimer_.Initialize();
 	//nonTargetResetTimer_.AddEmpty(3);
@@ -535,11 +535,11 @@ void BaseEnemy::to_Down()
 	downTime_ = 0.0f;
 }
 
-void BaseEnemy::to_WakeUp(){
+void BaseEnemy::to_WakeUp() {
 	wakwUpTime_ = 0.0f;
 }
 
-void BaseEnemy::to_Fever(){
+void BaseEnemy::to_Fever() {
 }
 
 void BaseEnemy::updateNormal(float deltaTime)
@@ -584,7 +584,7 @@ void BaseEnemy::updateAttack(float deltaTime)
 {
 	stepTime_ -= deltaTime;
 	//ステップが終了したら待機状態に戻る
-	if (stepTime_ <= 0.0f) {
+	if (stepTime_ <= 0.0f && attackType_ != AttackType::Spin) {
 		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Move_Forward))updateNormal(deltaTime);
 		return;
 	}
@@ -610,14 +610,14 @@ void BaseEnemy::updateDown(float deltaTime)
 	}
 
 }
-void BaseEnemy::updateWakeUp(float deltaTime){
+void BaseEnemy::updateWakeUp(float deltaTime) {
 	wakwUpTime_ += deltaTime;
 
 	if (wakwUpTime_ >= animation_.GetAnimMaxTime())
 		change_State_and_Anim(prevState_, Enemy_Animation::Move_Forward);
 }
 
-void BaseEnemy::updateFever(float deltaTime){
+void BaseEnemy::updateFever(float deltaTime) {
 }
 
 void BaseEnemy::half(float deltaTime)
@@ -636,8 +636,19 @@ void BaseEnemy::half(float deltaTime)
 
 }
 
-void BaseEnemy::spin(float deltaTime)
-{
+void BaseEnemy::spin(float deltaTime) {
+	velocity_ = Vector3::Zero;
+	spinAngle_ += 3.5f;
+	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - spinAngle_) / 180.0f)) * 6;
+	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-spinAngle_));
+
+	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1 - (MathHelper::Abs(180.f - spinAngle_) / 180.0f)) * 6;
+	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-spinAngle_));
+
+	if (spinAngle_ >= 360.0f) {
+		if (change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle))updateNormal(deltaTime);
+		return;
+	}
 }
 
 bool BaseEnemy::isCanStep() const
@@ -660,14 +671,14 @@ void BaseEnemy::correctPosition()
 
 ActorPtr BaseEnemy::getNearestActor()
 {
-	ActorPtr attackTarget=nullptr;
+	ActorPtr attackTarget = nullptr;
 	std::list<ActorPtr> others;
 	world_->findActors("Enemy", others);
 
-	others.remove_if([this] (const ActorPtr& ap){
+	others.remove_if([this](const ActorPtr& ap) {
 		return std::static_pointer_cast<BaseEnemy>(ap)->getPlayerNumber() == getPlayerNumber();
 	});
-	
+
 	auto player = world_->findActor("Player");
 	others.push_back(player);
 

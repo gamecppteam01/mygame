@@ -138,6 +138,7 @@ void Judgement_SpotLight::ReadyUpdate(float deltaTime) {
 	if (m_Timer <= 0.0f) {
 		EffekseerManager::GetInstance().StopEffect3D(effectHandole);
 		m_Timer = 15.0f;
+		world_->sendMessage(EventMessage::Lighting, (void*)&position_);
 		m_State = State::CenterLighting;
 		return;
 	}
@@ -154,7 +155,6 @@ void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
 	Color color = Color::Lerp(Color(0.5f, 0.5f, 0.5f, 0.5f), Color(0.1f, 0.1f, 0.1f, 0.1f), t);
 	m_LightHandle.setGlobalAmbientLight(color);
-	world_->sendMessage(EventMessage::Lighting, (void*)&position_);
 
 	//暗くなったらセンターライトの点灯
 	if (m_NowTimer >= m_MaxTimer) { m_LightHandle.setLightEnableHandle("Spot", true); }
