@@ -42,7 +42,7 @@ void TitleScene::start()
 void TitleScene::update(float deltaTime)
 {
 	float t = 0.0f;
-
+	key_.update(deltaTime);
 	switch (titleState_)
 	{
 	case TitleState::first:
@@ -93,6 +93,7 @@ void TitleScene::draw() const
 	
 	Camera::GetInstance().Update();
 
+	key_.draw(Vector2{ 200.0f,50.0f });
 }
 
 void TitleScene::end(){

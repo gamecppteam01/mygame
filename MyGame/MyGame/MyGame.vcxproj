@@ -263,6 +263,7 @@
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
     <ClCompile Include="src\Scene\Screen\ResultAnimation.cpp" />
     <ClCompile Include="src\Scene\Screen\ResultScoreDraw.cpp" />
+    <ClCompile Include="src\Scene\Screen\SoftwareKeyboard.cpp" />
     <ClCompile Include="src\Scene\Screen\TutorialCutIn.cpp" />
     <ClCompile Include="src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
@@ -460,6 +461,7 @@
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
     <ClInclude Include="src\Scene\Screen\ResultAnimation.h" />
     <ClInclude Include="src\Scene\Screen\ResultScoreDraw.h" />
+    <ClInclude Include="src\Scene\Screen\SoftwareKeyboard.h" />
     <ClInclude Include="src\Scene\Screen\TutorialCutIn.h" />
     <ClInclude Include="src\Scene\StageSelectScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />

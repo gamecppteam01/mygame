@@ -4,6 +4,7 @@
 #include"../Math/Vector3.h"
 #include"../Math/Vector2.h"
 #include"../Define.h"
+#include"Screen/SoftwareKeyboard.h"
 
 #include<vector>
 enum TitleState
@@ -66,6 +67,8 @@ private:
 	//透明度
 	float alpha_{ 0.0f };
 
+	
+	SoftwareKeyboard key_{};
 private:
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
