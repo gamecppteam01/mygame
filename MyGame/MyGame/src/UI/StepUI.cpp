@@ -4,7 +4,7 @@
 #include"../Graphic/Sprite.h"
 
 StepUI::StepUI(IWorld* world)
-	:UI{ "StepUI",position_ }, world_(world){
+	:UI{ "StepUI",Vector2::Zero }, world_(world){
 }
 
 void StepUI::initialize() {

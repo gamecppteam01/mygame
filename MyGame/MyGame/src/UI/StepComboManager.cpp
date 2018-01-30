@@ -6,7 +6,7 @@ static const Vector2 defaultPos_{ 100.0f,600.0f };
 static const Vector2 PatternPos_{ 150.0f,600.0f };
 
 StepComboManager::StepComboManager(IWorld * world)
-	:UI{ "StepComboManager", position_ }, world_(world)
+	:UI{ "StepComboManager", defaultPos_ }, world_(world)
 {
 	initialize();
 }

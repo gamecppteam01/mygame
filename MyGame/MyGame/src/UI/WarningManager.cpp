@@ -8,7 +8,7 @@
 #include"../Define.h"
 
 WarningManager::WarningManager(IWorld* world)
-	:UI{ "warningmanager" , position_ }, state_{ warningState::None }, world_(world)
+	:UI{ "warningmanager" , Vector2::Zero }, state_{ warningState::None }, world_(world)
 {
 	
 }

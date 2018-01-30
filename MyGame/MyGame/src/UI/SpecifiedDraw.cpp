@@ -1,7 +1,7 @@
 #include "SpecifiedDraw.h"
 
 SpecifiedDraw::SpecifiedDraw(const SPRITE_ID & id, const Vector2 & position)
-	:UI{ "SpecifiedDraw", position_ }, id_(id)
+	:UI{ "SpecifiedDraw", position }, id_(id)
 {
 	initialize();
 }
