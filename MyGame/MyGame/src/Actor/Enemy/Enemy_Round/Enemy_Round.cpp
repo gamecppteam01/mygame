@@ -17,6 +17,8 @@ Enemy_Round::Enemy_Round(IWorld * world, const std::string & name, const Vector3
 	points_.clear();
 	points_=world_->getCanChangedScoreMap().getEnemy_Round_CrawlPoint();
 	setNearestPoint();
+	timer_ = 0.0f;
+	nextStep = 0;
 }
 
 std::shared_ptr<BaseEnemy> Enemy_Round::Create(IWorld * world, const Vector3 & position, int playerNumber)
@@ -24,36 +26,22 @@ std::shared_ptr<BaseEnemy> Enemy_Round::Create(IWorld * world, const Vector3 & p
 	return std::make_shared<Enemy_Round>(world, "Enemy", position, playerNumber);
 }
 
-void Enemy_Round::JustStep()
-{
-	//ターゲット指定のリセットはとりあえずやる
-	nonTargetResetTimer_.Action();
-
-	if (Random::GetInstance().Range(1, 10) > 3) {
-		rhythmTimeCount_++;
-	}
-	if (rhythmTimeCount_ < 2) return;
-
-	rhythmTimeCount_ = 0;
-	nextPosition();
-
-	//ステップ出来るときだけステップする
-	if (!isCanStep())return;
-
-	int nextStep = Random::GetInstance().Randomize(std::vector<int>{ 0,2 });
-	change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first,false);
-	world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[nextStep].second);
-
-
-}
-
 void Enemy_Round::to_Normal()
 {
 	//setNearestPoint();
 }
 
+void Enemy_Round::JustStep()
+{
+}
+
 void Enemy_Round::updateNormal(float deltaTime)
 {
+	timer_ += deltaTime;
+
+	data_ = world_->getCanChangedScoreManager().getScoreData(playerNumber_);
+	firstdata = world_->getCanChangedScoreManager().getFirst();
+
 	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {
 		speedEaseTimer_ = 0.0f;
 		return;
@@ -72,10 +60,13 @@ void Enemy_Round::updateNormal(float deltaTime)
 	vel.y = 0.0f;
 	centerPosition_ += vel.Normalize()*movePower*answer;
 
-
 	//Vector3 pos = (nextPosition_ - position_).Normalize()*movePower;
 	//centerPosition_ += pos;
-	if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z }, Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
+	if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z },
+		Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
+
+	Step();
+	Around_Enemy(50.0f);
 }
 
 void Enemy_Round::onShadowDraw() const
@@ -101,6 +92,60 @@ void Enemy_Round::setNearestPoint()
 
 void Enemy_Round::nextPosition()
 {
-	nextKey_ = (nextKey_ - 1+ points_.size()) % points_.size();
+	nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
+	if (Around_Enemy(50.0f) >= 1) {
+		nextKey_ = (nextKey_ - Random::GetInstance().Range(1, 12) + points_.size()) % points_.size();
+	}
 	nextPosition_ = points_[nextKey_];
+	
+}
+
+void Enemy_Round::Step(){
+	if (timer_ >= 5.0f && Distance_First()) {
+		nextStep = 1;
+		change_State_and_Anim(Enemy_State::Attack, stepAnim[nextStep].first, false);
+		timer_ = 0.0f;
+	}
+	else if (timer_ >= 7.0f) {
+		nextStep = 0;
+		change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first, false);
+		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[nextStep].second);
+		timer_ = 0.0f;
+	}
+	else if (timer_ >= 9.0f) {
+		nextStep = 2;
+		change_State_and_Anim(Enemy_State::Step, stepAnim[nextStep].first, false);
+		world_->getCanChangedScoreManager().addScore(playerNumber_, stepAnim[nextStep].second);
+		timer_ = 0.0f;
+	}
+}
+
+bool Enemy_Round::Distance_First()
+{
+	if(!RankedFirst() && is_In_Distans(ActorPtr(firstdata.target_), centerPosition_, 50.0f)){
+		return true;
+	}
+	return false;
+}
+
+bool Enemy_Round::RankedFirst()
+{
+	if (firstdata.playerNumber_ == playerNumber_) {
+		return true;
+	}
+	return false;
+}
+
+int Enemy_Round::Around_Enemy(float distance)
+{
+	int enemy_count = 0;
+	int num = world_->getCanChangedScoreManager().GetCharacterCount();
+	ScoreData* data[5];
+	for (int i = 0; i <= num; i++) {
+		data[i] = world_->getCanChangedScoreManager().getScoreData(min(i+1,num));
+		if (is_In_Distans(ActorPtr(data[i]->target_), centerPosition_, distance)){
+			enemy_count++;
+		}
+	}
+	return enemy_count;
 }
