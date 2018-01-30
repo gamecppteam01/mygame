@@ -150,7 +150,6 @@ protected:
 	//UŒ‚—Í
 	int attackPower_{ 5 };
 	float stepTime_{ 0.0f };
-	Vector3 velocity_;
 	//‚Í‚¶‚©‚ê‚ÌƒxƒNƒgƒ‹
 	Vector3 bound_{ Vector3::Zero };
 	//Ÿ‚ÉŒü‚©‚¤‘ÎÛ

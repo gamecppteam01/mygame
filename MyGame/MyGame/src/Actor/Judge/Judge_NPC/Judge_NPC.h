@@ -37,8 +37,6 @@ private:
 private:
 	//ó‘Ô
 	Judge_State m_State;
-	//‹–ìŠp
-	float m_Scope_angle;
 	//‰¡‰ñ“]Šp
 	float yaw;
 	//Šp“x

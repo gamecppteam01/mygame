@@ -61,8 +61,6 @@ private:
 	std::map<int, ScoreData> m_ScoreDataList;
 	//スコアリスト
 	std::list<int> m_NumberList;
-	//カウント
-	int m_Count;
 	int timeCount_;
 	//1位の選手データ
 	ScoreData m_FirstData;

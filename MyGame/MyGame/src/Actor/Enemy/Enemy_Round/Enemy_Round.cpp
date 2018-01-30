@@ -5,8 +5,8 @@
 #include"../../../Sound/TempoManager.h"
 #include"../../../Math/Random.h"
 
-Enemy_Round::Enemy_Round():
-	BaseEnemy("Enemy")
+Enemy_Round::Enemy_Round() :
+	BaseEnemy("Enemy"), nextKey_(0), nextStep(0)
 {
 }
 
@@ -39,7 +39,6 @@ void Enemy_Round::updateNormal(float deltaTime)
 {
 	timer_ += deltaTime;
 
-	data_ = world_->getCanChangedScoreManager().getScoreData(playerNumber_);
 	firstdata = world_->getCanChangedScoreManager().getFirst();
 
 	if (world_->getCanChangedTempoManager().getBeatCount() % 3 == 2) {

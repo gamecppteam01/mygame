@@ -29,10 +29,6 @@ private:
 	std::vector<Vector3> points_;
 	//ポイントキー
 	int nextKey_;
-	//自分のScoreData
-	ScoreData* data_;
-	//タイマー
-	float timer_;
 	//ステップ
 	int nextStep;
 	//1位のScoreData

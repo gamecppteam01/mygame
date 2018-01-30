@@ -2,7 +2,7 @@
 
 //コンストラクタ
 ScoreRataManager::ScoreRataManager(IWorld* world)
-:m_World(world){
+:m_World(world),m_Count(0),m_Rata(0.0f){
 }
 
 //初期化

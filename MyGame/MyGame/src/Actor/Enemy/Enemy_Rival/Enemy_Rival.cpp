@@ -13,7 +13,7 @@ static const float moveMaxTimer_ = 3.0f;
 
 static const float attackResetDistance = 40.0f;
 Enemy_Rival::Enemy_Rival() :
-	BaseEnemy("Enemy")
+	BaseEnemy("Enemy"),scoreManager_(nullptr),prevAttackType_(AttackType::None),prevRivalState_(RivalState::MoveMode),nextKey_(0)
 {
 }
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
@@ -56,7 +56,7 @@ void Enemy_Rival::initialize() {
 	m_LightStateUpdateFunc[LightState::SpotLighting] = [this](float deltaTime) {SpotLighting(deltaTime); };
 	lightState_ = LightState::Extinction;
 	rivalState_ = RivalState::MoveMode;
-	attackType_ = AttackType::Half;
+	attackType_ = AttackType::None;
 	startPos_ = centerPosition_;
 }
 
