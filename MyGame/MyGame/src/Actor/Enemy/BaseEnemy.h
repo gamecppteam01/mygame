@@ -33,7 +33,9 @@ public:
 	};
 	enum class AttackType {
 		Half,
-		Spin
+		Spin,
+
+		None
 	};
 public:
 	BaseEnemy(const std::string& name);

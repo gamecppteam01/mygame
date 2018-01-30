@@ -114,7 +114,7 @@ void Enemy_Rival::updateNormal(float deltaTime)
 void Enemy_Rival::to_Normal()
 {
 	prevAttackType_ = attackType_;
-	attackType_ = AttackType::Half;
+	attackType_ = AttackType::None;
 	count_ = 0;
 	moveTimer_ = 0.0f;
 	stopTimer_ = 0.0f;
@@ -227,13 +227,13 @@ void Enemy_Rival::ExtinctionUpdate(float deltaTime) {
 			}
 			else if (Vector3::Distance(d->target_.lock()->position(), position_) <= 60.0f) {
 				count_++;
+				attackType_ = AttackType::Half;
 			}
 		}
 		if (attackType_ == AttackType::Spin) {
 			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Spin);
 		}
 		else if (attackType_ == AttackType::Half && count_ == 1) {
-			attackType_ = AttackType::Half;
 			change_State_and_Anim(Enemy_State::Attack, Enemy_Animation::Half);
 		}
 		else {

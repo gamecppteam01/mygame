@@ -158,7 +158,7 @@ void BaseEnemy::onUpdate(float deltaTime) {
 	}
 	correctPosition();
 
-	if(state_ != Enemy_State::Attack && attackType_ == AttackType::Spin) bulletUpdate(deltaTime);
+	if(attackType_ != AttackType::Spin) bulletUpdate(deltaTime);
 
 	timer_ += deltaTime;
 }
