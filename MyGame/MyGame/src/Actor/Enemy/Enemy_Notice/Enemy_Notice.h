@@ -38,11 +38,11 @@ private:
 	void setNextPosition();
 private:
 	//ステイト
-	Notice_State state_;
+	Notice_State stateNotice_;
 	//次のポイント
 	int nextPoint_;
 	//次の目的地
-	Vector3 nextPosition_;
+	Vector3 nextNoticePosition_;
 	//ボーナス
 	bool isGoBonus_{ false };
 	//ライトの座標
