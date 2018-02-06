@@ -149,16 +149,6 @@ void Enemy_Rival::to_Attack(Enemy_Animation anim)
 	startPos_ = centerPosition_;
 }
 
-//void Enemy_Rival::spin(float deltaTime){
-//	velocity_ = Vector3::Zero;
-//	angle_ += 3.5f;
-//	Vector3 baseRotatePos = bulletDistance + bulletDistance*(1 - (MathHelper::Abs(180.f - angle_) / 180.0f)) * 6;
-//	position_ = centerPosition_ + (baseRotatePos *rotation_* Matrix::CreateRotationY(-angle_));
-//
-//	Vector3 rotatePos = -bulletDistance + -bulletDistance*(1 - (MathHelper::Abs(180.f - angle_) / 180.0f))*6;
-//	*bulletPosition_ = centerPosition_ + (rotatePos *rotation_* Matrix::CreateRotationY(-angle_));
-//}
-
 int Enemy_Rival::getNearestPoint(const Vector3 & position)
 {
 	int result = 0;
@@ -322,7 +312,7 @@ void Enemy_Rival::CenterLightingUpdate(float deltaTime){
 			else if (Vector3::Distance(d->target_.lock()->position(), position_) <= 60.0f) {
 				numbers = scoreManager_->getPlayerNumberList();
 				numbers.remove_if([&](int number)->bool {return number == getPlayerNumber(); });
-				if (numbers.size() < 1)return;
+				if (numbers.size() < 1)break;
 					attackTarget_ = scoreManager_->getScoreData(numbers.front())->target_;
 			}
 		}
@@ -371,11 +361,21 @@ void Enemy_Rival::CenterLightingUpdate(float deltaTime){
 	ScoreData* data_ = scoreManager_->getScoreData(playerNumber_);
 	if (data_->notice_ == true) {
 		lightState_ = LightState::SpotLighting;
-		//world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
-		//change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Turn, false);
 	}
 }
 
 void Enemy_Rival::SpotLighting(float deltaTime)
 {
+	if (timer_ >= 1.0f && stepCount_ >= 1) {
+		stepCount_ = 0;
+		timer_ = 0;
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Turn);
+	}
+	else if(timer_ >= 1.0f){
+		stepCount_++;
+		timer_ = 0;
+		change_State_and_Anim(Enemy_State::Step, Enemy_Animation::Quarter);
+	}
+
+	timer_ += deltaTime;
 }
