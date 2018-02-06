@@ -1,6 +1,7 @@
 #include "SoftwareKeyboard.h"
 #include"../../Input/InputChecker.h"
 #include"../../Math/MathHelper.h"
+#include"../../Graphic/Sprite.h"
 
 SoftwareKeyboard::SoftwareKeyboard()
 {
@@ -62,6 +63,8 @@ void SoftwareKeyboard::update(float deltaTime)
 
 void SoftwareKeyboard::draw(const Vector2 & position)const
 {
+	Sprite::GetInstance().Draw(SPRITE_ID::KEYBOARD_FRAME_SPRITE, position + Vector2{ -50.0f,-30.0f });
+	
 	for (auto& k : keylist) {
 		for (auto& kc : k) {
 			//if (kc.character == "EX")continue;

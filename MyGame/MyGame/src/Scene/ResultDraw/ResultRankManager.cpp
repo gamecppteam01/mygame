@@ -11,6 +11,8 @@ static const float movePower{ 10.0f };
 static const float lightUp{ 50.0f };
 static const Vector2 defaultPos{ WINDOW_WIDTH + 100.0f, 200.0f };
 static const Vector3 defaultCameraPos{ 0.0f,50.0f,-50.0f };
+static const float spriteYSize = 80.0f;
+static const float spriteXSize = 50.0f;
 
 static const std::vector<Vector3> rankPositions{
 	Vector3{ -120.0f,0.0f,0.0f },
@@ -80,6 +82,14 @@ void ResultRankManager::init()
 		i++;
 
 	}
+	field_.init();
+
+	shadowmap_.initialize();
+
+	shadow_data = DataManager::GetInstance().getShadowData(MODEL_ID::STAGE_MODEL);
+	shadowmap_.makeShadowMap(shadow_data.Id, shadow_data.Size, shadow_data.Direction);
+	shadowmap_.AllSetRange(shadow_data.MinPos, shadow_data.MaxPos);
+
 }
 
 void ResultRankManager::update(float deltaTime)
@@ -135,17 +145,35 @@ void ResultRankManager::update(float deltaTime)
 	for (auto& c : characters_) {
 		std::get<3>(c)->update(1.0f);
 	}
+	field_.update(deltaTime);
+
 }
 
 void ResultRankManager::draw() const
 {
 	camera_.draw();
+	//シャドウマップに描画
+	shadowmap_.SetUp_ShadowMapDraw(shadow_data.Id);
+	// アクターの描画処理
 	int count = -1;
 	for (auto& c : characters_) {
 		count++;
 
 		std::get<3>(c)->draw(std::get<1>(c), std::get<2>(c));
 	}
+	shadowmap_.DrawEnd_ShadowMap();
+
+	//使用したいシャドウマップを設定して描画
+	shadowmap_.SetUse_ShadowMap(shadow_data.Id, shadow_data.Slot);
+	field_.draw();
+	count = -1;
+	for (auto& c : characters_) {
+		count++;
+
+		std::get<3>(c)->draw(std::get<1>(c), std::get<2>(c));
+	}
+	shadowmap_.ReleaseShadowMap(shadow_data.Slot);
+
 	count = -1;
 	for (auto& c : characters_) {
 		count++;
@@ -168,6 +196,7 @@ void ResultRankManager::draw() const
 void ResultRankManager::end()
 {
 	lightHandle_.deleteLightHandleAll();
+	shadowmap_.AllDeletionShadowMap();
 
 }
 
@@ -192,7 +221,7 @@ void ResultRankManager::MoveLeft(float deltaTime)
 		lerpTimer_ = time;
 		isChange = true;
 	}
-	float leftPos = Easing::EaseOutQuint(lerpTimer_, defaultPos.x, 50.0f - defaultPos.x, time);
+	float leftPos = Easing::EaseOutQuint(lerpTimer_, defaultPos.x, spriteXSize - defaultPos.x, time);
 	std::get<4>(characters_[currentTarget_]).x = leftPos;
 	
 	if (isChange) {
@@ -258,7 +287,6 @@ void ResultRankManager::EndLight(float deltaTime)
 
 void ResultRankManager::MoveDown(float deltaTime)
 {
-	float spriteYSize = 80.0f;
 	float downPos = defaultPos.y + (characters_.size() - currentTarget_-1)*spriteYSize;
 	std::get<4>(characters_[currentTarget_]) += Vector2{ 0.0f,movePower };
 	if (std::get<4>(characters_[currentTarget_]).y > downPos) {
@@ -282,6 +310,32 @@ void ResultRankManager::Next(float deltaTime)
 
 void ResultRankManager::End(float deltaTime)
 {
+}
+
+void ResultRankManager::To_End()
+{
+	if (isEnd())return;
+	state_ = State::End;
+	int count = 0;
+	for (auto& c : characters_) {
+		float leftPos = spriteXSize;
+		float downPos = defaultPos.y + (characters_.size() - count - 1)*spriteYSize;
+		std::get<4>(c) = Vector2{ leftPos,downPos };
+		count++;
+	}
+	currentTarget_ = characters_.size() - 1;
+
+	camera_.start(std::get<1>(characters_.back()) + Vector3{ -30.0f,0.0f,40.0f }, Vector3{ 0.0f,-70.0f,0.0f }, ResultEasingType::EaseOutQuad, ResultEasingType::EaseOutQuad, ResultEasingType::EaseInCirc, 10.0f);
+	
+	Sound::GetInstance().PlaySE(SE_ID::CHEER_SE);
+	soundVolume_ = 1.0f;
+	Sound::GetInstance().SetSEVolume(SE_ID::CHEER_SE, soundVolume_);
+
+	lightHandle_.setLightEnableHandle("Spot", true);
+	lightHandle_.setLightPositionHandle("Spot", std::get<1>(characters_.back()) + Vector3::Up*lightUp);
+
+	std::get<3>(characters_.back())->setAnim(3, true);
+
 }
 
 void ResultRankManager::changeState(State state,bool isLoop)

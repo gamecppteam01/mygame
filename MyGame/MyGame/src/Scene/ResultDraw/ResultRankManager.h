@@ -9,6 +9,9 @@
 #include"../../Math/Vector3.h"
 #include"../../Math/Matrix.h"
 #include"ResultModelDrawer.h"
+#include"../../ShadowMap/ShadowMap.h"
+#include"../../ShadowMap/ShadowMap_Data.h"
+#include"ResultField.h"
 
 class ResultRankManager {
 private:
@@ -22,7 +25,8 @@ private:
 		EndLight,
 		MoveDown,
 		Next,
-		End
+		End,
+		To_End
 
 	};
 public:
@@ -37,6 +41,9 @@ public:
 	void end();
 
 	bool isEnd()const;
+
+	void To_End();
+
 private:
 	void Start(float deltaTime);
 	void MoveLeft(float deltaTime);
@@ -48,7 +55,6 @@ private:
 	void MoveDown(float deltaTime);
 	void Next(float deltaTime);
 	void End(float deltaTime);
-
 
 	void changeState(State state, bool isLoop=false);
 
@@ -80,4 +86,13 @@ private:
 	int incSize_{ 0 };//ずらし値
 	float timer_;
 	std::vector<std::tuple<ScoreData, Vector3, Matrix, std::shared_ptr<ResultModelDrawer>, Vector2>> characters_;
+	ResultField field_{};
+
+
+
+	//シャドウマップ
+	ShadowMap shadowmap_{};
+	//シャドウマップのデータ
+	ShadowMap_Data shadow_data{};
+
 };

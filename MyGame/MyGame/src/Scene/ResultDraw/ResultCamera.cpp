@@ -27,7 +27,7 @@ void ResultCamera::init()
 
 }
 
-void ResultCamera::start(const Vector3 & nextTarget, const Vector3& add, ResultEasingType xEase, ResultEasingType yEase, ResultEasingType zEase)
+void ResultCamera::start(const Vector3 & nextTarget, const Vector3& add, ResultEasingType xEase, ResultEasingType yEase, ResultEasingType zEase,float speed)
 {
 	Vector3 current = currentTarget();
 
@@ -42,6 +42,7 @@ void ResultCamera::start(const Vector3 & nextTarget, const Vector3& add, ResultE
 	target_ = current;
 	nextTarget_ = nextTarget;
 	lerpTimer_ = 0.0f;
+	speed_ = speed;
 	xEase_ = xEase;
 	yEase_ = yEase;
 	zEase_ = zEase;
@@ -49,7 +50,7 @@ void ResultCamera::start(const Vector3 & nextTarget, const Vector3& add, ResultE
 
 void ResultCamera::update(float deltaTime)
 {
-	lerpTimer_ = min(lerpTimer_ + deltaTime, 1.0f);
+	lerpTimer_ = min(lerpTimer_ + deltaTime*speed_, 1.0f);
 }
 
 void ResultCamera::draw() const

@@ -152,6 +152,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "titlecursor.png", SPRITE_ID::TITLE_CURSOR);
 	Sprite::GetInstance().Load(defaultPath + "burstcomboUI.png", SPRITE_ID::COMBO_BURST_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "pointupcomboUI.png", SPRITE_ID::COMBO_POINTUP_SPRITE);
+
+	Sprite::GetInstance().Load(defaultPath + "nameSetFrame.png", SPRITE_ID::KEYBOARD_FRAME_SPRITE);
 	
 	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "stage2name.png", SPRITE_ID::STAGE_2_SPRITE);
@@ -268,7 +270,7 @@ void LoadingScene::LoadFont()
 	FontManager::GetInstance().AddFont(FONT_ID::DEFAULT_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
 	FontManager::GetInstance().AddFont(FONT_ID::TUTORIAL_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 70);
-	FontManager::GetInstance().AddFont(FONT_ID::KEYBOARD_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 28);
+	FontManager::GetInstance().AddFont(FONT_ID::KEYBOARD_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 60);
 }
 
 void LoadingScene::LoadBGM()

@@ -6,9 +6,9 @@
 SceneManager::SceneManager() :currentScene_(SceneType::SCENE_LOADING), fadesp_(){
 }
 
-SceneManager::~SceneManager() {
-	scenes_.clear();
-}
+//SceneManager::~SceneManager() {
+//	scenes_.clear();
+//}
 
 void SceneManager::init()
 {

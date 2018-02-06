@@ -142,8 +142,8 @@ public:
 		return keylist;
 	}
 private:
-	const float leftMargin = 30.0f;
-	const float upMargin = 40.0f;
+	const float leftMargin = 60.0f;
+	const float upMargin = 60.0f;
 	const float centerMargin = 20.0f;
 	const std::vector<std::vector<std::shared_ptr<KeyButton>>> keylist{//キーの
 		{ std::make_shared<KeyChar>(Vector2{ 0.0f,0.0f },"ワ",std::vector<int>{0},true)						,std::make_shared<KeyChar>(Vector2{ leftMargin*1.0f,0.0f },"ラ",std::vector<int>{0})				,std::make_shared<KeyChar>(Vector2{ leftMargin*2.0f,0.0f },"ヤ",std::vector<int>{0},true)										,std::make_shared<KeyChar>(Vector2{ leftMargin*3.0f,0.0f },"マ",std::vector<int>{0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*4.0f,0.0f },"ハ",std::vector<int>{0,1,2})			,std::make_shared<KeyChar>(Vector2{ leftMargin*5.0f,0.0f },"ナ",std::vector<int>{0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*6.0f,0.0f },"タ",std::vector<int>{0,1})					,std::make_shared<KeyChar>(Vector2{ leftMargin*7.0f,0.0f },"サ",std::vector<int>{0,1})				,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,0.0f },"カ",std::vector<int>{0,1})				,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,0.0f },"ア",std::vector<int>{0},true)					,std::make_shared<ChangeMinChara>(Vector2{ leftMargin*10.0f,0.0f })  },

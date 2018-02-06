@@ -277,10 +277,10 @@ void GamePlayScene::update_Play(float deltaTime) {
 	startDraw_.update(deltaTime);
 	if (startDraw_.isDead())startDraw_ = DrawStartSprite{ SPRITE_ID::GAMESTART_1_SPRITE,DrawStartSprite_FadeType::Fade_None };//死んだらフェード終わり
 
-	//if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::X)) {
-	//	isEnd_ = true;
-	//	next_ = SceneType::SCENE_CLEAR;
-	//}
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::X)) {
+		isEnd_ = true;
+		next_ = SceneType::SCENE_CLEAR;
+	}
 	if (world_.getCanChangedTempoManager().isEnd()) {
 		changeState(GamePlayState::End);
 		return;

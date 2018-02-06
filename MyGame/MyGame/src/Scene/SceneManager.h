@@ -10,7 +10,7 @@ class Scene;
 class SceneManager {
 public:
 	SceneManager();
-	~SceneManager();
+	//~SceneManager();
 	void init();
 	void start();
 	void update(float deltaTime);

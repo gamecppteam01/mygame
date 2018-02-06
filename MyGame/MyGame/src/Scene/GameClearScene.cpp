@@ -8,7 +8,7 @@
 #include"../Graphic/Model.h"
 
 
-GameClearScene::GameClearScene():sinCount_(0), field_()
+GameClearScene::GameClearScene():sinCount_(0)
 {
 	next_ = SceneType::SCENE_TITLE;
 }
@@ -26,12 +26,10 @@ void GameClearScene::start()
 	score_.init();
 
 	state_ = State::Start;
-	field_.init();
 }
 
 void GameClearScene::update(float deltaTime)
 {
-	field_.update(deltaTime);
 	rrMgr_.update(deltaTime);
 	score_.update(deltaTime);
 	if (state_ == GameClearScene::Start) {
@@ -39,6 +37,9 @@ void GameClearScene::update(float deltaTime)
 		Sound::GetInstance().PlayBGM(BGM_ID::CLEAR_BGM, DX_PLAYTYPE_LOOP);
 		state_ = Normal;
 		return;
+	}
+	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
+		rrMgr_.To_End();
 	}
 	if (rrMgr_.isEnd()) {
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A) ||
@@ -68,7 +69,6 @@ void GameClearScene::update(float deltaTime)
 void GameClearScene::draw() const
 {
 
-	field_.draw();
 
 	rrMgr_.draw();
 	

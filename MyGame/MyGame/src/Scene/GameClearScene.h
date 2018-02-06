@@ -6,7 +6,6 @@
 #include "../World/World.h"
 #include <list>
 #include"Screen/ResultScoreDraw.h"
-#include"ResultDraw/ResultField.h"
 #include"ResultDraw/ResultRankManager.h"
 
 /* 順位とスコアを並べる、タイトルに戻る */
@@ -36,7 +35,6 @@ private:
 	ResultScoreDraw score_;
 
 	ResultRankManager rrMgr_{};
-	ResultField field_;
 
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
