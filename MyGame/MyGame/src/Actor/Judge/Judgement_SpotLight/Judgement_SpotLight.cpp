@@ -14,14 +14,14 @@
 
 //コンストラクタ
 Judgement_SpotLight::Judgement_SpotLight(IWorld * world, const Vector3 & position, LightHandle& light)
-	:JudgeBase(world, "SpotLight", position), m_LightHandle(light) {
+	:JudgeBase(world, "SpotLight", position), m_LightHandle(&light) {
 	initialize();
 }
 
 //初期化
 void Judgement_SpotLight::initialize() {
 	m_State = State::SetUp;
-	m_LightHandle.setLightEnableHandle("Spot", false);
+	m_LightHandle->setLightEnableHandle("Spot", false);
 	m_StateUpdateFunc[State::SetUp] = [this](float deltaTime) {SetUp(deltaTime); };
 	m_StateUpdateFunc[State::Ready] = [this](float deltaTime) {ReadyUpdate(deltaTime); };
 	m_StateUpdateFunc[State::CenterLighting] = [this](float deltaTime) {CenterLightingUpdate(deltaTime); };
@@ -110,9 +110,9 @@ bool Judgement_SpotLight::getIsNotice(int num) const
 
 void Judgement_SpotLight::SetUp(float deltaTime) {
 	position_ = Vector3::Up * 2.0f;
-	m_LightHandle.setLightPositionHandle("Spot", Vector3(0.0f, 100.0f, 0.0f));
-	m_LightHandle.setLightAngleHandle("Spot", m_LightData[CenterLight].cone_outangle_, m_LightData[CenterLight].cone_inangle_);
-	m_LightHandle.setLightRangeAttenHandle("Spot", 500.0f, m_LightData[CenterLight].atten0_, m_LightData[CenterLight].atten1_, m_LightData[CenterLight].atten2_);
+	m_LightHandle->setLightPositionHandle("Spot", Vector3(0.0f, 100.0f, 0.0f));
+	m_LightHandle->setLightAngleHandle("Spot", m_LightData[CenterLight].cone_outangle_, m_LightData[CenterLight].cone_inangle_);
+	m_LightHandle->setLightRangeAttenHandle("Spot", 500.0f, m_LightData[CenterLight].atten0_, m_LightData[CenterLight].atten1_, m_LightData[CenterLight].atten2_);
 	m_Count = 0;
 	m_NowTimer = 0.0f;
 
@@ -154,10 +154,10 @@ void Judgement_SpotLight::ReadyUpdate(float deltaTime) {
 void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
 	Color color = Color::Lerp(Color(0.5f, 0.5f, 0.5f, 0.5f), Color(0.1f, 0.1f, 0.1f, 0.1f), t);
-	m_LightHandle.setGlobalAmbientLight(color);
+	m_LightHandle->setGlobalAmbientLight(color);
 
 	//暗くなったらセンターライトの点灯
-	if (m_NowTimer >= m_MaxTimer) { m_LightHandle.setLightEnableHandle("Spot", true); }
+	if (m_NowTimer >= m_MaxTimer) { m_LightHandle->setLightEnableHandle("Spot", true); }
 
 	//範囲内に入っていたらタイムを計る
 	TimeCount(deltaTime);
@@ -179,13 +179,13 @@ void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 void Judgement_SpotLight::SetUpSpotLighting(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
 	position_ = Vector3::Lerp(position_, m_Target.lock()->position(), t);
-	m_LightHandle.setLightPositionHandle("Spot", Vector3(position_.x, 100.0f, position_.z));
+	m_LightHandle->setLightPositionHandle("Spot", Vector3(position_.x, 100.0f, position_.z));
 	float out_a = MathHelper::Lerp(m_LightData[CenterLight].cone_outangle_, m_LightData[SpotLight].cone_outangle_, t);
 	float in_a = MathHelper::Lerp(m_LightData[CenterLight].cone_inangle_, m_LightData[SpotLight].cone_inangle_, t);
-	m_LightHandle.setLightAngleHandle("Spot", out_a, in_a);
+	m_LightHandle->setLightAngleHandle("Spot", out_a, in_a);
 	float atten0 = MathHelper::Lerp(m_LightData[CenterLight].atten0_, m_LightData[CenterLight].atten0_, t);
 	float atten1 = MathHelper::Lerp(m_LightData[CenterLight].atten1_, m_LightData[CenterLight].atten1_, t);
-	m_LightHandle.setLightRangeAttenHandle("Spot", 500.0f, atten0, atten1, 0.0f);
+	m_LightHandle->setLightRangeAttenHandle("Spot", 500.0f, atten0, atten1, 0.0f);
 
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);
 	if (m_NowTimer >= m_MaxTimer) {
@@ -195,10 +195,10 @@ void Judgement_SpotLight::SetUpSpotLighting(float deltaTime) {
 
 void Judgement_SpotLight::FailureUpdate(float deltaTime) {
 	//スポットライトの消灯
-	m_LightHandle.setLightEnableHandle("Spot", false);
+	m_LightHandle->setLightEnableHandle("Spot", false);
 	float t = m_NowTimer / m_MaxTimer;
 	Color color = Color::Lerp(Color(0.1f, 0.1f, 0.1f, 0.1f), Color(0.5f, 0.5f, 0.5f, 0.5f), t);
-	m_LightHandle.setGlobalAmbientLight(color);
+	m_LightHandle->setGlobalAmbientLight(color);
 	m_Timer = 30.0f;
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);
 	if (m_NowTimer >= m_MaxTimer){
@@ -209,7 +209,7 @@ void Judgement_SpotLight::FailureUpdate(float deltaTime) {
 
 void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 	position_ = m_Target.lock()->position();
-	m_LightHandle.setLightPositionHandle("Spot", Vector3(position_.x, 100.0f, position_.z));
+	m_LightHandle->setLightPositionHandle("Spot", Vector3(position_.x, 100.0f, position_.z));
 
 	if (m_Timer <= 0.0f) {
 		m_NowTimer = 0.0f;

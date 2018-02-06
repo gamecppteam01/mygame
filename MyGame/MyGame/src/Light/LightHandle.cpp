@@ -29,6 +29,7 @@ void LightHandle::setUsePixelLighting(bool valeu) {
 
 //グローバルアンビエントカラーを設定する
 void LightHandle::setGlobalAmbientLight(Color& color) {
+	color_ = color;
 	SetGlobalAmbientLight(GetColorF(color.r, color.g, color.b, color.a));
 }
 
@@ -165,4 +166,9 @@ int LightHandle::getEnableLightHandleNum() {
 //有効になっているライトハンドルを取得する
 int LightHandle::getEnableLightHandle(int index) {
 	return GetEnableLightHandle(index);
+}
+
+Color LightHandle::getGlobalAmbientColor()
+{
+	return color_;
 }

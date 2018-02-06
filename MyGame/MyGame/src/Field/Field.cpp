@@ -111,9 +111,13 @@ void Field::draw() const {
 	MV1SetPosition(audience_, Vector3::Vector3ToVECTOR(Vector3{270.0f,0.0f, 0.0f }));
 	MV1DrawModel(audience_);
 
+	SetDrawBright(red_, green_, blue_);
 	audience.draw(Vector3{0.0f,57.0f,210.0f}, Vector3{ -90.0f,0.0f,0.0f }, 1);
 	audience.draw(Vector3{ -295.0f,50.0f,0.0f }, Vector3{ 0.0f,-90.0f,-90.0f }, 2);
 	audience.draw(Vector3{295.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,90.0f },3);
+	SetDrawBright(255, 255, 255);
+
+	DrawFormatString(300, 300, GetColor(255, 255, 255), "%d", red_);
 }
 
 // フィールドのハンドル取得
@@ -150,4 +154,11 @@ float Field::getXWidth() const
 float Field::getZWidth() const
 {
 	return 142.5f*FIELD_SCALE;
+}
+
+void Field::AudienceLightColor(float r, float g, float b)
+{
+	red_ = r * 255;
+	green_ = g * 255;
+	blue_ = b * 255;
 }

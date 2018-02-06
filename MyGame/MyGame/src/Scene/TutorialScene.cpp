@@ -116,6 +116,10 @@ void TutorialScene::update(float deltaTime)
 	if (world_.getCanChangedTempoManager().isEnd()) {
 		world_.getCanChangedTempoManager().startMusic();
 	}
+
+	auto color = lightHandle_.getGlobalAmbientColor();
+	world_.setFieldAudienceBright(color.r, color.g, color.b);
+
 }
 
 void TutorialScene::draw() const
@@ -688,8 +692,11 @@ void TutorialScene::settingLight()
 	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	lightHandle_.setGlobalAmbientLight(Color(0.5f, 0.5f, 0.5f, 0.5f));
 	lightHandle_.setLightEnableHandle("Spot", false);
+	auto color = lightHandle_.getGlobalAmbientColor();
+	world_.setFieldAudienceBright(color.r, color.g, color.b);
+
 
 }
 

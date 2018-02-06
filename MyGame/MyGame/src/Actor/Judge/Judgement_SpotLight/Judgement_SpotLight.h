@@ -64,7 +64,7 @@ private:
 	float m_Distance;
 
 	//ライトハンドルクラス
-	LightHandle m_LightHandle;
+	LightHandle* m_LightHandle;
 	//ステイト
 	State m_State;
 	//タイマー

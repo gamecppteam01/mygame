@@ -74,6 +74,7 @@ public:
 	virtual void setLateDraw(std::function<void()> draw, bool isBeforeUI = true) override;
 	void setShadowMap(const bool flag,const MODEL_ID& id = MODEL_ID::DUMMY_MODEL);
 
+	void setFieldAudienceBright(float r,float g,float b);
 	// ÉRÉsÅ[ã÷é~
 	World(const World& other) = delete;
 	World& operator = (const World& other) = delete;

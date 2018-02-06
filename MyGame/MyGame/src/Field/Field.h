@@ -17,6 +17,7 @@ public:
 	Vector3 CorrectPosition(const Vector3& position);
 	float getXWidth()const;
 	float getZWidth()const;
+	void AudienceLightColor(float r, float g, float b);
 	// ÉRÉsÅ[ã÷é~
 	Field(const Field& other) = delete;
 	Field& operator = (const Field& other) = delete;
@@ -31,4 +32,9 @@ private:
 	int audience_;
 	CollisionMesh mesh_;
 	Audience audience;
+
+	const int LightDefault{ 130 };
+	int red_{ LightDefault };
+	int green_{ LightDefault };
+	int blue_{ LightDefault };
 };

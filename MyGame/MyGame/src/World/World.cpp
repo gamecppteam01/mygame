@@ -23,7 +23,7 @@ World::~World()
 {
 	lateDrawFuncList_.clear();
 	lateDrawFuncListAfterUI_.clear();
-	end();
+	//end();
 }
 
 //‰Šú‰»
@@ -253,6 +253,11 @@ void World::setShadowMap(const bool flag, const MODEL_ID& id) {
 	shadow_data = DataManager::GetInstance().getShadowData(id);
 	shadowmap_.makeShadowMap(shadow_data.Id, shadow_data.Size, shadow_data.Direction);
 	shadowmap_.AllSetRange(shadow_data.MinPos, shadow_data.MaxPos);
+}
+
+void World::setFieldAudienceBright(float r, float g, float b)
+{
+	field_->AudienceLightColor(r, g, b);
 }
 
 void World::roundCam(int num)

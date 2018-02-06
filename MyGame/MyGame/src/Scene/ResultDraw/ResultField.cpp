@@ -17,3 +17,8 @@ void ResultField::draw() const
 {
 	field_->draw();
 }
+
+void ResultField::setBright(float r, float g, float b)
+{
+	field_->AudienceLightColor(r, g, b);
+}

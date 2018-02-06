@@ -62,12 +62,14 @@ public:
 	int getEnableLightHandleNum();
 	//有効になっているライトハンドルを取得する
 	int getEnableLightHandle(int index);
-
+	//グローバルのアンビエント色を取得
+	Color getGlobalAmbientColor();
 public:
 	static const int DirType;
 	static const int PointType;
 	static const int SpotType;
 
 private:
+	Color color_;
 	std::map<std::string, int> lightHandles_;
 };

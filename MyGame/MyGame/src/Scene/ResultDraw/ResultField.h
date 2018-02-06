@@ -12,6 +12,7 @@ public:
 
 	void draw()const;
 
+	void setBright(float r, float g, float b);
 private:
 	FieldPtr field_;
 };

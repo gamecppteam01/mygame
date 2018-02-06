@@ -50,6 +50,8 @@ void ResultRankManager::init()
 	lerpTimer_ = 0.0f;
 	isLast_ = false;
 	state_ = State::Start;
+	field_.init();
+
 	settingLight();
 	soundVolume_ = 1.0f;
 	camera_.init();
@@ -82,7 +84,6 @@ void ResultRankManager::init()
 		i++;
 
 	}
-	field_.init();
 
 	shadowmap_.initialize();
 
@@ -172,7 +173,7 @@ void ResultRankManager::draw() const
 
 		std::get<3>(c)->draw(std::get<1>(c), std::get<2>(c));
 	}
-	shadowmap_.ReleaseShadowMap(shadow_data.Slot);
+	//shadowmap_.ReleaseShadowMap(shadow_data.Slot);
 
 	count = -1;
 	for (auto& c : characters_) {
@@ -333,6 +334,8 @@ void ResultRankManager::To_End()
 
 	lightHandle_.setLightEnableHandle("Spot", true);
 	lightHandle_.setLightPositionHandle("Spot", std::get<1>(characters_.back()) + Vector3::Up*lightUp);
+	lightHandle_.setLightEnableHandle("Point", true);
+	lightHandle_.setLightPositionHandle("Point", std::get<1>(characters_.back()) + Vector3::Up*lightUp);
 
 	std::get<3>(characters_.back())->setAnim(3, true);
 
@@ -358,7 +361,9 @@ void ResultRankManager::changeState(State state,bool isLoop)
 		break;
 	case ResultRankManager::State::Light:
 		lightHandle_.setLightEnableHandle("Spot", true);
-		lightHandle_.setLightPositionHandle("Spot", std::get<1>(characters_[currentTarget_])+Vector3::Up*lightUp);
+		lightHandle_.setLightEnableHandle("Point", true);
+		lightHandle_.setLightPositionHandle("Point", std::get<1>(characters_[currentTarget_]) + Vector3::Up*lightUp);
+		lightHandle_.setLightPositionHandle("Spot", std::get<1>(characters_[currentTarget_]) + Vector3::Up*lightUp);
 		//camera_.zoomIn();
 		break;
 	case ResultRankManager::State::Animation:
@@ -370,6 +375,7 @@ void ResultRankManager::changeState(State state,bool isLoop)
 		break;
 	case ResultRankManager::State::EndLight:
 		lightHandle_.setLightEnableHandle("Spot", false);
+		lightHandle_.setLightEnableHandle("Point", false);
 		//camera_.zoomOut();
 		break;
 	case ResultRankManager::State::MoveDown:
@@ -399,10 +405,21 @@ inline void ResultRankManager::settingLight() {
 	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
 	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+
+	lightHandle_.createPointLightHandle("Point", Vector3::Zero, 500.0f);
+	lightHandle_.setLightAmbientColorHandle("Point", Color(0.0f, 0.0f, 0.0f, 0.0f));
+	lightHandle_.setLightDiffuseColorHandle("Point", Color(0.7f, 0.7f, 0.2f, 1.0f));
+	lightHandle_.setLightSpecuarColorHandle("Point", Color(1.0f, 1.0f, 1.0f, 1.0f));
+
 	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
+	lightHandle_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
+	auto color = lightHandle_.getGlobalAmbientColor();
+	field_.setBright(color.r, color.g, color.b);
 
 	lightHandle_.setLightEnableHandle("Spot", false);
 	lightHandle_.setLightPositionHandle("Spot", camera_.currentTarget()+Vector3::Up*lightUp);
+
+	lightHandle_.setLightEnableHandle("Point", false);
+
 
 }

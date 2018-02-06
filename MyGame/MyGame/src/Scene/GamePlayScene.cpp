@@ -79,13 +79,13 @@ void GamePlayScene::start() {
 	world_.setShadowMap(true, MODEL_ID::STAGE_MODEL);
 	pause_.initialize();
 
-	//ライトの設定
-	settingLight();
 
 	std::shared_ptr<Field> field = std::make_shared<Field>(Model::GetInstance().GetHandle(MODEL_ID::STAGE_MODEL), Model::GetInstance().GetHandle(MODEL_ID::SKYBOX_MODEL));
 	world_.addField(field);
 	std::shared_ptr<OverLookingCamera> camera = std::make_shared<OverLookingCamera>(&world_, "Camera", Vector3::Zero);
 	world_.addCamera(camera);
+	//ライトの設定
+	settingLight();
 
 	//選手番号
 	int playerNumber = 1;
@@ -186,6 +186,8 @@ void GamePlayScene::update(float deltaTime) {
 
 	methodExecutor_.update();
 
+	auto color = lightHandle_.getGlobalAmbientColor();
+	world_.setFieldAudienceBright(color.r, color.g, color.b);
 }
 
 //描画
@@ -365,9 +367,11 @@ void GamePlayScene::changeState(GamePlayState state) {
 	case End:
 		break;
 	case Round:	
+		timer_ = 0.0f;
 		methodExecutor_.set([&] ()->bool{
 			timer_ += Time::GetInstance().deltaTime()*2.0f;
-			standardLight_.setGlobalAmbientLight(Color(timer_, timer_, timer_, timer_));
+
+			lightHandle_.setGlobalAmbientLight(Color(timer_, timer_, timer_, timer_));
 			return timer_ >= 0.5f;
 		});
 		
@@ -409,7 +413,7 @@ void GamePlayScene::changeState(GamePlayState state) {
 		break;
 	}
 	case Round:
-		standardLight_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
+		lightHandle_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
 		if (specifiedStepManager_ != nullptr) {
 			specifiedStepManager_->setDraw(false);
 		}
@@ -436,7 +440,11 @@ void GamePlayScene::settingLight() {
 	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
 	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
 	//グローバルアンビエントの設定
-	standardLight_.setGlobalAmbientLight(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	lightHandle_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
+
+	auto color = lightHandle_.getGlobalAmbientColor();
+	world_.setFieldAudienceBright(color.r, color.g, color.b);
+
 }
 
 //UI設定関数
