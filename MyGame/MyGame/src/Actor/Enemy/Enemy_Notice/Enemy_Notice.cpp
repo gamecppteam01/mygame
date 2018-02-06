@@ -85,11 +85,12 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 		
 		//スポットライト取得
 		if (data_->notice_ == true && Vector2::Distance(myPos,lightPos) <= 10.0f) {
-			lightFlag_ = false;
-			timer_ = 0;
 			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 			change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Idle, false);
 			OutputDebugString("Change\n");
+		}
+		else {
+			lightFlag_ = false;
 		}
 		break;
 	}
@@ -145,6 +146,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 
 void Enemy_Notice::updateFever(float deltaTime) {
 
+
 	//ステップの間にアイドルを挟む
 	if (animation_.IsAnimEnd() == true && stepFlag_ == true && changeFlag_ == false) {
 		changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
@@ -164,7 +166,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 
 	//スポットライトを獲得したら
 	//クオーター、クオーター、ターンを繰り返す
-	if ((int)timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ <= 1) {
+	if ((int)timer_ % 60 == 0 && /*animation_.IsAnimEnd() == true &&*/ stepFlag_ == false && stepCount_ <= 1) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 		changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
 		OutputDebugString("QUARTER\n");
@@ -172,7 +174,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 		stepCount_++;
 		timer_ = 0;
 	}
-	if ((int)timer_ % 60 == 0 && animation_.IsAnimEnd() == true && stepFlag_ == false && stepCount_ == 2) {
+	if ((int)timer_ % 60 == 0 && /*animation_.IsAnimEnd() == true &&*/ stepFlag_ == false && stepCount_ == 2) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
 		changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
 		OutputDebugString("TURN\n");
@@ -191,7 +193,7 @@ void Enemy_Notice::to_Normal() {
 		nextPoint_ = getNearestPoint(centerPosition_);
 		nextNoticePosition_ = roundPoint_[nextPoint_];
 		isGoBonus_ = false;
-		probability_ = 3;
+		//probability_ = 3;
 		break;
 	case Enemy_Notice::Steal:
 		nextNoticePosition_ = lightPosition_;
@@ -200,7 +202,11 @@ void Enemy_Notice::to_Normal() {
 }
 
 void Enemy_Notice::to_Fever() {
-	probability_ = 3;
+	//probability_ = 3;
+	lightFlag_ = false;
+	stepFlag_ = false;
+	timer_ = 0;
+	stepCount_ = 0;
 }
 
 void Enemy_Notice::updateWakeUp(float deltaTime)
