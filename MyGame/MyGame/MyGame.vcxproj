@@ -252,6 +252,7 @@
     <ClCompile Include="src\Scene\GameOverScene.cpp" />
     <ClCompile Include="src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="src\Scene\LoadingScene.cpp" />
+    <ClCompile Include="src\Scene\NamingScene.cpp" />
     <ClCompile Include="src\Scene\ResultDraw\ResultCamera.cpp" />
     <ClCompile Include="src\Scene\ResultDraw\ResultField.cpp" />
     <ClCompile Include="src\Scene\ResultDraw\ResultModelDrawer.cpp" />
@@ -259,6 +260,7 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scene\SceneTemplate.cpp" />
     <ClCompile Include="src\Scene\Screen\CreateEnemy.cpp" />
+    <ClCompile Include="src\Scene\Screen\Cursor\KeyCursor.cpp" />
     <ClCompile Include="src\Scene\Screen\DrawStartSprite.cpp" />
     <ClCompile Include="src\Scene\Screen\PauseScreen.cpp" />
     <ClCompile Include="src\Scene\Screen\ResultAnimation.cpp" />
@@ -284,6 +286,7 @@
     <ClCompile Include="src\UI\ComboDrawer.cpp" />
     <ClCompile Include="src\UI\ComboGaugeUI.cpp" />
     <ClCompile Include="src\UI\ComboSupportUI.cpp" />
+    <ClCompile Include="src\UI\CutInText.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI.cpp" />
@@ -447,6 +450,7 @@
     <ClInclude Include="src\Scene\GamePlayScene.h" />
     <ClInclude Include="src\Scene\GamePlayState.h" />
     <ClInclude Include="src\Scene\LoadingScene.h" />
+    <ClInclude Include="src\Scene\NamingScene.h" />
     <ClInclude Include="src\Scene\ResultDraw\ResultCamera.h" />
     <ClInclude Include="src\Scene\ResultDraw\ResultField.h" />
     <ClInclude Include="src\Scene\ResultDraw\ResultModelDrawer.h" />
@@ -457,6 +461,7 @@
     <ClInclude Include="src\Scene\SceneTemplate.h" />
     <ClInclude Include="src\Scene\SceneType.h" />
     <ClInclude Include="src\Scene\Screen\CreateEnemy.h" />
+    <ClInclude Include="src\Scene\Screen\Cursor\KeyCursor.h" />
     <ClInclude Include="src\Scene\Screen\DrawStartSprite.h" />
     <ClInclude Include="src\Scene\Screen\PauseScreen.h" />
     <ClInclude Include="src\Scene\Screen\ResultAnimation.h" />
@@ -489,6 +494,7 @@
     <ClInclude Include="src\UI\ComboGaugeUI.h" />
     <ClInclude Include="src\UI\ComboStepUIPtr.h" />
     <ClInclude Include="src\UI\ComboSupportUI.h" />
+    <ClInclude Include="src\UI\CutInText.h" />
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\MiniMap.h" />

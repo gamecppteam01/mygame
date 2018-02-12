@@ -15,6 +15,7 @@ void SceneManager::init()
 	//利用するシーンを作成し、シーンリストに追加する
 	scenes_[SceneType::SCENE_LOADING] = std::make_shared<LoadingScene>();
 	scenes_[SceneType::SCENE_TITLE] = std::make_shared<TitleScene>();
+	scenes_[SceneType::SCENE_NAMING] = std::make_shared<NamingScene>();
 	scenes_[SceneType::SCENE_STAGESELECT] = std::make_shared<StageSelectScene>();
 	scenes_[SceneType::SCENE_GAMEPLAY] = std::make_shared<GamePlayScene>();
 	scenes_[SceneType::SCENE_CLEAR] = std::make_shared<GameClearScene>();

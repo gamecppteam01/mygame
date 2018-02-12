@@ -58,3 +58,22 @@ int DataManager::getCount() const
 {
 	return count_;
 }
+
+void DataManager::setMenName(const std::string & men_name, int size)
+{
+	player_name.menSize = size;
+	player_name.men_name = men_name;
+}
+
+void DataManager::setWoMenName(const std::string & women_name, int size)
+{
+	player_name.womenSize = size;
+	player_name.women_name = women_name;
+
+}
+
+
+Player_Name DataManager::getName() const
+{
+	return player_name;
+}

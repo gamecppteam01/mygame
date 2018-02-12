@@ -77,7 +77,7 @@ bool Judgement_SpotLight::Judgement(ActorPtr& target) {
 	//if (is_In_Distans(target) == true) {
 	//	return true;
 	//}
-	//return false;
+	return false;
 
 }
 

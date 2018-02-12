@@ -4,7 +4,6 @@
 #include"../Math/Vector3.h"
 #include"../Math/Vector2.h"
 #include"../Define.h"
-#include"Screen/SoftwareKeyboard.h"
 
 #include<vector>
 enum TitleState
@@ -68,12 +67,11 @@ private:
 	float alpha_{ 0.0f };
 
 	
-	SoftwareKeyboard key_{};
 private:
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
 		{ Vector2{ 450.0f,400.f },SceneType::SCENE_TUTORIAL },
-		{ Vector2{ 450.0f,525.f },SceneType::SCENE_STAGESELECT },
+		{ Vector2{ 450.0f,525.f },SceneType::SCENE_NAMING },
 		{ Vector2{ 450.0f,650.f },SceneType::SCENE_EXIT }//ゲーム終了(遷移先はダミー)
 	};
 	//カーソルの位置

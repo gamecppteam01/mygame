@@ -117,7 +117,7 @@ void Field::draw() const {
 	audience.draw(Vector3{295.0f,50.0f,0.0f},   Vector3{ 0.0f,90.0f,90.0f },3);
 	SetDrawBright(255, 255, 255);
 
-	DrawFormatString(300, 300, GetColor(255, 255, 255), "%d", red_);
+	//DrawFormatString(300, 300, GetColor(255, 255, 255), "%d", red_);
 }
 
 // フィールドのハンドル取得

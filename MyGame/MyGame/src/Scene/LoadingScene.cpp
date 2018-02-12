@@ -168,7 +168,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "secondIcon.png", SPRITE_ID::RANK_TWO_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "thirdIcon.png", SPRITE_ID::RANK_THREE_SPRITE);
 	
-	Sprite::GetInstance().Load(defaultPath + "nameFramePlayer.png", SPRITE_ID::RANK_PLAYER_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "playerNameframe.png", SPRITE_ID::RANK_PLAYER_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameFrame001.png", SPRITE_ID::RANK_NAME1_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameFrame002.png", SPRITE_ID::RANK_NAME2_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameFrame003.png", SPRITE_ID::RANK_NAME3_SPRITE);
@@ -207,6 +207,12 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "nice_sprite.png", SPRITE_ID::NICE_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "titlecursorflash.png", SPRITE_ID::CURSOR_FLASH);
 	Sprite::GetInstance().Load(defaultPath + "flash.png", SPRITE_ID::FLASH_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameFramePlayer.png", SPRITE_ID::TEST_PLAYER_RANK_SPRITE);
+
+	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
+
+	
 }
 
 void LoadingScene::LoadModel()
@@ -271,6 +277,19 @@ void LoadingScene::LoadFont()
 	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
 	FontManager::GetInstance().AddFont(FONT_ID::TUTORIAL_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 70);
 	FontManager::GetInstance().AddFont(FONT_ID::KEYBOARD_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 60);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_UNDER_5_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 166);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_6_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 150);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_7_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 138);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_8_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 125);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_9_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 116);
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_10_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 108);
+
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_UNDER_5_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(166*0.4f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_6_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(150*0.4f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_7_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(138*0.4f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_8_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(125*0.4f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_9_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(116*0.4f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_10_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ",(int)(108*0.4f));
 }
 
 void LoadingScene::LoadBGM()

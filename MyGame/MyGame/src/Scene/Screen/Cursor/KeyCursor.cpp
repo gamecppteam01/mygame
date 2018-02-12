@@ -1,0 +1,46 @@
+#include "KeyCursor.h"
+#include"../../../Graphic/Sprite.h"
+#include"../../../Math/MathHelper.h"
+
+#include<math.h>
+
+static const float moveSpeed{ 10.f };//ÉJÅ[É\Éãà⁄ìÆéûä‘
+
+KeyCursor::KeyCursor(const Vector2 & position):targetPosition_(position), basePosition_(position)
+{
+
+}
+
+void KeyCursor::initialize(const Vector2 & position)
+{
+	targetPosition_ = position;
+	basePosition_ = position;
+	moveTime_ = 0.0f;
+	animationTime_ = 0.0f;
+
+}
+
+void KeyCursor::update(float deltaTime)
+{
+	moveTime_ = min((moveTime_ + deltaTime*moveSpeed), 1.0f);
+	animationTime_ = fmodf(animationTime_ + deltaTime, 1.0f);
+}
+
+void KeyCursor::draw(const Vector2& position) const
+{
+	float sinCount = MathHelper::Abs(MathHelper::Sin(animationTime_*360.0f));
+	float addSize = 10.0f;//çLÇ™ÇÈîÕàÕ
+	Vector2 addPos{ addSize*sinCount,addSize*sinCount };
+	Vector2 drawPos = position + Vector2::Lerp(basePosition_,targetPosition_,moveTime_);
+	Sprite::GetInstance().Draw(SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE, drawPos + Vector2{ -20.0f, -15.0f }-addPos);
+	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
+	size *= 0.5f;
+	Sprite::GetInstance().Draw(SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE, drawPos + size + Vector2{ -30.0f, -20.0f }+addPos);
+}
+
+void KeyCursor::setPosition(const Vector2 & position)
+{
+	basePosition_ = Vector2::Lerp(basePosition_, targetPosition_, moveTime_);
+	targetPosition_ = position;
+	moveTime_ = 0.0f;
+}

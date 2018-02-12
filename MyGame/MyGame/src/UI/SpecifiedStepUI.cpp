@@ -130,4 +130,5 @@ int SpecifiedStepUI::stepMatching() {
 	if (target_->getStep() == 0) {
 		return StepState::NONE;
 	}
+	return StepState::NONE;
 }

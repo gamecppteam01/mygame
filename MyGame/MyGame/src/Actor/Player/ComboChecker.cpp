@@ -341,6 +341,7 @@ ComboChecker::ComboType ComboChecker::checkComboBurst(std::vector<Player_Animati
 		comboList.clear();//4ŒÂˆÈã‚¾‚Á‚½‚ç‘S•”Á‚·
 		break;
 	}
+	return ComboType::Combo_None;
 }
 
 ComboChecker::ComboType ComboChecker::checkComboPointUp(std::vector<Player_Animation>& comboList, Player_Animation next, IWorld * world)
@@ -406,6 +407,8 @@ ComboChecker::ComboType ComboChecker::checkComboPointUp(std::vector<Player_Anima
 		comboList.clear();//4ŒÂˆÈã‚¾‚Á‚½‚ç‘S•”Á‚·
 		break;
 	}
+	return ComboType::Combo_None;
+
 }
 
 ComboChecker::ComboType ComboChecker::checkCombo(std::vector<Player_Animation>& comboList) {

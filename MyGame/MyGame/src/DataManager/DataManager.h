@@ -5,6 +5,16 @@
 #include"../ShadowMap/ShadowMap_Data.h"
 #include"../Game/ID.h"
 
+struct Player_Name
+{
+	Player_Name() {
+
+	}
+	std::string men_name{""};
+	std::string women_name{""};
+	int menSize{ 0 };
+	int womenSize{ 0 };
+};
 class DataManager {
 private:
 	DataManager();
@@ -31,6 +41,11 @@ public:
 	void setCount(int count);
 	int getCount() const;
 
+	void setMenName(const std::string& men_name, int size);
+	void setWoMenName(const std::string& women_name,int size);
+
+
+	Player_Name getName()const;
 private:
 	std::list<ScoreData> datas_;
 	std::map<MODEL_ID, ShadowMap_Data> shdowData_;
@@ -43,4 +58,6 @@ private:
 
 	//スポットライト内にいる数
 	int count_;
+
+	Player_Name player_name{ };
 };

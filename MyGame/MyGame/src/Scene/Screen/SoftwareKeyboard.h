@@ -4,6 +4,8 @@
 #include"../../Math/Point.h"
 #include"../../Graphic/FontManager.h"
 #include"../../Conv/ByteConverter.h"
+#include"Cursor/KeyCursor.h"
+
 #include<memory>
 #include<list>
 
@@ -114,6 +116,16 @@ public:
 		FontManager::GetInstance().DrawTextApplyFont(position.x + drawPos_.x, position.y + drawPos_.y, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, "DC");
 	}
 
+};
+class DecideName :public KeyButton {
+public:
+	DecideName(const Vector2& drawpos) :KeyButton(drawpos) {
+		 
+	}
+	void push(SoftwareKeyboard* kbd)override;
+	void draw(const Vector2& position)const override {
+		FontManager::GetInstance().DrawTextApplyFont(position.x + drawPos_.x, position.y + drawPos_.y, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, "OK");
+	}
 
 };
 //struct CursorPoint {
@@ -126,8 +138,16 @@ public:
 //仮想キーボード生成クラス
 class SoftwareKeyboard {
 public:
+	enum InputState {
+		INPUT_MEN,
+		INPUT_WOMEN,
+		INPUT_NONE
+	};
+public:
 	SoftwareKeyboard();
 
+	void initialize();
+	void stateReset();
 	void update(float deltaTime);
 
 	void draw(const Vector2& position)const;
@@ -138,8 +158,27 @@ public:
 	std::vector<SaveChara>& getName() {
 		return name_;
 	};
+	std::string getNameStr() const{
+		std::string result{ "" };
+		for (auto& n : name_) {
+			result += n.getCurrentText();
+		}
+		return result;
+	}
+	void clearName() {
+		name_.clear();
+	}
 	const std::vector<std::vector<std::shared_ptr<KeyButton>>>& getKeyList()const {
 		return keylist;
+	}
+	InputState getState()const {
+		return state_.back();
+	}
+	void nextState() {
+		state_.pop_back();
+	}
+	bool isEnd()const {
+		return state_.back() == InputState::INPUT_NONE;
 	}
 private:
 	const float leftMargin = 60.0f;
@@ -148,9 +187,9 @@ private:
 	const std::vector<std::vector<std::shared_ptr<KeyButton>>> keylist{//キーの
 		{ std::make_shared<KeyChar>(Vector2{ 0.0f,0.0f },"ワ",std::vector<int>{0},true)						,std::make_shared<KeyChar>(Vector2{ leftMargin*1.0f,0.0f },"ラ",std::vector<int>{0})				,std::make_shared<KeyChar>(Vector2{ leftMargin*2.0f,0.0f },"ヤ",std::vector<int>{0},true)										,std::make_shared<KeyChar>(Vector2{ leftMargin*3.0f,0.0f },"マ",std::vector<int>{0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*4.0f,0.0f },"ハ",std::vector<int>{0,1,2})			,std::make_shared<KeyChar>(Vector2{ leftMargin*5.0f,0.0f },"ナ",std::vector<int>{0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*6.0f,0.0f },"タ",std::vector<int>{0,1})					,std::make_shared<KeyChar>(Vector2{ leftMargin*7.0f,0.0f },"サ",std::vector<int>{0,1})				,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,0.0f },"カ",std::vector<int>{0,1})				,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,0.0f },"ア",std::vector<int>{0},true)					,std::make_shared<ChangeMinChara>(Vector2{ leftMargin*10.0f,0.0f })  },
 		{ std::make_shared<KeyChar>( Vector2{ 0.0f,upMargin*1.0f },"ヲ",std::vector<int>{0} )					,std::make_shared<KeyChar>( Vector2{ leftMargin*1.0f,upMargin*1.0f },"リ",std::vector<int>{0} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*2.0f,upMargin*1.0f },"ユ",std::vector<int>{0},true)							,std::make_shared<KeyChar>( Vector2{ leftMargin*3.0f,upMargin*1.0f },"ミ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*4.0f,upMargin*1.0f },"ヒ",std::vector<int>{0,1,2} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*5.0f,upMargin*1.0f },"ニ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*6.0f,upMargin*1.0f },"チ",std::vector<int>{0,1} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*7.0f,upMargin*1.0f },"シ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*1.0f },"キ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*1.0f },"イ",std::vector<int>{0},true)		,std::make_shared<ChangeDecoChara>(Vector2 { leftMargin*10.0f,upMargin*1.0f })},
-		{ std::make_shared<KeyChar>( Vector2{ 0.0f,upMargin*2.0f },"ン",std::vector<int>{0} )					,std::make_shared<KeyChar>( Vector2{ leftMargin*1.0f,upMargin*2.0f },"ル",std::vector<int>{0} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*2.0f,upMargin*2.0f },"ヨ",std::vector<int>{0},true)							,std::make_shared<KeyChar>( Vector2{ leftMargin*3.0f,upMargin*2.0f },"ム",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*4.0f,upMargin*2.0f },"フ",std::vector<int>{0,1,2} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*5.0f,upMargin*2.0f },"ヌ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*6.0f,upMargin*2.0f },"ツ",std::vector<int>{0,1},true)	,std::make_shared<KeyChar>( Vector2{ leftMargin*7.0f,upMargin*2.0f },"ス",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*2.0f },"ク",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*2.0f },"ウ",std::vector<int>{0},true)			,std::make_shared<CursorMove>(Vector2{ leftMargin*10.0f,upMargin*2.0f },Point{ -1,0 },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 }) },
-		{ std::make_shared<CursorMove>(Vector2{ 0.0f,upMargin*3.0f },Point{1,0},Point{0,0},Point{1,0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*1.0f,upMargin*3.0f },"レ",std::vector<int>{0})		,std::make_shared<CursorMove>(Vector2{ leftMargin*2.0f,upMargin*3.0f },Point{ 1,0 },Point{ 0,0 },Point{ -1,0 },Point{1,0})		,std::make_shared<KeyChar>(Vector2{ leftMargin*3.0f,upMargin*3.0f },"メ",std::vector<int>{0})	,std::make_shared<KeyChar>(Vector2{ leftMargin*4.0f,upMargin*3.0f },"ヘ",std::vector<int>{0,1,2})	,std::make_shared<KeyChar>(Vector2{ leftMargin*5.0f,upMargin*3.0f },"ネ",std::vector<int>{0})	,std::make_shared<KeyChar>(Vector2{ leftMargin*6.0f,upMargin*3.0f },"テ",std::vector<int>{0,1})			,std::make_shared<KeyChar>(Vector2{ leftMargin*7.0f,upMargin*3.0f },"セ",std::vector<int>{0,1})		,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*3.0f },"ケ",std::vector<int>{0,1})			,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*3.0f },"エ",std::vector<int>{0},true)	,std::make_shared<CursorMove>(Vector2{ leftMargin*10.0f,upMargin*3.0f },Point{ 0,0 },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 }) },
-		{ std::make_shared<CursorMove>(Vector2{ 0.0f,upMargin*4.0f },Point{ 0,0 },Point{ 0,0 },Point{ 1,0 })	,std::make_shared<KeyChar>( Vector2{ leftMargin*1.0f,upMargin*4.0f },"ロ",std::vector<int>{0} )		,std::make_shared<CursorMove>(Vector2{ leftMargin*2.0f,upMargin*4.0f },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 },Point{ 1,0 })	,std::make_shared<KeyChar>( Vector2{ leftMargin*3.0f,upMargin*4.0f },"モ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*4.0f,upMargin*4.0f },"ホ",std::vector<int>{0,1,2} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*5.0f,upMargin*4.0f },"ノ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*6.0f,upMargin*4.0f },"ト",std::vector<int>{0,1} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*7.0f,upMargin*4.0f },"ソ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*4.0f },"コ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*4.0f },"オ",std::vector<int>{0},true)		,std::make_shared<CursorMove>(Vector2{ leftMargin*10.0f,upMargin*4.0f },Point{ 0,0 },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 }) }
+		{ std::make_shared<KeyChar>( Vector2{ 0.0f,upMargin*2.0f },"ン",std::vector<int>{0} )					,std::make_shared<KeyChar>( Vector2{ leftMargin*1.0f,upMargin*2.0f },"ル",std::vector<int>{0} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*2.0f,upMargin*2.0f },"ヨ",std::vector<int>{0},true)							,std::make_shared<KeyChar>( Vector2{ leftMargin*3.0f,upMargin*2.0f },"ム",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*4.0f,upMargin*2.0f },"フ",std::vector<int>{0,1,2} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*5.0f,upMargin*2.0f },"ヌ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*6.0f,upMargin*2.0f },"ツ",std::vector<int>{0,1},true)	,std::make_shared<KeyChar>( Vector2{ leftMargin*7.0f,upMargin*2.0f },"ス",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*2.0f },"ク",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*2.0f },"ウ",std::vector<int>{0},true)			,std::make_shared<CursorMove>(Vector2{ leftMargin*10.0f,upMargin*2.0f },Point{ 0,2 },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 }) },
+		{ std::make_shared<CursorMove>(Vector2{ 0.0f,upMargin*3.0f },Point{1,0},Point{0,0},Point{1,0})			,std::make_shared<KeyChar>(Vector2{ leftMargin*1.0f,upMargin*3.0f },"レ",std::vector<int>{0})		,std::make_shared<CursorMove>(Vector2{ leftMargin*2.0f,upMargin*3.0f },Point{ 1,0 },Point{ 0,0 },Point{ -1,0 },Point{1,0})		,std::make_shared<KeyChar>(Vector2{ leftMargin*3.0f,upMargin*3.0f },"メ",std::vector<int>{0})	,std::make_shared<KeyChar>(Vector2{ leftMargin*4.0f,upMargin*3.0f },"ヘ",std::vector<int>{0,1,2})	,std::make_shared<KeyChar>(Vector2{ leftMargin*5.0f,upMargin*3.0f },"ネ",std::vector<int>{0})	,std::make_shared<KeyChar>(Vector2{ leftMargin*6.0f,upMargin*3.0f },"テ",std::vector<int>{0,1})			,std::make_shared<KeyChar>(Vector2{ leftMargin*7.0f,upMargin*3.0f },"セ",std::vector<int>{0,1})		,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*3.0f },"ケ",std::vector<int>{0,1})			,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*3.0f },"エ",std::vector<int>{0},true)	,std::make_shared<CursorMove>(Vector2{ leftMargin*10.0f,upMargin*3.0f },Point{ 0,0 },Point{ 0,-2 },Point{ 0,0 },Point{ -1,0 }) },
+		{ std::make_shared<CursorMove>(Vector2{ 0.0f,upMargin*4.0f },Point{ 0,0 },Point{ 0,0 },Point{ 1,0 })	,std::make_shared<KeyChar>( Vector2{ leftMargin*1.0f,upMargin*4.0f },"ロ",std::vector<int>{0} )		,std::make_shared<CursorMove>(Vector2{ leftMargin*2.0f,upMargin*4.0f },Point{ 0,0 },Point{ 0,0 },Point{ -1,0 },Point{ 1,0 })	,std::make_shared<KeyChar>( Vector2{ leftMargin*3.0f,upMargin*4.0f },"モ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*4.0f,upMargin*4.0f },"ホ",std::vector<int>{0,1,2} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*5.0f,upMargin*4.0f },"ノ",std::vector<int>{0} )	,std::make_shared<KeyChar>( Vector2{ leftMargin*6.0f,upMargin*4.0f },"ト",std::vector<int>{0,1} )		,std::make_shared<KeyChar>( Vector2{ leftMargin*7.0f,upMargin*4.0f },"ソ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*8.0f,upMargin*4.0f },"コ",std::vector<int>{0,1} )	,std::make_shared<KeyChar>(Vector2 { leftMargin*9.0f,upMargin*4.0f },"オ",std::vector<int>{0},true)		,std::make_shared<DecideName>(Vector2{ leftMargin*10.0f,upMargin*4.0f }) }
 	};
 	
 	//const std::vector<std::vector<CursorPoint>> keymoveList{//移動先リスト
@@ -160,9 +199,11 @@ private:
 	//												{ { 30,{ { 1,2 },{ 1,3 },{ 0,4 },{ 0,3 } } },											{ 31,{ { 3,2 },{ 2,3 },{ 1,4 },{ 0,3 } } },{ 32,{ { 4,2 },{ 3,3 },{ 2,4 },{ 1,3 } } },{ 33,{ { 5,2 },{ 4,3 },{ 3,4 },{ 2,3 } } },{ 34,{ { 6,2 },{ 5,3 },{ 4,4 },{ 3,3 } } },{ 35,{ { 7,2 },{ 6,3 },{ 5,4 },{ 4,3 } } },{ 36,{ { 8,2 },{ 7,3 },{ 6,4 },{ 5,3 } } },{ 37,{ { 9,2 },{ 7,3 },{ 7,4 },{ 6,3 } } }},
 	//												{ { 38,{ { 0,3 },{ 1,4 },{ 0,4 },{ 0,4 } } },											{ 39,{ { 1,3 },{ 2,4 },{ 1,4 },{ 0,4 } } },{ 40,{ { 2,3 },{ 3,4 },{ 2,4 },{ 1,4 } } },{ 41,{ { 3,3 },{ 4,4 },{ 3,4 },{ 2,4 } } },{ 42,{ { 4,3 },{ 5,4 },{ 4,4 },{ 3,4 } } },{ 43,{ { 5,3 },{ 6,4 },{ 5,4 },{ 4,4 } } },{ 44,{ { 6,3 },{ 7,4 },{ 6,4 },{ 5,4 } } },{ 45,{ { 7,3 },{ 7,4 },{ 7,4 },{ 6,4 } } }}
 	//};
-
-
 	Point currentKey_{ 0,0 };//現在のキー位置
+
+	KeyCursor cursor_;
+
+	std::list<InputState> state_{ InputState::INPUT_NONE,InputState::INPUT_WOMEN,InputState::INPUT_MEN };
 
 	std::vector<SaveChara> name_;
 };

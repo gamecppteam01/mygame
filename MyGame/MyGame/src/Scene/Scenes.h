@@ -9,3 +9,4 @@
 #include "CreditScene.h"
 #include "TutorialScene.h"
 #include "SceneType.h"
+#include"NamingScene.h"
