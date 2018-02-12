@@ -7,6 +7,7 @@
 #include"StepUI.h"
 #include"EndUI.h"
 #include"TimeUI.h"
+#include"RankUI.h"
 
 
 

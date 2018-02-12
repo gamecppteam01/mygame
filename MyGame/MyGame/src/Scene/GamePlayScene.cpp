@@ -27,7 +27,6 @@
 #include"../DataManager/DataManager.h"
 #include"../Sound/TempoManager.h"
 #include"../Fade/FadePanel.h"
-#include "../UI/EndUI.h"
 #include "../UI/Song_Title_UI.h"
 #include"../Graphic/EffekseerManager.h"
 #include"../UI/SpecifiedStepUI.h"
@@ -455,6 +454,8 @@ void GamePlayScene::settingUI() {
 	world_.addUI(warningUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2, 50.0f));
 	world_.addUI(timeUI);
+	std::shared_ptr<RankUI> rankUI = std::make_shared<RankUI>(&world_.getCanChangedScoreManager(),&world_.getRoundCam() ,Vector2(1175, 450));
+	world_.addUI(rankUI);
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
@@ -465,6 +466,7 @@ void GamePlayScene::settingUI() {
 	showrank_ = std::make_unique<ShowRankUI>(&world_);
 	auto cd = std::make_shared<ComboDrawer>();
 	world_.addUI(cd);
+
 }
 
 void GamePlayScene::stopRound()
