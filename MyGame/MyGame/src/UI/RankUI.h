@@ -4,7 +4,6 @@
 #include"../Graphic/FontManager.h"
 #include"../Math/Math.h"
 #include "../UI/UI.h"
-#include "RankUIPtr.h"
 #include "../Camera/RoundCamera.h"
 #include<list>
 class RankUI : public UI{
