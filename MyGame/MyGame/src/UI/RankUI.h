@@ -1,7 +1,6 @@
 #pragma once
 #include"../ScoreManager/ScoreManager.h"
 #include"../ScoreManager/NumberManager.h"
-#include"../Graphic/FontManager.h"
 #include"../Math/Math.h"
 #include "../UI/UI.h"
 #include "../Camera/RoundCamera.h"

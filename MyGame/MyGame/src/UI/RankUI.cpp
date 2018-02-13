@@ -18,6 +18,7 @@ RankUI::RankUI(ScoreManager * score,RoundCamera* roundCamera ,const Vector2 & po
 void RankUI::initialize(){
 	alpha_ = 0.0f;
 	start_ = false;
+	stage_ = DataManager::GetInstance().getStage();
 }
 
 void RankUI::update(float delta_time){
