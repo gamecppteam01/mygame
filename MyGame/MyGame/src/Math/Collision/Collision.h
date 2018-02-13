@@ -144,6 +144,7 @@ public:
 	// ƒJƒvƒZƒ‹‚Æü•ª‚ÌÕ“Ë”»’è
 	static bool Capsule_Segment(const Vector3 capsule[], const float& capsule_r, const Vector3 segment[]);
 	static bool Capsule_Segment(const Vector3& seg_pos, const Matrix& seg_mat, const float & seg_len, const Vector3& cap_pos, const Matrix& cap_mat, const float & cap_len, const float& cap_radius);
+	static bool Capsule_Segment(const Vector3 & seg_pos1, const Vector3 & seg_pos2, const Vector3 & cap_pos, const Matrix & cap_mat, const float & cap_len, const float & cap_radius);
 
 	static std::vector<MV1_COLL_RESULT_POLY> Model_Capsule(int modelHandle, const Vector3& start, const Vector3& end,float radius);
 	static bool Capsule_Triangle(const Capsule& capsule, const Triangle& poly);

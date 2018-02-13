@@ -13,7 +13,7 @@ static const float moveMaxTimer_ = 3.0f;
 
 static const float attackResetDistance = 40.0f;
 Enemy_Rival::Enemy_Rival() :
-	BaseEnemy("Enemy"),scoreManager_(nullptr),prevAttackType_(AttackType::None),prevRivalState_(RivalState::MoveMode),nextKey_(0)
+	BaseEnemy("Enemy"),scoreManager_(nullptr),prevAttackType_(AttackType::None),prevRivalState_(RivalState::MoveMode)
 {
 }
 Enemy_Rival::Enemy_Rival(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body) :
@@ -188,9 +188,12 @@ void Enemy_Rival::setNextPosition()
 	//	return;
 	//}
 	//nextPosition_ = roundPoint_[nextPoint_];
+	currentKey_ = nextKey_;
 	nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
 	nextPosition_ = points_[nextKey_];
 	stopTimer_ = 0.0f;
+
+
 }
 
 void Enemy_Rival::ExtinctionUpdate(float deltaTime) {

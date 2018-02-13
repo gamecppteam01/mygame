@@ -51,7 +51,7 @@ public:
 	void addVelocity(const Vector3& velocity);
 	void hitEnemy(const std::string& hitName, const Vector3& velocity);
 	//‘Iè”Ô†‚ğæ“¾‚·‚é
-	int getPlayerNumber()const { return playerNumber_; }
+	virtual int getPlayerNumber()const override { return playerNumber_; }
 	//‚æ‚ë‚¯•ûŒü‚ğæ“¾‚·‚é
 	Vector2 getStumbleDirection()const { return stumbleDirection_; }
 	//Œ»İ‚Ìó‘Ô‚ğæ“¾‚·‚é

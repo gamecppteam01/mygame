@@ -107,7 +107,4 @@ private:
 
 	std::map<LightState, std::function<void(float deltaTime)>> m_LightStateUpdateFunc;
 
-	std::vector<Vector3> points_;
-	//ポイントキー
-	int nextKey_;
 };

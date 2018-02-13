@@ -24,9 +24,9 @@ public:
 		// 描画倍率
 		SetWindowSizeExtendRate(mRate);
 		// ウインドウモードにするかどうか
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		ChangeWindowMode(mWindow);
-#endif
+//#endif
 		SetUseDirect3DVersion(DX_DIRECT3D_11);
 		//DXLib初期化処理
 		if (DxLib_Init() == -1)return -1;//エラーが起きたら終了

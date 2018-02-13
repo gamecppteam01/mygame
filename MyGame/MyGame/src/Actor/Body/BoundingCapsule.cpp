@@ -34,7 +34,8 @@ bool BoundingCapsule::intersects(const BoundingCapsule & other, HitInfo & hitinf
 
 // Õ“Ë”»’è(ü•ª)
 bool BoundingCapsule::intersects(const BoundingSegment & other, HitInfo & hitinfo) const {
-	return Collision::Capsule_Segment(other.position(), other.matrix(), other.length(), mPosition, mMatrix, mLength, mRadius);
+	//return Collision::Capsule_Segment(other.position(), other.matrix(), other.length(), mPosition, mMatrix, mLength, mRadius);
+	return Collision::Capsule_Segment(other.points(0), other.points(1), mPosition, mMatrix, mLength, mRadius);
 }
 
 // Õ“Ë”»’è(AABB)

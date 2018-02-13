@@ -212,6 +212,8 @@ void GamePlayScene::draw() const {
 	if (state_ == GamePlayState::Pause)pause_.draw(), showrank_->pause();
 	if (state_ != GamePlayState::Pause) showrank_->restart();
 	if (state_ == GamePlayState::Play) showrank_->draw();
+
+	Time::GetInstance().draw_fps();
 }
 
 //I—¹

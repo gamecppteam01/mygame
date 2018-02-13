@@ -180,12 +180,22 @@ bool Collision::Capsule_Segment(const Vector3 capsule[], const float& capsule_r,
 }
 
 // カプセルと線分の衝突判定
-bool Collision::Capsule_Segment(const Vector3 & seg_pos, const Matrix & seg_mat, const float & seg_len, const Vector3 & cap_pos, const Matrix & cap_mat, const float & cap_len, const float & cap_radius){
+bool Collision::Capsule_Segment(const Vector3 & seg_pos, const Matrix & seg_mat, const float & seg_len, const Vector3 & cap_pos, const Matrix & cap_mat, const float & cap_len, const float & cap_radius) {
 	Vector3 p1[2], p2[2];
 	p1[0] = cap_pos + Vector3::Up * cap_len * cap_mat;
 	p1[1] = cap_pos + Vector3::Down * cap_len * cap_mat;
 	p2[0] = seg_pos + Vector3::Up * seg_len * seg_mat;
 	p2[1] = seg_pos + Vector3::Down * seg_len * seg_mat;
+
+	return Capsule_Segment(p1, cap_radius, p2);
+}
+// カプセルと線分の衝突判定
+bool Collision::Capsule_Segment(const Vector3 & seg_pos1, const Vector3 & seg_pos2, const Vector3 & cap_pos, const Matrix & cap_mat, const float & cap_len, const float & cap_radius) {
+	Vector3 p1[2], p2[2];
+	p1[0] = cap_pos + Vector3::Up * cap_len * cap_mat;
+	p1[1] = cap_pos + Vector3::Down * cap_len * cap_mat;
+	p2[0] = seg_pos1;
+	p2[1] = seg_pos2;
 
 	return Capsule_Segment(p1, cap_radius, p2);
 }

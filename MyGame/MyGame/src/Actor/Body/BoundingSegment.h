@@ -7,6 +7,8 @@ class BoundingSegment : public Body {
 public:
 	//ü•ª‚Ì”»’è‚ğì¬
 	BoundingSegment(const Vector3& pos, const Matrix& mat, const float& len);
+	//ü•ª‚Ì”»’è‚ğì¬
+	BoundingSegment(const Vector3& pos1, const Vector3& pos2);
 public:
 	// Õ“Ë”»’è
 	virtual bool isCollide(const IBody& other, HitInfo& hitinfo) const override;

@@ -12,6 +12,7 @@
 #include"../../Field/Field.h"
 #include"../../Sound/TempoManager.h"
 #include"../../Math/Easing.h"
+#include"EnemyPointChecker.h"
 
 //’e‚«”ò‚Î‚·—Í
 static const float defBoundPower = 5.0f;
@@ -97,6 +98,24 @@ std::shared_ptr<BaseEnemy> BaseEnemy::Create(IWorld * world, const Vector3 & pos
 	return std::make_shared<BaseEnemy>(world, "Enemy", position, playerNumber);
 }
 
+void BaseEnemy::setNearestPoint()
+{
+	EnemyPointChecker::setNearestPoint(world_,currentKey_,nextKey_, nextPosition_, position_, points_, playerNumber_);
+	//if (points_.empty())return;
+
+	//nextPosition_ = points_.front();
+	//nextKey_ = 0;
+	//int i = 0;
+	//for (auto& p : points_) {
+	//	if (Vector3::Distance(nextPosition_, position_) > Vector3::Distance(p, position_)) {
+	//		nextPosition_ = p;
+	//		nextKey_ = i;
+	//	}
+	//	i++;
+	//}
+
+}
+
 MODEL_ID BaseEnemy::getModelID() const
 {
 	return modelHandle_;
@@ -152,11 +171,11 @@ void BaseEnemy::onUpdate(float deltaTime) {
 	centerPosition_ += velocity_;
 	velocity_ *= 0.5f;
 
+	correctPosition();
 	if (state_ != Enemy_State::Attack) {
 		position_ = bulletDistance*rotation_ + centerPosition_;
 		*bulletPosition_ = -bulletDistance*rotation_ + centerPosition_;
 	}
-	correctPosition();
 
 	if(attackType_ != AttackType::Spin) bulletUpdate(deltaTime);
 }
@@ -298,16 +317,16 @@ bool BaseEnemy::field(Vector3 & result)
 
 	}
 
-	Vector3 hit1;
-	Vector3 hit2;
-	if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
-	{
-		//–{‘Ì‚Æ’e‚Ì’†S‚ð•Ô‚·
-		result = (hit1 + hit2)*0.5f + ((body_->points(0)));
-		//result = hit1 + ((body_->points(0)));
+	//Vector3 hit1;
+	//Vector3 hit2;
+	//if (world_->getField()->getMesh().collide_capsule(position_ + body_->points(0), position_ + body_->points(1), body_->radius(), *bulletPosition_ + body_->points(0), *bulletPosition_ + body_->points(1), bullet_->body_->radius(), (VECTOR*)&hit1, (VECTOR*)&hit2))
+	//{
+	//	//–{‘Ì‚Æ’e‚Ì’†S‚ð•Ô‚·
+	//	result = (hit1 + hit2)*0.5f + ((body_->points(0)));
+	//	//result = hit1 + ((body_->points(0)));
 
-		return true;
-	}
+	//	return true;
+	//}
 	return false;
 }
 
@@ -661,7 +680,10 @@ void BaseEnemy::correctPosition()
 	}
 	Vector3 start = centerPosition_ + body_->points(1);
 	Vector3 end = start + Vector3::Down*(body_->radius() + 1.0f);
-	if (world_->getField()->getMesh().collide_line(start, end)) {
+	VECTOR corrPos;
+	if (world_->getField()->getMesh().collide_line(start, end, &corrPos)) {
+		corrPos.y += body_->length()*0.5f;
+		centerPosition_ = corrPos;
 		gravity_ = 0.0f;
 	}
 

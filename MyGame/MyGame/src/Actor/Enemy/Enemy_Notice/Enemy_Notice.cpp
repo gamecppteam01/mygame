@@ -17,9 +17,8 @@ Enemy_Notice::Enemy_Notice():
 }
 
 Enemy_Notice::Enemy_Notice(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body)
-	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::NOTICEENEMY_MODEL, MODEL_ID::NOTICEENEMY_BULLET_MODEL), nextPoint_(0), nextNoticePosition_(position), isGoBonus_(false) {
+	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::NOTICEENEMY_MODEL, MODEL_ID::NOTICEENEMY_BULLET_MODEL), isGoBonus_(false) {
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
-	nextPoint_ = getNearestPoint(centerPosition_);
 	//最初のステート
 	stateNotice_ = Notice_State::Normal;
 	charaPos_ = charaPos;
@@ -37,8 +36,8 @@ void Enemy_Notice::onMessage(EventMessage message, void * param) {
 	//ライトが光っていたら
 	case EventMessage::Lighting:
 		stateNotice_ = Notice_State::Steal;
-		nextNoticePosition_ = (Vector3&)param;
-		lightPosition_ = nextNoticePosition_;
+		nextPosition_ = (Vector3&)param;
+		lightPosition_ = nextPosition_;
 		changeFlag_ = false;
 		break;
 	//ライトが消えていたら
@@ -58,7 +57,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 
 	rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 
-	velocity_ += (nextNoticePosition_ - centerPosition_).Normalize()*movePower;
+	velocity_ += (nextPosition_ - centerPosition_).Normalize()*movePower;
 	gravity_ -= 0.05f;
 
 	Vector3 jumpVector = Vector3(0.0f, gravity_, 0.0f);
@@ -72,7 +71,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 		//巡回
 	case Enemy_Notice::Normal:
 		myPos = Vector2(centerPosition_.x, centerPosition_.z);
-		pointPos = Vector2(nextNoticePosition_.x, nextNoticePosition_.z);
+		pointPos = Vector2(nextPosition_.x, nextPosition_.z);
 		lightPos = Vector2(lightPosition_.x, lightPosition_.z);
 		//ポイントに到達したら
 		if (Vector2::Distance(myPos, pointPos) <= 10.0f && !isGoBonus_) {
@@ -190,13 +189,14 @@ void Enemy_Notice::to_Normal() {
 	switch (stateNotice_)
 	{
 	case Enemy_Notice::Normal:
-		nextPoint_ = getNearestPoint(centerPosition_);
-		nextNoticePosition_ = roundPoint_[nextPoint_];
+		nextKey_ = getNearestPoint(centerPosition_);
+		currentKey_ = nextKey_;
+		nextPosition_ = roundPoint_[nextKey_];
 		isGoBonus_ = false;
 		//probability_ = 3;
 		break;
 	case Enemy_Notice::Steal:
-		nextNoticePosition_ = lightPosition_;
+		nextPosition_ = lightPosition_;
 		break;
 	}
 }
@@ -232,14 +232,15 @@ int Enemy_Notice::getNearestPoint(const Vector3 & position) {
 
 void Enemy_Notice::setNextPosition() {
 	//ターゲットカウントを-1する
-	nextPoint_ = (nextPoint_ + roundPoint_.size() - 1) % roundPoint_.size();
+	currentKey_ = nextKey_;
+	nextKey_ = (nextKey_ + roundPoint_.size() - 1) % roundPoint_.size();
 
 	float rate = 1.0f;
 	Vector3 nextPosition = world_->getCanChangedScoreMap().getNextPoint(centerPosition_, &rate);
 	if (rate >= 1.05f) {
 		isGoBonus_ = true;
-		nextNoticePosition_ = nextPosition + Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
+		nextPosition_ = nextPosition + Vector3(Random::GetInstance().Range(-20.f, 20.f), 0.0f, Random::GetInstance().Range(-20.f, 20.f));
 		return;
 	}
-	nextNoticePosition_ = roundPoint_[nextPoint_];
+	nextPosition_ = roundPoint_[nextKey_];
 }

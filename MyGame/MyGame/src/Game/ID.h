@@ -295,7 +295,7 @@ enum SHADOW_MAP_ID {
 };
 
 enum class MOVIE_ID {
-
+	MOVIE_TEST,
 };
 
 

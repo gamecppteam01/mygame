@@ -4,9 +4,12 @@
 #include"../../../ScoreManager/ScoreManager.h"
 #include"../../../Sound/TempoManager.h"
 #include"../../../Math/Random.h"
+#include"../EnemyPointChecker.h"
+
+static const Vector3 checkNextTargetPos{ Vector3::Zero };//éüínì_ÇåüçıÇ∑ÇÈç€Ç…1âÒñﬂÇÈà íu
 
 Enemy_Round::Enemy_Round() :
-	BaseEnemy("Enemy"), nextKey_(0), nextStep(0)
+	BaseEnemy("Enemy"), nextStep(0)
 {
 }
 
@@ -55,18 +58,20 @@ void Enemy_Round::updateNormal(float deltaTime)
 	float maxp = 2.f;
 	float answer = mathSpeedUnderPower(speedEaseTimer_, maxp, maxEaseTime, quarter);
 
-	Vector3 vel = (nextPosition_ - centerPosition_);
+	Vector3 vel = (nextPosition_ - centerPosition_).Normalize();
 	vel.y = 0.0f;
-	centerPosition_ += vel.Normalize()*movePower*answer;
+	velocity_ += vel.Normalize()*movePower*answer*0.5f;
 
 	//Vector3 pos = (nextPosition_ - position_).Normalize()*movePower;
 	//centerPosition_ += pos;
-	if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z },
-		Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) nextPosition();
+	//if (Vector2::Distance(Vector2{ centerPosition_.x,centerPosition_.z },
+	//	Vector2{ nextPosition_.x,nextPosition_.z }) <= 10.0f) 
+	nextPosition();
 
 	Step();
 	//Around_Enemy(50.0f);
 }
+
 
 void Enemy_Round::onShadowDraw() const
 {
@@ -75,28 +80,11 @@ void Enemy_Round::onShadowDraw() const
 	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
 }
 
-void Enemy_Round::setNearestPoint()
-{
-	nextPosition_ = points_.front();
-	nextKey_ = 0;
-	int i = 0;
-	for (auto& p : points_) {
-		if (Vector3::Distance(nextPosition_, position_) > Vector3::Distance(p, position_)) {
-			nextPosition_ = p;
-			nextKey_ = i;
-		}
-		i++;
-	}
-}
-
 void Enemy_Round::nextPosition()
 {
-	//nextKey_ = (nextKey_ - 1 + points_.size()) % points_.size();
-	//if (Around_Enemy(50.0f) >= 1) {
-		nextKey_ = (nextKey_ - Random::GetInstance().Range(1, 12) + points_.size()) % points_.size();
-	//}
-	nextPosition_ = points_[nextKey_];
-	
+	if (EnemyPointChecker::nextPosition_Round(world_,currentKey_, nextKey_, nextPosition_, points_, playerNumber_,centerPosition_)) {
+	//	change_State(Enemy_State::CheckNext, Enemy_Animation::Move_Forward);
+	}
 }
 
 void Enemy_Round::Step(){

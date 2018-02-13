@@ -39,10 +39,6 @@ private:
 private:
 	//ステイト
 	Notice_State stateNotice_;
-	//次のポイント
-	int nextPoint_;
-	//次の目的地
-	Vector3 nextNoticePosition_;
 	//ボーナス
 	bool isGoBonus_{ false };
 	//ライトの座標

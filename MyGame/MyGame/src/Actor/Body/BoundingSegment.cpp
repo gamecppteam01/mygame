@@ -15,6 +15,12 @@ BoundingSegment::BoundingSegment(const Vector3 & pos, const Matrix & mat, const 
 	mPoints[1] = pos - Vector3::Up * len / 2;
 }
 
+BoundingSegment::BoundingSegment(const Vector3 & pos1, const Vector3 & pos2) :
+	Body(ShapeType::Segment, 0.0f, Matrix::Identity, Vector3::Distance(pos1, pos2), true) {
+	mPoints[0] = pos1;
+	mPoints[1] = pos2;
+}
+
 // 衝突判定
 bool BoundingSegment::isCollide(const IBody & other, HitInfo & hitinfo) const {
 	// どちらかの判定を行わない場合false
@@ -30,7 +36,8 @@ bool BoundingSegment::intersects(const BoundingSphere & other, HitInfo & hitinfo
 
 // 衝突判定(カプセル)
 bool BoundingSegment::intersects(const BoundingCapsule & other, HitInfo & hitinfo) const{
-	return Collision::Capsule_Segment(mPosition, mMatrix, mLength, other.position(), other.matrix(), other.length(), other.radius());
+	//return Collision::Capsule_Segment(mPosition, mMatrix, mLength, other.position(), other.matrix(), other.length(), other.radius());
+	return Collision::Capsule_Segment(mPoints[0], mPoints[1], other.position(), other.matrix(), other.length(), other.radius());
 }
 
 // 衝突判定(線分)

@@ -92,6 +92,9 @@ public:
 	//通知処理
 	void receiveNotification(Notification start);
 
+	//選手番号を取得する
+	virtual int getPlayerNumber()const { return 0; }
+
 	//停止時のステップアニメーション開始命令
 	virtual void startStepAnim() {}
 	//停止時のステップアニメーション更新命令

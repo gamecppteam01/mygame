@@ -3,6 +3,7 @@
 #include"../Body/BoundingCapsule.h"
 #include"../../Method/MethodTimer.h"
 #include"../../Define.h"
+
 class EnemyBullet;
 
 class BaseEnemy :public Enemy {
@@ -29,7 +30,6 @@ public:
 		WakeUp,//起き上がり
 		Track,//追跡
 		Fever,//スポットライト獲得中
-
 	};
 	enum class AttackType {
 		Half,
@@ -45,7 +45,7 @@ public:
 	void hitOther(const Vector3& velocity);
 
 	//選手番号を取得する
-	int getPlayerNumber()const { return playerNumber_; }
+	int getPlayerNumber()const override { return playerNumber_; }
 
 	//
 	Enemy_State getEnemyState()const { return state_; }
@@ -66,12 +66,16 @@ public:
 
 	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber);
 
+	virtual void setNearestPoint();
+
 	MODEL_ID getModelID()const;
 	MODEL_ID getBulletModelID()const;
 
 	//攻撃力
 	int getAttackPower()const { return attackPower_; }
 
+	int getCurrentKey()const { return currentKey_; }
+	int getNextKey()const { return nextKey_; }
 protected:
 	// メッセージ処理
 	virtual void onMessage(EventMessage message, void* param) override;
@@ -183,6 +187,12 @@ protected:
 	//ダウンするまでのカウント
 	int downCount_{ defDownCount };
 
+	//ポイントキー
+	int currentKey_{ 0 };//現在
+	int nextKey_{ 0 };//次
+	
+	std::vector<Vector3> points_;
+
 	//ダウンカウントの変更タイマー
 	MethodTimer downTimer_;
 	//攻撃対象からの除外設定解除タイマー
@@ -213,6 +223,7 @@ protected:
 
 	//スピンアングル
 	float spinAngle_{ 0.0f };
+
 protected:
 	//攻撃する範囲
 	const float attackDistance{ 30.0f };
