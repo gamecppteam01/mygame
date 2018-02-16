@@ -230,8 +230,12 @@ void LoadingScene::LoadModel()
 }
 
 
-void LoadingScene::LoadMovie()
-{
+void LoadingScene::LoadMovie(){
+	std::string defaultPath = "res/Movie/";
+	Movie::GetInstance().Load(MOVIE_ID::QUARTER, defaultPath + "quarter1.mp4");
+	Movie::GetInstance().Load(MOVIE_ID::HALF, defaultPath + "half.mp4");
+	Movie::GetInstance().Load(MOVIE_ID::SPIN, defaultPath + "spin.mp4");
+	Movie::GetInstance().Load(MOVIE_ID::TURN, defaultPath + "turn.mp4");
 }
 
 void LoadingScene::LoadEffect()

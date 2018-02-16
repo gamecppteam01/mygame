@@ -29,6 +29,7 @@
 #include"../UI/TutorialComboDrawer.h"
 
 
+
 std::map<int, SPRITE_ID> cutinList{
 	{ 1,SPRITE_ID::CUTIN_LESSON1_SPRITE },
 	{ 2,SPRITE_ID::CUTIN_LESSON2_SPRITE },
@@ -47,6 +48,7 @@ TutorialScene::TutorialScene()
 TutorialScene::~TutorialScene()
 {
 	player_.reset();
+	movie_.~TutorialMovie();
 }
 
 void TutorialScene::start()
@@ -107,6 +109,8 @@ void TutorialScene::start()
 	world_.init_update();
 
 	world_.getCanChangedTempoManager().startMusic();
+
+	movie_.initialize();
 }
 
 void TutorialScene::update(float deltaTime)
@@ -120,6 +124,7 @@ void TutorialScene::update(float deltaTime)
 	auto color = lightHandle_.getGlobalAmbientColor();
 	world_.setFieldAudienceBright(color.r, color.g, color.b);
 
+	movie_.update(deltaTime);
 }
 
 void TutorialScene::draw() const
@@ -131,6 +136,9 @@ void TutorialScene::draw() const
 	if (state_ == CutIn)TutorialCutIn::draw(currentCutIn_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
 
 	Time::GetInstance().draw_fps();
+
+	//Movie::GetInstance().Draw(MOVIE_ID::QUARTER,Vector2(WINDOW_WIDTH,WINDOW_HEIGHT),0.2f);
+	movie_.draw(Vector2(430,650));
 }
 
 void TutorialScene::end()
@@ -367,6 +375,8 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			movie_.Display_Movie();
+
 			player_->initCheckStep();
 			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Turn});
 			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
@@ -375,6 +385,7 @@ void TutorialScene::nextTutorial()
 			break;
 		}
 		case 2: {
+			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;
@@ -411,6 +422,9 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			movie_.Change_Movie(MOVIE_ID::TURN);
+			movie_.Display_Movie();
+
 			player_->initCheckStep();
 			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Half, Player_Animation::Quarter});
 			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Turn});
@@ -419,6 +433,7 @@ void TutorialScene::nextTutorial()
 			break;
 		}
 		case 2: {
+			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;
@@ -455,6 +470,9 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			movie_.Change_Movie(MOVIE_ID::HALF);
+			movie_.Display_Movie();
+
 			player_->initCheckStep();
 			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Shoot, Player_Animation::Quarter, Player_Animation::Turn});
 			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Half});
@@ -463,6 +481,7 @@ void TutorialScene::nextTutorial()
 			break;
 		}
 		case 2: {
+			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;
@@ -499,6 +518,9 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			movie_.Change_Movie(MOVIE_ID::SPIN);
+			movie_.Display_Movie();
+
 			player_->initCheckStep();
 			player_->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Half, Player_Animation::Turn});
 			player_->setIncrementStepTask(std::list<Player_Animation>{Player_Animation::Shoot});
@@ -506,6 +528,8 @@ void TutorialScene::nextTutorial()
 			break;
 		}
 		case 2: {
+			movie_.Hidden_Movie();
+
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			break;

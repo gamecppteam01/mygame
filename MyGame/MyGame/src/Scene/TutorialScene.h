@@ -8,6 +8,8 @@
 #include<stack>
 #include"../Light/StandardLight.h"
 #include"../Light/LightHandle.h"
+#include"../Graphic/Movie.h"
+#include"Screen/TutorialMovie.h"
 
 class TutorialPlayer;
 class TutorialScene :public Scene {
@@ -68,6 +70,7 @@ private:
 	State prevState_;
 	std::shared_ptr<TutorialPlayer> player_;
 	std::map<State, std::function<void(float)>> updateFuncMap_;
+	TutorialMovie movie_;
 
 	int tutorialTiming{ 0 };
 
