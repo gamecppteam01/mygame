@@ -267,6 +267,9 @@ void LoadingScene::LoadEffect()
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::QUARTER_EFFECT, defaultPath + "quaterEffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::HALF_EFFECT, defaultPath + "halfEffect.efk");
 	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_EFFECT, defaultPath + "Spin.efk");
+	EffekseerManager::GetInstance().LoadEffect(EFFECT_ID::SPIN_SHIELD_EFFECT, defaultPath + "shield_spin.efk");
+
+	
 }
 
 void LoadingScene::LoadFont()

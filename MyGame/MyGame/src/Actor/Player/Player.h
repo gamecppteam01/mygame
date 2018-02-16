@@ -19,6 +19,7 @@
 #include"ComboChecker.h"
 
 class PlayerBullet;
+class PlayerBuffManager;
 
 class Player :public Actor {
 public:
@@ -242,6 +243,8 @@ protected:
 	int stepCount_{ 0 };
 
 	bool isZoomEnd_{ true };
+
+	std::shared_ptr<PlayerBuffManager> buffManager_;//プレイヤーの強化状況を判断する
 
 	float shootAngle_;
 	//汎用タイマー

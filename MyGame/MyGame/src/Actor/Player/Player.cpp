@@ -29,6 +29,7 @@
 #include"ShootCollider.h"
 #include"../../UI/UI.h"
 #include"../../UI/SpecifiedStepManager.h"
+#include"PlayerBuffManager.h"
 
 //moveからidleに移行する際のinput確認数カウント
 static const int inputCheckCount = 4;
@@ -78,6 +79,7 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this), spinEffect_(world),
 	quaterEffect_(world),halfEffect_(world), isZoomEnd_(true), checkFunc_([&] {return ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_); })
 {
+	buffManager_ = std::make_shared<PlayerBuffManager>();
 	createBullet();
 	world_->addActor(ActorGroup::PLAYER_BULLET, bullet_);
 
@@ -164,6 +166,10 @@ void Player::hitEnemy(const std::string& hitName, const Vector3& velocity)
 	else if (state_ == Player_State::Down|| state_ == Player_State::Reversal) {
 		return;
 	}
+	
+	if (buffManager_->hit()) {//シールドが切れて無ければひるまない
+		return;
+	}
 	stumbleDirection_ = mathStumbleDirection(Vector2(-velocity.x, -velocity.z));
 	//stumbleDirection_ = -velocity;
 	stumbleResurrectTime_ = 0.5f;
@@ -220,6 +226,8 @@ void Player::initialize()
 	prevState_ = state_;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Move_Forward);
+
+	buffManager_->setPlayer(this);
 
 	turnPower_ = 1.0f;
 	bullet_->initialize();
@@ -342,6 +350,7 @@ void Player::onUpdate(float deltaTime)
 	effectSize_[0] = effectSize_[0] / 3.f;
 
 	musicScore_.Update(deltaTime);
+	buffManager_->update(deltaTime);
 }
 
 void Player::onDraw() const
@@ -1102,6 +1111,7 @@ void Player::end_ShootMode()
 	if (ssUIManager != nullptr)ssUIManager->stepMatching(4);
 
 	attackPower_ = 5;
+	buffManager_->shield();
 
 }
 

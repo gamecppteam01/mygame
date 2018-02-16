@@ -1,6 +1,4 @@
 #include "EffekseerManager.h"
-#include "EffekseerManager.h"
-#include "EffekseerManager.h"
 
 EffekseerManager::EffekseerManager():check_(-1)
 {
