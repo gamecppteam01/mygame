@@ -33,6 +33,7 @@ private:
 	virtual void onUpdate(float deltaTime)override;
 	// ï`âÊ
 	virtual void onDraw() const override;
+	virtual void onShadowDraw() const override;
 	// è’ìÀÇµÇΩ
 	virtual void onCollide(Actor& other) override;
 

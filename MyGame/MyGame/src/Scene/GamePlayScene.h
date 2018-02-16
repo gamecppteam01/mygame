@@ -73,6 +73,7 @@ private:
 	MethodExecutor methodExecutor_;
 
 	float timer_{ 0.0f };
+
 	//ó‘Ô–ˆXVmap
 	std::map<GamePlayState, std::function<void(float)>> updateFuncMap_;
 };

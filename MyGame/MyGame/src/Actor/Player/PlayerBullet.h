@@ -50,6 +50,7 @@ private:
 	virtual void onUpdate(float deltaTime);
 	// •`‰æˆ—
 	virtual void onDraw() const;
+	virtual void onShadowDraw() const;
 	// Õ“Ë‚µ‚½‚Ìˆ—
 	virtual void onCollide(Actor& other);
 

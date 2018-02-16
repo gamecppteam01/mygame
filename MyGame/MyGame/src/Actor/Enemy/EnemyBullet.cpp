@@ -43,6 +43,13 @@ void EnemyBullet::onDraw() const
 	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
 }
 
+void EnemyBullet::onShadowDraw() const
+{
+	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
+}
+
 void EnemyBullet::onCollide(Actor & other)
 {
 	if (other.getName() == "Player") {

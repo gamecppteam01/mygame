@@ -153,7 +153,7 @@ void Judgement_SpotLight::ReadyUpdate(float deltaTime) {
 
 void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 	float t = m_NowTimer / m_MaxTimer;
-	Color color = Color::Lerp(Color(0.5f, 0.5f, 0.5f, 0.5f), Color(0.1f, 0.1f, 0.1f, 0.1f), t);
+	Color color = Color::Lerp(Color(0.35f, 0.35f, 0.35f, 0.35f), Color(0.0f, 0.0f, 0.0f, 0.0f), t);
 	m_LightHandle->setGlobalAmbientLight(color);
 
 	//暗くなったらセンターライトの点灯
@@ -169,6 +169,7 @@ void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 		return;
 	}
 	else if (m_Timer <= 0.0f) {
+		m_NowTimer = 0.0f;
 		m_State = State::Failure;
 		return;
 	}
@@ -197,7 +198,7 @@ void Judgement_SpotLight::FailureUpdate(float deltaTime) {
 	//スポットライトの消灯
 	m_LightHandle->setLightEnableHandle("Spot", false);
 	float t = m_NowTimer / m_MaxTimer;
-	Color color = Color::Lerp(Color(0.1f, 0.1f, 0.1f, 0.1f), Color(0.5f, 0.5f, 0.5f, 0.5f), t);
+	Color color = Color::Lerp(Color(0.0f, 0.0f, 0.0f, 0.0f), Color(0.35f, 0.35f, 0.35f, 0.35f), t);
 	m_LightHandle->setGlobalAmbientLight(color);
 	m_Timer = 30.0f;
 	m_NowTimer = min(m_NowTimer + deltaTime, m_MaxTimer);

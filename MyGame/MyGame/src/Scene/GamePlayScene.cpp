@@ -35,6 +35,8 @@
 #include"../UI/StepComboManager.h"
 #include"../UI/ComboDrawer.h"
 
+#include"../Input/Keyboard.h"
+
 
 //ゲームの時間
 static const float gameTime = 5.0f;
@@ -101,9 +103,9 @@ void GamePlayScene::start() {
 
 	Vector3 pos{ -80.0f,10.0f,-40.0f };
 	//playerNumber++;
-	//auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
-	//world_.addActor(ActorGroup::ENEMY, enemy);
-	//world_.addStepTimeListener(enemy);
+	/*auto enemy = std::make_shared<Enemy_Notice>(&world_, "Enemy", pos, playerNumber);
+	world_.addActor(ActorGroup::ENEMY, enemy);
+	world_.addStepTimeListener(enemy);*/
 	for (int i = 0; i < std::get<3>(stageList[stageNum_ - 1]); i++) {
 		playerNumber++;
 		auto enemy = std::make_shared<Enemy_Round>(&world_, "Enemy", pos, playerNumber);
@@ -187,6 +189,7 @@ void GamePlayScene::update(float deltaTime) {
 
 	auto color = lightHandle_.getGlobalAmbientColor();
 	world_.setFieldAudienceBright(color.r, color.g, color.b);
+
 }
 
 //描画
@@ -373,7 +376,12 @@ void GamePlayScene::changeState(GamePlayState state) {
 			timer_ += Time::GetInstance().deltaTime()*2.0f;
 
 			lightHandle_.setGlobalAmbientLight(Color(timer_, timer_, timer_, timer_));
-			return timer_ >= 0.5f;
+			standardLight_.setLightEnable(true);
+			lightHandle_.setLightEnableHandle("Point_01", true);
+			lightHandle_.setLightEnableHandle("Point_02", true);
+			lightHandle_.setLightEnableHandle("Point_03", true);
+			lightHandle_.setLightEnableHandle("Point_04", true);
+			return timer_ >= 0.35f;
 		});
 		
 		lightHandle_.setLightEnableHandle("Spot", false);
@@ -414,8 +422,12 @@ void GamePlayScene::changeState(GamePlayState state) {
 		break;
 	}
 	case Round:
-		lightHandle_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
-		if (specifiedStepManager_ != nullptr) {
+		lightHandle_.setGlobalAmbientLight(Color(0.2f, 0.2f, 0.2f, 0.2f));
+		standardLight_.setLightEnable(false);
+		lightHandle_.setLightEnableHandle("Point_01", false);
+		lightHandle_.setLightEnableHandle("Point_02", false);
+		lightHandle_.setLightEnableHandle("Point_03", false);
+		lightHandle_.setLightEnableHandle("Point_04", false);		if (specifiedStepManager_ != nullptr) {
 			specifiedStepManager_->setDraw(false);
 		}
 		world_.roundCam(stageNum_);
@@ -427,19 +439,53 @@ void GamePlayScene::changeState(GamePlayState state) {
 
 //ライトの設定関数
 void GamePlayScene::settingLight() {
+	//ライトパラメータ
+	float range = 500.0f;
+	float in_angle = 50;
+	float out_angle = 160;
+	float atten0 = 0.045f;
+	float atten1 = 0.006f;
+	float posY = 70.0f;
+
+	Color ambient = Color(0.0f, 0.0f, 0.0f, 0.0f);
+	Color diffuse = Color(0.3f, 0.3f, 0.25f, 1.0f);
+	Color specualr = Color(0.2f, 0.2f, 0.2f, 1.0f);
+
 	//標準ライトの設定
 	standardLight_.initialize();
-	standardLight_.changeLightTypeDir(Vector3(0.0f, -1.0f, 0.0f));
-	standardLight_.setLightAmbientColor(Color(0.1f, 0.1f, 0.1f, 0.1f));
-	standardLight_.setLghtSpecurColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
-	standardLight_.setLightDiffuseColor(Color(0.5f, 0.5f, 0.5f, 0.5f));
+	standardLight_.changeLightTypeSpot(Vector3(0.0f, posY, 0.0f), Vector3(0.0f, -1.0f, 0.0f), out_angle, in_angle, range, atten0, atten1);
+	standardLight_.setLightAmbientColor(ambient);
+	standardLight_.setLghtSpecurColor(diffuse);
+	standardLight_.setLightDiffuseColor(specualr);
 
 	//ライトハンドルの設定
 	lightHandle_.setUsePixelLighting(true);
+
+	//スポットライト
 	lightHandle_.createSpotLightHandle("Spot", Vector3(0.0f, 100.0f, 0.0f), Vector3(0.0f, -1.0f, 0.0f), 0.7f, 0.6f, 500.0f, 0.75f, 0.003f, 0.0f);
 	lightHandle_.setLightAmbientColorHandle("Spot", Color(0.0f, 0.0f, 0.0f, 0.0f));
-	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.7f, 0.7f, 0.2f, 1.0f));
-	lightHandle_.setLightSpecuarColorHandle("Spot", Color(1.0f, 1.0f, 1.0f, 1.0f));
+	lightHandle_.setLightDiffuseColorHandle("Spot", Color(0.5f, 0.5f, 0.4f, 1.0f));
+	lightHandle_.setLightSpecuarColorHandle("Spot", Color(0.5f, 0.5f, 0.5f, 1.0f));
+
+	lightHandle_.createSpotLightHandle("Point_01", Vector3(200.0f, posY, 100.0f), Vector3(-0.5f, -1.0f, -1.0f), out_angle, in_angle, range, atten0, atten1);
+	lightHandle_.setLightAmbientColorHandle("Point_01", ambient);
+	lightHandle_.setLightDiffuseColorHandle("Point_01", diffuse);
+	lightHandle_.setLightSpecuarColorHandle("Point_01", specualr);
+
+	lightHandle_.createSpotLightHandle("Point_02", Vector3(120.0f, posY, -80.0f), Vector3(-0.5f, -1.0f, 1.0f), out_angle, in_angle, range, atten0, atten1);
+	lightHandle_.setLightAmbientColorHandle("Point_02", ambient);
+	lightHandle_.setLightDiffuseColorHandle("Point_02", diffuse);
+	lightHandle_.setLightSpecuarColorHandle("Point_02", specualr);
+
+	lightHandle_.createSpotLightHandle("Point_03", Vector3(-120.0f, posY, 50.0f), Vector3(0.5f, -1.0f, -1.0f), out_angle, in_angle, range, atten0, atten1);
+	lightHandle_.setLightAmbientColorHandle("Point_03", ambient);
+	lightHandle_.setLightDiffuseColorHandle("Point_03", diffuse);
+	lightHandle_.setLightSpecuarColorHandle("Point_03", specualr);
+
+	lightHandle_.createSpotLightHandle("Point_04", Vector3(-120.0f, posY, -80.0f), Vector3(0.5f, -1.0f, 1.0f), out_angle, in_angle, range, atten0, atten1);
+	lightHandle_.setLightAmbientColorHandle("Point_04", ambient);
+	lightHandle_.setLightDiffuseColorHandle("Point_04", diffuse);
+	lightHandle_.setLightSpecuarColorHandle("Point_04", specualr);
 	//グローバルアンビエントの設定
 	lightHandle_.setGlobalAmbientLight(Color(0.0f, 0.0f, 0.0f, 0.0f));
 

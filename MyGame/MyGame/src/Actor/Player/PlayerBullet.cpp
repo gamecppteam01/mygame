@@ -64,6 +64,12 @@ void PlayerBullet::onDraw() const
 
 }
 
+void PlayerBullet::onShadowDraw() const
+{
+	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
+	animation_.Draw(Matrix(rotation_).Translation(drawPosition));
+}
+
 void PlayerBullet::onCollide(Actor & other)
 {
 	if ((other.getName() == "Enemy" || other.getName() == "EnemyBullet")) {

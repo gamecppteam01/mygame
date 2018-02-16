@@ -87,7 +87,7 @@ void LightHandle::setLightAmbientColorHandle(const std::string& handle, Color& c
 
 //ライトハンドルの方向を指定する
 void LightHandle::setLightDirectionHandle(const std::string& handle, const Vector3& direction) {
-	SetLightPositionHandle(lightHandles_[handle], VGet(direction.x, direction.y, direction.z));
+	SetLightDirectionHandle(lightHandles_[handle], VGet(direction.x, direction.y, direction.z));
 }
 
 //ライトハンドルの位置を設定する

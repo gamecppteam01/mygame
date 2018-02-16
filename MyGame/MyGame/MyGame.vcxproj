@@ -173,6 +173,7 @@
     <ClCompile Include="src\Actor\Enemy\BaseEnemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
+    <ClCompile Include="src\Actor\Enemy\EnemyPointChecker.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyTemplate.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy_Notice\Enemy_Notice.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy_Power.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI_pair.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Model_Animation_UI.cpp" />
+    <ClCompile Include="src\UI\RankUI.cpp" />
     <ClCompile Include="src\UI\ShowRankUI.cpp" />
     <ClCompile Include="src\UI\Song_Title_UI.cpp" />
     <ClCompile Include="src\UI\SpecifiedDraw.cpp" />
@@ -334,6 +336,7 @@
     <ClInclude Include="src\Actor\Enemy\BaseEnemy.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
+    <ClInclude Include="src\Actor\Enemy\EnemyPointChecker.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyTemplate.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy_Notice\Enemy_Notice.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy_Power.h" />
@@ -502,6 +505,7 @@
     <ClInclude Include="src\UI\Model_Animation_UI\Animation_UI_pair.h" />
     <ClInclude Include="src\UI\Model_Animation_UI\Anima_UI_Ptr.h" />
     <ClInclude Include="src\UI\Model_Animation_UI\Model_Animation_UI.h" />
+    <ClInclude Include="src\UI\RankUI.h" />
     <ClInclude Include="src\UI\ShowRankUI.h" />
     <ClInclude Include="src\UI\Song_Title_UI.h" />
     <ClInclude Include="src\UI\SpecifiedDraw.h" />
