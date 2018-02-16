@@ -166,6 +166,8 @@ enum SPRITE_ID
 	KEYBOARD_CURSOR_L_SPRITE,
 	KEYBOARD_CURSOR_R_SPRITE,
 
+	MOVIE_FRAME,
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

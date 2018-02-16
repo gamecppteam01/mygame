@@ -138,7 +138,7 @@ void TutorialScene::draw() const
 	Time::GetInstance().draw_fps();
 
 	//Movie::GetInstance().Draw(MOVIE_ID::QUARTER,Vector2(WINDOW_WIDTH,WINDOW_HEIGHT),0.2f);
-	movie_.draw(Vector2(430,650));
+	movie_.draw(Vector2(500,680));
 }
 
 void TutorialScene::end()

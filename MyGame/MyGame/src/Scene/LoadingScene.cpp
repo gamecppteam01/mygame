@@ -29,6 +29,7 @@ void LoadingScene::start() {
 	//各種リソースのロードを行う
 	LoadSprite();
 	LoadModel();
+	LoadMovie();
 	LoadFont();
 	LoadBGM();
 	LoadSE();
@@ -212,6 +213,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
 
+	Sprite::GetInstance().Load(defaultPath + "movieFrame.png", SPRITE_ID::MOVIE_FRAME);
 	
 }
 

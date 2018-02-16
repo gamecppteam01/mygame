@@ -1,5 +1,6 @@
 #pragma once
 #include"../../Graphic/Movie.h"
+#include"../../Graphic/Sprite.h"
 #include<map>
 class TutorialMovie {
 public:
@@ -24,6 +25,7 @@ private:
 	std::vector<MOVIE_ID> Movie_ID;
 	bool play_movie;
 	float scale;
+	float alpha;
 	Vector2 move;
 	Vector2 movie_half_size;
 };
