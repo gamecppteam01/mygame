@@ -30,7 +30,7 @@ void Animation_UI::Draw(){
 	pair_->Draw();
 }
 
-void Animation_UI::ChangeModel(MODEL_ID & id, MODEL_ID& id2) {
+void Animation_UI::ChangeModel(MODEL_ID  id, MODEL_ID id2) {
 	animation_.SetHandle(Model::GetInstance().GetHandle(id));
 	pair_->ChangeModel(id2);
 }

@@ -188,6 +188,7 @@
     <ClCompile Include="src\Actor\Player\CheckStepTask.cpp" />
     <ClCompile Include="src\Actor\Player\ComboChecker.cpp" />
     <ClCompile Include="src\Actor\Player\Player.cpp" />
+    <ClCompile Include="src\Actor\Player\PlayerBuffManager.cpp" />
     <ClCompile Include="src\Actor\Player\PlayerBullet.cpp" />
     <ClCompile Include="src\Actor\Player\RegulationMaker.cpp" />
     <ClCompile Include="src\Actor\Player\ShootCollider.cpp" />
@@ -268,6 +269,7 @@
     <ClCompile Include="src\Scene\Screen\ResultScoreDraw.cpp" />
     <ClCompile Include="src\Scene\Screen\SoftwareKeyboard.cpp" />
     <ClCompile Include="src\Scene\Screen\TutorialCutIn.cpp" />
+    <ClCompile Include="src\Scene\Screen\TutorialMovie.cpp" />
     <ClCompile Include="src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="src\Scene\TitleScene.cpp" />
     <ClCompile Include="src\Scene\TutorialScene.cpp" />
@@ -354,6 +356,7 @@
     <ClInclude Include="src\Actor\Player\GyroRotateChecker.h" />
     <ClInclude Include="src\Actor\Player\InputDrawer.h" />
     <ClInclude Include="src\Actor\Player\Player.h" />
+    <ClInclude Include="src\Actor\Player\PlayerBuffManager.h" />
     <ClInclude Include="src\Actor\Player\PlayerBullet.h" />
     <ClInclude Include="src\Actor\Player\Player_Animation.h" />
     <ClInclude Include="src\Actor\Player\RegulationMaker.h" />
@@ -471,6 +474,7 @@
     <ClInclude Include="src\Scene\Screen\ResultScoreDraw.h" />
     <ClInclude Include="src\Scene\Screen\SoftwareKeyboard.h" />
     <ClInclude Include="src\Scene\Screen\TutorialCutIn.h" />
+    <ClInclude Include="src\Scene\Screen\TutorialMovie.h" />
     <ClInclude Include="src\Scene\StageSelectScene.h" />
     <ClInclude Include="src\Scene\TitleScene.h" />
     <ClInclude Include="src\Scene\TutorialScene.h" />

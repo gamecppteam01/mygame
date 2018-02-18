@@ -214,6 +214,17 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
 
 	Sprite::GetInstance().Load(defaultPath + "movieFrame.png", SPRITE_ID::MOVIE_FRAME);
+
+	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameCursor_L.png", SPRITE_ID::NAME_CURSOL_L_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameCursor_R.png", SPRITE_ID::NAME_CURSOL_R_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "inputNameFrame.png", SPRITE_ID::INPUT_NAMEFRAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameCheck_Yes.png", SPRITE_ID::NAMECHECK_YES_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameCheck_No.png", SPRITE_ID::NAMECHECK_NO_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "nameCheckFrame.png", SPRITE_ID::NAMECHECK_FRAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "player1_nameMesse.png", SPRITE_ID::PLAYER1_NAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "player2_nameMesse.png", SPRITE_ID::PLAYER2_NAME_SPRITE);
 	
 }
 
@@ -283,6 +294,7 @@ void LoadingScene::LoadFont()
 	std::string defaultPath = "res/Font/";//全リソース共通パス
 	FontManager::GetInstance().AddFont(FONT_ID::JAPANESE_FONT, defaultPath + "HGRGY.TTC", "HG行書体", 50);
 	FontManager::GetInstance().AddFont(FONT_ID::DEFAULT_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 50);
+	FontManager::GetInstance().AddFont(FONT_ID::INPUT_SIZE_FONT, defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 101);
 	FontManager::GetInstance().AddFont(FONT_ID::BIG_FONT , defaultPath + "KILLGOTHIC.TTC", "Killゴシック", 140);
 	FontManager::GetInstance().AddFont(FONT_ID::TUTORIAL_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 70);
 	FontManager::GetInstance().AddFont(FONT_ID::KEYBOARD_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", 60);

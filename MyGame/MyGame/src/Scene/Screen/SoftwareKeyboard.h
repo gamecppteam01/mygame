@@ -180,6 +180,7 @@ public:
 	bool isEnd()const {
 		return state_.back() == InputState::INPUT_NONE;
 	}
+
 private:
 	const float leftMargin = 60.0f;
 	const float upMargin = 60.0f;

@@ -32,10 +32,10 @@ void KeyCursor::draw(const Vector2& position) const
 	float addSize = 10.0f;//çLÇ™ÇÈîÕàÕ
 	Vector2 addPos{ addSize*sinCount,addSize*sinCount };
 	Vector2 drawPos = position + Vector2::Lerp(basePosition_,targetPosition_,moveTime_);
-	Sprite::GetInstance().Draw(SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE, drawPos + Vector2{ -20.0f, -15.0f }-addPos);
-	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
+	Sprite::GetInstance().Draw(SPRITE_ID::NAME_CURSOL_L_SPRITE, drawPos + Vector2{ -5.0f, 5.0f }-addPos);
+	Vector2 size = Sprite::GetInstance().GetSize(SPRITE_ID::NAME_CURSOL_L_SPRITE);
 	size *= 0.5f;
-	Sprite::GetInstance().Draw(SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE, drawPos + size + Vector2{ -30.0f, -20.0f }+addPos);
+	Sprite::GetInstance().Draw(SPRITE_ID::NAME_CURSOL_R_SPRITE, drawPos + size + Vector2{ 10.0f, 0.0f }+addPos);
 }
 
 void KeyCursor::setPosition(const Vector2 & position)
