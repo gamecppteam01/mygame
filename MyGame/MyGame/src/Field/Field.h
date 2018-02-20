@@ -25,9 +25,9 @@ private:
 	int mField;
 	int fieldUp_;
 	int fieldSide_;
-	int wallUp_;
-	int wallSide_;
-	int wallCorner_;
+	//int wallUp_;
+	//int wallSide_;
+	//int wallCorner_;
 	int mSkyBox;
 	int audience_;
 	CollisionMesh mesh_;

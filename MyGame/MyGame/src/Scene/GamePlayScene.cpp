@@ -32,7 +32,6 @@
 #include"../UI/SpecifiedStepUI.h"
 #include"../Actor/Player/RegulationMaker.h"
 #include "../UI/SpecifiedStepManager.h"
-#include"../UI/StepComboManager.h"
 #include"../UI/ComboDrawer.h"
 
 #include"../Input/Keyboard.h"
@@ -509,8 +508,6 @@ void GamePlayScene::settingUI() {
 	world_.addUI(std::make_shared<Song_Title_UI>(world_.getCanChangedTempoManager().getSoundHandle()));
 	specifiedStepManager_ = std::make_shared<SpecifiedStepManager>(&world_);
 	world_.addUI(specifiedStepManager_);
-	//stepcomboManager_ = std::make_shared<StepComboManager>(&world_);
-	//world_.addUI(stepcomboManager_);
 	showrank_ = std::make_unique<ShowRankUI>(&world_);
 	auto cd = std::make_shared<ComboDrawer>();
 	world_.addUI(cd);

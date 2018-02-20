@@ -14,7 +14,6 @@
 #include"../UI/ShowRankUI.h"
 
 class SpecifiedStepManager;
-class StepComboManager;
 class ShowRankUI;
 //リソース読み込み専用シーン
 class GamePlayScene :public Scene {
@@ -61,7 +60,6 @@ private:
 	float freamCounter_{ 0.0f };
 	bool isStart_;
 	std::shared_ptr<SpecifiedStepManager> specifiedStepManager_;
-	std::shared_ptr<StepComboManager> stepcomboManager_;
 
 	std::unique_ptr<ShowRankUI> showrank_;
 	float timeCount_{ 3.0f };//スタート時のタイマー

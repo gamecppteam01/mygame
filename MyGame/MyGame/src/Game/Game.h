@@ -19,14 +19,15 @@ protected:
 public:
 	// 実行
 	int run() {
+		//SetOutApplicationLogValidFlag(FALSE);
 		// サイズ指定
 		SetGraphMode(mWidth, mHeight, 32);
 		// 描画倍率
 		SetWindowSizeExtendRate(mRate);
 		// ウインドウモードにするかどうか
-//#ifdef _DEBUG
+#ifdef _DEBUG
 		ChangeWindowMode(mWindow);
-//#endif
+#endif
 		SetUseDirect3DVersion(DX_DIRECT3D_11);
 		//DXLib初期化処理
 		if (DxLib_Init() == -1)return -1;//エラーが起きたら終了
@@ -45,6 +46,9 @@ public:
 
 		// キーが押されるまでループします
 		while (isRunning()) {
+			if (InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Start) && InputChecker::GetInstance().KeyStateDown(InputChecker::Input_Key::Back)) {
+				break;
+			}
 			//ClearDrawScreen();
 		
 			etceteraUpdate();

@@ -34,11 +34,12 @@ void PlayerBuffManager::shield(int guardCount) {
 
 }
 bool PlayerBuffManager::hit(int damage) {
+	bool result = shield_count_ > 0;//体力が0より多いか
 	shield_count_ = max(shield_count_ - damage, 0);//シールド値にダメージを与える(最低値は0)
 
-												   //シールドがなくなったらエフェクトの停止
+	//シールドがなくなったらエフェクトの停止
 	if (shield_count_ <= 0) {
 		isCreateEffect_ = false;
 	}
-	return shield_count_ > 0;//体力が0より多いか
+	return result;
 }

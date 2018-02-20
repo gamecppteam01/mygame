@@ -130,28 +130,27 @@ void ResultScoreDraw::update(float deltaTime)
 
 void ResultScoreDraw::draw() const
 {
-	//DrawSprite3D(Vector3(0.0f, 0.0f, 0.0f), 128.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::RESULT_STAGE), 255, 255, 255, 255, 0.0f, 0.0f, 0.0f);
 	int key_ = curent_key;
 	key_ = min(curent_key, PlayerList.size() - 1);
 	for (int i = 0; i < key_ + 1; i++) {
 		NumberManager::GetInstance().DrawNumberTexture(SPRITE_ID::NUMBER, PlayerList[i].second, i - PlayerList.size(), Vector2(64, 64), Vector2(0.5f, 0.5f));
-		switch (PlayerList.at(i).first.playerNumber_)
-		{
-		case 1:
-			Sprite::GetInstance().Draw(SPRITE_ID::PLAYER_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
-			break;
-		case 2:
-			Sprite::GetInstance().Draw(SPRITE_ID::ENEMY1_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
-			break;
-		case 3:
-			Sprite::GetInstance().Draw(SPRITE_ID::ENEMY2_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
-			break;
-		case 4:
-			Sprite::GetInstance().Draw(SPRITE_ID::ENEMY3_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
-			break;
-		default:
-			break;
-		}
+		//switch (PlayerList.at(i).first.playerNumber_)
+		//{
+		//case 1:
+		//	Sprite::GetInstance().Draw(SPRITE_ID::PLAYER_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
+		//	break;
+		//case 2:
+		//	Sprite::GetInstance().Draw(SPRITE_ID::ENEMY1_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
+		//	break;
+		//case 3:
+		//	Sprite::GetInstance().Draw(SPRITE_ID::ENEMY2_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
+		//	break;
+		//case 4:
+		//	Sprite::GetInstance().Draw(SPRITE_ID::ENEMY3_SCORE, Vector2{ PlayerList[i].second.x + 128.0f, PlayerList[i].second.y - 32.0f });
+		//	break;
+		//default:
+		//	break;
+		//}
 	}
 	if (curent_key >= PlayerList.size() - 2 && state_==ResultScoreDraw::Animation) {
 		animation_.draw(Vector3(0.0f,0.0f,0.0f));

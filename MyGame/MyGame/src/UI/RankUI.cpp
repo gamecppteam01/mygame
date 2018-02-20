@@ -1,6 +1,8 @@
 #include "RankUI.h"
 #include "../DataManager/DataManager.h"
 #include "../Graphic/Sprite.h"
+#include"../UI/CutInText.h"
+
 #include<iostream>
 #include<algorithm>
 
@@ -39,7 +41,9 @@ void RankUI::Score(const Vector2 & position) const{
 	scores.sort(score_less);
 	int a = 1;
 	for (auto i : scores) {
-		Sprite::GetInstance().Draw(Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1), Vector2(position.x, position.y + a * 40), Sprite::GetInstance().GetSize(Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1)) / 2,alpha_ ,Vector2(0.2, 0.2));
+		auto spr = Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1);
+		if(spr==SPRITE_ID::RANK_PLAYER_SPRITE)CutInText::DrawRank(Vector2(position.x, position.y + a * 40));
+		else Sprite::GetInstance().Draw(spr, Vector2(position.x, position.y + a * 40), Vector2(Sprite::GetInstance().GetSize(Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1)))*0.2f / 2,alpha_ ,Vector2(0.2, 0.2));
 		Rank_SpriteID(a, Vector2(position.x - 100, position.y + a * 40), 0.18f);
 		a++;
 	}

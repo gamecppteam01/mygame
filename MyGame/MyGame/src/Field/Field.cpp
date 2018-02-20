@@ -19,23 +19,23 @@ Field::Field(int field,int skybox) :
 
 	fieldSide_= Model::GetInstance().GetHandle(MODEL_ID::STAGE_RIGHTLEFT_MODEL);
 	fieldUp_= Model::GetInstance().GetHandle(MODEL_ID::STAGE_UPDOWN_MODEL);
-	wallCorner_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_CORNER_MODEL);
-	wallSide_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_SIDE_MODEL);
-	wallUp_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_UP_MODEL);
+	//wallCorner_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_CORNER_MODEL);
+	//wallSide_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_SIDE_MODEL);
+	//wallUp_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_WALL_UP_MODEL);
 	audience_ = Model::GetInstance().GetHandle(MODEL_ID::STAGE_SEAT);
 
 	Vector3 wallUp{ 0.0f,0.0f,420.0f };
 	// フィールドの座標指定
 	MV1SetPosition(mField, Vector3::Vector3ToVECTOR(FIELD_POS * FIELD_SCALE));
-	MV1SetPosition(wallUp_, Vector3::Vector3ToVECTOR(wallUp *FIELD_SCALE));
+	//MV1SetPosition(wallUp_, Vector3::Vector3ToVECTOR(wallUp *FIELD_SCALE));
 
 	// フィールドの拡大率指定
 	MV1SetScale(mField, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE));
 	MV1SetScale(fieldSide_, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE));
 	MV1SetScale(fieldUp_, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE));
-	MV1SetScale(wallCorner_, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE));
-	MV1SetScale(wallSide_, Vector3::Vector3ToVECTOR(Vector3{1.0f,1.0f,1.5f} *FIELD_SCALE));
-	MV1SetScale(wallUp_, Vector3::Vector3ToVECTOR(Vector3{ 1.5f,1.0f,1.0f } * FIELD_SCALE));
+	//MV1SetScale(wallCorner_, Vector3::Vector3ToVECTOR(Vector3::One * FIELD_SCALE));
+	//MV1SetScale(wallSide_, Vector3::Vector3ToVECTOR(Vector3{1.0f,1.0f,1.5f} *FIELD_SCALE));
+	//MV1SetScale(wallUp_, Vector3::Vector3ToVECTOR(Vector3{ 1.5f,1.0f,1.0f } * FIELD_SCALE));
 
 	// スカイボックスの座標指定
 	//MV1SetPosition(mSkyBox, Vector3::Vector3ToVECTOR(Vector3(FIELD_SIZE, 0, FIELD_SIZE) * FIELD_SCALE * 0.5f));

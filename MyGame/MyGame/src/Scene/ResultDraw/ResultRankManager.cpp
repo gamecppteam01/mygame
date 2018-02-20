@@ -6,6 +6,7 @@
 #include"../../Math/Easing.h"
 #include"../../Graphic/Sprite.h"
 #include"../../Sound/Sound.h"
+#include"../../UI/CutInText.h"
 
 static const float movePower{ 10.0f };
 static const float lightUp{ 50.0f };
@@ -187,7 +188,8 @@ void ResultRankManager::draw() const
 		//NumberManager::GetInstance().DrawNumberTexture(SPRITE_ID::NUMBER, pos, std::get<0>(c).score_, Vector2(64, 64), Vector2(0.5f, 0.5f));
 		if (rankSprList.at(count + incSize_).first)Sprite::GetInstance().Draw(rankSprList.at(count + incSize_).second, pos, Vector2::Zero, Vector2::One*scl);
 		auto spr = names.at(stage_ - 1).at(std::get<0>(c).playerNumber_ - 1);
-		Sprite::GetInstance().Draw(spr, pos + Vector2{ sprx ,0.0f }, Vector2::Zero, Vector2::One*0.4f);
+		if (spr == SPRITE_ID::RANK_PLAYER_SPRITE)CutInText::DrawMin(pos + Vector2{ sprx ,0.0f });
+		else Sprite::GetInstance().Draw(spr, pos + Vector2{ sprx ,0.0f }, Vector2::Zero, Vector2::One*0.4f);
 
 	}
 

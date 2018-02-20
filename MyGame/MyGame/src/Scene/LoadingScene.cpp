@@ -4,6 +4,8 @@
 #include"../DataManager/DataManager.h"
 #include"../ShadowMap/ShadowMap_Data.h"
 #include"../Define.h"
+#include"../Graphic/DebugDraw.h"
+
 static const std::vector<SPRITE_ID> ids_{
 	SPRITE_ID::LOADING_1_SPRITE,
 	SPRITE_ID::LOADING_2_SPRITE,
@@ -28,15 +30,17 @@ void LoadingScene::start() {
 	SetUseASyncLoadFlag(TRUE);
 	//各種リソースのロードを行う
 	LoadSprite();
-	LoadModel();
-	LoadMovie();
-	LoadFont();
 	LoadBGM();
 	LoadSE();
 	LoadEtcetera();
-	LoadShadowMap();
 	
 	SetUseASyncLoadFlag(FALSE);
+	LoadFont();
+
+	LoadModel();
+	LoadMovie();
+
+	LoadShadowMap();
 
 	for (auto& i : posits_) {
 		i = 0.0f;
@@ -61,7 +65,7 @@ void LoadingScene::draw() const {
 	float size = 0.5f;
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_1_SPRITE) / 2;
 	Sprite::GetInstance().Draw(ids_.at(keyCount_), SCREEN_SIZE*0.5f, origin, Vector2::One*size);
-
+	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", GetASyncLoadNum());
 }
 
 void LoadingScene::end() {
@@ -196,27 +200,23 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "audience_women002.png", SPRITE_ID::AUDIENCE_WOMEN2);
 	Sprite::GetInstance().Load(defaultPath + "audience_women003.png", SPRITE_ID::AUDIENCE_WOMEN3);
 
-	Sprite::GetInstance().Load(defaultPath + "score_player.png", SPRITE_ID::PLAYER_SCORE);
-	Sprite::GetInstance().Load(defaultPath + "score_enemy1.png", SPRITE_ID::ENEMY1_SCORE);
-	Sprite::GetInstance().Load(defaultPath + "score_enemy2.png", SPRITE_ID::ENEMY2_SCORE);
-	Sprite::GetInstance().Load(defaultPath + "score_enemy3.png", SPRITE_ID::ENEMY3_SCORE);
-	Sprite::GetInstance().Load(defaultPath + "ResultStage.png", SPRITE_ID::RESULT_STAGE);
+	//Sprite::GetInstance().Load(defaultPath + "score_player.png", SPRITE_ID::PLAYER_SCORE);
+	//Sprite::GetInstance().Load(defaultPath + "score_enemy1.png", SPRITE_ID::ENEMY1_SCORE);
+	//Sprite::GetInstance().Load(defaultPath + "score_enemy2.png", SPRITE_ID::ENEMY2_SCORE);
+	//Sprite::GetInstance().Load(defaultPath + "score_enemy3.png", SPRITE_ID::ENEMY3_SCORE);
 
 	Sprite::GetInstance().Load(defaultPath + "clock.png", SPRITE_ID::TIME_UI);
-	Sprite::GetInstance().Load(defaultPath + "burst_ui.png", SPRITE_ID::BURST_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "pointup_ui.png", SPRITE_ID::POINTUP_SPRITE);
+	//Sprite::GetInstance().Load(defaultPath + "burst_ui.png", SPRITE_ID::BURST_SPRITE);
+	//Sprite::GetInstance().Load(defaultPath + "pointup_ui.png", SPRITE_ID::POINTUP_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nice_sprite.png", SPRITE_ID::NICE_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "titlecursorflash.png", SPRITE_ID::CURSOR_FLASH);
+	//Sprite::GetInstance().Load(defaultPath + "titlecursorflash.png", SPRITE_ID::CURSOR_FLASH);
 	Sprite::GetInstance().Load(defaultPath + "flash.png", SPRITE_ID::FLASH_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameFramePlayer.png", SPRITE_ID::TEST_PLAYER_RANK_SPRITE);
 
-	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
-
 	Sprite::GetInstance().Load(defaultPath + "movieFrame.png", SPRITE_ID::MOVIE_FRAME);
 
-	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
-	Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
+	//Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
+	//Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameCursor_L.png", SPRITE_ID::NAME_CURSOL_L_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameCursor_R.png", SPRITE_ID::NAME_CURSOL_R_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "inputNameFrame.png", SPRITE_ID::INPUT_NAMEFRAME_SPRITE);
@@ -238,14 +238,14 @@ void LoadingScene::LoadModel()
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_men/rivalEnemy_men.mv1", MODEL_ID::RIVALENEMY_MODEL);
 	Model::GetInstance().Load(defaultPath + "enemy/rivalEnemy_women/rivalEnemy_women.mv1", MODEL_ID::RIVALENEMY_BULLET_MODEL);
 	Model::GetInstance().Load(defaultPath + "judge/judgemodel.mv1", MODEL_ID::JUDGE_MODEL);
-	Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_men/balanceEnemy_men.mv1", MODEL_ID::NOTICEENEMY_MODEL);
-	Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_women/balanceEnemy_women.mv1", MODEL_ID::NOTICEENEMY_BULLET_MODEL);
+	//Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_men/balanceEnemy_men.mv1", MODEL_ID::NOTICEENEMY_MODEL);
+	//Model::GetInstance().Load(defaultPath + "enemy/noticeEnemy_women/balanceEnemy_women.mv1", MODEL_ID::NOTICEENEMY_BULLET_MODEL);
 }
 
 
 void LoadingScene::LoadMovie(){
 	std::string defaultPath = "res/Movie/";
-	Movie::GetInstance().Load(MOVIE_ID::QUARTER, defaultPath + "quarter1.mp4");
+	Movie::GetInstance().Load(MOVIE_ID::QUARTER, defaultPath + "quarter.mp4");
 	Movie::GetInstance().Load(MOVIE_ID::HALF, defaultPath + "half.mp4");
 	Movie::GetInstance().Load(MOVIE_ID::SPIN, defaultPath + "spin.mp4");
 	Movie::GetInstance().Load(MOVIE_ID::TURN, defaultPath + "turn.mp4");
@@ -311,6 +311,14 @@ void LoadingScene::LoadFont()
 	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_8_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(125*0.4f));
 	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_9_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(116*0.4f));
 	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_SMALL_10_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ",(int)(108*0.4f));
+
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_UNDER_5_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(166 * 0.2f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_6_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(150 * 0.2f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_7_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(138 * 0.2f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_8_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(125 * 0.2f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_9_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(116 * 0.2f));
+	FontManager::GetInstance().AddFont(FONT_ID::CUTIN_RANK_10_FONT, defaultPath + "GN-Koharuiro_Sunray.ttf", "GN-こはるいろサンレイ", (int)(108 * 0.2f));
+
 }
 
 void LoadingScene::LoadBGM()
@@ -365,9 +373,9 @@ void LoadingScene::LoadEtcetera()
 	Model::GetInstance().Load(defaultPath + "Stage/field/field.mv1", MODEL_ID::STAGE_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/field_Side.mv1", MODEL_ID::STAGE_RIGHTLEFT_MODEL);
 	Model::GetInstance().Load(defaultPath + "Stage/field/field_Updown.mv1", MODEL_ID::STAGE_UPDOWN_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/field/wall_corner.mv1", MODEL_ID::STAGE_WALL_CORNER_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/field/wall_side.mv1", MODEL_ID::STAGE_WALL_SIDE_MODEL);
-	Model::GetInstance().Load(defaultPath + "Stage/field/wall_up.mv1", MODEL_ID::STAGE_WALL_UP_MODEL);
+	//Model::GetInstance().Load(defaultPath + "Stage/field/wall_corner.mv1", MODEL_ID::STAGE_WALL_CORNER_MODEL);
+	//Model::GetInstance().Load(defaultPath + "Stage/field/wall_side.mv1", MODEL_ID::STAGE_WALL_SIDE_MODEL);
+	//Model::GetInstance().Load(defaultPath + "Stage/field/wall_up.mv1", MODEL_ID::STAGE_WALL_UP_MODEL);
 	//Model::GetInstance().Load(defaultPath + "Stage/field/audience.mv1", MODEL_ID::AUDIENCE);
 	Model::GetInstance().Load(defaultPath + "Stage/audienceSeat/audienceSeat.mv1", MODEL_ID::STAGE_SEAT);
 

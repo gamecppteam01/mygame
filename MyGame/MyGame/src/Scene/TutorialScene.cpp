@@ -25,7 +25,6 @@
 #include"Screen/CreateEnemy.h"
 #include"../Actor/Player/RegulationMaker.h"
 #include"../UI/SpecifiedStepManager.h"
-#include"../UI/StepComboManager.h"
 #include"../UI/TutorialComboDrawer.h"
 
 

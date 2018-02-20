@@ -111,3 +111,50 @@ void CutInText::DrawMin(const Vector2 & position) {
 	FontManager::GetInstance().DrawTextApplyFont(position.x + (23.0f * rate), position.y + (27.0f * rate), GetColor(255, 255, 255), type, text);
 
 }
+
+void CutInText::DrawRank(const Vector2 & position) {
+	float rate = 0.2f;
+	Sprite::GetInstance().Draw(SPRITE_ID::RANK_PLAYER_SPRITE, position, Vector2(Sprite::GetInstance().GetSize(SPRITE_ID::RANK_PLAYER_SPRITE))*0.2f / 2, Vector2::One*rate, 0.0f);
+	std::string text{ "" };
+	auto name = DataManager::GetInstance().getName();
+	int frontspaceSize = 0;
+	int backspaceSize = 2;
+	int length = name.menSize + name.womenSize;
+
+	FONT_ID type = CUTIN_SMALL_UNDER_5_FONT;
+	if (length >= 5) {
+		type = fontIDs[maxNameSize - length + (fontIDs.size() / 2)];
+
+	}
+	else if (length == 4) {
+		frontspaceSize = 3;
+		backspaceSize = 2;
+	}
+	else if (length == 3) {
+		frontspaceSize = 5;
+		backspaceSize = 2;
+	}
+	else if (length == 2) {
+		frontspaceSize = 7;
+		backspaceSize = 3;
+	}
+
+	for (int i = 0; i < frontspaceSize; i++) {
+		text += " ";
+	}
+	text += name.men_name;
+	text += "&";
+	text += name.women_name;
+	for (int i = 0; i < backspaceSize; i++) {
+		text += " ";
+	}
+	text += "ƒyƒA";
+
+
+	SetDrawBright(0, 0, 0);
+	float shadowPos = 7.0f;
+	FontManager::GetInstance().DrawTextApplyFont(position.x + (23.0f + shadowPos)*rate, position.y + (27.0f + shadowPos)* rate, GetColor(255, 255, 255), type, text);
+	SetDrawBright(255, 255, 255);
+	FontManager::GetInstance().DrawTextApplyFont(position.x + (23.0f * rate), position.y + (27.0f * rate), GetColor(255, 255, 255), type, text);
+
+}

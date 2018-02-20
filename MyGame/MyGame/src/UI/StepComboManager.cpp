@@ -73,6 +73,7 @@ void StepComboManager::update(float deltaTime)
 void StepComboManager::draw() const
 {
 	//if (stepcombo_.empty())return;
+	return;//g‚í‚È‚¢‚©‚çƒGƒ‰[‰ñ”ğ
 
 	for (auto b : stepcombo_) {
 		b->draw();

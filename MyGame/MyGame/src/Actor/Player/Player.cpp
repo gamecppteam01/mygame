@@ -294,8 +294,8 @@ void Player::onUpdate(float deltaTime)
 	if (!((world_->getCanChangedTempoManager().getMeasureCount() % world_->getCanChangedTempoManager().getMusicCount()) == world_->getCanChangedTempoManager().getMusicCount() - 1)) {
 		if (comboResetTimer_ <= 0&&comboType_==ComboChecker::ComboType::Combo_None) {
 			comboChecker_.clear();//コンボをリセット
-			auto stepComboMgr = world_->findUI("StepComboManager");
-			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+			//auto stepComboMgr = world_->findUI("StepComboManager");
+			//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
 			auto stepdrawer = world_->findUI("ComboDrawer");
 			if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
 
@@ -309,8 +309,8 @@ void Player::onUpdate(float deltaTime)
 			musicScore_.setNotice(false);
 			comboChecker_.clear();
 			comboType_ = ComboChecker::ComboType::Combo_None;//時間になったらコンボを終了する
-			auto stepComboMgr = world_->findUI("StepComboManager");
-			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+			//auto stepComboMgr = world_->findUI("StepComboManager");
+			//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
 			auto stepdrawer = world_->findUI("ComboDrawer");
 			if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
 		}
@@ -897,8 +897,8 @@ void Player::to_StepSuccessMode()
 			if (puComboCount_ <= 0) {
 				comboChecker_.clear();
 				comboType_ = ComboChecker::ComboType::Combo_None;
-				auto stepComboMgr = world_->findUI("StepComboManager");
-				if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
+				//auto stepComboMgr = world_->findUI("StepComboManager");
+				//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Combo_End);
 				auto stepdrawer = world_->findUI("ComboDrawer");
 				if (stepdrawer != nullptr)stepdrawer->Notify(Notification::Call_Combo_End);
 
@@ -917,8 +917,8 @@ void Player::to_StepSuccessMode()
 		comboType_ = checkFunc_();
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst) {
 
-			auto stepComboMgr = world_->findUI("StepComboManager");
-			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
+			//auto stepComboMgr = world_->findUI("StepComboManager");
+			//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_Burst);
 			auto cd = world_->findUI("ComboDrawer");
 			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_Burst);
 
@@ -933,8 +933,8 @@ void Player::to_StepSuccessMode()
 				puEffectID_ = EffekseerManager::GetInstance().PlayEffect3D(EFFECT_ID::POINT_UP_EFFECT);
 				EffekseerManager::GetInstance().SetPositionTrackTarget(EFFECT_ID::POINT_UP_EFFECT, puEffectID_, &position_);
 			}
-			auto stepComboMgr = world_->findUI("StepComboManager");
-			if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
+			//auto stepComboMgr = world_->findUI("StepComboManager");
+			//if (stepComboMgr != nullptr)stepComboMgr->Notify(Notification::Call_Success_Combo_PointUp);
 			auto cd = world_->findUI("ComboDrawer");
 			if (cd != nullptr)cd->Notify(Notification::Call_Success_Combo_PointUp);
 			isChangePUMode = true;

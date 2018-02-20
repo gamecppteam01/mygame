@@ -17,7 +17,7 @@ Enemy_Notice::Enemy_Notice():
 }
 
 Enemy_Notice::Enemy_Notice(IWorld * world, const std::string & name, const Vector3 & position, int playerNumber, const IBodyPtr & body)
-	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::NOTICEENEMY_MODEL, MODEL_ID::NOTICEENEMY_BULLET_MODEL), isGoBonus_(false) {
+	: BaseEnemy(world, name, position, playerNumber, body, MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID::BALANCEENEMY_BULLET_MODEL), isGoBonus_(false) {
 	roundPoint_ = world_->getCanChangedScoreMap().getRoundPoint();
 	//最初のステート
 	stateNotice_ = Notice_State::Normal;
