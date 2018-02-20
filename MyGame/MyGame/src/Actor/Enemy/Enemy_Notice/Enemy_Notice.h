@@ -14,7 +14,11 @@ public:
 	Enemy_Notice();
 	//コンストラクタ
 	Enemy_Notice(IWorld* world, const std::string& name, const Vector3& position, int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
-	
+
+	// 衝突した
+	virtual void onCollide(Actor& other) override;
+	virtual void hitOther(const Vector3& velocity) override;
+
 	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber);
 
 	// メッセージ処理
@@ -58,6 +62,6 @@ private:
 	int stepCount_{ 0 };
 	//１キャラの大きさ
 	float charaPos_;
-	bool lightFlag_{ false };
+	bool lightFlag_{ false };//現在ライト内にいるか
 	
 };

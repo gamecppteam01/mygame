@@ -42,6 +42,8 @@ bool EnemyPointChecker::nextPosition_Round(IWorld* world, int& currentKey, int &
 	world->findActors("Enemy", enemys);
 	enemys.push_back(world->findActor("Player"));
 	enemys.remove_if([&](auto& e) {return e.lock()->getPlayerNumber() == myNumber; });
+	enemys.remove_if([&](auto& e) {return Vector3::Distance(center, e.lock()->position()) >= 100.0f; });
+
 	//“G‚Ì–Ú“I’n‚ðŽæ“¾
 	std::list<int> noneTargetPoints_;
 	currentKey = nextKey;
@@ -62,7 +64,6 @@ CHECK_ROUTE:
 	}
 FIRST:
 	for (auto& e : enemys) {
-		if (Vector3::Distance(center, e.lock()->position()) >= 100.0f)continue;
 		Vector3 toSeg = (nextPosition - center).Normalize()*100.0f;
 		toSeg.y = 0.0f;
 		BoundingSegment seg(center, center + toSeg);

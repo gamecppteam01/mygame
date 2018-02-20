@@ -25,6 +25,30 @@ Enemy_Notice::Enemy_Notice(IWorld * world, const std::string & name, const Vecto
 	downCount_ = 10;
 }
 
+void Enemy_Notice::onCollide(Actor & other)
+{
+	BaseEnemy::onCollide(other);
+
+}
+
+void Enemy_Notice::hitOther(const Vector3 & velocity)
+{
+	BaseEnemy::hitOther(velocity);
+
+	//ライト狙い終了
+	if (state_ == Enemy_State::Normal&&stateNotice_==Notice_State::Steal) {
+		stateNotice_ = Notice_State::Normal;
+		changeFlag_ = true;
+		lightFlag_ = false;
+
+		nextKey_ = getNearestPoint(centerPosition_);
+		currentKey_ = nextKey_;
+		nextPosition_ = roundPoint_[nextKey_];
+
+	}
+
+}
+
 std::shared_ptr<BaseEnemy> Enemy_Notice::Create(IWorld * world, const Vector3 & position, int playerNumber)
 {
 	return std::make_shared<Enemy_Notice>(world, "Enemy", position, playerNumber);
@@ -86,7 +110,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 		if (data_->notice_ == true && Vector2::Distance(myPos,lightPos) <= 10.0f) {
 			world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 			change_State_and_Anim(Enemy_State::Fever, Enemy_Animation::Idle, false);
-			OutputDebugString("Change\n");
+			//OutputDebugString("Change\n");
 		}
 		else {
 			lightFlag_ = false;
@@ -112,7 +136,7 @@ void Enemy_Notice::updateNormal(float deltaTime) {
 				
 				if (animation_.IsAnimEnd() == true && stepFlag_ == true ) {
 					changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
-					OutputDebugString("IDLE\n");
+					//OutputDebugString("IDLE\n");
 					stepFlag_ = false;
 				}
 
@@ -149,14 +173,14 @@ void Enemy_Notice::updateFever(float deltaTime) {
 	//ステップの間にアイドルを挟む
 	if (animation_.IsAnimEnd() == true && stepFlag_ == true && changeFlag_ == false) {
 		changeAnimation(Enemy_Animation::Idle, 0.0f, 1.0f, false);
-		OutputDebugString("IDLE\n");
+		//OutputDebugString("IDLE\n");
 		rotation_ *= Matrix::CreateFromAxisAngle(rotation_.Up(), -5.0f);
 		stepFlag_ = false;
 	}
 
 	if (animation_.IsAnimEnd() == true && changeFlag_ == true) {
 		change_State_and_Anim(Enemy_State::Normal, Enemy_Animation::Idle, true);
-		OutputDebugString("Change\n");
+		//OutputDebugString("Change\n");
 		setNextPosition();
 		stepFlag_ = true;
 		stepCount_ = 0;
@@ -168,7 +192,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 	if ((int)timer_ % 60 == 0 && /*animation_.IsAnimEnd() == true &&*/ stepFlag_ == false && stepCount_ <= 1) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_QUARTER);
 		changeAnimation(Enemy_Animation::Quarter, 0.0f, 1.0f, false);
-		OutputDebugString("QUARTER\n");
+		//OutputDebugString("QUARTER\n");
 		stepFlag_ = true;
 		stepCount_++;
 		timer_ = 0;
@@ -176,7 +200,7 @@ void Enemy_Notice::updateFever(float deltaTime) {
 	if ((int)timer_ % 60 == 0 && /*animation_.IsAnimEnd() == true &&*/ stepFlag_ == false && stepCount_ == 2) {
 		world_->getCanChangedScoreManager().addScore(playerNumber_, SCORE_TURN);
 		changeAnimation(Enemy_Animation::Turn, 0.0f, 1.0f, false);
-		OutputDebugString("TURN\n");
+		//OutputDebugString("TURN\n");
 		stepFlag_ = true;
 		stepCount_ = 0;
 		timer_ = 0;
