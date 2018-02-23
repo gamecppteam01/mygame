@@ -42,6 +42,7 @@ public:
 	/// Ä¶ó‘Ô‚Ì“®‰æ‚ğ•\¦‚·‚é
 	///</summary>
 	void Draw(const MOVIE_ID& id, const Vector2& pos1, const float& scale);
+	void Draw(const MOVIE_ID& id, const Vector2& pos, float scale, float angle);
 
 	void Draw(const MOVIE_ID& id);
 

@@ -77,7 +77,8 @@ Player::Player(IWorld* world, const std::string& name, const Vector3& position, 
 	state_(Player_State::Idle), prevState_(Player_State::Idle), defaultPosition_(position), centerPosition_(position),
 	bulletVelocity_(Vector3::Zero), turnPower_(1.0f), bound_(Vector3::Zero), playerNumber_(playerNumber),
 	gyroCheck_(), musicScore_(), stepEffect_(world),turnEffect_(world), appear_stepUI_(world, this), spinEffect_(world),
-	quaterEffect_(world),halfEffect_(world), isZoomEnd_(true), checkFunc_([&] {return ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_); })
+	quaterEffect_(world),halfEffect_(world), isZoomEnd_(true), checkFunc_([&] {return ComboChecker::checkCombo(comboChecker_, stepAnimScoreList_.at(nextStep_).first, world_); }),
+	lightTimeUI_()
 {
 	buffManager_ = std::make_shared<PlayerBuffManager>();
 	createBullet();
@@ -211,6 +212,11 @@ void Player::initCheckStep()
 	checkstep_.initialize();
 }
 
+LightTimeDrawUI * Player::getLightTimeDrawUIPtr() 
+{
+	return &lightTimeUI_;
+}
+
 void Player::createBullet()
 {
 	bullet_ = std::make_shared<PlayerBullet>(world_, position_, this);
@@ -226,6 +232,8 @@ void Player::initialize()
 	prevState_ = state_;
 	modelHandle_ = MODEL_ID::PLAYER_MODEL;
 	changeAnimation(Player_Animation::Move_Forward);
+
+	lightTimeUI_.init();
 
 	buffManager_->setPlayer(this);
 
@@ -351,6 +359,7 @@ void Player::onUpdate(float deltaTime)
 
 	musicScore_.Update(deltaTime);
 	buffManager_->update(deltaTime);
+	lightTimeUI_.update(deltaTime);
 }
 
 void Player::onDraw() const
@@ -404,7 +413,7 @@ void Player::onDraw() const
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
 		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
-
+		lightTimeUI_.draw(Vector2{ 500.0f,300.0f });
 		//DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
 
 		////デバッグ表示

@@ -9,9 +9,12 @@
 #include"../../../ScoreManager/ScoreData.h"
 #include"../../../Input/Keyboard.h"
 #include"../../../DataManager/DataManager.h"
+#include"../../../Math/Random.h"
+
 #include<list>
 #include<minmax.h>
 
+static const float maxLightTime = 3.0f;//タイムの限界値
 //コンストラクタ
 Judgement_SpotLight::Judgement_SpotLight(IWorld * world, const Vector3 & position, LightHandle& light)
 	:JudgeBase(world, "SpotLight", position), m_LightHandle(&light) {
@@ -166,10 +169,12 @@ void Judgement_SpotLight::CenterLightingUpdate(float deltaTime) {
 		m_Timer = 8.0f;
 		m_NowTimer = 0.0f;
 		m_State = State::SetUpSpotLighting;
+
 		return;
 	}
 	else if (m_Timer <= 0.0f) {
 		m_NowTimer = 0.0f;
+		resetLight();
 		m_State = State::Failure;
 		return;
 	}
@@ -223,33 +228,66 @@ void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 }
 
 void Judgement_SpotLight::TimeCount(float deltaTime) {
+	std::vector<int> clearCount;
 	for (auto& d : m_DataList) {
+		std::pair<int, LightTimeDrawUI*>* target = nullptr;
+		for (auto& ltdu : ltduList_) {
+			if (ltdu.first == d.first) {
+				target = &ltdu;
+				break;
+			}
+		}
 		if (is_In_Distans(d.second->target_.lock())) {
 			//3秒経っているか
-			TimeJudge(d.second);
+			if (TimeJudge(d.second))clearCount.push_back(d.first);
 			d.second->time_ += deltaTime;
+
+			if (target != nullptr)target->second->isIn(true);
 		}
 		else {
-			d.second->time_ = 0.0f;
+			if (target != nullptr)target->second->isIn(false);
+		//	d.second->time_ = 0.0f;
 		}
+		if (target != nullptr)target->second->rate(d.second->time_/ maxLightTime);
+
+	}
+	if (m_Count > 0) {
+		for (auto& dt : m_DataList) {
+			dt.second->notice_ = 0.0f;
+			dt.second->time_ = 0.0f;
+		}
+		int target = Random::GetInstance().Randomize(clearCount);
+		m_Target = m_DataList[target]->target_;
+		m_DataList[target]->notice_ = true;
+		m_DataList[target]->time_ = maxLightTime;
+
 	}
 }
 
-void Judgement_SpotLight::TimeJudge(ScoreData* data) {
+bool Judgement_SpotLight::TimeJudge(ScoreData* data) {
 	//対象の時間数が3秒を超えていたらカウントを追加
-	if (data->time_ >= 3.0f) {
+	if (data->time_ >= maxLightTime) {
 		m_Count++;
 		data->notice_ = true;
 
-		//カウントが2以上で強制的に1番をターゲットにする
-		if (m_Count >= 2) {
-			m_Target = m_DataList[1]->target_;
-			m_DataList[1]->notice_ = true;
-		}
-		else {
-			m_Target = data->target_;
-		}
+		////カウントが2以上で強制的に1番をターゲットにする
+		//if (m_Count >= 2) {
+		//	m_Target = m_DataList[1]->target_;
+		//	m_DataList[1]->notice_ = true;
+		//}
+		//else {
+		//	m_Target = data->target_;
+		//}
+		return true;
+	}
+	return false;
+}
 
+void Judgement_SpotLight::resetLight()
+{
+	for (auto& ltdu : ltduList_) {
+		ltdu.second->isIn(false);
+		ltdu.second->rate(0.0f);
 	}
 }
 
@@ -261,4 +299,9 @@ bool Judgement_SpotLight::IsInEnemy()
 int Judgement_SpotLight::getCountEnemy()
 {
 	return count_;
+}
+
+void Judgement_SpotLight::addLightTimeDrawUI(LightTimeDrawUI * ltdu, int playerNum)
+{
+	ltduList_.push_back(std::make_pair(playerNum, ltdu));
 }

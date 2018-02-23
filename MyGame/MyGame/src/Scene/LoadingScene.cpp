@@ -65,7 +65,7 @@ void LoadingScene::draw() const {
 	float size = 0.5f;
 	Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::LOADING_1_SPRITE) / 2;
 	Sprite::GetInstance().Draw(ids_.at(keyCount_), SCREEN_SIZE*0.5f, origin, Vector2::One*size);
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", GetASyncLoadNum());
+	//DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", GetASyncLoadNum());
 }
 
 void LoadingScene::end() {

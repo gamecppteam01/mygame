@@ -17,6 +17,7 @@
 #include"../../UI/Appear_StepUI.h"
 #include "../../Effect/EffekseerEffect/EffectIclude.h"
 #include"ComboChecker.h"
+#include"../../UI/LightTimeDrawUI.h"
 
 class PlayerBullet;
 class PlayerBuffManager;
@@ -78,6 +79,8 @@ public:
 	virtual void endStepAnim()override;
 
 	void initCheckStep();
+
+	LightTimeDrawUI* getLightTimeDrawUIPtr();
 protected:
 	void createBullet();
 	virtual void initialize()override;
@@ -332,6 +335,8 @@ protected:
 	int puComboCount_;//ポイントアップコンボの残り回数
 
 	bool attackCheckKeep{ false };
+
+	LightTimeDrawUI lightTimeUI_;
 protected:
 	const Vector3 defaultPosition_;
 

@@ -14,6 +14,7 @@ public:
 
 private:
 	static const std::vector<FONT_ID> fontIDs;
+	static const std::vector<FONT_ID> rankIDs;
 
 	static const int maxNameSize{ 10 };
 };

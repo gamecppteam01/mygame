@@ -291,6 +291,7 @@
     <ClCompile Include="src\UI\ComboSupportUI.cpp" />
     <ClCompile Include="src\UI\CutInText.cpp" />
     <ClCompile Include="src\UI\EndUI.cpp" />
+    <ClCompile Include="src\UI\LightTimeDrawUI.cpp" />
     <ClCompile Include="src\UI\MiniMap.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI.cpp" />
     <ClCompile Include="src\UI\Model_Animation_UI\Animation_UI_pair.cpp" />
@@ -450,6 +451,7 @@
     <ClInclude Include="src\Method\MethodTimer.h" />
     <ClInclude Include="src\Resource\CsvReader.h" />
     <ClInclude Include="src\Resource\LoadingList.h" />
+    <ClInclude Include="src\Scene\ChangeLoadScene.h" />
     <ClInclude Include="src\Scene\CreditScene.h" />
     <ClInclude Include="src\Scene\GameClearScene.h" />
     <ClInclude Include="src\Scene\GameOverScene.h" />
@@ -504,6 +506,7 @@
     <ClInclude Include="src\UI\CutInText.h" />
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
+    <ClInclude Include="src\UI\LightTimeDrawUI.h" />
     <ClInclude Include="src\UI\MiniMap.h" />
     <ClInclude Include="src\UI\Model_Animation_UI\Animation_UI.h" />
     <ClInclude Include="src\UI\Model_Animation_UI\Animation_UI_pair.h" />

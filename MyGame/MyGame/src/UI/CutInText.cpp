@@ -16,9 +16,16 @@ const std::vector<FONT_ID> CutInText::fontIDs{
 	FONT_ID::CUTIN_SMALL_6_FONT,
 	FONT_ID::CUTIN_SMALL_UNDER_5_FONT,
 
-
 };
+const std::vector<FONT_ID> CutInText::rankIDs{
 
+	FONT_ID::CUTIN_RANK_10_FONT,
+	FONT_ID::CUTIN_RANK_9_FONT,
+	FONT_ID::CUTIN_RANK_8_FONT,
+	FONT_ID::CUTIN_RANK_7_FONT,
+	FONT_ID::CUTIN_RANK_6_FONT,
+	FONT_ID::CUTIN_RANK_UNDER_5_FONT,
+};
 
 void CutInText::Draw(const Vector2 & position, const Vector2 & origin, const Vector2 & scale) {
 	Sprite::GetInstance().Draw(SPRITE_ID::RANK_PLAYER_SPRITE, position, origin, scale);
@@ -114,16 +121,17 @@ void CutInText::DrawMin(const Vector2 & position) {
 
 void CutInText::DrawRank(const Vector2 & position) {
 	float rate = 0.2f;
-	Sprite::GetInstance().Draw(SPRITE_ID::RANK_PLAYER_SPRITE, position, Vector2(Sprite::GetInstance().GetSize(SPRITE_ID::RANK_PLAYER_SPRITE))*0.2f / 2, Vector2::One*rate, 0.0f);
+	auto origin = Vector2(Sprite::GetInstance().GetSize(SPRITE_ID::RANK_PLAYER_SPRITE))*0.2f / 2;
+	Sprite::GetInstance().Draw(SPRITE_ID::RANK_PLAYER_SPRITE, position, origin, Vector2::One*rate, 0.0f);
 	std::string text{ "" };
 	auto name = DataManager::GetInstance().getName();
 	int frontspaceSize = 0;
 	int backspaceSize = 2;
 	int length = name.menSize + name.womenSize;
 
-	FONT_ID type = CUTIN_SMALL_UNDER_5_FONT;
+	FONT_ID type = CUTIN_RANK_UNDER_5_FONT;
 	if (length >= 5) {
-		type = fontIDs[maxNameSize - length + (fontIDs.size() / 2)];
+		type = rankIDs[maxNameSize - length];
 
 	}
 	else if (length == 4) {
@@ -153,8 +161,9 @@ void CutInText::DrawRank(const Vector2 & position) {
 
 	SetDrawBright(0, 0, 0);
 	float shadowPos = 7.0f;
-	FontManager::GetInstance().DrawTextApplyFont(position.x + (23.0f + shadowPos)*rate, position.y + (27.0f + shadowPos)* rate, GetColor(255, 255, 255), type, text);
+	Vector2 slidepos{ 80.f,15.f };
+	FontManager::GetInstance().DrawTextApplyFont(position.x- origin.x+ slidepos.x + (23.0f + shadowPos)*rate, position.y- origin.y+ slidepos.y + (27.0f + shadowPos)* rate, GetColor(255, 255, 255), type, text);
 	SetDrawBright(255, 255, 255);
-	FontManager::GetInstance().DrawTextApplyFont(position.x + (23.0f * rate), position.y + (27.0f * rate), GetColor(255, 255, 255), type, text);
+	FontManager::GetInstance().DrawTextApplyFont(position.x- origin.x+ slidepos.x + (23.0f * rate), position.y- origin.y+ slidepos.y + (27.0f * rate), GetColor(255, 255, 255), type, text);
 
 }

@@ -91,6 +91,8 @@ void GamePlayScene::start() {
 	int playerNumber = 1;
 	std::shared_ptr<Player> player = std::make_shared<Player>(&world_, "Player", Vector3::Up*10.0f + Vector3{ 0.0f,0.0f,50.0f }, playerNumber);
 	world_.addActor(ActorGroup::PLAYER, player);
+	std::list<std::pair<int,LightTimeDrawUI*>> ltdus;
+	ltdus.push_back(std::make_pair(playerNumber,player->getLightTimeDrawUIPtr()));
 
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter, Player_Animation::Turn});
 	//player->setCheckStepTask(std::list<Player_Animation>{Player_Animation::Quarter});
@@ -144,7 +146,11 @@ void GamePlayScene::start() {
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(180.0f, 0.0f, 90.0f), Matrix::CreateRotationY(45.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(180.0f, 0.0f, -90.0f), Matrix::CreateRotationY(135.0f)));
 	world_.addActor(ActorGroup::NPC, std::make_shared<Judge_NPC>(&world_, Vector3(-180.0f, 0.0f, -90.0f), Matrix::CreateRotationY(-135.0f)));
-	world_.addActor(ActorGroup::NPC, std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_));
+	auto judgespt = std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_);
+	world_.addActor(ActorGroup::NPC, judgespt);
+	for (auto ltdu : ltdus) {
+		judgespt->addLightTimeDrawUI(ltdu.second, ltdu.first);
+	}
 	world_.getCamera()->setTarget(world_.findActor("Player"));
 	world_.getCamera()->setFirstPos();
 
@@ -501,7 +507,7 @@ void GamePlayScene::settingUI() {
 	world_.addUI(warningUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, Vector2(SCREEN_SIZE.x / 2, 50.0f));
 	world_.addUI(timeUI);
-	std::shared_ptr<RankUI> rankUI = std::make_shared<RankUI>(&world_.getCanChangedScoreManager(),&world_.getRoundCam() ,Vector2(1175, 450));
+	std::shared_ptr<RankUI> rankUI = std::make_shared<RankUI>(&world_.getCanChangedScoreManager(),&world_.getRoundCam() ,Vector2(1000, 450));
 	world_.addUI(rankUI);
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);

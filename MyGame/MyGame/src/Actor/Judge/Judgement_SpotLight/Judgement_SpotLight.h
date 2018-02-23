@@ -3,6 +3,7 @@
 #include"../../../Light/LightHandle.h"
 #include"../../../ScoreManager/ScoreData.h"
 #include"../../../Light/LightHandle_Data.h"
+#include"../../../UI/LightTimeDrawUI.h"
 #include<map>
 #include<functional>
 #include<list>
@@ -50,6 +51,8 @@ public:
 	//スポットライト内に敵が何体いるか？
 	int getCountEnemy();
 
+	void addLightTimeDrawUI(LightTimeDrawUI* ltdu,int playerNum);
+
 private:
 	void SetUp(float deltaTime);
 	void ReadyUpdate(float deltaTime);
@@ -58,8 +61,10 @@ private:
 	void FailureUpdate(float deltaTime);
 	void SpotLightingUpdate(float deltaTime);
 	void TimeCount(float deltaTime);
-	void TimeJudge(ScoreData* data);
+	bool TimeJudge(ScoreData* data);
 
+
+	void resetLight();
 private:
 	float m_Distance;
 
@@ -91,4 +96,6 @@ private:
 
 	bool IsInEnemy_{ false };
 	bool IsGetSpotLight_{ false };
+
+	std::list<std::pair<int,LightTimeDrawUI*>> ltduList_;
 };
