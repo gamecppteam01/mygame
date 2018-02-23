@@ -8,6 +8,7 @@
 #include<memory>
 #include"../UI/Model_Animation_UI/Animation_UI.h"
 #include"../Graphic/AnimationDx.h"
+#include"../Light/StandardLight.h"
 
 class NamingScene :public Scene {
 public:
@@ -42,11 +43,12 @@ private:
 	float timer_;
 	int sinCount_;
 	float alpha_;
-	float Xpos_{ 0 };
 
 	//カーソルの位置及びボタンの位置リスト
 	const std::vector<std::pair<Vector2, SceneType>> cursorPoses{
 		{ Vector2{ 690.0f, 555.0f },SceneType::SCENE_STAGESELECT },
 		{ Vector2{ 990.0f, 555.0f },SceneType::SCENE_NAMING }
 	};
+
+	StandardLight light_;
 };

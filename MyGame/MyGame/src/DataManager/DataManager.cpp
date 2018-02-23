@@ -72,6 +72,13 @@ void DataManager::setWoMenName(const std::string & women_name, int size)
 
 }
 
+void DataManager::ResetName()
+{
+	player_name.menSize = 0;
+	player_name.womenSize = 0;
+	player_name.men_name = "";
+	player_name.women_name = "";
+}
 
 Player_Name DataManager::getName() const
 {

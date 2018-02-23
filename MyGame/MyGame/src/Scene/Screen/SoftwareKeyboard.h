@@ -54,6 +54,9 @@ public:
 	virtual void draw(const Vector2& position)const=0;//描画
 
 	Vector2 getDrawPos()const { return drawPos_; }
+
+
+
 protected:
 	Vector2 drawPos_;//描画基準位置
 };
@@ -95,9 +98,11 @@ private:
 //小文字化ボタン
 class ChangeMinChara :public KeyButton {
 public:
-	ChangeMinChara(const Vector2& drawpos): KeyButton(drawpos) {
+	ChangeMinChara(const Vector2& drawpos): KeyButton(drawpos){
 
 	}
+	void select(SoftwareKeyboard* kbd, const Point& currentMove) override;
+
 	void push(SoftwareKeyboard* kbd)override;
 	void draw(const Vector2& position)const override {
 		FontManager::GetInstance().DrawTextApplyFont(position.x + drawPos_.x, position.y + drawPos_.y, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, "MN");
@@ -111,6 +116,9 @@ public:
 	ChangeDecoChara(const Vector2& drawpos) : KeyButton(drawpos) {
 
 	}
+
+	void select(SoftwareKeyboard* kbd, const Point& currentMove) override;
+
 	void push(SoftwareKeyboard* kbd)override;
 	void draw(const Vector2& position)const override {
 		FontManager::GetInstance().DrawTextApplyFont(position.x + drawPos_.x, position.y + drawPos_.y, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, "DC");
@@ -122,6 +130,9 @@ public:
 	DecideName(const Vector2& drawpos) :KeyButton(drawpos) {
 		 
 	}
+
+	void select(SoftwareKeyboard* kbd, const Point& currentMove) override;
+
 	void push(SoftwareKeyboard* kbd)override;
 	void draw(const Vector2& position)const override {
 		FontManager::GetInstance().DrawTextApplyFont(position.x + drawPos_.x, position.y + drawPos_.y, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, "OK");
@@ -181,6 +192,9 @@ public:
 		return state_.back() == InputState::INPUT_NONE;
 	}
 
+	void isdrawWide();
+	void NotisdrawWide();
+
 private:
 	const float leftMargin = 60.0f;
 	const float upMargin = 60.0f;
@@ -203,8 +217,11 @@ private:
 	Point currentKey_{ 0,0 };//現在のキー位置
 
 	KeyCursor cursor_;
-
+	
 	std::list<InputState> state_{ InputState::INPUT_NONE,InputState::INPUT_WOMEN,InputState::INPUT_MEN };
 
 	std::vector<SaveChara> name_;
+
+	bool isdrawWide_{ false };
+	bool istwoSize_{ false };
 };

@@ -20,7 +20,6 @@ void SoftwareKeyboard::initialize()
 	state_.push_back(InputState::INPUT_MEN);
 
 	name_.clear();
-
 }
 
 void SoftwareKeyboard::stateReset()
@@ -85,7 +84,14 @@ void SoftwareKeyboard::update(float deltaTime)
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::B)) {
 		if (!name_.empty())name_.pop_back();
 	}
-
+	//MN Point{10,0}, DC Point{10,1}, OK Point{10,4}
+	if (isdrawWide_ == true && (currentKey_ == Point{ 10,0 } || currentKey_ == Point{ 10,1 } || currentKey_ == Point{ 10,4 })) {
+		istwoSize_ = true;
+	}
+	else {
+		istwoSize_ = false;
+	}
+	
 	cursor_.update(deltaTime);
 }
 
@@ -113,10 +119,27 @@ void SoftwareKeyboard::draw(const Vector2 & position)const
 	//SetDrawBright(255, 255, 255);
 	Vector2 pos = position + keylist.at(currentKey_.y).at(currentKey_.x)->getDrawPos();
 	//DrawCircle(pos.x, pos.y, 16, GetColor(255, 0, 0));
-	cursor_.draw(position);
+	if (istwoSize_ == false) {
+		cursor_.draw(position);
+	}
+	else {
+		cursor_.drawWide(position);
+	}
+	
+	
 	//for (int i = 0; i < name_.size(); i++) {
 	//	FontManager::GetInstance().DrawTextApplyFont(800 + i * 20, 350, GetColor(255, 255, 255), FONT_ID::KEYBOARD_FONT, name_.at(i).getCurrentText());
 	//}
+}
+
+void SoftwareKeyboard::isdrawWide()
+{
+	isdrawWide_ = true;
+}
+
+void SoftwareKeyboard::NotisdrawWide()
+{
+	isdrawWide_ = false;
 }
 
 void KeyChar::push(SoftwareKeyboard * kbd)
@@ -142,14 +165,38 @@ void CursorMove::select(SoftwareKeyboard * kbd, const Point & currentMove)
 	}
 }
 
+void ChangeMinChara::select(SoftwareKeyboard * kbd, const Point & currentMove)
+{
+	//カーソルがMNの座標に来たら
+	if (Point{ 10,0 } == kbd->getCurrentKey()) {
+		kbd->isdrawWide();
+	}
+	
+}
+
 void ChangeMinChara::push(SoftwareKeyboard * kbd) {
 	if (kbd->getName().empty())return;//空なら終わり
 	kbd->getName().back().changeMin();
 }
 
+void ChangeDecoChara::select(SoftwareKeyboard * kbd, const Point & currentMove)
+{
+	//カーソルがDCの座標に来たら
+	if (Point{ 10,1 } == kbd->getCurrentKey()) {
+		kbd->isdrawWide();
+	}
+}
+
 void ChangeDecoChara::push(SoftwareKeyboard * kbd) {
 	if (kbd->getName().empty())return;//空なら終わり
 	kbd->getName().back().changeDeco();
+}
+
+void DecideName::select(SoftwareKeyboard * kbd, const Point & currentMove)
+{
+	if (Point{ 10,4 } == kbd->getCurrentKey()) {
+		kbd->isdrawWide();
+	}
 }
 
 void DecideName::push(SoftwareKeyboard * kbd)

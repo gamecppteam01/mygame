@@ -44,6 +44,7 @@ public:
 	void setMenName(const std::string& men_name, int size);
 	void setWoMenName(const std::string& women_name,int size);
 
+	void ResetName();
 
 	Player_Name getName()const;
 private:
@@ -60,4 +61,5 @@ private:
 	int count_;
 
 	Player_Name player_name{ };
+
 };

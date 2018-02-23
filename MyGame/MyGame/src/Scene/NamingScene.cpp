@@ -7,9 +7,12 @@
 #include"../Graphic/Model.h"
 #include"../Define.h"
 #include"../Sound/Sound.h"
+#include"../DataManager/DataManager.h"
+
 
 NamingScene::NamingScene()
 {
+	
 	next_ = SceneType::SCENE_STAGESELECT;
 	cameraPos_ = Vector3(0, 0, 0);
 	cameraTarget_ = Vector3(0, 0, -1);
@@ -24,9 +27,17 @@ NamingScene::NamingScene()
 
 void NamingScene::start()
 {
+	light_.initialize();
+	light_.changeLightTypeDir(Vector3(0, -1, 0));
+	light_.setLghtSpecurColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
+	light_.setLightAmbientColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+	light_.setLightDiffuseColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+
 	next_ = SceneType::SCENE_STAGESELECT;
 	anim_UI_ = std::make_unique<Animation_UI>(MODEL_ID::PLAYER_MODEL, manPos_);
 	anim_UI_->ChangeModel(MODEL_ID::PLAYER_MODEL, MODEL_ID::PLAYER_BULLET_MODEL);
+
+	anim_UI_->Update(1.0f / 60.0f);
 }
 
 void NamingScene::update(float deltaTime)
@@ -45,7 +56,7 @@ void NamingScene::update(float deltaTime)
 		}
 		if (cursor_ == 1 && InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::A)) {
 			key_.stateReset();
-			
+			DataManager::GetInstance().ResetName();
 			nameState_ = NamingState::name;
 		}
 		if (Keyboard::GetInstance().KeyTriggerDown(KEYCODE::A) ||
@@ -96,6 +107,8 @@ void NamingScene::draw() const
 		}
 
 		FontManager::GetInstance().DrawTextApplyFont(655.0f, 130.0f, GetColor(255, 255, 255), FONT_ID::INPUT_SIZE_FONT, key_.getNameStr());
+
+
 	}
 
 	if (nameState_ == NamingState::select) {
