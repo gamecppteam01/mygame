@@ -234,6 +234,8 @@ void TutorialScene::update_textDraw(float deltaTime)
 
 void TutorialScene::update_Play(float deltaTime)
 {
+	text_.Update();
+
 	world_.update(deltaTime);
 
 	if (InputChecker::GetInstance().KeyTriggerDown(InputChecker::Input_Key::Start)) {
@@ -264,6 +266,7 @@ void TutorialScene::update_Pause(float deltaTime)
 
 void TutorialScene::update_CutIn(float deltaTime)
 {
+	text_.Update();
 	world_.update_end(deltaTime);
 	cutInTimer_ += deltaTime;
 	if (cutInTimer_ >= StopTime + InTime + OutTime) {
@@ -329,15 +332,18 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			changeState(Play);//移動
 			break;
 		}
 		case 2: {
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
+	
 			cutInID_.push(SPRITE_ID::CUTIN_LESSON2_SPRITE);
 			changeState(CutIn);//ステップ
 			break;
@@ -374,6 +380,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			movie_.Display_Movie();
 
 			player_->initCheckStep();
@@ -387,6 +394,7 @@ void TutorialScene::nextTutorial()
 			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
@@ -421,6 +429,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::TURN);
 			movie_.Display_Movie();
 
@@ -435,6 +444,7 @@ void TutorialScene::nextTutorial()
 			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
@@ -469,6 +479,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::HALF);
 			movie_.Display_Movie();
 
@@ -483,6 +494,7 @@ void TutorialScene::nextTutorial()
 			movie_.Hidden_Movie();
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
@@ -517,6 +529,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::SPIN);
 			movie_.Display_Movie();
 
@@ -531,6 +544,7 @@ void TutorialScene::nextTutorial()
 
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
@@ -566,6 +580,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			light_ = std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_);
 			world_.addActor(ActorGroup::NPC, light_);
 
@@ -575,6 +590,7 @@ void TutorialScene::nextTutorial()
 		case 2: {
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}	
 		case 3: {
@@ -598,6 +614,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			player_->resetCombo();
 			auto specStepMgr = std::make_shared<SpecifiedStepManager>(&world_);
 			world_.addUI(specStepMgr);
@@ -609,6 +626,7 @@ void TutorialScene::nextTutorial()
 		case 2: {
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}		
 		case 3: {
@@ -630,6 +648,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			player_->setCheckType(ComboChecker::ComboType::Combo_PointUp);
 			auto stepcomboManager = std::make_shared<TutorialComboDrawer>();
 			stepcomboManager->init(TutorialComboDrawer::DrawComboType::PointUp);
@@ -643,6 +662,7 @@ void TutorialScene::nextTutorial()
 		case 2: {
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {
@@ -659,6 +679,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Hidden_Text();
 			player_->setCheckType(ComboChecker::ComboType::Combo_Burst);
 			std::shared_ptr<TutorialComboDrawer> stepcomboManager = std::static_pointer_cast<TutorialComboDrawer>(world_.findUI("ComboDrawer"));
 			stepcomboManager->initialize();
@@ -670,6 +691,7 @@ void TutorialScene::nextTutorial()
 		case 2: {
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//成功
+			text_.Display_Text();
 			break;
 		}
 		case 3: {

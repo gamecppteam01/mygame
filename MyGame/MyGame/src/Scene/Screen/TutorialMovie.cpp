@@ -43,13 +43,13 @@ void TutorialMovie::update(float deltaTime){
 		scale -= 0.02;
 		if (scale <= 0.0f) {
 			scale = 0.0f;
-			alpha -= 0.1;
+			alpha -= 0.25;
 			if (alpha <= 0.0f) {
 				alpha = 0.0f;
 			}
 		}
-		move.x -= 4;
-		move.y -= 3;
+		move.x -= 6;
+		move.y -= 4.5;
 		if (scale <= 0.0f) {
 			move.x = 0.0;
 		}

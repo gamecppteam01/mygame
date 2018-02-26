@@ -24,6 +24,9 @@ public:
 	void Draw(const Vector2& position) const;
 	void End();
 
+	void Display_Text();
+	void Hidden_Text();
+
 	bool isEnd()const;
 private:
 
@@ -40,4 +43,6 @@ private:
 	int targetText_;//ï\é¶âÊñ êî
 
 	bool isEnd_;
+	bool DisPlay;
+	int alpha;
 };

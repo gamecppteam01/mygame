@@ -15,6 +15,8 @@ TextScreen::TextScreen()
 void TextScreen::Init(const std::string& filename, int lineTextSize)
 {
 	isEnd_ = false;
+	DisPlay = true;
+	alpha = 256;
 	textSize_ = lineTextSize;//1行分の量を決める
 
 	//データを初期化
@@ -112,6 +114,18 @@ void TextScreen::Update()
 
 	textCount_ = min(textCount_, textList_[targetText_].size());//文字範囲を制限
 
+	if (DisPlay) {
+		alpha += 8;
+		if (alpha >= 256) {
+			alpha = 256;
+		}
+	}
+	else {
+		alpha -= 8;
+		if (alpha <= 0) {
+			alpha = 0;
+		}
+	}
 }
 
 void TextScreen::Check()
@@ -135,7 +149,7 @@ void TextScreen::Check()
 
 void TextScreen::Draw(const Vector2& position) const
 {
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (128));
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha/2);
 	Vector2 size=Sprite::GetInstance().GetSize(SPRITE_ID::TEXTFRAME_SPRITE);
 	DrawBox(position.x, position.y, position.x +size.x, position.y + size.y, GetColor(128, 128, 128), TRUE);
 	Sprite::GetInstance().Draw(SPRITE_ID::TEXTFRAME_SPRITE, Vector2{ position.x,position.y });
@@ -143,21 +157,33 @@ void TextScreen::Draw(const Vector2& position) const
 	
 	size = Sprite::GetInstance().GetSize(SPRITE_ID::FACEFRAME_SPRITE);
 	float correct = 50;
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 128);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha/2);
 	DrawBox(0, position.y+ correct, size.x-1, position.y + size.y+ correct, GetColor(200, 200, 200), TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	Sprite::GetInstance().Draw(SPRITE_ID::FACE_SPRITE, Vector2{ 0.0f,position.y+ correct }+Vector2{ 16.f,17.f }, Vector2::Zero, Vector2::One);
 	Sprite::GetInstance().Draw(SPRITE_ID::FACEFRAME_SPRITE, Vector2{ 0.0f,position.y+ correct });
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	if (textList_.empty())return;
 
 	std::string drawText = textList_.at(targetText_).substr(0, textCount_);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	FontManager::GetInstance().DrawTextApplyFont(position.x+80.0f, position.y+60.0f, GetColor(255, 255, 255), FONT_ID::TUTORIAL_FONT, drawText);
-
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void TextScreen::End()
 {
+}
+
+void TextScreen::Display_Text(){
+	DisPlay = true;
+}
+
+void TextScreen::Hidden_Text(){
+	DisPlay = false;
 }
 
 bool TextScreen::isEnd() const
