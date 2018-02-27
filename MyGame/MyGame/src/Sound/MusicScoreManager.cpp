@@ -90,7 +90,7 @@ void MusicScoreManager::Draw(const Vector2& position) const
 	*/
 }
 
-void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) const
+float MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) const
 {
 	float size = 20.0f;
 
@@ -115,8 +115,9 @@ void MusicScoreManager::Draw(const Vector3& position, const Vector3& upVector) c
 	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size*2.0f, percent, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE),-90.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), fc.r, fc.g, fc.b, fc.a, -180.0f);
+	DrawSprite3D(position, size, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), fc.r, fc.g, fc.b, fc.a);
 
+	return size/20.0f;
 	//Vector2 origin = Sprite::GetInstance().GetSize(SPRITE_ID::JUST_GAUGE_FRAME)/2;
 	//DrawRotaGraph2(pos.x, pos.y, origin.x, origin.y, 1.0, 0.0, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE_FRAME), TRUE);
 

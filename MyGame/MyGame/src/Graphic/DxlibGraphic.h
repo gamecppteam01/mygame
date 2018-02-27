@@ -23,8 +23,8 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 
 		VERTEX_3D vec[3];
 
-		Vector3 rotVector = Vector3::Cross(upVector, Vector3::Left)*size;
-		rotVector = rotVector*Matrix::CreateFromAxisAngle(upVector, startangle);
+		Vector3 rotVector = Vector3::Cross(upVector, Vector3::Right)*size;
+		rotVector = rotVector*Matrix::CreateFromAxisAngle(upVector, startangle+180.0f);
 		//90°毎の回転行列を作成
 		Matrix rotMatrix = Matrix::CreateFromAxisAngle(upVector, ang*90.0f + 90.0f*i);
 		//位置を指定
@@ -44,11 +44,11 @@ static void DrawCircleGauge3D(const Vector3& pos,const Vector3& upVector,unsigne
 		}
 
 		//テクスチャ座標
-		vec[0].u = sinf((i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
-		vec[0].v = cosf((i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[0].u = sinf(-(2+i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[0].v = cosf(-(2+i + 0)*0.5f*DX_PI_F)*1.0f+0.5f;
 
-		vec[1].u = sinf((i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
-		vec[1].v = cosf((i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[1].u = sinf(-(2+i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
+		vec[1].v = cosf(-(2+i + ang)*0.5f*DX_PI_F)*1.0f+0.5f;
 
 		vec[2].u = 0.5f;
 		vec[2].v = 0.5f;

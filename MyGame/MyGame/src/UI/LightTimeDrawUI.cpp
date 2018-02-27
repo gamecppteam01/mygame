@@ -1,5 +1,7 @@
 #include "LightTimeDrawUI.h"
 #include"../Graphic/Sprite.h"
+#include"../Graphic/DxlibGraphic.h"
+#include"../Math/Color.h"
 #include<DxLib.h>
 
 LightTimeDrawUI::LightTimeDrawUI():state_(State::None), alpha_(0.0f),rate_(0.0f), isIn_(false)
@@ -27,13 +29,27 @@ void LightTimeDrawUI::update(float deltaTime)
 	}
 }
 
-void LightTimeDrawUI::draw(const Vector2& position) const
+void LightTimeDrawUI::draw_enemy(const Vector2& position) const
 {
 	if (!isDraw())return;
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha_ * 255);
 	DrawCircleGauge(position.x, position.y, rate_*100.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE), 0.0);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void LightTimeDrawUI::draw_player(const Vector3& position, const Vector3& upVector,float rate) const
+{
+	if (!isDraw())return;
+	float size = 20.0f*2.0f;
+	size *= rate;
+	Color c{ 255,255,255,255 };//ÉQÅ[ÉWêF
+
+	DrawCircleGauge3D(position, upVector, c.r, c.g, c.b, c.a, size, 40.0f+rate_*42.5f, Sprite::GetInstance().GetHandle(SPRITE_ID::LIGHT_GAUGE_SPRITE),0.0f);//LIGHT_GAUGE_SPRITE
+	
+	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha_ * 255);
+	//DrawCircleGauge(position.x, position.y, rate_*100.0f, Sprite::GetInstance().GetHandle(SPRITE_ID::JUST_GAUGE), 0.0);
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 void LightTimeDrawUI::start()

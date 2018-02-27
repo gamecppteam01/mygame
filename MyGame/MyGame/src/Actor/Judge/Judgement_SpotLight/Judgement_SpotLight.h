@@ -64,7 +64,7 @@ private:
 	bool TimeJudge(ScoreData* data);
 
 
-	void resetLight();
+	void resetLight(const std::list<int>& ignoreList=std::list<int>());
 private:
 	float m_Distance;
 

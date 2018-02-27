@@ -412,8 +412,8 @@ void Player::onDraw() const
 
 	world_->setLateDraw([this] {
 		//musicScore_.Draw(Vector2{ WINDOW_WIDTH / 2.f,WINDOW_HEIGHT/2.f });
-		musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
-		lightTimeUI_.draw(Vector2{ 500.0f,300.0f });
+		float size=musicScore_.Draw(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up());
+		lightTimeUI_.draw_player(centerPosition_ + Vector3{ 0.0f,-8.0f,0.0f }, rotation_.Up(), size);
 		//DrawFormatString(400,300,GetColor(255,255,255),"%d",(int)comboType_);//デバッグ表示
 
 		////デバッグ表示

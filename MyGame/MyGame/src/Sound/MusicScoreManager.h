@@ -14,7 +14,7 @@ public:
 	void Initialize();
 	void Update(float deltaTime);
 	void Draw(const Vector2& position)const;
-	void Draw(const Vector3& position, const Vector3& upVector)const;
+	float Draw(const Vector3& position, const Vector3& upVector)const;
 
 	bool getNotice()const;
 	void setNotice(bool notice);

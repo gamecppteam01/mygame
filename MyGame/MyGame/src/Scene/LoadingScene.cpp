@@ -158,6 +158,8 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "burstcomboUI.png", SPRITE_ID::COMBO_BURST_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "pointupcomboUI.png", SPRITE_ID::COMBO_POINTUP_SPRITE);
 
+	Sprite::GetInstance().Load(defaultPath + "lightgauge.png", SPRITE_ID::LIGHT_GAUGE_SPRITE);
+	
 	Sprite::GetInstance().Load(defaultPath + "nameSetFrame.png", SPRITE_ID::KEYBOARD_FRAME_SPRITE);
 	
 	Sprite::GetInstance().Load(defaultPath + "stage1name.png", SPRITE_ID::STAGE_1_SPRITE);

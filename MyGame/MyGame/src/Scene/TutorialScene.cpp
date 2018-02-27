@@ -582,6 +582,8 @@ void TutorialScene::nextTutorial()
 		case 1: {
 			text_.Hidden_Text();
 			light_ = std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_);
+			light_->addLightTimeDrawUI(player_->getLightTimeDrawUIPtr(), player_->getPlayerNumber());
+
 			world_.addActor(ActorGroup::NPC, light_);
 
 			changeState(Play);//スポットライト

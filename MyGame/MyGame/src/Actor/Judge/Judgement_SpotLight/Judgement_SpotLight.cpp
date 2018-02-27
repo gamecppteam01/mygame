@@ -219,6 +219,7 @@ void Judgement_SpotLight::SpotLightingUpdate(float deltaTime) {
 
 	if (m_Timer <= 0.0f) {
 		m_NowTimer = 0.0f;
+		resetLight();
 		m_State = State::Failure;
 		for (auto& d : m_DataList) {
 			d.second->notice_ = false;
@@ -260,6 +261,7 @@ void Judgement_SpotLight::TimeCount(float deltaTime) {
 		m_Target = m_DataList[target]->target_;
 		m_DataList[target]->notice_ = true;
 		m_DataList[target]->time_ = maxLightTime;
+		resetLight({ target });
 
 	}
 }
@@ -283,9 +285,10 @@ bool Judgement_SpotLight::TimeJudge(ScoreData* data) {
 	return false;
 }
 
-void Judgement_SpotLight::resetLight()
+void Judgement_SpotLight::resetLight(const std::list<int>& ignoreList)
 {
 	for (auto& ltdu : ltduList_) {
+		if (std::find(ignoreList.begin(), ignoreList.end(), ltdu.first) != ignoreList.end())continue;
 		ltdu.second->isIn(false);
 		ltdu.second->rate(0.0f);
 	}

@@ -1,5 +1,6 @@
 #pragma once
 #include"../Math/Vector2.h"
+#include"../Math/Vector3.h"
 
 class LightTimeDrawUI {
 private:
@@ -15,7 +16,8 @@ public:
 	void init();
 
 	void update(float deltaTime);
-	void draw(const Vector2& position)const;
+	void draw_enemy(const Vector2& position)const;
+	void draw_player(const Vector3& position, const Vector3& upVector, float rate=1.0f)const;
 
 	void start();
 	void end();
