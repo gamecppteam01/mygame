@@ -28,6 +28,7 @@ private:
 	bool play_movie;
 	bool pause;
 	float scale;
+	float angle;
 	float alpha;
 	Vector2 move;
 	Vector2 movie_half_size;

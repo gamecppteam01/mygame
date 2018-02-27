@@ -20,47 +20,22 @@ void TutorialMovie::update(float deltaTime){
 		Movie::GetInstance().Play(Movie_ID.front());
 	}
 	if (play_movie) {
-		alpha += 0.1;
-		if (alpha >= 1.0f) {
-			alpha = 1.0f;
 			scale += 0.02;
 			if (scale >= 0.5f) {
 				scale = 0.5f;
 			}
-			move.x += 4;
-			move.y += 3;
-			movie_half_size = Movie::GetInstance().GetMovieSize(Movie_ID.front()) * 0.5;
-			if (move.x >= movie_half_size.x / MathHelper::Pi) {
-				move.x = movie_half_size.x / MathHelper::Pi;
-			}
-			if (move.y >= movie_half_size.y / MathHelper::Pi) {
-				move.y = movie_half_size.y / MathHelper::Pi;
-			}
-		}
 	}
 	else{
 		scale -= 0.02;
 		if (scale <= 0.0f) {
 			scale = 0.0f;
-			alpha -= 0.25;
-			if (alpha <= 0.0f) {
-				alpha = 0.0f;
-			}
-		}
-		move.x -= 6;
-		move.y -= 4.5;
-		if (scale <= 0.0f) {
-			move.x = 0.0;
-		}
-		if (scale <= 0.0f) {
-			move.y = 0.0;
 		}
 	}
 }
 void TutorialMovie::draw(const Vector2 position) const{
 	//if (play_movie) {
-	Movie::GetInstance().Draw(Movie_ID.front(), Vector2(position.x - move.x, position.y - move.y), scale);
-	Sprite::GetInstance().Draw(SPRITE_ID::MOVIE_FRAME, Vector2(237.5,480),Sprite::GetInstance().GetSize(SPRITE_ID::MOVIE_FRAME)/2,alpha,Vector2(0.47f,0.54f));
+	Movie::GetInstance().Draw(Movie_ID.front(), Vector2(position.x, position.y), scale,0.0);
+	Sprite::GetInstance().Draw(SPRITE_ID::MOVIE_FRAME, Vector2(position.x,position.y),Sprite::GetInstance().GetSize(SPRITE_ID::MOVIE_FRAME)/2,1.0f,Vector2(scale,scale),0.0f);
 	//}
 }
 

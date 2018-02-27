@@ -131,7 +131,7 @@ void TutorialScene::draw() const
 {
 	world_.draw();
 	text_.Draw({ 190,0 });
-	movie_.draw(Vector2(500, 680));
+	movie_.draw(Vector2(200, 450));
 	if (state_ == Pause)pause_.draw();
 
 	if (state_ == CutIn)TutorialCutIn::draw(currentCutIn_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
@@ -398,6 +398,7 @@ void TutorialScene::nextTutorial()
 		case 1: {
 			text_.Set_Sprite_Number(2);
 			text_.Hidden_Text();
+			movie_.Change_Movie(MOVIE_ID::QUARTER);
 			movie_.Display_Movie();
 
 			player_->initCheckStep();
