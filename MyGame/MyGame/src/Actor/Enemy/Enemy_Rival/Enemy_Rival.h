@@ -2,6 +2,8 @@
 #include "../BaseEnemy.h"
 #include "../../../ScoreManager/ScoreManager.h"
 #include<queue>
+#include"../Base/AvoidSearch.h"
+
 
 class Enemy_Rival : public BaseEnemy {
 private:
@@ -24,12 +26,19 @@ private:
 		MoveMode,
 		StepMode,
 	};
+	enum class MoveState {
+		Avoid,
+		First_Aim,
+	};
 public:
 	Enemy_Rival();
 	//コンストラクタ
 	Enemy_Rival(IWorld* world, const std::string& name, const Vector3& position, int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f));
 
 	virtual std::shared_ptr<BaseEnemy> Create(IWorld* world, const Vector3& position, int playerNumber)override;
+
+	virtual void hitOther(const Vector3& velocity) override;
+
 
 private:
 	virtual void JustStep() override{}
@@ -40,29 +49,38 @@ private:
 	virtual void onDraw() const override;
 
 	virtual void onShadowDraw() const override;
+	// 衝突した
+	virtual void onCollide(Actor& other);
 
 	virtual void updateNormal(float deltaTime)override;
+	virtual void updateFever(float deltaTime) override;
 	virtual void to_Normal()override;
 	virtual void to_Step(Enemy_Animation anim) override;
 	virtual void to_Attack(Enemy_Animation anim) override;
+	virtual void to_Fever() override;
 
 	//virtual void spin(float deltaTime)override;
 
 	//周回ポイント一覧のうち最も近い点を求める
 	int getNearestPoint(const Vector3 & position);
 	void setNearestPoint();
+	void selectPoint();
+	virtual void setCountDown(int downCount);
 
 private:
 
 	void setNextPosition();
-
+	bool is_First();
+	AttackType is_Attack();
+	void FirstMove(float deltaTime);
+	void AvoidMove(float deltaTime);
 	void ExtinctionUpdate(float deltaTime);
 	void CenterLightingUpdate(float deltaTime);
 	void SpotLighting(float deltaTime);
 
 private:
 	//次のポイント
-	int nextPoint_{ 0 };
+	//int nextPoint_{ 0 };
 
 	//狙う場所
 	Vector3 targetPos_{ Vector3::Zero };
@@ -104,7 +122,14 @@ private:
 	RivalState rivalState_{ RivalState::AttackMode };
 	//前の状態
 	RivalState prevRivalState_;
+	//移動の状態
+	MoveState moveState_{ MoveState::Avoid };
+
+	std::list<TestDP> score_;
+
+	Vector3 avoidDirection_{ Vector3::Zero };//回避移動ベクトル
 
 	std::map<LightState, std::function<void(float deltaTime)>> m_LightStateUpdateFunc;
+	std::map<MoveState, std::function<void(float deltaTime)>> m_MoveUpdate;
 
 };

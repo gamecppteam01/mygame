@@ -159,3 +159,15 @@ std::list<int> ScoreManager::getPlayerNumberList()
 	}
 	return numbers;
 }
+
+ScoreData * ScoreManager::getNoticePlayer()
+{
+	ScoreData data;
+	for (auto& d : m_ScoreDataList) {
+		if (d.second.notice_ == true) {
+			data = d.second;
+			break;
+		}
+	}
+	return &data;
+}

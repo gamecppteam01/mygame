@@ -51,6 +51,8 @@ public:
 	void getRankingList(std::list<ScoreData>& list);
 	//センターライト内に入っている選手番号のリストを返す
 	std::list<int> getPlayerNumberList();
+	//スポットライトを勝ち取った選手のデータを返す
+	ScoreData* getNoticePlayer();
 
 private:
 	//ワールド

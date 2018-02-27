@@ -171,6 +171,7 @@
     <ClCompile Include="src\Actor\EffectActor\EffectActor.cpp" />
     <ClCompile Include="src\Actor\EffectActor\UniqueEffectActor\TrackingEffectActor.cpp" />
     <ClCompile Include="src\Actor\Enemy\BaseEnemy.cpp" />
+    <ClCompile Include="src\Actor\Enemy\Base\AvoidSearch.cpp" />
     <ClCompile Include="src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="src\Actor\Enemy\EnemyPointChecker.cpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="src\Fade\FadeSprite.cpp" />
     <ClCompile Include="src\Field\Audience.cpp" />
     <ClCompile Include="src\Field\Field.cpp" />
+    <ClCompile Include="src\Field\FieldGrid.cpp" />
     <ClCompile Include="src\Game\Time.cpp" />
     <ClCompile Include="src\Game\WorkFolder.cpp" />
     <ClCompile Include="src\Graphic\Animation.cpp" />
@@ -337,6 +339,7 @@
     <ClInclude Include="src\Actor\EffectActor\EffectActor.h" />
     <ClInclude Include="src\Actor\EffectActor\UniqueEffectActor\TrackingEffectActor.h" />
     <ClInclude Include="src\Actor\Enemy\BaseEnemy.h" />
+    <ClInclude Include="src\Actor\Enemy\Base\AvoidSearch.h" />
     <ClInclude Include="src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyBullet.h" />
     <ClInclude Include="src\Actor\Enemy\EnemyPointChecker.h" />
@@ -393,6 +396,7 @@
     <ClInclude Include="src\Field\Audience.h" />
     <ClInclude Include="src\Field\AudienceDrawer.h" />
     <ClInclude Include="src\Field\Field.h" />
+    <ClInclude Include="src\Field\FieldGrid.h" />
     <ClInclude Include="src\Field\FieldPtr.h" />
     <ClInclude Include="src\Function\Split.h" />
     <ClInclude Include="src\Game\Game.h" />

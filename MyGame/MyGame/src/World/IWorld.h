@@ -13,6 +13,8 @@ enum class ActorGroup;
 class ScoreManager;
 class ScoreMap;
 class TempoManager;
+class FieldGrid;
+
 // ワールド抽象インターフェース
 class IWorld {
 public:
@@ -45,4 +47,5 @@ public:
 	virtual TempoManager& getCanChangedTempoManager() = 0;
 	virtual TempoManager getTempoManager()const = 0;
 	virtual UIPtr findUI(const std::string& name) = 0;
+	virtual FieldGrid& getGrid() = 0;
 };

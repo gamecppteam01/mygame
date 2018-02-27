@@ -159,6 +159,14 @@ protected:
 	Vector3 bound_{ Vector3::Zero };
 	//次に向かう対象
 	Vector3 nextPosition_;
+	//最終地点
+	Vector3 finalPosition_;
+	//最終点
+	Point finalPoint_{ -1,-1 };
+	//次の点
+	Point nextPoint_{ -1,-1 };
+	//開始点
+	Point basePoint_{ -1,-1 };
 	//2キャラの中心
 	Vector3 centerPosition_{ Vector3::Zero };
 	//本体

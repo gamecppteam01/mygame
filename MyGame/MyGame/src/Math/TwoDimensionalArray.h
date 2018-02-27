@@ -22,6 +22,14 @@ public:
 		setData(0, 0, xSize, ySize,0, dataSize, data...);
 
 	}
+	//
+	void setSize(int x, int y) {
+		dataList_.clear();
+		dataList_.resize(y);
+		for (auto& d : dataList_) {
+			d.resize(x);
+		}
+	}
 	//ƒf[ƒ^‚Ìæ“¾
 	T& getElement(int x, int y) {
 		return dataList_[y][x];

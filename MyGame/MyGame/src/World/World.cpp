@@ -16,7 +16,8 @@ World::World() :
 	scoreManager_(this),
 	scoreMap_(this),
 	tempo_(),
-	shadowmap_() {
+	shadowmap_(),
+	grid_(this) {
 }
 
 World::~World()
@@ -47,6 +48,7 @@ void World::Initialize()
 	//シャドウマップの設定
 	shadowflag_ = false;
 	shadowmap_.initialize();
+	grid_.initialize();
 }
 void World::FindInitialize() {
 	scoreManager_.initialize();
@@ -203,6 +205,11 @@ TempoManager & World::getCanChangedTempoManager()
 TempoManager World::getTempoManager()const
 {
 	return tempo_;
+}
+
+FieldGrid & World::getGrid()
+{
+	return grid_;
 }
 
 // アクターの追加
