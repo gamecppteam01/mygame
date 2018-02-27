@@ -10,6 +10,7 @@
 #include"../Light/LightHandle.h"
 #include"../Graphic/Movie.h"
 #include"Screen/TutorialMovie.h"
+#include"../UI/DrawAlphaSprite.h"
 
 class TutorialPlayer;
 class TutorialScene :public Scene {
@@ -20,7 +21,8 @@ private:
 		TextDraw,
 		CutIn,
 		Play,
-		Pause
+		Pause,
+		DrawSprite,
 	};
 
 public:
@@ -42,7 +44,8 @@ public:
 	void update_Play(float deltaTime);
 	void update_Pause(float deltaTime);
 	void update_CutIn(float deltaTime);
-
+	void update_DrawSprite(float deltaTime);
+	
 	int getTutorialNum()const;
 
 	void nextTutorial();//カットインとテキスト描画の遷移先を決定する
@@ -80,4 +83,6 @@ private:
 	LightHandle lightHandle_{};
 
 	std::shared_ptr<Judgement_SpotLight> light_;
+
+	DrawAlphaSprite haveSprite_;
 };

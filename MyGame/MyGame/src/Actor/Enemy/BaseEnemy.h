@@ -3,6 +3,7 @@
 #include"../Body/BoundingCapsule.h"
 #include"../../Method/MethodTimer.h"
 #include"../../Define.h"
+#include"../../UI/LightTimeDrawUI.h"
 
 class EnemyBullet;
 
@@ -40,8 +41,8 @@ public:
 public:
 	BaseEnemy(const std::string& name);
 	//カプセル判定は例、キャラクターの体型に応じて設定を変更する事
-	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position,int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f), MODEL_ID id = MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID bulletid = MODEL_ID::BALANCEENEMY_MODEL);
-	virtual ~BaseEnemy(){}
+	BaseEnemy(IWorld* world, const std::string& name, const Vector3& position, int playerNumber, const IBodyPtr& body = std::make_shared<BoundingCapsule>(Vector3(0.0f, 0.0f, 0.0f), Matrix::Identity, 20.0f, 3.0f), MODEL_ID id = MODEL_ID::BALANCEENEMY_MODEL, MODEL_ID bulletid = MODEL_ID::BALANCEENEMY_MODEL);
+	virtual ~BaseEnemy() {}
 	virtual void hitOther(const Vector3& velocity);
 
 	//選手番号を取得する
@@ -87,7 +88,7 @@ protected:
 	virtual void onShadowDraw() const override;
 	// 衝突した
 	virtual void onCollide(Actor& other) override;
-	
+
 	// 衝突した後
 	virtual void onCollideResult() override;
 
@@ -101,10 +102,10 @@ protected:
 
 	//一番近いキャラクターを受け取る
 	ActorPtr getNearestActor();
-	
+
 
 	//topTime:最大値になる時間
-	float mathSpeed(float current,float maxSpeed, float maxTime, float topTime);
+	float mathSpeed(float current, float maxSpeed, float maxTime, float topTime);
 
 	float mathSpeedUnderPower(float current, float maxSpeed, float maxTime, float topTime);
 protected:
@@ -120,12 +121,12 @@ protected:
 	//指定位置への移動
 	void addVelocity_NextPosition(float deltaTime);
 	//一定距離内にいるか？
-	bool is_In_Distans(ActorPtr& target,const Vector3& mypos, float distance = 60.0f) const;
+	bool is_In_Distans(ActorPtr& target, const Vector3& mypos, float distance = 60.0f) const;
 
 	//アニメーションの変更
-	void changeAnimation(Enemy_Animation animID,float animFrame=0.0f,float animSpeed=1.0f,bool isLoop=true);
+	void changeAnimation(Enemy_Animation animID, float animFrame = 0.0f, float animSpeed = 1.0f, bool isLoop = true);
 	//状態の更新
-	bool change_State(Enemy_State state,BaseEnemy::Enemy_Animation anim);
+	bool change_State(Enemy_State state, BaseEnemy::Enemy_Animation anim);
 	//状態変更とアニメーション変更を同時に行う
 	bool change_State_and_Anim(Enemy_State state, Enemy_Animation animID, bool isLoop = true);
 
@@ -190,7 +191,7 @@ protected:
 	//ポイントキー
 	int currentKey_{ 0 };//現在
 	int nextKey_{ 0 };//次
-	
+
 	std::vector<Vector3> points_;
 
 	//ダウンカウントの変更タイマー
@@ -223,6 +224,8 @@ protected:
 
 	//スピンアングル
 	float spinAngle_{ 0.0f };
+
+	LightTimeDrawUI lightTimeUI_{};
 
 protected:
 	//攻撃する範囲

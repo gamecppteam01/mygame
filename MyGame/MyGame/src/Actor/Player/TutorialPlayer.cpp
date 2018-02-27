@@ -7,10 +7,10 @@
 
 //足を止めるレッスン番号
 static const std::list<int> stopList{
-	5,
-	7,
-	9,
-	11
+	6,
+	8,
+	10,
+	12
 };
 
 TutorialPlayer::TutorialPlayer(IWorld * world, const std::string & name, const Vector3 & position, TutorialScene * tutorial):
@@ -23,7 +23,7 @@ void TutorialPlayer::onUpdate(float deltaTime)
 	switch (tutorial_->getTutorialNum())
 	{
 	//スポットライトのチュートリアル
-	case 13: {
+	case 14: {
 		auto ptr = std::dynamic_pointer_cast<Judgement_SpotLight>(world_->findActor("SpotLight"));
 		if (ptr != nullptr) {
 			//既にライトに当たってたら当たらなくなったかを検索
@@ -48,21 +48,21 @@ void TutorialPlayer::onUpdate(float deltaTime)
 		}
 		break;
 	}
-	case 14: {
+	case 15: {
 		if (checkstep_.isEndCheck()&&state_!=Player_State::Shoot&&isZoomEnd_) {
 			tutorial_->nextLesson();
 			return;
 		}
 		break;
 	}
-	case 15: {
+	case 16: {
 		if (comboType_ == ComboChecker::ComboType::Combo_PointUp&&state_ != Player_State::Step_Success&&isZoomEnd_) {
 			tutorial_->nextLesson();
 			return;
 		}
 		break;
 	}
-	case 16: {
+	case 17: {
 		if (comboType_ == ComboChecker::ComboType::Combo_Burst&&state_ != Player_State::Step_Success&&isZoomEnd_) {
 			tutorial_->nextLesson();
 			return;
@@ -81,7 +81,7 @@ void TutorialPlayer::onUpdate(float deltaTime)
 void TutorialPlayer::hitPoint()
 {
 	hitCount_++;
-	if (tutorial_->getTutorialNum() == 3&&hitCount_ >= 3) {
+	if (tutorial_->getTutorialNum() == 4&&hitCount_ >= 3) {
 		tutorial_->nextLesson();
 	}
 }
@@ -131,7 +131,7 @@ bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation 
 	}
 	switch (tutorial_->getTutorialNum())
 	{
-	case 3: {
+	case 4: {
 		if (state == Player_State::Step)return false;
 		break;
 	}
@@ -139,10 +139,10 @@ bool TutorialPlayer::change_State_and_Anim(Player_State state, Player_Animation 
 		break;
 	}
 	if (
-		tutorial_->getTutorialNum() != 13 &&
 		tutorial_->getTutorialNum() != 14 &&
 		tutorial_->getTutorialNum() != 15 &&
-		tutorial_->getTutorialNum() != 16
+		tutorial_->getTutorialNum() != 16 &&
+		tutorial_->getTutorialNum() != 17
 		) {
 		if (state == Player_State::Stumble)return false;
 	}
@@ -201,14 +201,14 @@ void TutorialPlayer::end_StepSuccessMode()
 	switch (nextStep_)
 	{
 	case 1:
-		if (tutorial_->getTutorialNum() == 5) {
+		if (tutorial_->getTutorialNum() == 6) {
 			world_->getCamera()->setZoomEndFunc([&] {tutorial_->nextLesson(); });
 			break;
 		}
 	case 2:
 		break;
 	case 3:
-		if (tutorial_->getTutorialNum() == 7) {
+		if (tutorial_->getTutorialNum() == 8) {
 			world_->getCamera()->setZoomEndFunc([&] {tutorial_->nextLesson(); });
 		}
 		break;
@@ -223,7 +223,7 @@ void TutorialPlayer::end_AttackMode()
 {
 	Player::end_AttackMode();
 
-	if (tutorial_->getTutorialNum() == 9) {
+	if (tutorial_->getTutorialNum() == 10) {
 		world_->getCamera()->setZoomEndFunc([&] {tutorial_->nextLesson(); });
 	}
 
@@ -233,7 +233,7 @@ void TutorialPlayer::end_ShootMode()
 {
 	Player::end_ShootMode();
 
-	if (tutorial_->getTutorialNum() == 11) {
+	if (tutorial_->getTutorialNum() == 12) {
 		world_->getCamera()->setZoomEndFunc([&] {tutorial_->nextLesson(); });
 	}
 

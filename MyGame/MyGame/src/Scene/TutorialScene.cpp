@@ -35,7 +35,7 @@ std::map<int, SPRITE_ID> cutinList{
 	{ 3,SPRITE_ID::CUTIN_LESSON3_SPRITE }
 };
 
-TutorialScene::TutorialScene()
+TutorialScene::TutorialScene():haveSprite_(SPRITE_ID::TUTORIAL_HAVE_SPRITE)
 {
 	next_ = SceneType::SCENE_STAGESELECT;
 	updateFuncMap_[State::TextDraw] = [&](float deltaTime) {update_textDraw(deltaTime); };
@@ -55,7 +55,7 @@ void TutorialScene::start()
 	Sound::GetInstance().StopBGM();
 
 	light_ = nullptr;
-
+	haveSprite_.init();
 	world_.Initialize();
 	settingLight();
 	tutorialNumber_ = 1;
@@ -124,6 +124,7 @@ void TutorialScene::update(float deltaTime)
 	world_.setFieldAudienceBright(color.r, color.g, color.b);
 
 	movie_.update(deltaTime);
+	haveSprite_.update(deltaTime);
 }
 
 void TutorialScene::draw() const
@@ -138,6 +139,7 @@ void TutorialScene::draw() const
 
 	//Movie::GetInstance().Draw(MOVIE_ID::QUARTER,Vector2(WINDOW_WIDTH,WINDOW_HEIGHT),0.2f);
 	movie_.draw(Vector2(500,680));
+	haveSprite_.draw(Vector2(240.0f, 480.0f)/*+(Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_HAVE_SPRITE)/2)*/, Vector2::One*0.5f);
 }
 
 void TutorialScene::end()
@@ -279,6 +281,10 @@ void TutorialScene::update_CutIn(float deltaTime)
 	}
 }
 
+void TutorialScene::update_DrawSprite(float deltaTime)
+{
+}
+
 int TutorialScene::getTutorialNum() const
 {
 	return tutorialNumber_;
@@ -328,6 +334,12 @@ void TutorialScene::nextTutorial()
 		break;
 	}
 	case 3: {
+		haveSprite_.active(true);
+		nextTutorialCount();
+		changeState(TextDraw);//éüÇ÷
+
+	}
+	case 4: {
 
 		switch (tutorialTiming)
 		{
@@ -337,6 +349,7 @@ void TutorialScene::nextTutorial()
 			break;
 		}
 		case 2: {
+			haveSprite_.active(false);
 			cutInID_.push(SPRITE_ID::CUTIN_SUCCESS_SPRITE);
 			changeState(CutIn);//ê¨å˜
 			text_.Display_Text();
@@ -358,7 +371,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 4: {
+	case 5: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -376,7 +389,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 5: {
+	case 6: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -407,7 +420,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 6: {
+	case 7: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -425,7 +438,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 7: {
+	case 8: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -457,7 +470,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 8: {
+	case 9: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -475,7 +488,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 9: {
+	case 10: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -507,7 +520,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 10: {
+	case 11: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -525,7 +538,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 11: {
+	case 12: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -557,7 +570,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 12: {
+	case 13: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -576,7 +589,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 13: {
+	case 14: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -612,7 +625,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 14: {
+	case 15: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -646,7 +659,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 15: {
+	case 16: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -677,7 +690,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 16: {
+	case 17: {
 		switch (tutorialTiming)
 		{
 		case 1: {
@@ -706,7 +719,7 @@ void TutorialScene::nextTutorial()
 		}
 		break;
 	}
-	case 17: {
+	case 18: {
 		isEnd_ = true;
 		next_ = SceneType::SCENE_TITLE;
 		return;

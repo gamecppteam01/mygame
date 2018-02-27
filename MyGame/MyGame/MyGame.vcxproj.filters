@@ -1148,5 +1148,8 @@
     <ClInclude Include="src\UI\LightTimeDrawUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\UI\DrawAlphaSprite.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

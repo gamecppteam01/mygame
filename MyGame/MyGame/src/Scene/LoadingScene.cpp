@@ -227,6 +227,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "nameCheckFrame.png", SPRITE_ID::NAMECHECK_FRAME_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "player1_nameMesse.png", SPRITE_ID::PLAYER1_NAME_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "player2_nameMesse.png", SPRITE_ID::PLAYER2_NAME_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "tutorialTexture.png", SPRITE_ID::TUTORIAL_HAVE_SPRITE);
 	
 }
 

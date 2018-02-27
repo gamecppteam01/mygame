@@ -58,7 +58,7 @@ BaseEnemy::BaseEnemy(IWorld * world, const std::string & name, const Vector3 & p
 	bulletRotation_ = bullet_->getRotationPtr();
 
 	target_ = world_->findActor("Player");
-
+	lightTimeUI_.init();
 }
 
 void BaseEnemy::hitOther(const Vector3 & velocity)
@@ -178,6 +178,8 @@ void BaseEnemy::onUpdate(float deltaTime) {
 	}
 
 	if(attackType_ != AttackType::Spin) bulletUpdate(deltaTime);
+
+	lightTimeUI_.update(deltaTime);
 }
 
 void BaseEnemy::onDraw() const
@@ -185,6 +187,10 @@ void BaseEnemy::onDraw() const
 	//”»’è‚Ì’†S‚É•`‰æˆÊ’u‚ð‡‚í‚¹‚é
 	Vector3 drawPosition = position_ + Vector3::Down*body_->length()*0.5f;
 	animation_.Draw(Matrix(Matrix::Identity)*Matrix(rotation_).Translation(drawPosition));
+
+	world_->setLateDraw([this] {
+
+	});
 }
 
 //‰e‚Ì•`‰æ

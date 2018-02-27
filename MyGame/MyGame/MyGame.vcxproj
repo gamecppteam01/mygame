@@ -504,6 +504,7 @@
     <ClInclude Include="src\UI\ComboStepUIPtr.h" />
     <ClInclude Include="src\UI\ComboSupportUI.h" />
     <ClInclude Include="src\UI\CutInText.h" />
+    <ClInclude Include="src\UI\DrawAlphaSprite.h" />
     <ClInclude Include="src\UI\EndUI.h" />
     <ClInclude Include="src\UI\JudgeMapData.h" />
     <ClInclude Include="src\UI\LightTimeDrawUI.h" />

@@ -57,7 +57,7 @@ void Movie::Draw(const MOVIE_ID& id, const Vector2& pos1, const float& scale)
 	DrawExtendGraph(pos1.x - size.x / 2, pos1.y - size.y / 2, pos1.x - size.x / 2 + (size.x*scale), pos1.y - size.y / 2 + (size.y*scale), m_movies[id], FALSE);
 }
 void Movie::Draw(const MOVIE_ID& id, const Vector2& pos, float scale,float angle) {
-	Vector2 size = GetMovieSize(id);
+	Vector2 size = GetMovieSize(id)*0.5f;
 	DrawRotaGraph2(pos.x, pos.y, size.x, size.y, scale, 0.0, m_movies[id], FALSE);
 }
 //再生状態の動画をフルスクリーンで表示する
