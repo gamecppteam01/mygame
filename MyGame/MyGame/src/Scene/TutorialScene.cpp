@@ -673,6 +673,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(7);
 			text_.Hidden_Text();
 			player_->setCheckType(ComboChecker::ComboType::Combo_PointUp);
 			auto stepcomboManager = std::make_shared<TutorialComboDrawer>();
@@ -704,6 +705,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(7);
 			text_.Hidden_Text();
 			player_->setCheckType(ComboChecker::ComboType::Combo_Burst);
 			std::shared_ptr<TutorialComboDrawer> stepcomboManager = std::static_pointer_cast<TutorialComboDrawer>(world_.findUI("ComboDrawer"));

@@ -215,7 +215,7 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "flash.png", SPRITE_ID::FLASH_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "nameFramePlayer.png", SPRITE_ID::TEST_PLAYER_RANK_SPRITE);
 
-	Sprite::GetInstance().Load(defaultPath + "movieFrame.png", SPRITE_ID::MOVIE_FRAME);
+	Sprite::GetInstance().Load(defaultPath + "movieFrame2.png", SPRITE_ID::MOVIE_FRAME);
 
 	//Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_L.png", SPRITE_ID::KEYBOARD_CURSOR_L_SPRITE);
 	//Sprite::GetInstance().Load(defaultPath + "charChoiceFrame_R.png", SPRITE_ID::KEYBOARD_CURSOR_R_SPRITE);
