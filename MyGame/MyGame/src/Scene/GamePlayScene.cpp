@@ -507,7 +507,7 @@ void GamePlayScene::settingUI() {
 	world_.addUI(warningUI);
 	std::shared_ptr<TimeUI> timeUI = std::make_shared<TimeUI>(&world_, &world_.getRoundCam(), Vector2(SCREEN_SIZE.x / 2, 65.0f));
 	world_.addUI(timeUI);
-	std::shared_ptr<RankUI> rankUI = std::make_shared<RankUI>(&world_.getCanChangedScoreManager(),&world_.getRoundCam() ,Vector2(1000, 450));
+	std::shared_ptr<RankUI> rankUI = std::make_shared<RankUI>(&world_.getCanChangedScoreManager(),&world_.getRoundCam() ,Vector2(1095, 450));
 	world_.addUI(rankUI);
 	std::shared_ptr<StepUI> stepUI = std::make_shared<StepUI>(&world_);
 	world_.addUI(stepUI);

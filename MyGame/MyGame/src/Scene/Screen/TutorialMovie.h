@@ -21,9 +21,12 @@ public:
 	void Display_Movie();
 	//Movie‚Ì”ñ•\Ž¦
 	void Hidden_Movie();
+	void Pause();
+	void Start();
 private:
 	std::vector<MOVIE_ID> Movie_ID;
 	bool play_movie;
+	bool pause;
 	float scale;
 	float alpha;
 	Vector2 move;

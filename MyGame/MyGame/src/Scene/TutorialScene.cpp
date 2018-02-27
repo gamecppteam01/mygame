@@ -131,6 +131,7 @@ void TutorialScene::draw() const
 {
 	world_.draw();
 	text_.Draw({ 190,0 });
+	movie_.draw(Vector2(500, 680));
 	if (state_ == Pause)pause_.draw();
 
 	if (state_ == CutIn)TutorialCutIn::draw(currentCutIn_, WINDOW_HEIGHT*0.5f, cutInTimer_, StopTime, InTime, OutTime);
@@ -138,7 +139,6 @@ void TutorialScene::draw() const
 	Time::GetInstance().draw_fps();
 
 	//Movie::GetInstance().Draw(MOVIE_ID::QUARTER,Vector2(WINDOW_WIDTH,WINDOW_HEIGHT),0.2f);
-	movie_.draw(Vector2(500,680));
 	haveSprite_.draw(Vector2(240.0f, 480.0f)/*+(Sprite::GetInstance().GetSize(SPRITE_ID::TUTORIAL_HAVE_SPRITE)/2)*/, Vector2::One*0.5f);
 }
 
@@ -169,6 +169,7 @@ void TutorialScene::changeState(State state) {
 		break;
 	case Pause:
 		world_.restart();
+		movie_.Start();
 		break;
 	default:
 		break;
@@ -208,6 +209,7 @@ void TutorialScene::changeState(State state) {
 		break;
 	case Pause:
 		world_.pause();
+		movie_.Pause();
 		pause_.start();
 		break;
 	default:
@@ -344,6 +346,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(1);
 			text_.Hidden_Text();
 			changeState(Play);//ˆÚ“®
 			break;
@@ -393,6 +396,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(2);
 			text_.Hidden_Text();
 			movie_.Display_Movie();
 
@@ -442,6 +446,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(3);
 			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::TURN);
 			movie_.Display_Movie();
@@ -492,6 +497,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(4);
 			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::HALF);
 			movie_.Display_Movie();
@@ -542,6 +548,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(5);
 			text_.Hidden_Text();
 			movie_.Change_Movie(MOVIE_ID::SPIN);
 			movie_.Display_Movie();
@@ -593,6 +600,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(6);
 			text_.Hidden_Text();
 			light_ = std::make_shared<Judgement_SpotLight>(&world_, Vector3(0.0f, 2.0f, 0.0f), lightHandle_);
 			light_->addLightTimeDrawUI(player_->getLightTimeDrawUIPtr(), player_->getPlayerNumber());
@@ -629,6 +637,7 @@ void TutorialScene::nextTutorial()
 		switch (tutorialTiming)
 		{
 		case 1: {
+			text_.Set_Sprite_Number(7);
 			text_.Hidden_Text();
 			player_->resetCombo();
 			auto specStepMgr = std::make_shared<SpecifiedStepManager>(&world_);

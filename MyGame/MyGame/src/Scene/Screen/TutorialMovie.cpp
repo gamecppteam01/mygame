@@ -7,6 +7,7 @@ TutorialMovie::~TutorialMovie(){
 void TutorialMovie::initialize(){
 	Movie_ID.push_back(MOVIE_ID::QUARTER);
 	play_movie = false;
+	pause = false;
 	scale = 0.0f;
 	alpha = 0.0f;
 	move = Vector2::Zero;
@@ -14,12 +15,11 @@ void TutorialMovie::initialize(){
 }
 
 void TutorialMovie::update(float deltaTime){
-	if (!Movie::GetInstance().IsPlay(Movie_ID.front())) {
+	if (!Movie::GetInstance().IsPlay(Movie_ID.front())&&!pause) {
 		Movie::GetInstance().Seek(Movie_ID.front(), 0.0f);
 		Movie::GetInstance().Play(Movie_ID.front());
 	}
 	if (play_movie) {
-
 		alpha += 0.1;
 		if (alpha >= 1.0f) {
 			alpha = 1.0f;
@@ -37,7 +37,6 @@ void TutorialMovie::update(float deltaTime){
 				move.y = movie_half_size.y / MathHelper::Pi;
 			}
 		}
-
 	}
 	else{
 		scale -= 0.02;
@@ -86,4 +85,16 @@ void TutorialMovie::Display_Movie(){
 void TutorialMovie::Hidden_Movie(){
 	play_movie = false;
 	StopMovie();
+}
+
+void TutorialMovie::Pause()
+{
+	pause = true;
+	StopMovie();
+}
+
+void TutorialMovie::Start()
+{
+	PlayMovie();
+	pause = false;
 }

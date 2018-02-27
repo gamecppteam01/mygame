@@ -228,6 +228,13 @@ void LoadingScene::LoadSprite()
 	Sprite::GetInstance().Load(defaultPath + "player1_nameMesse.png", SPRITE_ID::PLAYER1_NAME_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "player2_nameMesse.png", SPRITE_ID::PLAYER2_NAME_SPRITE);
 	Sprite::GetInstance().Load(defaultPath + "tutorialTexture.png", SPRITE_ID::TUTORIAL_HAVE_SPRITE);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine1.png", SPRITE_ID::TutorialSprite1);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine2.png", SPRITE_ID::TutorialSprite2);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine3.png", SPRITE_ID::TutorialSprite3);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine4.png", SPRITE_ID::TutorialSprite4);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine5.png", SPRITE_ID::TutorialSprite5);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine6.png", SPRITE_ID::TutorialSprite6);
+	Sprite::GetInstance().Load(defaultPath + "lessonLine7.png", SPRITE_ID::TutorialSprite7);
 	
 }
 

@@ -45,7 +45,7 @@ void RankUI::Score(const Vector2 & position) const{
 		auto spr = Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1);
 		if(spr==SPRITE_ID::RANK_PLAYER_SPRITE)CutInText::DrawRank(Vector2(position.x, position.y + a * 40));
 		else Sprite::GetInstance().Draw(spr, Vector2(position.x, position.y + a * 40), Vector2(Sprite::GetInstance().GetSize(Player_Name.at(stage_ - 1).at(i->playerNumber_ - 1)))*0.2f / 2,alpha_ ,Vector2(0.2, 0.2));
-		Rank_SpriteID(a, Vector2(position.x - 20, position.y + a * 40), 0.18f);
+		Rank_SpriteID(a, Vector2(position.x - 20, position.y + 10 + a * 40), 0.18f);
 		a++;
 	}
 }

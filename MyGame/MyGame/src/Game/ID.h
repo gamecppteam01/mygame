@@ -178,6 +178,14 @@ enum SPRITE_ID
 	TUTORIAL_HAVE_SPRITE,
 	MOVIE_FRAME,
 
+	TutorialSprite1,
+	TutorialSprite2,
+	TutorialSprite3,
+	TutorialSprite4,
+	TutorialSprite5,
+	TutorialSprite6,
+	TutorialSprite7,
+
 	COUNT_SPRITE//全リソース数確認用キー(このキーにリソースを設定しないこと)
 };
 

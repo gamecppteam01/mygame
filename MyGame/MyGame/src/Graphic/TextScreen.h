@@ -27,6 +27,8 @@ public:
 	void Display_Text();
 	void Hidden_Text();
 
+	void Set_Sprite_Number(const int num);
+
 	bool isEnd()const;
 private:
 
@@ -45,4 +47,6 @@ private:
 	bool isEnd_;
 	bool DisPlay;
 	int alpha;
+	float sizeY;
+	int sprite_number;
 };

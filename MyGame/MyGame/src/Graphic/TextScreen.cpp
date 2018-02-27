@@ -6,6 +6,9 @@
 
 static const int textSpeed = 3;
 
+static const std::vector<SPRITE_ID> Tutorial_Sprite{
+	{ SPRITE_ID::TutorialSprite1, SPRITE_ID::TutorialSprite2 ,SPRITE_ID::TutorialSprite3 ,SPRITE_ID::TutorialSprite4,SPRITE_ID::TutorialSprite5,SPRITE_ID::TutorialSprite6,SPRITE_ID::TutorialSprite7},
+};
 
 TextScreen::TextScreen()
 {
@@ -17,6 +20,8 @@ void TextScreen::Init(const std::string& filename, int lineTextSize)
 	isEnd_ = false;
 	DisPlay = true;
 	alpha = 256;
+	sizeY = 0.0f;
+	sprite_number = 0;
 	textSize_ = lineTextSize;//1行分の量を決める
 
 	//データを初期化
@@ -115,15 +120,23 @@ void TextScreen::Update()
 	textCount_ = min(textCount_, textList_[targetText_].size());//文字範囲を制限
 
 	if (DisPlay) {
-		alpha += 8;
-		if (alpha >= 256) {
-			alpha = 256;
+		sizeY -= 0.05; 
+		if(sizeY <= 0.0){
+			sizeY = 0.0f;
+			alpha += 8;
+			if (alpha >= 256) {
+				alpha = 256;
+			}
 		}
 	}
 	else {
 		alpha -= 8;
 		if (alpha <= 0) {
 			alpha = 0;
+			sizeY += 0.05;
+			if (sizeY >= 1.0) {
+				sizeY = 1.0f;
+			}
 		}
 	}
 }
@@ -172,6 +185,8 @@ void TextScreen::Draw(const Vector2& position) const
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	FontManager::GetInstance().DrawTextApplyFont(position.x+80.0f, position.y+60.0f, GetColor(255, 255, 255), FONT_ID::TUTORIAL_FONT, drawText);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	Sprite::GetInstance().Draw(Tutorial_Sprite.at(sprite_number), Vector2(SCREEN_SIZE.x / 2, 100), Sprite::GetInstance().GetSize(Tutorial_Sprite.at(sprite_number)) / 2, Vector2(1.0, sizeY));
 }
 
 void TextScreen::End()
@@ -184,6 +199,11 @@ void TextScreen::Display_Text(){
 
 void TextScreen::Hidden_Text(){
 	DisPlay = false;
+}
+
+void TextScreen::Set_Sprite_Number(const int num)
+{
+	sprite_number = num - 1;
 }
 
 bool TextScreen::isEnd() const
